@@ -246,13 +246,15 @@ export default function StatystykiPage() {
  @media (max-width: 600px), (max-height: 500px) and (orientation: landscape) {
    .stats-grid-2, .stats-grid-3, .stats-hero { grid-template-columns: 1fr !important; }
  }
- #rotate-overlay {
-   display: none;
+ @keyframes spin-hint {
+   0%, 100% { transform: rotate(0deg); }
+   40% { transform: rotate(-90deg); }
+   60% { transform: rotate(-90deg); }
  }
+ #rotate-overlay { display: none; }
  @media screen and (max-width: 768px) and (orientation: portrait) {
-   #rotate-overlay {
-     display: flex;
-   }
+   #rotate-overlay { display: flex; }
+   body { overflow: hidden; }
  }
  `}</style>
 
@@ -263,29 +265,18 @@ export default function StatystykiPage() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: 24,
+        gap: 20,
+        overflow: "hidden",
       }}>
-        <div style={{
-          fontSize: 72,
-          animation: "spin-hint 2s ease-in-out infinite",
-        }}>📱</div>
+        <div style={{ fontSize: 52, animation: "spin-hint 2s ease-in-out infinite" }}>📱</div>
         <div style={{
           fontFamily: "'Bebas Neue', Impact, sans-serif",
-          fontSize: 28,
-          letterSpacing: "0.1em",
-          color: "#fff",
+          fontSize: 26, letterSpacing: "0.1em", color: "#fff",
         }}>OBRÓĆ TELEFON</div>
-        <div style={{ fontSize: 13, color: "#475569", textAlign: "center", maxWidth: 240, lineHeight: 1.6 }}>
+        <div style={{ fontSize: 12, color: "#475569", textAlign: "center", maxWidth: 220, lineHeight: 1.6 }}>
           Statystyki wymagają widoku poziomego
         </div>
-        <div style={{ width: 40, height: 2, background: "#3b82f6", borderRadius: 2 }} />
-        <style>{`
-          @keyframes spin-hint {
-            0%, 100% { transform: rotate(0deg); }
-            40% { transform: rotate(-90deg); }
-            60% { transform: rotate(-90deg); }
-          }
-        `}</style>
+        <div style={{ width: 36, height: 2, background: "#3b82f6", borderRadius: 2 }} />
       </div>
 
       <NavBar backLabel="Strona główna"/>
