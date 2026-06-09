@@ -102,24 +102,7 @@ export default function NastepnyMecz({
                 minWidth: 120,
               }}
             >
-              {isDrawa(next.team1) ? (
-                <HerbImg src={next.herb1} alt={next.team1} size={90} />
-              ) : (
-                <div
-                  style={{
-                    width: 80,
-                    height: 80,
-                    borderRadius: '50%',
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '2px solid rgba(255,255,255,0.08)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <HerbImg src={next.herb1} alt={next.team1} size={52} />
-                </div>
-              )}
+              <HerbImg src={next.herb1} alt={next.team1} size={isDrawa(next.team1) ? 90 : 52} />
 
               <div
                 style={{
@@ -161,24 +144,7 @@ export default function NastepnyMecz({
                 minWidth: 120,
               }}
             >
-              {isDrawa(next.team2) ? (
-                <HerbImg src={next.herb2} alt={next.team2} size={90} />
-              ) : (
-                <div
-                  style={{
-                    width: 80,
-                    height: 80,
-                    borderRadius: '50%',
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '2px solid rgba(255,255,255,0.08)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <HerbImg src={next.herb2} alt={next.team2} size={52} />
-                </div>
-              )}
+              <HerbImg src={next.herb2} alt={next.team2} size={isDrawa(next.team2) ? 90 : 52} />
 
               <div
                 style={{
