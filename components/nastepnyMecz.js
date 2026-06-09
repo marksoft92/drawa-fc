@@ -102,31 +102,24 @@ export default function NastepnyMecz({
                 minWidth: 120,
               }}
             >
-              <div
-                style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: '50%',
-                  background: isDrawa(next.team1)
-                    ? 'rgba(59,130,246,0.15)'
-                    : 'rgba(255,255,255,0.05)',
-                  border: isDrawa(next.team1)
-                    ? '2px solid rgba(59,130,246,0.4)'
-                    : '2px solid rgba(255,255,255,0.08)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: isDrawa(next.team1)
-                    ? '0 0 24px rgba(59,130,246,0.2)'
-                    : 'none',
-                }}
-              >
-                <HerbImg
-                  src={next.herb1}
-                  alt={next.team1}
-                  size={52}
-                />
-              </div>
+              {isDrawa(next.team1) ? (
+                <HerbImg src={next.herb1} alt={next.team1} size={90} />
+              ) : (
+                <div
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '2px solid rgba(255,255,255,0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <HerbImg src={next.herb1} alt={next.team1} size={52} />
+                </div>
+              )}
 
               <div
                 style={{
@@ -168,28 +161,24 @@ export default function NastepnyMecz({
                 minWidth: 120,
               }}
             >
-              <div
-                style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: '50%',
-                  background: isDrawa(next.team2)
-                    ? 'rgba(59,130,246,0.15)'
-                    : 'rgba(255,255,255,0.05)',
-                  border: isDrawa(next.team2)
-                    ? '2px solid rgba(59,130,246,0.4)'
-                    : '2px solid rgba(255,255,255,0.08)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <HerbImg
-                  src={next.herb2}
-                  alt={next.team2}
-                  size={52}
-                />
-              </div>
+              {isDrawa(next.team2) ? (
+                <HerbImg src={next.herb2} alt={next.team2} size={90} />
+              ) : (
+                <div
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '2px solid rgba(255,255,255,0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <HerbImg src={next.herb2} alt={next.team2} size={52} />
+                </div>
+              )}
 
               <div
                 style={{
