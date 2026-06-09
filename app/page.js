@@ -34,7 +34,9 @@ const HerbImg = ({ src, alt, size = 40 }) => (
  // eslint-disable-next-line @next/next/no-img-element
  <img
  src={
- src?.includes("/flags/0.jpg")
+ isDrawa(alt)
+ ? DRAWA_HERB
+ : src?.includes("/flags/0.jpg")
  ? `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' fill='%231e293b' rx='20'/><text x='20' y='26' text-anchor='middle' font-size='18' fill='%2364748b'>?</text></svg>`
  : src
  }
