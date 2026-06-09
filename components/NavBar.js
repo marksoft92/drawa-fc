@@ -64,7 +64,7 @@ export default function NavBar({ backLabel }) {
  .nav-pulse-dot { animation: nav-pulse 1.6s ease-in-out infinite; }
  .nav-desktop-links { display: none !important; }
  .nav-hamburger { display: flex !important; }
- @media (min-width: 641px) {
+ @media (min-width: 641px) and (min-height: 501px) {
  .nav-desktop-links { display: flex !important; }
  .nav-hamburger { display: none !important; }
  }

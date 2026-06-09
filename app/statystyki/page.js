@@ -243,7 +243,7 @@ export default function StatystykiPage() {
  ::-webkit-scrollbar { width: 6px; }
  ::-webkit-scrollbar-track { background: #0f172a; }
  ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 3px; }
- @media (max-width: 600px) {
+ @media (max-width: 600px), (max-height: 500px) and (orientation: landscape) {
    .stats-grid-2, .stats-grid-3, .stats-hero { grid-template-columns: 1fr !important; }
  }
  #rotate-overlay {
@@ -258,7 +258,7 @@ export default function StatystykiPage() {
 
       {/* Overlay: obróć telefon */}
       <div id="rotate-overlay" style={{
-        position: "fixed", inset: 0, zIndex: 9999,
+        position: "fixed", top: 64, left: 0, right: 0, bottom: 0, zIndex: 99,
         background: "#030712",
         flexDirection: "column",
         alignItems: "center",
@@ -290,7 +290,7 @@ export default function StatystykiPage() {
 
       <NavBar backLabel="Strona główna"/>
 
-      <main style={{maxWidth: 900, margin: "0 auto", padding: "96px 20px 80px", overflowX: "hidden"}}>
+      <main style={{maxWidth: 900, margin: "0 auto", padding: "96px 20px 80px"}}>
 
         {/* ── 1. HERO ── */}
         <div
