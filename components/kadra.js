@@ -39,11 +39,12 @@ function PlayerCard({ z, isHovered, isInRow, onEnter, onLeave, cardRef }) {
       }}
     >
       <div style={{ height: expanded ? 300 : 0, transition: 'height 0.3s ease', overflow: 'hidden', position: 'relative', background: '#060d1c' }}>
-        {z.foto ? (
+        {expanded && z.foto ? (
           <Image
             src={z.foto}
             alt={z.imieNazwisko}
             fill
+            priority={false}
             style={{
               objectFit: 'cover',
               objectPosition: 'top',
@@ -51,11 +52,11 @@ function PlayerCard({ z, isHovered, isInRow, onEnter, onLeave, cardRef }) {
               transition: 'filter 0.2s ease',
             }}
           />
-        ) : (
+        ) : expanded ? (
           <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 52, fontWeight: 700, color: 'rgba(59,130,246,0.15)', fontFamily: "'Bebas Neue', Impact, sans-serif", filter: isInRow && !isHovered ? 'blur(3px) brightness(0.25)' : 'none', transition: 'filter 0.2s ease' }}>
             {initials(z.imieNazwisko)}
           </div>
-        )}
+        ) : null}
       </div>
 
       <div style={{ padding: '10px 14px 8px', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -114,8 +115,8 @@ function MobilePlayerCard({ z, defaultExpanded = false }) {
       }}
     >
       <div style={{ height: expanded ? 300 : 0, transition: 'height 0.3s ease', overflow: 'hidden', position: 'relative', background: '#060d1c' }}>
-        {z.foto && (
-          <Image src={z.foto} alt={z.imieNazwisko} fill style={{ objectFit: 'cover', objectPosition: 'top' }} />
+        {expanded && z.foto && (
+          <Image src={z.foto} alt={z.imieNazwisko} fill priority={false} style={{ objectFit: 'cover', objectPosition: 'top' }} />
         )}
       </div>
 

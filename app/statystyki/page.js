@@ -243,14 +243,18 @@ export default function StatystykiPage() {
  ::-webkit-scrollbar { width: 6px; }
  ::-webkit-scrollbar-track { background: #0f172a; }
  ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 3px; }
+ @media (max-width: 600px) {
+   .stats-grid-2, .stats-grid-3, .stats-hero { grid-template-columns: 1fr !important; }
+ }
  `}</style>
 
       <NavBar backLabel="Strona główna"/>
 
-      <main style={{maxWidth: 900, margin: "0 auto", padding: "96px 20px 80px"}}>
+      <main style={{maxWidth: 900, margin: "0 auto", padding: "96px 20px 80px", overflowX: "hidden"}}>
 
         {/* ── 1. HERO ── */}
         <div
+          className="stats-hero"
           style={{display: "grid", gridTemplateColumns: "1fr auto", gap: 16, marginBottom: 12, alignItems: "stretch"}}>
           {/* left: big numbers + form */}
           <div style={{...CARD, display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
@@ -349,7 +353,7 @@ export default function StatystykiPage() {
         </div>
 
         {/* ── 2. GOLE WG MINUT + DOM vs WYJAZD ── */}
-        <div style={{display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12}}>
+        <div className="stats-grid-2" style={{display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12}}>
 
           {/* Gole wg minut */}
           <div style={CARD}>
@@ -517,7 +521,7 @@ export default function StatystykiPage() {
         </div>
 
         {/* ── 6. FORMA MIESIĘCZNA + HT/FT ── */}
-        <div style={{display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12}}>
+        <div className="stats-grid-2" style={{display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12}}>
 
           {/* Forma miesięczna */}
           <div style={CARD}>
@@ -599,7 +603,7 @@ export default function StatystykiPage() {
         </div>
 
         {/* ── 7. WYNIKI + MULTI-GOAL ── */}
-        <div style={{display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12}}>
+        <div className="stats-grid-2" style={{display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12}}>
 
           {/* Najczęstsze wyniki */}
           <div style={CARD}>
@@ -733,7 +737,7 @@ export default function StatystykiPage() {
         </div>
 
         {/* ── 10. EFEKTYWNOŚĆ + DYSCYPLINA ── */}
-        <div style={{display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 32}}>
+        <div className="stats-grid-3" style={{display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 32}}>
           <div style={CARD}>
             <div style={SECTION_LABEL}>GDY STRZELAMY PIERWSI</div>
             <div style={{...BIG, fontSize: 44, color: "#fff"}}>{s.scoredFirstWinPct}%</div>
