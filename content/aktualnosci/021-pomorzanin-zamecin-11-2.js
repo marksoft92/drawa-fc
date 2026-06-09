@@ -1,0 +1,71 @@
+const artykul = {
+  id: 21,
+  slug: '021-pomorzanin-zamecin-11-2',
+  title: "Rozbiliśmy Pomorzanin Zamęcin 11:2 przed własną publicznością",
+  date: '2026-04-25',
+  tags: ["wynik","liga","wygrana"],
+  kolor: '#22c55e',
+  thumbnail: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681084282_122101619786629774_3824409186379990434_n.jpg',
+  excerpt: "MKS Drawa Drawno wygrała przed własną publicznością z Pomorzanin Zamęcin 11:2. Dla Drawy bramki zdobyli: Jędrasik Waldemar (4'), Radziwoń Łukasz (12'), Jędrasik Waldemar (17'), Jędrasik Waldemar (21'), Kwaśnik Maciej (32'), Lewandowski Janusz (37'), Jędrasik Waldemar (41'), Agudi Edmond Ogara (60'), Jędrasik Waldemar (72'), Jędrasik Waldemar (75'), Dzierbun Remigiusz (83').",
+  content: `25 kwietnia 2026 w ramach rozgrywek Klasa B odbył się mecz Drawa Drawno vs Pomorzanin Zamęcin. Spotkanie zakończyło się wynikiem 11:2.
+
+Bramki dla Drawy strzelali: Jędrasik Waldemar (4'), Radziwoń Łukasz (12'), Jędrasik Waldemar (17'), Jędrasik Waldemar (21'), Kwaśnik Maciej (32'), Lewandowski Janusz (37'), Jędrasik Waldemar (41'), Agudi Edmond Ogara (60'), Jędrasik Waldemar (72'), Jędrasik Waldemar (75'), Dzierbun Remigiusz (83'). Dla rywali gole zdobyli: Janik Mariusz (13'), Łabaj Piotr (30').
+
+W wyjściowym składzie Drawy wystąpili: Dzierbun Hubert, Farbotko Krzysztof, Filipowicz Szymon, Kwaśnik Maciej, Radziwoń Łukasz, Jędrasik Waldemar, Dzierbun Remigiusz, Gławdel Maciej, Skrzypiec Dominik, Czarnojan Paweł, Bieńkowski Dawid. Na ławce rezerwowych zasiedli: Agudi Edmond Ogara, Piotrowski Krzysztof, Lewandowski Janusz.
+
+Dziękujemy wszystkim kibicom za doping i wsparcie! Trzy punkty zostają w Drawnie.`,
+  photos: [
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681084282_122101619786629774_3824409186379990434_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681205513_122101619030629774_4919982279871119431_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681231732_122101620446629774_4032620536358728264_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681247564_122101622390629774_7364832706198185143_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681268666_122101619846629774_1697641045587737342_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681271100_122101621220629774_1019403301695915805_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681271347_122101620074629774_8661600209520841552_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681275385_122101618484629774_6697997285380682079_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681443202_122101622924629774_8230995166821909381_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681540638_122101620104629774_6069714933608552243_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681551937_122101618346629774_9222726800031962258_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681633360_122101619654629774_8409980428633082143_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681636062_122101618568629774_227107146766294169_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681749019_122101621064629774_295191964229147360_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681860157_122101620638629774_1860851955796366650_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681993647_122101620998629774_5869789272376588610_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/682051269_122101617968629774_3874562189851211238_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/682731378_122101618388629774_5932192509247505419_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683140769_122101619534629774_2433901386798040507_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683174160_122101622426629774_1795456420968469469_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683240023_122101618562629774_6432225819571091113_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683546080_122101619252629774_2078632615913512127_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683566766_122101618112629774_7159754165082480975_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683603198_122101619750629774_56589474021748196_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683604688_122101622702629774_2929579797356214232_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683618370_122101619588629774_2566994359007159319_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683630861_122101621592629774_2131584580408395451_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683648130_122101622498629774_5031563762177416920_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683676319_122101621274629774_5379428937756594126_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683723802_122101619216629774_6893897793792598873_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683751593_122101620554629774_3260017009189231300_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683762977_122101618724629774_4267482638568912690_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683771337_122101621328629774_3930173970542062441_n (1).jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683807224_122101619714629774_7582479076928981727_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683827099_122101620308629774_2755999226877203421_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683843123_122101619354629774_3265060995945932510_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683919577_122101618730629774_5113114281438682665_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/683951162_122101622252629774_8866460606080592736_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/684090745_122101618190629774_1096196351482351632_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/684294521_122101618064629774_8168881627140566452_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/684302233_122101621796629774_6185059905730704467_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/684400742_122101620344629774_667654737755665233_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/684494715_122101619528629774_4795647589491379293_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/684891084_122101617896629774_8156610568817963489_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/684891715_122101621190629774_8819558774138819020_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/684893277_122101619318629774_5864783917147174496_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/684908563_122101618604629774_7227917951196766103_n.jpg', caption: '' },
+    { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/684968620_122101618010629774_5480280926624786634_n.jpg', caption: '' },
+  ],
+};
+
+
+
+export default artykul;
