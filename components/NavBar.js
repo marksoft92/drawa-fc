@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import data from "@/lib/drawa_data_b_klasa_2025_2026";
 
 const isDrawa = (name) => name?.toLowerCase().includes("drawa");
@@ -50,33 +50,17 @@ export default function NavBar({ backLabel }) {
  const [mobileOpen, setMobileOpen] = useState(false);
  const [scrolled, setScrolled] = useState(false);
  const [playing, setPlaying] = useState(false);
- const audioRef = useRef(null);
  const nextMatch = getNextMatch();
 
  useEffect(() => {
-  const audio = audioRef.current;
-  if (!audio) return;
-  audio.volume = 0.4;
-  // Próbuj zagrać od razu; jeśli przeglądarka blokuje, czekaj na pierwszą interakcję
-  audio.play().then(() => setPlaying(true)).catch(() => {
-   const onInteraction = () => {
-    audio.play().then(() => setPlaying(true)).catch(() => {});
-    ['click', 'keydown', 'touchstart'].forEach(e => document.removeEventListener(e, onInteraction));
-   };
-   ['click', 'keydown', 'touchstart'].forEach(e => document.addEventListener(e, onInteraction, { once: true }));
-  });
+  const onState = (e) => setPlaying(e.detail.playing);
+  window.addEventListener('audio:state', onState);
+  return () => window.removeEventListener('audio:state', onState);
  }, []);
 
  const toggleMusic = (e) => {
   e.preventDefault();
-  const audio = audioRef.current;
-  if (!audio) return;
-  if (playing) {
-   audio.pause();
-   setPlaying(false);
-  } else {
-   audio.play().then(() => setPlaying(true)).catch(() => {});
-  }
+  window.dispatchEvent(new CustomEvent('audio:toggle'));
  };
 
  useEffect(() => {
@@ -92,7 +76,6 @@ export default function NavBar({ backLabel }) {
 
  return (
  <>
- <audio ref={audioRef} src="/filipo.mp3" loop preload="none" />
  <nav
  style={{
  position: "fixed",

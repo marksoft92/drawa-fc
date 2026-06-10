@@ -1,4 +1,5 @@
 import "./globals.css";
+import GlobalAudio from "@/components/GlobalAudio";
 
 const BASE_URL = "https://mksdrawadrawno.pl";
 
@@ -45,7 +46,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="pl" className="h-full">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <GlobalAudio />
+        {children}
+      </body>
     </html>
   );
 }
