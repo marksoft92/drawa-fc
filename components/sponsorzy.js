@@ -11,7 +11,7 @@ const sponsorzy = [
   { nazwa: 'Krzysztof Farbotko Ubezpieczenia', logo: '/sponsorzy/farbo.jpg' ,href: 'https://www.facebook.com/profile.php?id=61567532552948'},
   { nazwa: 'Zachodniopomorski Bank Spółdzielczy', logo: '/sponsorzy/sgb.jpg' ,href: 'https://www.facebook.com/profile.php?id=100057141352732'},
   { nazwa: 'Firma Dren z Recza – Maciej, Michał i Roman Kwaśnik', logo: '/sponsorzy/dren.svg' ,href: 'https://dren.com.pl/'},
-  { nazwa: 'WiToBi – Patryk Krykwiński', logo: '/sponsorzy/noname.jpg',href: 'https://www.multigeodeta.pl/firma/witobi-uslugi-geodezyjne-patryk-krykwinski-8918176#' },
+  { nazwa: 'WiToBi Usługi Geodezyjne Patryk Krykwiński ', logo: '/sponsorzy/witobi.jpeg',href: 'https://www.multigeodeta.pl/firma/witobi-uslugi-geodezyjne-patryk-krykwinski-8918176#' },
   { nazwa: 'Wiśniowski-Instal', logo: '/sponsorzy/wisn.webp',href: 'https://www.google.com/search?sca_esv=ec0135bcbec233e7&sxsrf=ANbL-n6yyUoMyKPflCPLU2QatdS4T1bPcA:1780947047931&q=Wi%C5%9Bniowski-Instal&si=AL3DRZGNtcdgKOqVhotcr-UG2kkYpwR2WO4qu3O00NmpwBmLneVmmSeLh_hN54pSjAkSFpQU6a5CWj16A2IrvP5v7-SbKwuRxBv-s6LbbsmW8wlzLMjsqeE7sWKvwNApgQkw-5maPgcW&sa=X&ved=2ahUKEwiek5_hsPiUAxUbFBAIHQvDCsQQ_coHegQINBAB&biw=1920&bih=992&dpr=1#lpg=ik:CAoSF0NJSE0wb2dLRUlDQWdJRHBzcExRc3dF' },
   { nazwa: 'Małgorzata Łubińska', logo: '/sponsorzy/noname.jpg',href: 'https://www.facebook.com/irazone' },
   { nazwa: 'Krzysztof Gralla', logo: '/sponsorzy/noname.jpg',href: '' },
