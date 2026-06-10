@@ -294,7 +294,7 @@ export default function StatystykiPage() {
           Statystyki wymagają widoku poziomego
         </div>
         <div style={{ width: 36, height: 2, background: "#3b82f6", borderRadius: 2 }} />
-      </div>
+      </div>}
 
       <NavBar backLabel="Strona główna"/>
 
