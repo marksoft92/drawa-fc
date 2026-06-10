@@ -57,17 +57,14 @@ export default function NavBar({ backLabel }) {
   const audio = audioRef.current;
   if (!audio) return;
   audio.volume = 0.4;
-  const tryPlay = () => {
-   audio.play().then(() => setPlaying(true)).catch(() => {});
-  };
-  const onInteraction = () => {
-   tryPlay();
-   ['click','keydown','touchstart'].forEach(e => document.removeEventListener(e, onInteraction));
-  };
-  ['click','keydown','touchstart'].forEach(e => document.addEventListener(e, onInteraction, { once: true }));
-  return () => {
-   ['click','keydown','touchstart'].forEach(e => document.removeEventListener(e, onInteraction));
-  };
+  // Próbuj zagrać od razu; jeśli przeglądarka blokuje, czekaj na pierwszą interakcję
+  audio.play().then(() => setPlaying(true)).catch(() => {
+   const onInteraction = () => {
+    audio.play().then(() => setPlaying(true)).catch(() => {});
+    ['click', 'keydown', 'touchstart'].forEach(e => document.removeEventListener(e, onInteraction));
+   };
+   ['click', 'keydown', 'touchstart'].forEach(e => document.addEventListener(e, onInteraction, { once: true }));
+  });
  }, []);
 
  const toggleMusic = (e) => {
@@ -95,7 +92,7 @@ export default function NavBar({ backLabel }) {
 
  return (
  <>
- <audio ref={audioRef} src="/anthem.mp3" loop preload="none" />
+ <audio ref={audioRef} src="/filipo.mp3" loop preload="none" />
  <nav
  style={{
  position: "fixed",
