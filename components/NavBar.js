@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import data from "@/lib/drawa_data_b_klasa_2025_2026";
 
 const isDrawa = (name) => name?.toLowerCase().includes("drawa");
@@ -27,10 +27,60 @@ function getNextMatch() {
  return { opp: oppShort, date, time };
 }
 
+const IconMusicOn = () => (
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <path d="M9 18V5l12-2v13"/>
+  <circle cx="6" cy="18" r="3"/>
+  <circle cx="18" cy="16" r="3"/>
+ </svg>
+);
+
+const IconMusicOff = () => (
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <path d="M9 18V5l12-2v13"/>
+  <circle cx="6" cy="18" r="3"/>
+  <circle cx="18" cy="16" r="3"/>
+  <line x1="2" y1="2" x2="22" y2="22"/>
+ </svg>
+);
+
 export default function NavBar({ backLabel }) {
  const [mobileOpen, setMobileOpen] = useState(false);
  const [scrolled, setScrolled] = useState(false);
+ const [playing, setPlaying] = useState(false);
+ const audioRef = useRef(null);
  const nextMatch = getNextMatch();
+
+ useEffect(() => {
+  const audio = audioRef.current;
+  if (!audio) return;
+  audio.volume = 0.4;
+  const tryPlay = () => {
+   audio.play().then(() => setPlaying(true)).catch(() => {});
+  };
+  const onInteraction = () => {
+   tryPlay();
+   ['click','keydown','touchstart'].forEach(e => document.removeEventListener(e, onInteraction));
+  };
+  ['click','keydown','touchstart'].forEach(e => document.addEventListener(e, onInteraction, { once: true }));
+  return () => {
+   ['click','keydown','touchstart'].forEach(e => document.removeEventListener(e, onInteraction));
+  };
+ }, []);
+
+ const toggleMusic = (e) => {
+  e.preventDefault();
+  const audio = audioRef.current;
+  if (!audio) return;
+  if (playing) {
+   audio.pause();
+   setPlaying(false);
+  } else {
+   audio.play().then(() => setPlaying(true)).catch(() => {});
+  }
+ };
 
  useEffect(() => {
  const onScroll = () => setScrolled(window.scrollY > 40);
@@ -44,6 +94,8 @@ export default function NavBar({ backLabel }) {
  const href = (id) => backLabel ? `/#${id}` : `#${id}`;
 
  return (
+ <>
+ <audio ref={audioRef} src="/anthem.mp3" loop preload="none" />
  <nav
  style={{
  position: "fixed",
@@ -141,6 +193,28 @@ export default function NavBar({ backLabel }) {
  </a>
  )}
 
+ {/* Music toggle */}
+ <button
+ onClick={toggleMusic}
+ aria-label={playing ? "Wycisz muzykę" : "Włącz muzykę"}
+ title={playing ? "Wycisz muzykę" : "Włącz muzykę"}
+ style={{
+ background: playing ? "rgba(59,130,246,0.15)" : "none",
+ border: `1px solid ${playing ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.1)"}`,
+ borderRadius: 6,
+ color: playing ? "#3b82f6" : "#475569",
+ cursor: "pointer",
+ padding: "6px 8px",
+ lineHeight: 1,
+ display: "flex",
+ alignItems: "center",
+ justifyContent: "center",
+ transition: "background 0.2s, border-color 0.2s, color 0.2s",
+ }}
+ >
+ {playing ? <IconMusicOn /> : <IconMusicOff />}
+ </button>
+
  {/* Hamburger */}
  <button
  className="nav-hamburger"
@@ -199,5 +273,6 @@ export default function NavBar({ backLabel }) {
  </div>
  )}
  </nav>
+ </>
  );
 }
