@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import NavBar from "@/components/NavBar";
 import data from "@/lib/drawa_data_b_klasa_2025_2026";
 import {computeTeamStats} from "@/lib/computeStats";
@@ -92,6 +93,26 @@ const ChartTooltip = ({active, payload, label}) => {
 
 export default function StatystykiPage() {
   const s = computeTeamStats(data.mecze);
+
+  const [isPortrait, setIsPortrait] = useState(false);
+  useEffect(() => {
+    const check = () => setIsPortrait(window.innerWidth < window.innerHeight && window.innerWidth <= 768);
+    check();
+    window.addEventListener("resize", check);
+    window.addEventListener("orientationchange", check);
+    return () => {
+      window.removeEventListener("resize", check);
+      window.removeEventListener("orientationchange", check);
+    };
+  }, []);
+  useEffect(() => {
+    document.body.style.overflow = isPortrait ? "hidden" : "";
+    document.documentElement.style.overflow = isPortrait ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+  }, [isPortrait]);
 
   // scorers
   const scorerMap = {};
@@ -251,17 +272,13 @@ export default function StatystykiPage() {
    40% { transform: rotate(-90deg); }
    60% { transform: rotate(-90deg); }
  }
- #rotate-overlay { display: none; }
- @media screen and (max-width: 768px) and (orientation: portrait) {
-   #rotate-overlay { display: flex; }
-   body { overflow: hidden; }
- }
  `}</style>
 
       {/* Overlay: obróć telefon */}
-      <div id="rotate-overlay" style={{
-        position: "fixed", top: 64, left: 0, right: 0, bottom: 0, zIndex: 99,
+      {isPortrait && <div style={{
+        position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 1001,
         background: "#030712",
+        display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
