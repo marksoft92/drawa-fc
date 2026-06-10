@@ -96,14 +96,11 @@ export default function StatystykiPage() {
 
   const [isPortrait, setIsPortrait] = useState(false);
   useEffect(() => {
-    const check = () => setIsPortrait(window.innerWidth < window.innerHeight && window.innerWidth <= 768);
-    check();
-    window.addEventListener("resize", check);
-    window.addEventListener("orientationchange", check);
-    return () => {
-      window.removeEventListener("resize", check);
-      window.removeEventListener("orientationchange", check);
-    };
+    const mq = window.matchMedia("(max-width: 768px) and (orientation: portrait)");
+    setIsPortrait(mq.matches);
+    const handler = (e) => setIsPortrait(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
   }, []);
   useEffect(() => {
     document.body.style.overflow = isPortrait ? "hidden" : "";
