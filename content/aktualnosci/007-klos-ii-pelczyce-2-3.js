@@ -1,21 +1,30 @@
 const artykul = {
   id: 7,
   slug: '007-klos-ii-pelczyce-2-3',
-  title: "Porażka 2:3 z Kłos II Pełczyce przed własną publicznością",
+  title: "Niedosyt w Drawnie. Zacięty mecz i porażka z rezerwami z Pełczyc",
   date: '2025-09-06',
   tags: ["wynik","liga","porażka"],
   kolor: '#ef4444',
   thumbnail: '/logo.png',
-  excerpt: "MKS Drawa Drawno przegrała z Kłos II Pełczyce 2:3. Dla Drawy bramki zdobyli: Jędrasik Waldemar (67'), Dzierbun Remigiusz (70').",
-  content: `6 września 2025 w ramach rozgrywek Klasa B odbył się mecz Drawa Drawno vs Kłos II Pełczyce. Spotkanie zakończyło się wynikiem 2:3.
+  excerpt:
+    'Drawa Drawno przegrała 2:3 z Kłosem II Pełczyce po meczu pełnym walki i niewykorzystanych okazji. Gole dla Drawy zdobyli Jędrasik i Dzierbun.',
 
-Bramki dla Drawy strzelali: Jędrasik Waldemar (67'), Dzierbun Remigiusz (70'). Dla rywali gole zdobyli: Borek Dawid (34'), Radziwoń Łukasz (45'), Filiks Dawid (68').
+  content: `Spotkanie z Kłosem II Pełczyce od początku zapowiadało się jako wymagające starcie, szczególnie że rywal był wzmocniony zawodnikami z wyższych rozgrywek.
 
-W wyjściowym składzie Drawy wystąpili: Filipowicz Szymon, Farbotko Krzysztof, Michalski Adrian, Rembiałkowski Jakub, Radziwoń Łukasz, Jędrasik Waldemar, Dzierbun Remigiusz, Góralczyk Damian, Turkosz Bartłomiej, Zając Dawid, Skrzypiec Dominik. Na ławce rezerwowych zasiedli: Piotrowski Krzysztof, Wzorek Bartek, Piluk Piotr, Piotrowski Jakub, Lewandowski Janusz, Grabek Jakub.
+Mecz rozpoczął się od szybkiej bramki gości, którzy w 34. minucie wykorzystali swoją okazję i wyszli na prowadzenie. Drawa starała się odpowiedzieć, ale długo brakowało skuteczności w finalizacji akcji.
 
-Z zawodników Drawy żółtą kartkę otrzymali Góralczyk Damian (19'), Michalski Adrian (37'), Michalski Adrian (65'); czerwoną kartkę obejrzał Michalski Adrian (65').
+Przełomowy moment pierwszej połowy przyszedł tuż przed przerwą, kiedy niefortunnie piłkę do własnej bramki skierował Łukasz Radziwoń, co ustawiło wynik na korzyść Kłosa.
 
-Mimo porażki wierzymy w drużynę i czekamy z niecierpliwością na kolejne spotkanie.`,
+Po zmianie stron Drawa zaczęła grać odważniej i przejęła inicjatywę. W 67. minucie Waldemar Jędrasik dał sygnał do walki, zdobywając kontaktową bramkę i przywracając nadzieję na korzystny rezultat.
+
+Chwilę później, w 68. minucie, goście odpowiedzieli trafieniem Dawida Filiksa, ale Drawa nie złożyła broni. W 70. minucie Remigiusz Dzierbun ponownie zmniejszył straty, doprowadzając do wyniku 2:3 i podkręcając tempo meczu do samego końca.
+
+Końcówka spotkania to napór Drawy i kilka sytuacji, które mogły zmienić losy meczu. Zabrakło jednak skuteczności, a także odrobiny szczęścia, by wywalczyć choćby remis.
+
+Dla Drawy był to mecz z dużym niedosytem — drużyna miała swoje momenty, pokazała charakter i dobrą grę fragmentami, ale ostatecznie to rywal z Pełczyc okazał się skuteczniejszy.
+
+Warto jednak podkreślić, że rezerwy z okręgówki nie miały w tym meczu łatwego zadania. Drawa potrafiła postawić trudne warunki i pokazała, że z każdym kolejnym spotkaniem rośnie jej potencjał.`,
+
   photos: [
     { src: '/logo.png', caption: '' },
   ],

@@ -7,11 +7,19 @@ const artykul = {
   kolor: '#22c55e',
   thumbnail: '/galeria/sokol_granowo_2025_2026_wyjazd/718190677_122105801450629774_7309330086482365282_n.jpg',
   excerpt: "MKS Drawa Drawno wygrała na wyjeździe z Sokół Granowo aż 6:2. Szczegółowa relacja z meczu niedostępna.",
-  content: `7 czerwca 2026 Drawa Drawno rozegrała wyjazdowe spotkanie z Sokół Granowo w ramach Klasy B Zachodniopomorskiej. Podopieczni wygrali wysoko 6:2 (0:2 dla Granowa, 6:2 dla Drawy).
+  content: `MKS Drawa Drawno zaliczyła kolejne udane ligowe spotkanie. W meczu rozegranym 7 czerwca w Granowie podopieczni Drawy pokonali miejscowego Sokoła aż 6:2, prezentując skuteczną i widowiskową grę w ofensywie.
 
-Niestety szczegółowa relacja z tego spotkania — skład, strzelcy i zdarzenia — nie jest dostępna w systemie. Trzy punkty zostają jednak w Drawnie po pewnym zwycięstwie na trudnym terenie.
+Spotkanie rozpoczęło się jednak od niespodzianki. Już w 5. minucie gospodarze objęli prowadzenie po trafieniu Bartosza Tazowa. Drawa szybko odpowiedziała i nie pozwoliła rywalom długo cieszyć się z przewagi. W 13. minucie wyrównującego gola zdobył Waldemar Jędrasik, który skutecznie zakończył jedną z pierwszych groźnych akcji gości.
 
-Gratulujemy drużynie kolejnego świetnego wyniku i czekamy na więcej takich spotkań!`,
+Po zdobyciu bramki wyrównującej Drawa przejęła kontrolę nad wydarzeniami na boisku. W 20. minucie na listę strzelców wpisał się Edmond Ogara Agudi, wyprowadzając swoją drużynę na prowadzenie. Osiem minut później przewagę powiększył Remigiusz Dzierbun, ustalając wynik pierwszej połowy na 3:1 dla zespołu z Drawna.
+
+Po zmianie stron gospodarze próbowali wrócić do gry, jednak Drawa konsekwentnie realizowała swój plan. W 72. minucie czwarte trafienie dla gości zanotował Maciej Kwaśnik. Chwilę później Sokół zdobył drugą bramkę i zmniejszył straty do wyniku 2:4, jednak był to jedynie chwilowy zryw miejscowych.
+
+Końcówka należała już całkowicie do Drawy. W 88. minucie swojego drugiego gola w meczu zdobył Waldemar Jędrasik, pieczętując bardzo dobry występ. Zaledwie minutę później wynik spotkania ustalił Paweł Czarnojan, który wykorzystał rozprężenie gospodarzy i zamknął strzelecki festiwal w Granowie.
+
+Drawa pokazała charakter po szybko straconej bramce i odpowiedziała w najlepszy możliwy sposób. Sześć zdobytych goli oraz skuteczna gra ofensywna pozwoliły drużynie wrócić z wyjazdu z kompletem punktów. Na szczególne wyróżnienie zasługuje Waldemar Jędrasik, autor dwóch trafień, a także cała formacja ofensywna, która przez całe spotkanie stwarzała zagrożenie pod bramką rywali.
+
+Dzięki zwycięstwu Drawa dopisuje kolejne trzy punkty do ligowego dorobku i potwierdza wysoką formę w końcówce sezonu.`,
   photos: [
     { src: '/galeria/sokol_granowo_2025_2026_wyjazd/718190677_122105801450629774_7309330086482365282_n.jpg', caption: '' },
     { src: '/galeria/sokol_granowo_2025_2026_wyjazd/718212845_122105800616629774_7103128280704447146_n.jpg', caption: '' },

@@ -6,14 +6,21 @@ const artykul = {
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
   thumbnail: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681084282_122101619786629774_3824409186379990434_n.jpg',
-  excerpt: "MKS Drawa Drawno wygrała przed własną publicznością z Pomorzanin Zamęcin 11:2. Dla Drawy bramki zdobyli: Jędrasik Waldemar (4'), Radziwoń Łukasz (12'), Jędrasik Waldemar (17'), Jędrasik Waldemar (21'), Kwaśnik Maciej (32'), Lewandowski Janusz (37'), Jędrasik Waldemar (41'), Agudi Edmond Ogara (60'), Jędrasik Waldemar (72'), Jędrasik Waldemar (75'), Dzierbun Remigiusz (83').",
-  content: `25 kwietnia 2026 w ramach rozgrywek Klasa B odbył się mecz Drawa Drawno vs Pomorzanin Zamęcin. Spotkanie zakończyło się wynikiem 11:2.
+  excerpt: 'Kibice w Drawnie obejrzeli prawdziwy festiwal bramek. Drawa rozbiła Pomorzanina Zamęcin 11:2, a bohaterem spotkania został Waldemar Jędrasik, który zdobył aż sześć bramek.',
 
-Bramki dla Drawy strzelali: Jędrasik Waldemar (4'), Radziwoń Łukasz (12'), Jędrasik Waldemar (17'), Jędrasik Waldemar (21'), Kwaśnik Maciej (32'), Lewandowski Janusz (37'), Jędrasik Waldemar (41'), Agudi Edmond Ogara (60'), Jędrasik Waldemar (72'), Jędrasik Waldemar (75'), Dzierbun Remigiusz (83'). Dla rywali gole zdobyli: Janik Mariusz (13'), Łabaj Piotr (30').
+  content: `To był jeden z tych meczów, które na długo pozostają w pamięci kibiców. Drawa Drawno urządziła prawdziwy pokaz skuteczności, pokonując Pomorzanina Zamęcin aż 11:2 w spotkaniu rozegranym na własnym stadionie.
 
-W wyjściowym składzie Drawy wystąpili: Dzierbun Hubert, Farbotko Krzysztof, Filipowicz Szymon, Kwaśnik Maciej, Radziwoń Łukasz, Jędrasik Waldemar, Dzierbun Remigiusz, Gławdel Maciej, Skrzypiec Dominik, Czarnojan Paweł, Bieńkowski Dawid. Na ławce rezerwowych zasiedli: Agudi Edmond Ogara, Piotrowski Krzysztof, Lewandowski Janusz.
+Od pierwszego gwizdka gospodarze narzucili bardzo wysokie tempo. Już w 4. minucie wynik otworzył Waldemar Jędrasik, rozpoczynając swój niezwykły strzelecki popis. Chwilę później prowadzenie podwyższył Łukasz Radziwoń, jednak goście szybko odpowiedzieli trafieniem Mariusza Janika. Drawa nie zamierzała jednak zwalniać.
 
-Dziękujemy wszystkim kibicom za doping i wsparcie! Trzy punkty zostają w Drawnie.`,
+Między 17. a 21. minutą dwukrotnie do siatki trafił ponownie Jędrasik, kompletując klasycznego hat-tricka jeszcze przed upływem pierwszych dwudziestu minut gry. Mimo że Pomorzanin zdobył drugą bramkę po trafieniu Piotra Łabaja, odpowiedź Drawy była natychmiastowa. Bramki Macieja Kwaśnika i Janusza Lewandowskiego pozwoliły gospodarzom zbudować wysoką przewagę, a tuż przed przerwą kolejne trafienie dołożył niezawodny Waldemar Jędrasik.
+
+Do szatni zawodnicy schodzili przy wyniku 7:2 dla Drawy i było jasne, że gospodarze kontrolują przebieg spotkania. Po zmianie stron obraz gry nie uległ zmianie. Drawa nadal dominowała, stwarzając sobie kolejne okazje bramkowe i nie pozwalając rywalom na rozwinięcie skrzydeł.
+
+W 60. minucie na listę strzelców wpisał się Edmond Ogara Agudi, a następnie dwa kolejne trafienia dołożył Waldemar Jędrasik. Napastnik Drawy zakończył spotkanie z imponującym dorobkiem sześciu bramek, będąc bezapelacyjnie największą gwiazdą meczu. Wynik w końcówce ustalił Remigiusz Dzierbun, pieczętując efektowne zwycięstwo gospodarzy.
+
+Drawa zaprezentowała bardzo ofensywny futbol, imponując skutecznością i zaangażowaniem przez pełne 90 minut. Aż sześciu różnych zawodników wpisało się na listę strzelców, co najlepiej pokazuje siłę ofensywną zespołu.
+
+Zwycięstwo 11:2 było nie tylko kolejnym kompletem punktów, ale również sygnałem dla ligowych rywali, że Drawa znajduje się w znakomitej formie. Kibice zgromadzeni na stadionie mogli opuszczać obiekt z szerokimi uśmiechami, będąc świadkami jednego z najbardziej efektownych występów swojej drużyny w sezonie.`,
   photos: [
     { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681084282_122101619786629774_3824409186379990434_n.jpg', caption: '' },
     { src: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681205513_122101619030629774_4919982279871119431_n.jpg', caption: '' },

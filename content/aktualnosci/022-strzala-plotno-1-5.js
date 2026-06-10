@@ -7,13 +7,19 @@ const artykul = {
   kolor: '#22c55e',
   thumbnail: '/galeria/strzala_plotno_2025_2026_wyjazd/714989921_122105452652629774_6036229136482564579_n.jpg',
   excerpt: "MKS Drawa Drawno wygrała na wyjeździe z Strzała Płotno 5:1. Dla Drawy bramki zdobyli: Jędrasik Waldemar (24'), Agudi Edmond Ogara (36'), Jędrasik Waldemar (63'), Dzierbun Remigiusz (72'), Jędrasik Waldemar (82').",
-  content: `24 maja 2026 w ramach rozgrywek Klasa B odbył się mecz Strzała Płotno vs Drawa Drawno. Spotkanie zakończyło się wynikiem 1:5.
+  content: `Drawa Drawno zanotowała kolejne bardzo ważne zwycięstwo w rozgrywkach Klasy B. W wyjazdowym spotkaniu rozegranym w Płotnie nasz zespół pokonał miejscową Strzałę 5:1, prezentując skuteczną i dojrzałą grę przez większość meczu.
 
-Bramki dla Drawy strzelali: Jędrasik Waldemar (24'), Agudi Edmond Ogara (36'), Jędrasik Waldemar (63'), Dzierbun Remigiusz (72'), Jędrasik Waldemar (82'). Dla rywali gole zdobyli: Wróblewski Nikodem (39').
+Od pierwszych minut było widać, że Drawa przyjechała do Płotna z zamiarem zdobycia kompletu punktów. Drużyna dobrze operowała piłką i stwarzała zagrożenie pod bramką gospodarzy. Przewaga została udokumentowana w 24. minucie, kiedy wynik spotkania otworzył Waldemar Jędrasik. Napastnik Drawy po raz kolejny potwierdził swoją skuteczność i dał drużynie prowadzenie.
 
-W wyjściowym składzie Drawy wystąpili: Dzierbun Hubert, Rembiałkowski Jakub, Farbotko Krzysztof, Filipowicz Szymon, Kwaśnik Maciej, Radziwoń Łukasz, Jędrasik Waldemar, Dzierbun Remigiusz, Agudi Edmond Ogara, Gławdel Maciej, Bieńkowski Dawid. Na ławce rezerwowych zasiedli: Wzorek Bartek, Skrzypiec Dominik, Śródecki Szymonakacper, Piotrowski Krzysztof, Lewandowski Janusz.
+Kolejne minuty należały do gości. W 36. minucie prowadzenie podwyższył Edmond Ogara Agudi, wykorzystując dobrą akcję ofensywną zespołu. Gdy wydawało się, że Drawa spokojnie zejdzie do szatni z dwubramkową przewagą, gospodarze odpowiedzieli trafieniem Nikodema Wróblewskiego w 39. minucie. Do przerwy było więc 2:1 dla Drawy, a druga połowa zapowiadała się bardzo interesująco.
 
-Dziękujemy wszystkim kibicom za doping i wsparcie! Trzy punkty zostają w Drawnie.`,
+Po zmianie stron zespół z Drawna nie pozwolił jednak rywalom rozwinąć skrzydeł. W 63. minucie ponownie dał o sobie znać Waldemar Jędrasik, zdobywając swoją drugą bramkę w meczu i przywracając Drawie bezpieczną przewagę. Dziewięć minut później wynik podwyższył Remigiusz Dzierbun, a gospodarze coraz wyraźniej tracili wiarę w odrobienie strat.
+
+Ostatnie słowo należało do Jędrasika. W 82. minucie skompletował hat-tricka, ustalając wynik spotkania na 5:1. Było to zwieńczenie bardzo dobrego występu całej drużyny, która kontrolowała przebieg meczu i skutecznie wykorzystywała swoje sytuacje.
+
+Na szczególne wyróżnienie zasłużył autor trzech trafień Waldemar Jędrasik, jednak na pochwałę zapracował cały zespół. Drawa zaprezentowała skuteczność w ofensywie, pewność w defensywie oraz dużą konsekwencję w realizacji założeń taktycznych.
+
+Dzięki zwycięstwu Drawa dopisała kolejne trzy punkty do ligowego dorobku i potwierdziła, że znajduje się w bardzo dobrej dyspozycji. Końcówka sezonu nabierała tempa, a zespół z Drawna konsekwentnie realizował swoje cele.`,
   photos: [
     { src: '/galeria/strzala_plotno_2025_2026_wyjazd/714989921_122105452652629774_6036229136482564579_n.jpg', caption: '' },
     { src: '/galeria/strzala_plotno_2025_2026_wyjazd/714989931_122105453378629774_1592903333288699770_n.jpg', caption: '' },

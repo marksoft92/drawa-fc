@@ -6,16 +6,23 @@ const artykul = {
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
   thumbnail: '/galeria/blyskawica_kluki_2025_2026_wyjazd/689006160_122102514986629774_7691985086083232357_n.jpg',
-  excerpt: "MKS Drawa Drawno wygrała na wyjeździe z Błyskawica Kluki 5:1. Dla Drawy bramki zdobyli: Michalski Adrian (7'), Jędrasik Waldemar (15'), Kwaśnik Maciej (21'), Dzierbun Remigiusz (76'), Jędrasik Waldemar (89').",
-  content: `16 listopada 2025 w ramach rozgrywek Klasa B odbył się mecz Błyskawica Kluki vs Drawa Drawno. Spotkanie zakończyło się wynikiem 1:5.
+  excerpt:
+    'Drawa Drawno odniosła wysokie zwycięstwo 5:1 na wyjeździe z Błyskawicą Kluki. Dublet zdobył Waldemar Jędrasik, a na listę strzelców wpisali się także Adrian Michalski, Maciej Kwaśnik i Remigiusz Dzierbun.',
 
-Bramki dla Drawy strzelali: Michalski Adrian (7'), Jędrasik Waldemar (15'), Kwaśnik Maciej (21'), Dzierbun Remigiusz (76'), Jędrasik Waldemar (89'). Dla rywali gole zdobyli: Pitura Bartosz (53').
+  content: `Piłkarze Drawy Drawno zakończyli rundę jesienną efektownym zwycięstwem na wyjeździe. W spotkaniu rozegranym w Klukach podopieczni Drawy pokonali miejscową Błyskawicę aż 5:1, prezentując skuteczną i konsekwentną grę przez większość meczu.
 
-W wyjściowym składzie Drawy wystąpili: Dzierbun Hubert, Bieńkowski Dawid, Farbotko Krzysztof, Michalski Adrian, Kwaśnik Maciej, Radziwoń Łukasz, Jędrasik Waldemar, Dzierbun Remigiusz, Góralczyk Damian, Turkosz Bartłomiej, Gławdel Maciej. Na ławce rezerwowych zasiedli: Śródecki Szymonakacper, Skrzypiec Dominik, Piotrowski Krzysztof, Wzorek Bartek, Lewandowski Janusz.
+Od pierwszych minut goście narzucili wysokie tempo i szybko przejęli inicjatywę. Już w 7. minucie wynik spotkania otworzył Adrian Michalski, który wykorzystał dobrą akcję ofensywną swojej drużyny. Drawa nie zamierzała zwalniać i osiem minut później prowadzenie podwyższył Waldemar Jędrasik.
 
-Z zawodników Drawy żółtą kartkę otrzymał Michalski Adrian (70').
+Kolejny cios gospodarze otrzymali w 21. minucie, kiedy na listę strzelców wpisał się Maciej Kwaśnik. Drawa kontrolowała przebieg gry i do przerwy utrzymywała bezpieczne prowadzenie.
 
-Dziękujemy wszystkim kibicom za doping i wsparcie! Trzy punkty zostają w Drawnie.`,
+Po zmianie stron Błyskawica próbowała wrócić do meczu. W 53. minucie Bartosz Pitura zdobył bramkę dla gospodarzy, zmniejszając straty. Był to jednak jedynie chwilowy zryw miejscowych.
+
+Drawa odpowiedziała w najlepszy możliwy sposób. W 76. minucie kolejną bramkę dla gości zdobył Remigiusz Dzierbun, praktycznie rozstrzygając losy spotkania. Wynik meczu ustalił w 89. minucie Waldemar Jędrasik, kompletując dublet i przypieczętowując wysokie zwycięstwo swojej drużyny.
+
+Spotkanie przebiegało w sportowej atmosferze. Arbiter pokazał trzy żółte kartki, a po stronie Drawy napomniany został Adrian Michalski.
+
+Dzięki temu zwycięstwu Drawa Drawno dopisała do swojego dorobku kolejne trzy punkty i potwierdziła dobrą dyspozycję. Bohaterem spotkania został Waldemar Jędrasik, autor dwóch bramek, jednak na wyróżnienie zasługuje cały zespół, który przez większość meczu dominował nad rywalem.`,
+
   photos: [
     { src: '/galeria/blyskawica_kluki_2025_2026_wyjazd/689006160_122102514986629774_7691985086083232357_n.jpg', caption: '' },
     { src: '/galeria/blyskawica_kluki_2025_2026_wyjazd/689008569_122102511488629774_6477999143402298719_n.jpg', caption: '' },

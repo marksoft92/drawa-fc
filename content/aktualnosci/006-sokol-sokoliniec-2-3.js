@@ -1,21 +1,28 @@
 const artykul = {
   id: 6,
   slug: '006-sokol-sokoliniec-2-3',
-  title: "Wyjazd do Sokół Sokoliniec — wygrywamy 3:2!",
+  title: "Sokół Sokoliniec — Drawa Drawno 2:3. Symboliczny powrót i hat-trick Jędrasika!",
   date: '2025-08-31',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
   thumbnail: '/logo.png',
-  excerpt: "MKS Drawa Drawno wygrała na wyjeździe z Sokół Sokoliniec 3:2. Dla Drawy bramki zdobyli: Jędrasik Waldemar (36'), Jędrasik Waldemar (41'), Jędrasik Waldemar (74').",
-  content: `31 sierpnia 2025 w ramach rozgrywek Klasa B odbył się mecz Sokół Sokoliniec vs Drawa Drawno. Spotkanie zakończyło się wynikiem 2:3.
+  excerpt: "Pierwszy mecz po reaktywacji Drawy Drawno kończy się zwycięstwem 3:2. Bohaterem spotkania został Waldemar Jędrasik z hat-trickiem.",
+  content: `MKS Drawa Drawno rozpoczęła nowy rozdział w swojej historii od wyjątkowego i symbolicznego momentu. Po reaktywacji klubu pierwszy oficjalny mecz ligowy zakończył się zwycięstwem na trudnym terenie w Sokolińcu 3:2.
 
-Bramki dla Drawy strzelali: Jędrasik Waldemar (36'), Jędrasik Waldemar (41'), Jędrasik Waldemar (74'). Dla rywali gole zdobyli: Matuszewski Marcin (14'), Izajko Jakub (56').
+To spotkanie miało szczególny ciężar emocjonalny — dla wielu zawodników był to powrót do gry w barwach ukochanego klubu po latach przerwy, a dla całej społeczności Drawy był to symbol ponownego startu i odbudowy drużyny.
 
-W wyjściowym składzie Drawy wystąpili: Dzierbun Hubert, Werner Jakub, Farbotko Krzysztof, Michalski Adrian, Rembiałkowski Jakub, Radziwoń Łukasz, Jędrasik Waldemar, Dzierbun Remigiusz, Domagała Mateusz, Zając Dawid, Grabek Jakub. Na ławce rezerwowych zasiedli: Śródecki Szymonakacper, Skrzypiec Dominik, Piluk Piotr, Wzorek Bartek, Lewandowski Janusz.
+Mecz rozpoczął się od mocnego uderzenia gospodarzy. W 14. minucie Sokół Sokoliniec objął prowadzenie po trafieniu Marcina Matuszewskiego i wydawało się, że postawi to Drawę w trudnej sytuacji na inaugurację nowego etapu.
 
-Z zawodników Drawy żółtą kartkę otrzymali Michalski Adrian (7'), Domagała Mateusz (83').
+Goście szybko jednak odpowiedzieli. W 36. minucie wyrównał Waldemar Jędrasik, a już pięć minut później ponownie wpisał się na listę strzelców, odwracając wynik na 1:2. Był to moment, w którym historia tego meczu zaczęła nabierać symbolicznego znaczenia — pierwsze bramki po reaktywacji i natychmiastowa odpowiedź zespołu.
 
-Dziękujemy wszystkim kibicom za doping i wsparcie! Trzy punkty zostają w Drawnie.`,
+Po przerwie gospodarze doprowadzili do wyrównania w 56. minucie po golu Jakuba Izajko, a spotkanie znów stało się otwarte i bardzo wyrównane.
+
+Decydujący moment przyszedł w 74. minucie. Waldemar Jędrasik skompletował hat-tricka, zdobywając bramkę na 3:2 i jednocześnie zapisując się w historii jako bohater pierwszego meczu po reaktywacji klubu.
+
+Końcówka była pełna emocji i walki, ale Drawa utrzymała prowadzenie do ostatniego gwizdka. To zwycięstwo miało nie tylko sportowe znaczenie, ale przede wszystkim symboliczne — pokazało, że nowy rozdział w historii klubu zaczyna się w najlepszy możliwy sposób.
+
+Trzy punkty na inaugurację, hat-trick Jędrasika i ogromna dawka emocji sprawiają, że ten mecz już teraz zapisuje się jako jedno z ważniejszych wydarzeń w nowej historii Drawy Drawno.`,
+
   photos: [
     { src: '/logo.png', caption: '' },
   ],

@@ -6,16 +6,25 @@ const artykul = {
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
   thumbnail: '/galeria/grom_plonno_2025_2026_wyjazd/673742603_122097345014629774_1916283062571015442_n.jpg',
-  excerpt: "MKS Drawa Drawno wygrała na wyjeździe z Grom Płonno 5:3. Dla Drawy bramki zdobyli: Bieńkowski Dawid (17'), Dzierbun Remigiusz (22'), Jędrasik Waldemar (37'), Agudi Edmond Ogara (53'), Dzierbun Remigiusz (83').",
-  content: `19 kwietnia 2026 w ramach rozgrywek Klasa B odbył się mecz Grom Płonno vs Drawa Drawno. Spotkanie zakończyło się wynikiem 3:5.
+  excerpt: 'Po emocjonującym spotkaniu pełnym zwrotów akcji Drawa Drawno pokonała na wyjeździe Grom Płonno 5:3. Szczególnym momentem meczu była bramka Dawida Bieńkowskiego – pierwsza po jego powrocie na boisko po ponad dziewięciu latach przerwy.',
 
-Bramki dla Drawy strzelali: Bieńkowski Dawid (17'), Dzierbun Remigiusz (22'), Jędrasik Waldemar (37'), Agudi Edmond Ogara (53'), Dzierbun Remigiusz (83'). Dla rywali gole zdobyli: Pyrih Roman (20'), Pyrih Roman (41'), Pyrih Roman (80').
+  content: `Mecz w Płonnie od pierwszego gwizdka zapowiadał się na niezwykle emocjonujące widowisko i nie zawiódł oczekiwań kibiców. W spotkaniu pełnym walki, zwrotów akcji i efektownych bramek Drawa Drawno pokonała Grom Płonno 5:3, dopisując do swojego dorobku kolejny komplet punktów.
 
-W wyjściowym składzie Drawy wystąpili: Dzierbun Hubert, Agudi Edmond Ogara, Filipowicz Szymon, Kwaśnik Maciej, Radziwoń Łukasz, Jędrasik Waldemar, Dzierbun Remigiusz, Gławdel Maciej, Skrzypiec Dominik, Czarnojan Paweł, Bieńkowski Dawid. Na ławce rezerwowych zasiedli: Piotrowski Krzysztof.
+Pierwsze minuty upływały pod znakiem otwartej gry z obu stron. Gospodarze starali się wykorzystać atut własnego boiska, jednak Drawa odważnie odpowiadała kolejnymi akcjami ofensywnymi. Szczególny moment nastąpił w 17. minucie spotkania. Akcję zakończył strzałem Waldemar Jędrasik, a choć piłka nie znalazła od razu drogi do siatki, w polu karnym najlepiej zachował się Dawid Bieńkowski. Kierując się typowym instynktem napastnika, pobiegł za akcją do samego końca i znalazł się dokładnie tam, gdzie powinien. Dopadł do futbolówki jako pierwszy i z najbliższej odległości skierował ją do bramki, wyprowadzając Drawę na prowadzenie.
 
-Z zawodników Drawy żółtą kartkę otrzymał Czarnojan Paweł (61').
+Dla Dawida był to wyjątkowy moment. Trafienie było nie tylko ważnym golem dla zespołu, ale również pierwszą oficjalną bramką po powrocie na boisko po ponad dziewięciu latach przerwy od regularnej gry. Był to piękny dowód na to, że piłkarskiego instynktu nie traci się nigdy, a determinacja i ciężka praca potrafią zostać nagrodzone w najmniej spodziewanym momencie.
 
-Dziękujemy wszystkim kibicom za doping i wsparcie! Trzy punkty zostają w Drawnie.`,
+Radość z prowadzenia nie trwała jednak długo. Gospodarze szybko odpowiedzieli za sprawą Romana Pyriha, który doprowadził do wyrównania. Drawa po raz kolejny pokazała jednak charakter. Już w 22. minucie Remigiusz Dzierbun ponownie wyprowadził gości na prowadzenie, a w 37. minucie wynik podwyższył Waldemar Jędrasik.
+
+Jeszcze przed przerwą Grom ponownie złapał kontakt po drugim trafieniu Romana Pyriha, jednak to Drawa schodziła do szatni w lepszych nastrojach. Mimo ambitnej postawy gospodarzy zespół z Drawna prezentował większy spokój i skuteczność pod bramką przeciwnika.
+
+Po zmianie stron Drawa nie zwolniła tempa. W 53. minucie kolejne trafienie dołożył Edmond Ogara Agudi, dając swojej drużynie większy komfort gry. Gospodarze walczyli do końca, a Roman Pyrih skompletował hat-tricka, zmniejszając straty i przywracając emocje w końcówce spotkania.
+
+Ostatnie słowo należało jednak do Drawy. W 83. minucie Remigiusz Dzierbun zdobył swoją drugą bramkę w meczu, ustalając wynik spotkania na 5:3. Było to trafienie, które definitywnie zamknęło losy rywalizacji i przypieczętowało zasłużone zwycięstwo gości.
+
+Na listę strzelców wpisali się Dawid Bieńkowski, Remigiusz Dzierbun (dwukrotnie), Waldemar Jędrasik oraz Edmond Ogara Agudi. Dzięki skutecznej grze ofensywnej i konsekwencji przez całe spotkanie Drawa mogła wracać do domu z kompletem punktów.
+
+Choć zwycięstwo drużyny było najważniejsze, wielu kibiców szczególnie zapamięta bramkę Dawida Bieńkowskiego. Po ponad dziewięciu latach przerwy wrócił do gry, a jego pierwsze trafienie po powrocie stało się jednym z najbardziej symbolicznych momentów całej rundy. Takie historie pokazują, że warto walczyć do końca – zarówno w pojedynczej akcji, jak i w sportowym życiu.`,
   photos: [
     { src: '/galeria/grom_plonno_2025_2026_wyjazd/673742603_122097345014629774_1916283062571015442_n.jpg', caption: '' },
     { src: '/galeria/grom_plonno_2025_2026_wyjazd/673761449_122097343286629774_6125499107467484971_n.jpg', caption: '' },

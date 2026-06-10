@@ -1,19 +1,28 @@
 const artykul = {
   id: 10,
   slug: '010-pomorzanin-zamecin-0-7',
-  title: "Wyjazd do Pomorzanin Zamęcin — wygrywamy 7:0!",
+  title: "Demolka w Zamęcinie. Drawa rozbija rywala, show Adriana Michalskiego",
   date: '2025-09-28',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
   thumbnail: '/logo.png',
-  excerpt: "MKS Drawa Drawno wygrała na wyjeździe z Pomorzanin Zamęcin 7:0. Dla Drawy bramki zdobyli: Radziwoń Łukasz (5'), Dzierbun Remigiusz (54'), Michalski Adrian (56'), Michalski Adrian (80'), Michalski Adrian (84'), Jędrasik Waldemar (86'), Gławdel Maciej (88').",
-  content: `28 września 2025 w ramach rozgrywek Klasa B odbył się mecz Pomorzanin Zamęcin vs Drawa Drawno. Spotkanie zakończyło się wynikiem 0:7.
+  excerpt:
+    'Drawa Drawno rozbiła Pomorzanina Zamęcin 7:0. Kapitalne zawody rozegrał Adrian Michalski, który zdobył trzy bramki.',
 
-Bramki dla Drawy strzelali: Radziwoń Łukasz (5'), Dzierbun Remigiusz (54'), Michalski Adrian (56'), Michalski Adrian (80'), Michalski Adrian (84'), Jędrasik Waldemar (86'), Gławdel Maciej (88'). Rywale nie zdołali pokonać naszej obrony.
+  content: `Od pierwszych minut było widać, że Drawa Drawno przyjechała do Zamęcina po pełną pulę. Zespół od początku narzucił wysokie tempo i szybko przejął kontrolę nad spotkaniem.
 
-W wyjściowym składzie Drawy wystąpili: Gławdel Maciej, Rembiałkowski Radosław, Farbotko Krzysztof, Michalski Adrian, Radziwoń Łukasz, Kwaśnik Maciej, Jędrasik Waldemar, Dzierbun Remigiusz, Dzierbun Hubert, Turkosz Bartłomiej, Skrzypiec Dominik. Na ławce rezerwowych zasiedli: Mateusz Oliwier, Piotrowski Jakub, Śródecki Szymonakacper, Zając Dawid, Piotrowski Krzysztof, Wzorek Bartek, Lewandowski Janusz.
+Już w 5. minucie wynik otworzył Łukasz Radziwoń, dając sygnał do ofensywnej dominacji gości. Pomorzanin próbował się bronić, ale przewaga Drawy rosła z każdą minutą.
 
-Dziękujemy wszystkim kibicom za doping i wsparcie! Trzy punkty zostają w Drawnie.`,
+Po przerwie obraz gry nie uległ zmianie. Goście całkowicie zdominowali rywala, a kluczową postacią spotkania był Adrian Michalski. Mieszkaniec Drawna i wieloletni zawodnik klubu zaprezentował się znakomicie, zdobywając trzy bramki i rozbijając defensywę gospodarzy.
+
+W 54. minucie na listę strzelców wpisał się Remigiusz Dzierbun, podwyższając prowadzenie i praktycznie zamykając mecz. Chwilę później kolejne trafienia dołożyli zawodnicy Drawy, a wynik systematycznie rósł.
+
+W końcówce spotkania swoją obecność zaznaczyli jeszcze Michalski, Waldemar Jędrasik oraz Maciej Gławdel, którzy przypieczętowali efektowne zwycięstwo 7:0.
+
+Pomorzanin nie był w stanie odpowiedzieć na tempo i jakość gry Drawy, która w tym meczu wyglądała bardzo dojrzale i skutecznie zarówno w ofensywie, jak i defensywie.
+
+To był pokaz siły zespołu z Drawna, a występ Adriana Michalskiego bez wątpienia zostanie zapamiętany jako jeden z jego najlepszych w barwach klubu.`,
+
   photos: [
     { src: '/logo.png', caption: '' },
   ],

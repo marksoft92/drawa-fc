@@ -7,9 +7,17 @@ const artykul = {
   kolor: '#22c55e',
   thumbnail: '/logo.png',
   excerpt: "MKS Drawa Drawno otrzymała trzy punkty walkowerem w meczu z Gavia II Choszczno. Wynik 0:3 bez gry na boisku.",
-  content: `10 maja 2026 Drawa Drawno miała rozegrać wyjazdowe spotkanie z Gavia II Choszczno w ramach Klasy B Zachodniopomorskiej. Spotkanie nie odbyło się — gospodarzom przyznano walkower na korzyść Drawy, co oznacza wynik 0:3 bez wyjścia na boisko.
+  content: `Spotkanie pomiędzy Gavią II Choszczno a Drawą Drawno, zaplanowane na 10 maja 2026 roku, miało być jednym z ciekawszych meczów kolejki. Rywalizacja z sąsiadem z regionu zawsze budzi dodatkowe emocje, dlatego zespół z Drawna udał się do Choszczna wyjątkowo zmotywowany i gotowy do walki o kolejne ligowe punkty.
 
-Trzy punkty trafiają do Drawna w zasłużony sposób. Drużyna pozostaje skupiona i przygotowuje się na kolejne spotkania sezonu.`,
+Niestety kibice nie doczekali się pierwszego gwizdka. Pomimo obecności Drawy i gotowości do rozegrania zawodów, gospodarze nie wyszli na boisko, przez co spotkanie nie mogło się rozpocząć.
+
+W związku z zaistniałą sytuacją mecz został zweryfikowany jako walkower 3:0 na korzyść Drawy Drawno. Regulamin rozgrywek nie pozostawiał w tym przypadku żadnych wątpliwości, a komplet punktów trafił na konto drużyny z Drawna.
+
+Tym większy był niedosyt po stronie zawodników i sztabu szkoleniowego, ponieważ zespół liczył na sportową rywalizację z lokalnym przeciwnikiem. Mecze derbowe zawsze mają swój wyjątkowy charakter i są okazją do pokazania się przed kibicami, dlatego brak możliwości rozegrania spotkania był rozczarowaniem dla wszystkich obecnych.
+
+Mimo wszystko Drawa wróciła do domu z trzema punktami, które okazały się ważne w ligowej tabeli. Drużyna mogła następnie skupić się na przygotowaniach do kolejnych spotkań, licząc już na rozstrzygnięcia wyłącznie na boisku.
+
+Choć derby z Gavią II nie doszły do skutku, Drawa wykazała pełną gotowość do gry i zgodnie z regulaminem została nagrodzona zwycięstwem walkowerem 3:0.`,
   photos: [
     { src: '/logo.png', caption: '' },
   ],
