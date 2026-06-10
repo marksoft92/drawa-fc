@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import artykuly from '@/content/aktualnosci/index';
 
 // ── Placeholder zdjęcia ───────────────────────────────────────
@@ -326,7 +327,7 @@ export default function Aktualnosci({ SectionLabel, showAll = false }) {
 
         {!showAll && artykuly.length > 3 && (
           <div style={{ marginTop: 24, textAlign: 'center' }}>
-            <a
+            <Link
               href="/aktualnosci"
               style={{
                 display: 'inline-block',
@@ -344,7 +345,7 @@ export default function Aktualnosci({ SectionLabel, showAll = false }) {
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(59,130,246,0.3)'; }}
             >
               WSZYSTKIE AKTUALNOŚCI ({artykuly.length}) →
-            </a>
+            </Link>
           </div>
         )}
       </div>

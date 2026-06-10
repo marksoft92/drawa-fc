@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import data from "@/lib/drawa_data_b_klasa_2025_2026";
 
 const isDrawa = (name) => name?.toLowerCase().includes("drawa");
@@ -115,7 +116,7 @@ export default function NavBar({ backLabel }) {
  }}
  >
  {/* Logo */}
- <a href={backLabel ? "/" : "#"} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+ <Link href={backLabel ? "/" : "#"} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
  {/* eslint-disable-next-line @next/next/no-img-element */}
  <img src="/logo.png" alt="MKS Drawa" width={60} height={60} style={{ objectFit: "contain", borderRadius: 4 }} />
  <div>
@@ -124,12 +125,12 @@ export default function NavBar({ backLabel }) {
  </div>
  <div style={{ fontSize: 9, color: "#3b82f6", letterSpacing: "0.2em" }}>DRAWNO</div>
  </div>
- </a>
+ </Link>
 
  {/* Desktop links */}
  <div className="nav-desktop-links" style={{ display: "flex", gap: 24, alignItems: "center" }}>
  {NAV_LINKS.map((l) => (
- <a
+ <Link
  key={l.id}
  href={href(l.id)}
  style={{ fontSize: 11, color: "#64748b", letterSpacing: "0.15em", textDecoration: "none", fontWeight: 600, transition: "color 0.2s" }}
@@ -137,7 +138,7 @@ export default function NavBar({ backLabel }) {
  onMouseLeave={(e) => (e.currentTarget.style.color = "#64748b")}
  >
  {l.label.toUpperCase()}
- </a>
+ </Link>
  ))}
  </div>
 
@@ -145,7 +146,7 @@ export default function NavBar({ backLabel }) {
  <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
  {/* Next match pill */}
  {nextMatch && (
- <a
+ <Link
  href={href("mecze")}
  style={{
  display: "flex",
@@ -170,7 +171,7 @@ export default function NavBar({ backLabel }) {
  vs {nextMatch.opp}
  </span>
  </div>
- </a>
+ </Link>
  )}
 
  {/* Music toggle */}
@@ -229,7 +230,7 @@ export default function NavBar({ backLabel }) {
  }}
  >
  {nextMatch && (
- <a
+ <Link
  href={href("mecze")}
  onClick={close}
  style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", textDecoration: "none" }}
@@ -238,17 +239,17 @@ export default function NavBar({ backLabel }) {
  <span style={{ fontSize: 12, color: "#22c55e", fontWeight: 600 }}>
  Następny mecz: {nextMatch.date} {nextMatch.time} vs {nextMatch.opp}
  </span>
- </a>
+ </Link>
  )}
  {NAV_LINKS.map((l) => (
- <a
+ <Link
  key={l.id}
  href={href(l.id)}
  onClick={close}
  style={{ fontSize: 13, color: "#94a3b8", textDecoration: "none", padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", letterSpacing: "0.1em" }}
  >
  {l.label}
- </a>
+ </Link>
  ))}
  </div>
  )}
