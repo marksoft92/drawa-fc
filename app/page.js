@@ -14,6 +14,7 @@ import Kadra from "@/components/kadra";
 import Aktualnosci from "@/components/aktualnosci";
 import Galeria from "@/components/galeria";
 import Kontakt from "@/components/kontakt";
+import Struktura from "@/components/struktura";
 import Sponsorzy from "@/components/sponsorzy";
 import Footer from "@/components/footer";
 
@@ -191,6 +192,10 @@ export default function Page() {
 
         <div id="kadra">
           <Kadra SectionLabel={SectionLabel}/>
+        </div>
+
+        <div id="struktura">
+          <Struktura SectionLabel={SectionLabel}/>
         </div>
 
         <div id="kontakt">

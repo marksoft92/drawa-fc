@@ -12,6 +12,7 @@ const NAV_LINKS = [
  { label: "Statystyki", id: "statystyki" },
  { label: "Galeria", id: "galeria" },
  { label: "Kadra", id: "kadra" },
+ { label: "Struktura", id: "struktura" },
  { label: "Kontakt", id: "kontakt" },
 ];
 
