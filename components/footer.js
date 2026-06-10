@@ -23,7 +23,8 @@ const kolumny = [
     linki: [
       { label: 'ul. Choszczeńska 85a, Drawno', href: '#kontakt' },
       { label: 'kontakt@mksdrawadrawno.pl', href: 'mailto:kontakt@mksdrawadrawno.pl' },
-      { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=100031740656452&sk=following' },
+      { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=100031740656452' },
+      { label: 'Instagram', href: 'https://www.instagram.com/mksdrawadrawno/' },
     ],
   },
 ];
@@ -97,8 +98,8 @@ export default function Footer({ HerbImg, herb }) {
           {/* Socials */}
           <div style={{ display: 'flex', gap: 12 }}>
             {[
-              { href: 'https://www.facebook.com', label: 'Facebook' },
-              { href: 'https://www.instagram.com', label: 'Instagram' },
+              { href: 'https://www.facebook.com/profile.php?id=100031740656452', label: 'Facebook' },
+              { href: 'https://www.instagram.com/mksdrawadrawno/', label: 'Instagram' },
             ].map(({ href, label }) => (
               <a
                 key={label}

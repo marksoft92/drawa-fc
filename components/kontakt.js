@@ -3,7 +3,7 @@
 const MAPS_LINK =
   'https://rozgrywki.zzpn.pl/league/17/table';
 const FB_LINK =
-  'https://www.facebook.com/profile.php?id=100031740656452&sk=following';
+  'https://www.facebook.com/profile.php?id=100031740656452';
 
 const IconPin = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
