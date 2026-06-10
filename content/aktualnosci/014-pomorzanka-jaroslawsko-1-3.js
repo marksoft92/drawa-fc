@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-10-26',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/jaroslawsko_2025_2026_dom.png',
   excerpt:
     'Mimo trudnych warunków atmosferycznych oraz absencji najlepszego strzelca Waldemara Jędrasika, Drawa Drawno pokonała na wyjeździe Pomorzankę Jarosławsko 3:1.',
 

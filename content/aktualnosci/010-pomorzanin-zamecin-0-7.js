@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-09-28',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/zamecin_2025_2026_dom.png',
   excerpt:
     'Drawa Drawno rozbiła Pomorzanina Zamęcin 7:0. Kapitalne zawody rozegrał Adrian Michalski, który zdobył trzy bramki.',
 

@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-09-06',
   tags: ["wynik","liga","porażka"],
   kolor: '#ef4444',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/pelczyce_2025_2026_wyjazd.png',
   excerpt:
     'Drawa Drawno przegrała 2:3 z Kłosem II Pełczyce po meczu pełnym walki i niewykorzystanych okazji. Gole dla Drawy zdobyli Jędrasik i Dzierbun.',
 

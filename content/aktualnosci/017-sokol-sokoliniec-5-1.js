@@ -5,7 +5,7 @@ const artykul = {
   date: '2026-03-21',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/sokoliniec_2025_2026_dom.png',
   excerpt:
     'Drawa Drawno rozpoczęła rundę wiosenną od efektownego zwycięstwa 5:1 nad Sokołem Sokoliniec. Hat-tricka zdobył Waldemar Jędrasik, a kolejne bramki dołożyli Remigiusz Dzierbun i Damian Góralczyk.',
 

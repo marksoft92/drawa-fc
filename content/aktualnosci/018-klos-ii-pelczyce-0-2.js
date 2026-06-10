@@ -5,7 +5,7 @@ const artykul = {
   date: '2026-03-29',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/pelczyce_2025_2026_wyjazd.png',
   excerpt: 'W drugim meczu po zimowej przerwie Drawa Drawno pokonała na wyjeździe lidera rozgrywek Kłos II Pełczyce 2:0. Bramki zdobyli Maciej Kwaśnik i Waldemar Jędrasik.',
 
   content: `Po zimowej przerwie Drawa Drawno powoli wracała do ligowego rytmu. Spotkanie w Pełczycach było dopiero drugim meczem rundy wiosennej, a przed zespołem stało niezwykle wymagające zadanie. Rywalem był lider rozgrywek – Kłos II Pełczyce, który na własnym boisku należał do najtrudniejszych przeciwników w lidze.

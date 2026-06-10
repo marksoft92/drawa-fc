@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-10-04',
   tags: ["wynik","liga","remis"],
   kolor: '#f59e0b',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/gavia_2025_2026_dom.png',
   excerpt:
     'Drawa Drawno zremisowała 2:2 z Gavią II Choszczno mimo wyraźnej przewagi w grze. Bramki dla Drawy zdobyli Remigiusz Dzierbun i Waldemar Jędrasik.',
 

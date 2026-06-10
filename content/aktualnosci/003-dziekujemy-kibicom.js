@@ -5,7 +5,7 @@ const artykul = {
   date: '2026-05-02',
   tags: ['społeczność', 'kibice', 'podziękowania'],
   kolor: '#f59e0b',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/kibice.png',
   excerpt:
     'W ostatnim meczu domowym Wasz doping był niesamowity. Dziękujemy każdemu kibicowi za obecność i wsparcie!',
   content: `Chcielibyśmy z całego serca podziękować wszystkim kibicom, którzy pojawili się na ostatnim meczu domowym MKS Drawa Drawno.

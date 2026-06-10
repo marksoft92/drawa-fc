@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-10-12',
   tags: ["wynik","liga","remis"],
   kolor: '#f59e0b',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/bedargowo_2025_2026_wyjazd.png',
   excerpt:
     'Po problemach komunikacyjnych w drodze na mecz Drawa Drawno zremisowała 1:1 ze Skrzydlatymi Będargowo. Wyrównującą bramkę zdobył Remigiusz Dzierbun.',
 

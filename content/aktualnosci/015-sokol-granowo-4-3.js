@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-11-08',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/granowo_2025_2026_wyjazd.png',
   excerpt:
     'Drawa Drawno odwróciła losy spotkania i pokonała Sokół Granowo 4:3. Bohaterami meczu zostali Waldemar Jędrasik i Remigiusz Dzierbun, którzy zdobyli po dwa gole.',
 

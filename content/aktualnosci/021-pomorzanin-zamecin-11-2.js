@@ -5,7 +5,7 @@ const artykul = {
   date: '2026-04-25',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/galeria/luks_pomorzanin_zamecin_2025_2026_domowy/681084282_122101619786629774_3824409186379990434_n.jpg',
+  thumbnail: '/aktualnosci/zamecin_2025_2026_dom.png',
   excerpt: 'Kibice w Drawnie obejrzeli prawdziwy festiwal bramek. Drawa rozbiła Pomorzanina Zamęcin 11:2, a bohaterem spotkania został Waldemar Jędrasik, który zdobył aż sześć bramek.',
 
   content: `To był jeden z tych meczów, które na długo pozostają w pamięci kibiców. Drawa Drawno urządziła prawdziwy pokaz skuteczności, pokonując Pomorzanina Zamęcin aż 11:2 w spotkaniu rozegranym na własnym stadionie.

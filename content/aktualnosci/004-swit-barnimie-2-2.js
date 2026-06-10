@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-08-16',
   tags: ["wynik","puchar","remis"],
   kolor: '#f59e0b',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/barnimie_2025_2026_puchar.png',
   excerpt: "MKS Drawa Drawno zremisowała z Świt Barnimie 2:2. Dla Drawy bramki zdobyli: Dzierbun Remigiusz (34'), Góralczyk Damian (75').",
   content: `16 sierpnia 2025 w ramach rozgrywek Puchar Polski odbył się mecz Drawa Drawno vs Świt Barnimie. Spotkanie zakończyło się wynikiem 2:2.
 

@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-10-18',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/plotno_2025_2026_wyjazd.png',
   excerpt:
     'Drawa Drawno nie dała szans Strzale Płotno i zwyciężyła 5:1. Bohaterem spotkania został Waldemar Jędrasik, który skompletował hat-tricka jeszcze przed przerwą.',
 

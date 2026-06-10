@@ -5,7 +5,7 @@ const artykul = {
   date: '2026-04-19',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/galeria/grom_plonno_2025_2026_wyjazd/673742603_122097345014629774_1916283062571015442_n.jpg',
+  thumbnail: '/aktualnosci/plonno_2025_2026_wyjazd.png',
   excerpt: 'Po emocjonującym spotkaniu pełnym zwrotów akcji Drawa Drawno pokonała na wyjeździe Grom Płonno 5:3. Szczególnym momentem meczu była bramka Dawida Bieńkowskiego – pierwsza po jego powrocie na boisko po ponad dziewięciu latach przerwy.',
 
   content: `Mecz w Płonnie od pierwszego gwizdka zapowiadał się na niezwykle emocjonujące widowisko i nie zawiódł oczekiwań kibiców. W spotkaniu pełnym walki, zwrotów akcji i efektownych bramek Drawa Drawno pokonała Grom Płonno 5:3, dopisując do swojego dorobku kolejny komplet punktów.

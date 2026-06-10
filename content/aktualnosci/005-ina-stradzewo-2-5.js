@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-08-23',
   tags: ["wynik","puchar","porażka"],
   kolor: '#ef4444',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/stradzewo_2025_2026_puchar.png',
   excerpt: "MKS Drawa Drawno przegrała z Ina Stradzewo 2:5. Dla Drawy bramki zdobyli: Dzierbun Remigiusz (66'), Jędrasik Waldemar (88').",
   content: `23 sierpnia 2025 w ramach rozgrywek Puchar Polski odbył się mecz Drawa Drawno vs Ina Stradzewo. Spotkanie zakończyło się wynikiem 2:5.
 

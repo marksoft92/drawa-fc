@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-09-20',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/plonno_2025_2026_wyjazd.png',
   excerpt:
     'Drawa Drawno pokonała Grom Płonno 4:1. Świetne spotkanie rozegrali Waldemar Jędrasik i Łukasz Radziwoń.',
 

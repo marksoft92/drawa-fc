@@ -5,7 +5,7 @@ const artykul = {
   date: '2026-04-11',
   tags: ["wynik","liga","remis"],
   kolor: '#f59e0b',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/zensko_2025_2026_dom.png',
   excerpt: 'Jeszcze na sześć minut przed końcem Drawa prowadziła 3:1 i była o krok od zwycięstwa. Orzeł Żeńsko zdołał jednak odrobić straty, a mecz zakończył się remisem 3:3.',
 
   content: `Kibice zgromadzeni na stadionie w Drawnie obejrzeli spotkanie pełne emocji, zwrotów akcji i dramatycznej końcówki. Drawa Drawno zremisowała z Orłem Żeńsko 3:3, choć jeszcze kilka minut przed końcem wydawało się, że trzy punkty pozostaną w Drawnie.

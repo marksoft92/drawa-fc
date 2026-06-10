@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-11-16',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/galeria/blyskawica_kluki_2025_2026_wyjazd/689006160_122102514986629774_7691985086083232357_n.jpg',
+  thumbnail: '/aktualnosci/kluki_2025_2026_wyjazd.png',
   excerpt:
     'Drawa Drawno odniosła wysokie zwycięstwo 5:1 na wyjeździe z Błyskawicą Kluki. Dublet zdobył Waldemar Jędrasik, a na listę strzelców wpisali się także Adrian Michalski, Maciej Kwaśnik i Remigiusz Dzierbun.',
 

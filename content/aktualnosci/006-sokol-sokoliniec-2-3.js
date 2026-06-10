@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-08-31',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/sokoliniec_2025_2026_dom.png',
   excerpt: "Pierwszy mecz po reaktywacji Drawy Drawno kończy się zwycięstwem 3:2. Bohaterem spotkania został Waldemar Jędrasik z hat-trickiem.",
   content: `MKS Drawa Drawno rozpoczęła nowy rozdział w swojej historii od wyjątkowego i symbolicznego momentu. Po reaktywacji klubu pierwszy oficjalny mecz ligowy zakończył się zwycięstwem na trudnym terenie w Sokolińcu 3:2.
 

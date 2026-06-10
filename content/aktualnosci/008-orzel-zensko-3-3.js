@@ -5,7 +5,7 @@ const artykul = {
   date: '2025-09-14',
   tags: ["wynik","liga","remis"],
   kolor: '#f59e0b',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/zensko_2025_2026_dom.png',
   excerpt:
     'Drawa Drawno zremisowała 3:3 z Orłem Żeńsko w trudnym meczu wyjazdowym. Dwa trafienia zaliczył Waldemar Jędrasik.',
 
