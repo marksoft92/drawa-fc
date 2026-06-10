@@ -5,7 +5,7 @@ const artykul = {
   date: '2026-05-16',
   tags: ["wynik","liga","walkower"],
   kolor: '#22c55e',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/bedargowo_2025_2026_dom.png',
   excerpt: "MKS Drawa Drawno wygrała walkowerem z Skrzydlacimi Będargowo 3:0. Rywale nie stawili się na mecz.",
   content: `Spotkanie Drawy Drawno ze Skrzydlatymi Będargowo nie doszło do skutku. Goście poinformowali wcześniej o braku możliwości rozegrania meczu, a gospodarzom przyznano zwycięstwo walkowerem 3:0.',
 

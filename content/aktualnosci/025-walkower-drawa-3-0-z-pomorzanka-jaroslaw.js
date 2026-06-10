@@ -5,7 +5,7 @@ const artykul = {
   date: '2026-05-30',
   tags: ["wynik","liga","walkower"],
   kolor: '#22c55e',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/jaroslawsko_2025_2026_dom.png',
   excerpt: "MKS Drawa Drawno zdobywa kolejne trzy punkty walkowerem — Pomorzanka Jarosławsko nie stawiła się na mecz.",
   content: `Zaplanowane na 30 maja spotkanie Klasy B pomiędzy Drawą Drawno a Pomorzanką Jarosławsko nie doszło do skutku. Drużyna gości już dzień wcześniej oficjalnie poinformowała, że nie będzie w stanie stawić się na meczu w Drawnie.
 
@@ -17,7 +17,7 @@ Dla Drawy oznacza to kolejne trzy punkty do ligowego dorobku. Zespół mógł sk
 
 Sezon powoli zbliża się do końca, a każdy zdobyty punkt ma znaczenie. Tym razem Drawa dopisała komplet do tabeli bez gry, jednak już w kolejnych kolejkach drużyna będzie chciała potwierdzić swoją wartość w bezpośredniej rywalizacji z ligowymi przeciwnikami.`,
   photos: [
-    { src: '/logo.png', caption: '' },
+    { src: '/aktualnosci/jaroslawsko_2025_2026_dom.png', caption: '' },
   ],
 };
 

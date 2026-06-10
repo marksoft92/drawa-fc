@@ -5,7 +5,7 @@ const artykul = {
   date: '2026-05-24',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/galeria/strzala_plotno_2025_2026_wyjazd/714989921_122105452652629774_6036229136482564579_n.jpg',
+  thumbnail: '/aktualnosci/plotno_2025_2026_wyjazd.png',
   excerpt: "MKS Drawa Drawno wygrała na wyjeździe z Strzała Płotno 5:1. Dla Drawy bramki zdobyli: Jędrasik Waldemar (24'), Agudi Edmond Ogara (36'), Jędrasik Waldemar (63'), Dzierbun Remigiusz (72'), Jędrasik Waldemar (82').",
   content: `Drawa Drawno zanotowała kolejne bardzo ważne zwycięstwo w rozgrywkach Klasy B. W wyjazdowym spotkaniu rozegranym w Płotnie nasz zespół pokonał miejscową Strzałę 5:1, prezentując skuteczną i dojrzałą grę przez większość meczu.
 

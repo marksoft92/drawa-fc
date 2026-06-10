@@ -5,7 +5,7 @@ const artykul = {
   date: '2026-05-10',
   tags: ["wynik","liga","walkower"],
   kolor: '#22c55e',
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/gavia_2025_2026_wyjazd.png',
   excerpt: "MKS Drawa Drawno otrzymała trzy punkty walkowerem w meczu z Gavia II Choszczno. Wynik 0:3 bez gry na boisku.",
   content: `Spotkanie pomiędzy Gavią II Choszczno a Drawą Drawno, zaplanowane na 10 maja 2026 roku, miało być jednym z ciekawszych meczów kolejki. Rywalizacja z sąsiadem z regionu zawsze budzi dodatkowe emocje, dlatego zespół z Drawna udał się do Choszczna wyjątkowo zmotywowany i gotowy do walki o kolejne ligowe punkty.
 

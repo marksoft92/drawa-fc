@@ -19,7 +19,7 @@ const artykul = {
   kolor: '#22c55e',
 
   // Ścieżka do zdjęcia miniaturki (null = placeholder)
-  thumbnail: '/logo.png',
+  thumbnail: '/aktualnosci/lider.png',
   excerpt:
     'MKS Drawa Drawno utrzymuje pozycję lidera z 46 punktami po 19 meczach. Drużyna jest w rewelacyjnej formie sezonu 2025/26!',
 

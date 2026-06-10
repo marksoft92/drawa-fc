@@ -5,7 +5,7 @@ const artykul = {
   date: '2026-06-07',
   tags: ["wynik","liga","wygrana"],
   kolor: '#22c55e',
-  thumbnail: '/galeria/sokol_granowo_2025_2026_wyjazd/718190677_122105801450629774_7309330086482365282_n.jpg',
+  thumbnail: '/aktualnosci/granowo_2025_2026_wyjazd.png',
   excerpt: "MKS Drawa Drawno wygrała na wyjeździe z Sokół Granowo aż 6:2. Szczegółowa relacja z meczu niedostępna.",
   content: `MKS Drawa Drawno zaliczyła kolejne udane ligowe spotkanie. W meczu rozegranym 7 czerwca w Granowie podopieczni Drawy pokonali miejscowego Sokoła aż 6:2, prezentując skuteczną i widowiskową grę w ofensywie.
 
