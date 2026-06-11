@@ -57,11 +57,20 @@ function initials(imieNazwisko) {
 
 /* ─── Karta desktop (z efektem rozmycia rzędu) ─── */
 function PlayerCard({ z, isHovered, isInRow, onEnter, onLeave, cardRef }) {
+  const [sharing, setSharing] = useState(false);
   const parts = z.imieNazwisko.split(' ');
   const nazwisko = parts[0];
   const imie = parts.slice(1).join(' ');
   const goleNaMecz = z.mecze > 0 ? (z.gole / z.mecze).toFixed(2) : '—';
   const expanded = isHovered || isInRow;
+
+  const handleShare = async (e) => {
+    e.stopPropagation();
+    if (sharing) return;
+    setSharing(true);
+    await sharePlayer(z);
+    setSharing(false);
+  };
 
   return (
     <div
@@ -147,10 +156,11 @@ function PlayerCard({ z, isHovered, isInRow, onEnter, onLeave, cardRef }) {
         {isHovered && (
           <div style={{ padding: '0 14px 10px' }}>
             <button
-              onClick={(e) => { e.stopPropagation(); sharePlayer(z); }}
-              style={{ width: '100%', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 6, color: '#3b82f6', fontSize: 10, letterSpacing: '0.12em', padding: '6px 0', cursor: 'pointer', fontWeight: 600 }}
+              onClick={handleShare}
+              disabled={sharing}
+              style={{ width: '100%', background: sharing ? 'rgba(59,130,246,0.05)' : 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 6, color: sharing ? '#334155' : '#3b82f6', fontSize: 10, letterSpacing: '0.12em', padding: '6px 0', cursor: sharing ? 'default' : 'pointer', fontWeight: 600, transition: 'color 0.2s, background 0.2s' }}
             >
-              UDOSTĘPNIJ KARTĘ
+              {sharing ? 'GENERUJĘ…' : 'UDOSTĘPNIJ KARTĘ'}
             </button>
           </div>
         )}
@@ -162,10 +172,19 @@ function PlayerCard({ z, isHovered, isInRow, onEnter, onLeave, cardRef }) {
 /* ─── Karta mobile (lokalne rozwinięcie przez klik) ─── */
 function MobilePlayerCard({ z, defaultExpanded = false }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
+  const [sharing, setSharing] = useState(false);
   const parts = z.imieNazwisko.split(' ');
   const nazwisko = parts[0];
   const imie = parts.slice(1).join(' ');
   const goleNaMecz = z.mecze > 0 ? (z.gole / z.mecze).toFixed(2) : '—';
+
+  const handleShare = async (e) => {
+    e.stopPropagation();
+    if (sharing) return;
+    setSharing(true);
+    await sharePlayer(z);
+    setSharing(false);
+  };
 
   return (
     <div
@@ -229,21 +248,23 @@ function MobilePlayerCard({ z, defaultExpanded = false }) {
         {expanded && (
           <div style={{ padding: '0 12px 10px' }}>
             <button
-              onClick={(e) => { e.stopPropagation(); sharePlayer(z); }}
+              onClick={handleShare}
+              disabled={sharing}
               style={{
                 width: '100%',
-                background: 'rgba(59,130,246,0.1)',
+                background: sharing ? 'rgba(59,130,246,0.05)' : 'rgba(59,130,246,0.1)',
                 border: '1px solid rgba(59,130,246,0.2)',
                 borderRadius: 6,
-                color: '#3b82f6',
+                color: sharing ? '#334155' : '#3b82f6',
                 fontSize: 10,
                 letterSpacing: '0.12em',
                 padding: '6px 0',
-                cursor: 'pointer',
+                cursor: sharing ? 'default' : 'pointer',
                 fontWeight: 600,
+                transition: 'color 0.2s, background 0.2s',
               }}
             >
-              UDOSTĘPNIJ KARTĘ
+              {sharing ? 'GENERUJĘ…' : 'UDOSTĘPNIJ KARTĘ'}
             </button>
           </div>
         )}
