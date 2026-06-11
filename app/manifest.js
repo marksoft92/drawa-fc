@@ -7,7 +7,7 @@ export default function manifest() {
     display: 'standalone',
     background_color: '#030712',
     theme_color: '#030712',
-    orientation: 'any',
+
     icons: [
       {
         src: '/android-chrome-192x192.png',
