@@ -2,11 +2,11 @@
 import { useState, useRef, useEffect } from 'react';
 
 const MODELS = [
-  { id: 'openrouter/owl-alpha', label: 'Owl Alpha' },
   { id: 'google/gemini-2.0-flash-001', label: 'Gemini 2.0 Flash' },
   { id: 'openai/gpt-4o-mini', label: 'GPT-4o mini' },
   { id: 'anthropic/claude-3-haiku', label: 'Claude 3 Haiku' },
   { id: 'meta-llama/llama-3.3-70b-instruct', label: 'Llama 3.3 70B' },
+  { id: 'openrouter/owl-alpha', label: 'Owl Alpha (wolny)' },
 ];
 
 const IconChat = () => (

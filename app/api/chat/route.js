@@ -67,7 +67,7 @@ export async function POST(req) {
       'X-Title': 'MKS Drawa Chat',
     },
     body: JSON.stringify({
-      model: model || 'openrouter/owl-alpha',
+      model: model || 'google/gemini-2.0-flash-001',
       messages: [
         { role: 'system', content: systemPrompt },
         ...messages,
