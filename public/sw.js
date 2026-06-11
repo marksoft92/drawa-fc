@@ -10,6 +10,7 @@ self.addEventListener('activate', (e) => e.waitUntil(
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   if (!e.request.url.startsWith(self.location.origin)) return;
+  if (e.request.url.includes('manifest.webmanifest')) return;
   e.respondWith(
     fetch(e.request)
       .then((res) => {
