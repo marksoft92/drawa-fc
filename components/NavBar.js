@@ -87,7 +87,8 @@ export default function NavBar({ backLabel }) {
  background: scrolled ? "rgba(3,7,18,0.95)" : "rgba(3,7,18,0.85)",
  backdropFilter: "blur(20px)",
  borderBottom: "1px solid rgba(255,255,255,0.06)",
- transition: "background 0.3s",
+ boxShadow: scrolled ? "0 2px 24px rgba(0,0,0,0.6)" : "none",
+ transition: "background 0.3s, box-shadow 0.3s",
  }}
  >
  <style>{`

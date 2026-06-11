@@ -45,15 +45,18 @@ const AlbumCard = ({ album, onClick }) => (
       borderRadius: 12,
       overflow: 'hidden',
       cursor: 'pointer',
-      transition: 'transform 0.2s, border-color 0.2s',
+      boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+      transition: 'transform 0.2s, border-color 0.2s, box-shadow 0.2s',
     }}
     onMouseEnter={(e) => {
       e.currentTarget.style.transform = 'translateY(-3px)';
       e.currentTarget.style.borderColor = 'rgba(59,130,246,0.35)';
+      e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.5)';
     }}
     onMouseLeave={(e) => {
       e.currentTarget.style.transform = 'translateY(0)';
       e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
+      e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
     }}
   >
     {/* Thumbnail */}

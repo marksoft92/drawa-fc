@@ -29,6 +29,7 @@ export default function Statystyki({ teamStats = null, SectionLabel }) {
             borderRadius: 14,
             overflow: 'hidden',
             border: '1px solid rgba(255,255,255,0.06)',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.35)',
           }}
         >
           {[
@@ -120,6 +121,7 @@ export default function Statystyki({ teamStats = null, SectionLabel }) {
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: 12,
+            boxShadow: '0 4px 28px rgba(34,197,94,0.09)',
           }}
         >
           <div>

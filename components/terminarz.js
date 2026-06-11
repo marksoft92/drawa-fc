@@ -259,7 +259,7 @@ function MatchCard({ mecz, isDrawa, HerbImg, upcoming }) {
       borderLeft: `4px solid ${color}`,
       borderRadius: 12,
       overflow: 'hidden',
-      boxShadow: '0 2px 20px rgba(0,0,0,0.3)',
+      boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
     }}>
       {/* Header row */}
       <div style={{

@@ -34,7 +34,8 @@ function PlayerCard({ z, isHovered, isInRow, onEnter, onLeave, cardRef }) {
         border: `1px solid ${isHovered ? 'rgba(59,130,246,0.35)' : 'rgba(255,255,255,0.06)'}`,
         borderRadius: 10,
         overflow: 'hidden',
-        transition: 'background 0.2s, border-color 0.2s',
+        boxShadow: isHovered ? '0 8px 32px rgba(0,0,0,0.5)' : 'none',
+        transition: 'background 0.2s, border-color 0.2s, box-shadow 0.2s',
         cursor: 'default',
       }}
     >
@@ -110,7 +111,8 @@ function MobilePlayerCard({ z, defaultExpanded = false }) {
         border: `1px solid ${expanded ? 'rgba(59,130,246,0.35)' : 'rgba(255,255,255,0.06)'}`,
         borderRadius: 10,
         overflow: 'hidden',
-        transition: 'background 0.2s, border-color 0.2s',
+        boxShadow: expanded ? '0 8px 28px rgba(0,0,0,0.45)' : 'none',
+        transition: 'background 0.2s, border-color 0.2s, box-shadow 0.2s',
         cursor: 'pointer',
       }}
     >

@@ -53,7 +53,7 @@ const HerbImg = ({src, alt, size = 40}) => {
 
 const SectionLabel = ({children}) => (
   <div style={{display: "flex", alignItems: "center", gap: 12}}>
-    <div style={{width: 4, height: 24, background: "#3b82f6", borderRadius: 2}}/>
+    <div style={{width: 4, height: 24, background: "#3b82f6", borderRadius: 2, boxShadow: "0 0 12px rgba(59,130,246,0.65)"}}/>
     <div
       style={{
         fontSize: "clamp(20px, 4vw, 28px)",

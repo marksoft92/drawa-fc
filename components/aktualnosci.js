@@ -226,15 +226,16 @@ const NewsCard = ({ artykul, onClick }) => (
       cursor: 'pointer',
       display: 'flex',
       flexDirection: 'column',
+      boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
       transition: 'transform 0.2s, box-shadow 0.2s',
     }}
     onMouseEnter={(e) => {
       e.currentTarget.style.transform = 'translateY(-3px)';
-      e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.4)';
+      e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.5)';
     }}
     onMouseLeave={(e) => {
       e.currentTarget.style.transform = 'translateY(0)';
-      e.currentTarget.style.boxShadow = 'none';
+      e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
     }}
   >
     {/* Miniaturka */}

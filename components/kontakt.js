@@ -124,15 +124,17 @@ export default function Kontakt({ SectionLabel }) {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 14,
-                transition: 'border-color 0.2s, background 0.2s',
+                transition: 'border-color 0.2s, background 0.2s, box-shadow 0.2s',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = 'rgba(59,130,246,0.4)';
                 e.currentTarget.style.background = '#0f1f3d';
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.5)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
                 e.currentTarget.style.background = '#0f172a';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
               {/* Ikona */}
