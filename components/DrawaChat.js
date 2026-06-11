@@ -2,9 +2,8 @@
 import { useState, useRef, useEffect } from 'react';
 
 const MODELS = [
-  { id: 'google/gemma-4-31b:free', label: 'Gemma 4 31B' },
-  { id: 'nvidia/nemotron-3-ultra:free', label: 'Nemotron Ultra' },
-  { id: 'nvidia/nemotron-3-super:free', label: 'Nemotron Super' },
+  { id: 'google/gemma-4-31b-it:free', label: 'Gemma 4 31B' },
+  { id: 'nvidia/nemotron-3-ultra-550b-a55b:free', label: 'Nemotron Ultra 550B' },
   { id: 'nex-agi/nex-n2-pro:free', label: 'Nex N2 Pro' },
   { id: 'openrouter/owl-alpha', label: 'Owl Alpha (wolny)' },
 ];

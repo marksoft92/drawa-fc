@@ -68,7 +68,7 @@ export async function POST(req) {
       'X-Title': 'MKS Drawa Chat',
     },
     body: JSON.stringify({
-      model: model || 'google/gemma-4-31b:free',
+      model: model || 'google/gemma-4-31b-it:free',
       messages: [
         { role: 'system', content: systemPrompt },
         ...messages,
