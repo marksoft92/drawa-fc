@@ -42,7 +42,6 @@ export const metadata = {
     description: "Wyniki, tabela, terminarz i aktualności MKS Drawa Drawno.",
     images: ["/logo.png"],
   },
-  themeColor: [{ media: '(prefers-color-scheme: dark)', color: '#030712' }, { media: '(prefers-color-scheme: light)', color: '#030712' }],
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -56,6 +55,10 @@ export const metadata = {
     ],
   },
   manifest: '/manifest.webmanifest',
+};
+
+export const viewport = {
+  themeColor: '#030712',
 };
 
 export default function RootLayout({ children }) {
