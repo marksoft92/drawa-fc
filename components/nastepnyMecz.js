@@ -1,5 +1,92 @@
 'use client';
 
+import { useState, useEffect, useMemo } from 'react';
+
+const POLISH_MONTHS = {
+  sty: 0, styczeń: 0,
+  lut: 1, luty: 1,
+  mar: 2, marzec: 2,
+  kwi: 3, kwiecień: 3,
+  maj: 4,
+  cze: 5, czerwiec: 5,
+  lip: 6, lipiec: 6,
+  sie: 7, sierpień: 7,
+  wrz: 8, wrzesień: 8,
+  paź: 9, październik: 9,
+  lis: 10, listopad: 10,
+  gru: 11, grudzień: 11,
+};
+
+function parseMatchDate(str) {
+  if (!str) return null;
+  const cleaned = str.replace(',', '').toLowerCase();
+  const tokens = cleaned.split(/\s+/);
+
+  let day = null, month = null, year = null, hours = 0, minutes = 0;
+
+  for (const token of tokens) {
+    if (/^\d{1,2}:\d{2}$/.test(token)) {
+      const [h, m] = token.split(':').map(Number);
+      hours = h;
+      minutes = m;
+      continue;
+    }
+    if (/^\d{4}$/.test(token)) {
+      year = parseInt(token, 10);
+      continue;
+    }
+    if (/^\d{1,2}$/.test(token)) {
+      day = parseInt(token, 10);
+      continue;
+    }
+    // Try matching month by checking if any key is a prefix of or matches the token
+    const matchedKey = Object.keys(POLISH_MONTHS).find((k) => token.startsWith(k));
+    if (matchedKey !== undefined) {
+      month = POLISH_MONTHS[matchedKey];
+    }
+  }
+
+  if (day === null || month === null) return null;
+
+  // Year heuristic: months >= 6 (July and later) → 2025, else → 2026
+  if (year === null) {
+    year = month >= 6 ? 2025 : 2026;
+  }
+
+  return new Date(year, month, day, hours, minutes, 0, 0);
+}
+
+function useCountdown(targetDate) {
+  const [state, setState] = useState({ d: 0, h: 0, m: 0, s: 0, past: false });
+
+  useEffect(() => {
+    if (!targetDate) return;
+
+    function tick() {
+      const now = Date.now();
+      const diff = targetDate.getTime() - now;
+
+      if (diff <= 0) {
+        setState({ d: 0, h: 0, m: 0, s: 0, past: true });
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const d = Math.floor(totalSeconds / 86400);
+      const h = Math.floor((totalSeconds % 86400) / 3600);
+      const m = Math.floor((totalSeconds % 3600) / 60);
+      const s = totalSeconds % 60;
+      setState({ d, h, m, s, past: false });
+    }
+
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [targetDate]);
+
+  return state;
+}
+
 export default function NastepnyMecz({
                                        mecze = [],
                                        SectionLabel,
@@ -7,6 +94,9 @@ export default function NastepnyMecz({
                                        isDrawa,
                                      }) {
   const next = mecze.find((m) => !m.score && !m.walkower);
+
+  const matchDate = useMemo(() => parseMatchDate(next?.date ?? null), [next?.date]);
+  const countdown = useCountdown(matchDate);
 
   if (!next) return null;
 
@@ -82,6 +172,68 @@ export default function NastepnyMecz({
               {next.date}
             </div>
           </div>
+
+          {/* Countdown */}
+          {matchDate && !countdown.past && (
+            <div style={{ textAlign: 'center', marginTop: 16, marginBottom: 8 }}>
+              <div
+                style={{
+                  fontSize: 10,
+                  color: '#3b82f6',
+                  letterSpacing: '0.2em',
+                  marginBottom: 8,
+                }}
+              >
+                DO MECZU
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 8,
+                  justifyContent: 'center',
+                }}
+              >
+                {[
+                  { v: countdown.d, l: 'DNI' },
+                  { v: countdown.h, l: 'GODZ' },
+                  { v: countdown.m, l: 'MIN' },
+                  { v: countdown.s, l: 'SEK' },
+                ].map(({ v, l }) => (
+                  <div
+                    key={l}
+                    style={{
+                      background: '#030712',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      borderRadius: 8,
+                      padding: '8px 10px',
+                      textAlign: 'center',
+                      minWidth: 44,
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: 28,
+                        fontFamily: "'Bebas Neue', Impact, sans-serif",
+                        color: '#fff',
+                        lineHeight: 1,
+                      }}
+                    >
+                      {String(v).padStart(2, '0')}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 8,
+                        color: '#475569',
+                        marginTop: 4,
+                      }}
+                    >
+                      {l}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Teams */}
           <div

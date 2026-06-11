@@ -42,3 +42,8 @@ next-env.d.ts
 
 # IDE
 .idea/
+
+# next-pwa generated files
+public/workbox-*.js
+public/sw.js.map
+public/workbox-*.js.map

@@ -1,5 +1,6 @@
 import "./globals.css";
 import GlobalAudio from "@/components/GlobalAudio";
+import ServiceWorker from "@/components/ServiceWorker";
 
 const BASE_URL = "https://mksdrawadrawno.pl";
 
@@ -41,12 +42,27 @@ export const metadata = {
     description: "Wyniki, tabela, terminarz i aktualności MKS Drawa Drawno.",
     images: ["/logo.png"],
   },
+  themeColor: [{ media: '(prefers-color-scheme: dark)', color: '#030712' }, { media: '(prefers-color-scheme: light)', color: '#030712' }],
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'MKS Drawa',
+  },
+  icons: {
+    apple: '/apple-touch-icon.png',
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+  },
+  manifest: '/manifest.webmanifest',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="pl" className="h-full">
       <body className="min-h-full flex flex-col">
+        <ServiceWorker />
         <GlobalAudio />
         {children}
       </body>
