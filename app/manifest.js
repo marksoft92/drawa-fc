@@ -1,7 +1,7 @@
 export default function manifest() {
   return {
     name: 'MKS Drawa Drawno',
-    short_name: 'Drawa FC',
+    short_name: 'MKS Drawa',
     description: 'Oficjalna strona MKS Drawa Drawno — wyniki, tabela, kadra, aktualności',
     start_url: '/',
     display: 'standalone',

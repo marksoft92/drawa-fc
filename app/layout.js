@@ -1,6 +1,7 @@
 import "./globals.css";
 import GlobalAudio from "@/components/GlobalAudio";
 import ServiceWorker from "@/components/ServiceWorker";
+import SplashScreen from "@/components/SplashScreen";
 
 const BASE_URL = "https://mksdrawadrawno.pl";
 
@@ -67,6 +68,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         <ServiceWorker />
         <GlobalAudio />
+        <SplashScreen />
         {children}
       </body>
     </html>
