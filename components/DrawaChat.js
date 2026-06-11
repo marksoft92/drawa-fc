@@ -2,10 +2,10 @@
 import { useState, useRef, useEffect } from 'react';
 
 const MODELS = [
-  { id: 'openai/gpt-4o-mini', label: 'GPT-4o mini' },
-  { id: 'google/gemini-flash-1.5', label: 'Gemini Flash 1.5' },
-  { id: 'anthropic/claude-3-haiku', label: 'Claude 3 Haiku' },
-  { id: 'meta-llama/llama-3.3-70b-instruct', label: 'Llama 3.3 70B' },
+  { id: 'google/gemma-4-31b:free', label: 'Gemma 4 31B' },
+  { id: 'nvidia/nemotron-3-ultra:free', label: 'Nemotron Ultra' },
+  { id: 'nvidia/nemotron-3-super:free', label: 'Nemotron Super' },
+  { id: 'nex-agi/nex-n2-pro:free', label: 'Nex N2 Pro' },
   { id: 'openrouter/owl-alpha', label: 'Owl Alpha (wolny)' },
 ];
 

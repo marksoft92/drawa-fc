@@ -67,7 +67,7 @@ export async function POST(req) {
       'X-Title': 'MKS Drawa Chat',
     },
     body: JSON.stringify({
-      model: model || 'openai/gpt-4o-mini',
+      model: model || 'google/gemma-4-31b:free',
       messages: [
         { role: 'system', content: systemPrompt },
         ...messages,
