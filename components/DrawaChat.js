@@ -102,7 +102,7 @@ export default function DrawaChat() {
     } catch (e) {
       setMessages(prev => {
         const next = [...prev];
-        next[next.length - 1] = { role: 'assistant', content: 'Błąd połączenia. Sprawdź klucz API.' };
+        next[next.length - 1] = { role: 'assistant', content: 'Limit zapytań wyczerpany — wersja beta. Więcej zmian wkrótce! 🔄' };
         return next;
       });
     } finally {
