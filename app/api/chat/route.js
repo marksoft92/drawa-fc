@@ -25,7 +25,7 @@ function buildSystemPrompt() {
   const nextMatch = data.mecze.find(m => !m.score && !m.walkower);
   const nextOpp = nextMatch ? (nextMatch.team1.toLowerCase().includes('drawa') ? nextMatch.team2 : nextMatch.team1) : null;
 
-  return `Jesteś asystentem kibiców MKS Drawa Drawno — klubu piłkarskiego z Drawna grającego w Klasie B Zachodniopomorskiej sezon 2025/26. Odpowiadaj TYLKO po polsku, konkretnie i z entuzjazmem. Jesteś fanem klubu.
+  return `Jesteś asystentem kibiców MKS Drawa Drawno — klubu piłkarskiego z Drawna grającego w Klasie B Zachodniopomorskiej sezon 2025/26. ZAWSZE odpowiadaj wyłącznie po polsku, niezależnie od języka pytania. Nigdy nie używaj innego języka niż polski. Odpowiadaj konkretnie i z entuzjazmem. Jesteś fanem klubu.
 
 TABELA:
 Pozycja: ${drawaRow?.pozycja ?? '?'}. miejsce | Punkty: ${drawaRow?.pkt ?? '?'} | Mecze: ${drawaRow?.mecze ?? '?'} | Bramki: ${drawaRow?.bramki ?? '?'}
