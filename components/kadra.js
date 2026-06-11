@@ -3,6 +3,27 @@
 import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { zawodnicy } from '@/lib/kadra';
+import { generatePlayerCard } from '@/lib/playerCard';
+
+async function sharePlayer(player) {
+  try {
+    const blob = await generatePlayerCard(player);
+    const safeName = player.imieNazwisko.replace(/\s+/g, '-').toLowerCase();
+    const file = new File([blob], `drawa-${safeName}.png`, { type: 'image/png' });
+    if (navigator.share && navigator.canShare?.({ files: [file] })) {
+      await navigator.share({ title: `${player.imieNazwisko} — MKS Drawa`, files: [file] });
+    } else {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `drawa-${safeName}.png`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+  } catch (e) {
+    if (e?.name !== 'AbortError') console.error(e);
+  }
+}
 
 const POZYCJE = ['Bramkarz', 'Obrońca', 'Pomocnik', 'Napastnik'];
 
@@ -91,6 +112,28 @@ function PlayerCard({ z, isHovered, isInRow, onEnter, onLeave, cardRef }) {
           ))}
         </div>
       </div>
+
+      {isHovered && (
+        <div style={{ padding: '8px 14px 10px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <button
+            onClick={(e) => { e.stopPropagation(); sharePlayer(z); }}
+            style={{
+              width: '100%',
+              background: 'rgba(59,130,246,0.1)',
+              border: '1px solid rgba(59,130,246,0.2)',
+              borderRadius: 6,
+              color: '#3b82f6',
+              fontSize: 10,
+              letterSpacing: '0.12em',
+              padding: '6px 0',
+              cursor: 'pointer',
+              fontWeight: 600,
+            }}
+          >
+            UDOSTĘPNIJ KARTĘ
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -134,7 +177,7 @@ function MobilePlayerCard({ z, defaultExpanded = false }) {
         </div>
       </div>
 
-      <div style={{ height: expanded ? 58 : 0, transition: 'height 0.3s ease', overflow: 'hidden' }}>
+      <div style={{ height: expanded ? 90 : 0, transition: 'height 0.3s ease', overflow: 'hidden' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', borderTop: '1px solid rgba(255,255,255,0.05)', margin: '0 8px' }}>
           {[
             { v: z.mecze,    l: 'MECZE' },
@@ -149,6 +192,28 @@ function MobilePlayerCard({ z, defaultExpanded = false }) {
             </div>
           ))}
         </div>
+
+        {expanded && (
+          <div style={{ padding: '8px 12px 10px' }}>
+            <button
+              onClick={(e) => { e.stopPropagation(); sharePlayer(z); }}
+              style={{
+                width: '100%',
+                background: 'rgba(59,130,246,0.1)',
+                border: '1px solid rgba(59,130,246,0.2)',
+                borderRadius: 6,
+                color: '#3b82f6',
+                fontSize: 10,
+                letterSpacing: '0.12em',
+                padding: '6px 0',
+                cursor: 'pointer',
+                fontWeight: 600,
+              }}
+            >
+              UDOSTĘPNIJ KARTĘ
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

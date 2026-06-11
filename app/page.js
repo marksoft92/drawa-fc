@@ -17,6 +17,7 @@ import Kontakt from "@/components/kontakt";
 import Struktura from "@/components/struktura";
 import Sponsorzy from "@/components/sponsorzy";
 import Footer from "@/components/footer";
+import NotificationPrompt from "@/components/NotificationPrompt";
 
 // ─── Helpers ─────────────────────────────────────────────────
 
@@ -203,6 +204,7 @@ export default function Page() {
         </div>
       </main>
 
+      <NotificationPrompt />
       <Footer HerbImg={HerbImg} herb={DRAWA_HERB}/>
       <ScrollToTop/>
     </>
