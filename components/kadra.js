@@ -44,7 +44,7 @@ async function sharePlayer(player) {
   }
 }
 
-const POZYCJE = ['Bramkarz', 'Obrońca', 'Pomocnik', 'Napastnik'];
+const POZYCJE = ['Bramkarz', 'Obrońca', 'Pomocnik', 'Napastnik', 'Trener'];
 
 function initials(imieNazwisko) {
   return imieNazwisko
@@ -352,7 +352,7 @@ export default function Kadra({ SectionLabel }) {
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         <SectionLabel>Kadra</SectionLabel>
         <div style={{ fontSize: 12, color: '#475569', marginTop: 4 }}>
-          Sezon 2025/26 · {zawodnicy.length} zawodników
+          Sezon 2025/26 · {zawodnicy.filter(z => z.pozycja !== 'Trener').length} zawodników + trener
         </div>
 
         {/* Mobile — accordion po pozycji */}
