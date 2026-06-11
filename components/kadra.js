@@ -198,7 +198,8 @@ function MobilePlayerCard({ z, defaultExpanded = false }) {
         </div>
       </div>
 
-      <div style={{ height: expanded ? 90 : 0, transition: 'height 0.3s ease', overflow: 'hidden' }}>
+      <div style={{ height: expanded ? 290 : 0, transition: 'height 0.3s ease', overflow: 'hidden' }}>
+        {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', borderTop: '1px solid rgba(255,255,255,0.05)', margin: '0 8px' }}>
           {[
             { v: z.mecze,    l: 'MECZE' },
@@ -214,8 +215,19 @@ function MobilePlayerCard({ z, defaultExpanded = false }) {
           ))}
         </div>
 
+        {/* Radar */}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', margin: '0 8px' }}>
+          <ResponsiveContainer width="100%" height={160}>
+            <RadarChart data={playerRadarData(z)} margin={{ top: 12, right: 20, bottom: 12, left: 20 }}>
+              <PolarGrid stroke="rgba(255,255,255,0.08)" />
+              <PolarAngleAxis dataKey="attr" tick={{ fill: '#475569', fontSize: 8 }} />
+              <Radar dataKey="val" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.15} strokeWidth={1.5} />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
+
         {expanded && (
-          <div style={{ padding: '8px 12px 10px' }}>
+          <div style={{ padding: '0 12px 10px' }}>
             <button
               onClick={(e) => { e.stopPropagation(); sharePlayer(z); }}
               style={{
