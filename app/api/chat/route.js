@@ -9,7 +9,8 @@ function buildSystemPrompt() {
   const rosterLines = zawodnicy.map(z => {
     const parts = [];
     parts.push(z.imieNazwisko);
-    parts.push(z.pozycja);
+    if (z.pseudonim) parts.push(`ps. "${z.pseudonim}"`);
+    parts.push(z.dokładna_pozycja || z.pozycja);
     parts.push(`${z.mecze ?? 0} meczów`);
     parts.push(`${z.gole ?? 0} goli`);
     if (z.asysty) parts.push(`${z.asysty} asyst`);
