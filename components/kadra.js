@@ -4,6 +4,25 @@ import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { zawodnicy } from '@/lib/kadra';
 import { generatePlayerCard } from '@/lib/playerCard';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
+
+const maxGole = Math.max(...zawodnicy.map(z => z.gole ?? 0), 1);
+const maxAsysty = Math.max(...zawodnicy.map(z => z.asysty ?? 0), 1);
+const maxMecze = Math.max(...zawodnicy.map(z => z.mecze ?? 0), 1);
+const maxGM = Math.max(...zawodnicy.map(z => z.mecze > 0 ? z.gole / z.mecze : 0), 0.01);
+const maxKartki = Math.max(...zawodnicy.map(z => (z.zolte ?? 0) + (z.czerwone ?? 0) * 3), 1);
+
+function playerRadarData(z) {
+  const gm = z.mecze > 0 ? z.gole / z.mecze : 0;
+  const kartki = (z.zolte ?? 0) + (z.czerwone ?? 0) * 3;
+  return [
+    { attr: 'GOLE', val: Math.round((z.gole ?? 0) / maxGole * 100) },
+    { attr: 'ASYSTY', val: Math.round((z.asysty ?? 0) / maxAsysty * 100) },
+    { attr: 'MECZE', val: Math.round((z.mecze ?? 0) / maxMecze * 100) },
+    { attr: 'G/M', val: Math.round(gm / maxGM * 100) },
+    { attr: 'DYSC', val: Math.round((1 - kartki / maxKartki) * 100) },
+  ];
+}
 
 async function sharePlayer(player) {
   try {
@@ -96,44 +115,46 @@ function PlayerCard({ z, isHovered, isInRow, onEnter, onLeave, cardRef }) {
         )}
       </div>
 
-      <div style={{ height: isHovered ? 68 : 0, transition: 'height 0.3s ease', overflow: 'hidden' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', borderTop: '1px solid rgba(255,255,255,0.05)', margin: '0 8px' }}>
-          {[
-            { v: z.mecze,    l: 'MECZE' },
-            { v: z.gole,     l: 'GOLE' },
-            { v: z.asysty,   l: 'ASYSTY' },
-            { v: goleNaMecz, l: 'G/M' },
-            { v: z.zolte > 0 || z.czerwone > 0 ? `${z.zolte > 0 ? z.zolte + '🟨' : ''}${z.czerwone > 0 ? z.czerwone + '🟥' : ''}` : '—', l: 'KARTKI' },
-          ].map(({ v, l }) => (
-            <div key={l} style={{ textAlign: 'center', padding: '10px 0' }}>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#3b82f6', lineHeight: 1 }}>{v}</div>
-              <div style={{ fontSize: 8, color: '#334155', letterSpacing: '0.07em', marginTop: 3 }}>{l}</div>
-            </div>
-          ))}
+      <div style={{ height: isHovered ? 198 : 0, transition: 'height 0.35s ease', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', borderTop: '1px solid rgba(255,255,255,0.05)', margin: '0 8px', gap: 0 }}>
+          {/* Radar chart */}
+          <div style={{ width: 120, flexShrink: 0 }}>
+            <ResponsiveContainer width={120} height={150}>
+              <RadarChart data={playerRadarData(z)} margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
+                <PolarGrid stroke="rgba(255,255,255,0.08)" />
+                <PolarAngleAxis dataKey="attr" tick={{ fill: '#334155', fontSize: 7 }} />
+                <Radar dataKey="val" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.15} strokeWidth={1.5} />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+          {/* Stats */}
+          <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', alignContent: 'center', gap: 4, padding: '8px 6px 8px 0' }}>
+            {[
+              { v: z.mecze, l: 'MECZE' },
+              { v: z.gole, l: 'GOLE' },
+              { v: z.asysty, l: 'ASYSTY' },
+              { v: z.mecze > 0 ? (z.gole / z.mecze).toFixed(2) : '—', l: 'G/M' },
+              { v: z.zolte > 0 || z.czerwone > 0 ? `${z.zolte ?? 0}🟨${z.czerwone > 0 ? z.czerwone+'🟥' : ''}` : '—', l: 'KARTKI' },
+            ].map(({ v, l }) => (
+              <div key={l} style={{ textAlign: 'center', padding: '4px 0' }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#3b82f6', lineHeight: 1 }}>{v}</div>
+                <div style={{ fontSize: 7, color: '#334155', letterSpacing: '0.07em', marginTop: 2 }}>{l}</div>
+              </div>
+            ))}
+          </div>
         </div>
+        {/* Share button stays below */}
+        {isHovered && (
+          <div style={{ padding: '0 14px 10px' }}>
+            <button
+              onClick={(e) => { e.stopPropagation(); sharePlayer(z); }}
+              style={{ width: '100%', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 6, color: '#3b82f6', fontSize: 10, letterSpacing: '0.12em', padding: '6px 0', cursor: 'pointer', fontWeight: 600 }}
+            >
+              UDOSTĘPNIJ KARTĘ
+            </button>
+          </div>
+        )}
       </div>
-
-      {isHovered && (
-        <div style={{ padding: '8px 14px 10px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          <button
-            onClick={(e) => { e.stopPropagation(); sharePlayer(z); }}
-            style={{
-              width: '100%',
-              background: 'rgba(59,130,246,0.1)',
-              border: '1px solid rgba(59,130,246,0.2)',
-              borderRadius: 6,
-              color: '#3b82f6',
-              fontSize: 10,
-              letterSpacing: '0.12em',
-              padding: '6px 0',
-              cursor: 'pointer',
-              fontWeight: 600,
-            }}
-          >
-            UDOSTĘPNIJ KARTĘ
-          </button>
-        </div>
-      )}
     </div>
   );
 }

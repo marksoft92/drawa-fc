@@ -18,6 +18,7 @@ import Struktura from "@/components/struktura";
 import Sponsorzy from "@/components/sponsorzy";
 import Footer from "@/components/footer";
 import NotificationPrompt from "@/components/NotificationPrompt";
+import JakDojechac from "@/components/jakDojechac";
 
 // ─── Helpers ─────────────────────────────────────────────────
 
@@ -128,6 +129,52 @@ export default function Page() {
 
   const teamStats = computeTeamStats(data.mecze);
 
+  // Matchday detection
+  function parseSimpleDate(str) {
+    if (!str) return null;
+    const MONTHS = { sty:0,lut:1,mar:2,kwi:3,maj:4,cze:5,lip:6,sie:7,wrz:8,'paź':9,lis:10,gru:11 };
+    const tokens = str.replace(',','').toLowerCase().split(/\s+/);
+    let day=null,month=null,year=null,h=0,m=0;
+    for (const t of tokens) {
+      if (/^\d{1,2}:\d{2}$/.test(t)){[h,m]=t.split(':').map(Number);continue;}
+      if (/^\d{4}$/.test(t)){year=+t;continue;}
+      if (/^\d{1,2}$/.test(t)){day=+t;continue;}
+      const k=Object.keys(MONTHS).find(k=>t.startsWith(k));
+      if(k!==undefined)month=MONTHS[k];
+    }
+    if(day===null||month===null)return null;
+    if(year===null)year=month>=6?2025:2026;
+    return new Date(year,month,day,h,m,0);
+  }
+
+  const today = new Date();
+  const isMatchday = data.mecze.some(m => {
+    if (!m.date || m.score || m.walkower) return false;
+    const d = parseSimpleDate(m.date);
+    return d && d.toDateString() === today.toDateString();
+  });
+
+  const MatchdayBanner = isMatchday ? () => {
+    const next = data.mecze.find(m => !m.score && !m.walkower);
+    const opp = next ? (isDrawa(next.team1) ? next.team2 : next.team1) : '';
+    const time = next?.date?.split(' ').find(p => p.includes(':')) ?? '';
+    return (
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(34,197,94,0.15), rgba(34,197,94,0.05))',
+        borderBottom: '1px solid rgba(34,197,94,0.3)',
+        padding: '10px 20px',
+        textAlign: 'center',
+        position: 'sticky',
+        top: 64,
+        zIndex: 90,
+      }}>
+        <span style={{ fontSize: 11, color: '#22c55e', fontWeight: 700, letterSpacing: '0.15em' }}>
+          ⚽ DZIŚ MECZ! &nbsp;·&nbsp; DRAWA VS {opp.toUpperCase()} &nbsp;·&nbsp; {time}
+        </span>
+      </div>
+    );
+  } : () => null;
+
   return (
     <>
       <style>{`
@@ -141,6 +188,7 @@ export default function Page() {
  `}</style>
 
       <NavBar/>
+      <MatchdayBanner />
 
       <main style={{paddingTop: 64}}>
         <Hero tabela={heroData}/>
@@ -179,6 +227,7 @@ export default function Page() {
           />
         </div>
 
+
         <div id="statystyki">
           <Statystyki teamStats={teamStats} SectionLabel={SectionLabel}/>
         </div>
@@ -197,6 +246,10 @@ export default function Page() {
 
         <div id="struktura">
           <Struktura SectionLabel={SectionLabel}/>
+        </div>
+
+        <div id="dojazd">
+          <JakDojechac SectionLabel={SectionLabel} />
         </div>
 
         <div id="kontakt">
