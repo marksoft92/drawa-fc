@@ -80,7 +80,7 @@ export default function Statystyki({ teamStats = null, SectionLabel }) {
                   padding: '14px 18px',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                <div className="stat-side-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                   <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.15em', color: '#475569' }}>
                     {side.label}
                   </span>
@@ -141,27 +141,29 @@ export default function Statystyki({ teamStats = null, SectionLabel }) {
             </div>
           </div>
           {form && (
-            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
               <span style={{ fontSize: 10, color: '#334155', letterSpacing: '0.1em', marginRight: 4 }}>OSTATNIE</span>
-              {form.map((r, i) => (
-                <div
-                  key={i}
-                  style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 6,
-                    background: FORM_COLOR[r],
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: '#fff',
-                  }}
-                >
-                  {FORM_LABEL[r]}
-                </div>
-              ))}
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                {form.map((r, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: 6,
+                      background: FORM_COLOR[r],
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: '#fff',
+                    }}
+                  >
+                    {FORM_LABEL[r]}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

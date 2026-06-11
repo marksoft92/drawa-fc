@@ -147,6 +147,7 @@ export default function NavBar({ backLabel }) {
  {/* Next match pill */}
  {nextMatch && (
  <Link
+ className="nav-next-match"
  href={href("mecze")}
  style={{
  display: "flex",

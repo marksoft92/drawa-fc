@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import albumy from '@/content/galeria/index';
 
 // ── Placeholder gdy brak zdjęcia ─────────────────────────────
@@ -117,6 +117,8 @@ const AlbumCard = ({ album, onClick }) => (
 const Lightbox = ({ album, startIndex, onClose }) => {
   const [current, setCurrent] = useState(startIndex);
   const photos = album.photos;
+  const stripRef = useRef(null);
+  const touchStartX = useRef(null);
 
   const prev = useCallback(() => setCurrent((i) => (i === 0 ? photos.length - 1 : i - 1)), [photos.length]);
   const next = useCallback(() => setCurrent((i) => (i === photos.length - 1 ? 0 : i + 1)), [photos.length]);
@@ -134,6 +136,31 @@ const Lightbox = ({ album, startIndex, onClose }) => {
       document.body.style.overflow = '';
     };
   }, [onClose, prev, next]);
+
+  // Scroll aktywnej miniatury do środka stripа
+  useEffect(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    const thumb = strip.children[current];
+    if (!thumb) return;
+    strip.scrollTo({
+      left: thumb.offsetLeft - strip.offsetWidth / 2 + thumb.offsetWidth / 2,
+      behavior: 'smooth',
+    });
+  }, [current]);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(dx) > 50) {
+      dx < 0 ? next() : prev();
+    }
+  };
 
   const photo = photos[current];
 
@@ -196,6 +223,8 @@ const Lightbox = ({ album, startIndex, onClose }) => {
       {/* Główne zdjęcie */}
       <div
         onClick={(e) => e.stopPropagation()}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         style={{
           maxWidth: '90vw',
           maxHeight: '70vh',
@@ -312,6 +341,8 @@ const Lightbox = ({ album, startIndex, onClose }) => {
       {/* Strip miniaturek */}
       {photos.length > 1 && (
         <div
+          ref={stripRef}
+          className="thumb-strip"
           onClick={(e) => e.stopPropagation()}
           style={{
             position: 'absolute',
@@ -326,6 +357,7 @@ const Lightbox = ({ album, startIndex, onClose }) => {
             backdropFilter: 'blur(8px)',
             maxWidth: '90vw',
             overflowX: 'auto',
+            scrollbarWidth: 'none',
           }}
         >
           {photos.map((p, i) => (

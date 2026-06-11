@@ -172,6 +172,7 @@ export default function OstatniMecz({
 
           {/* Score */}
           <div
+            className="score-body"
             style={{
               padding: '32px 24px',
             }}

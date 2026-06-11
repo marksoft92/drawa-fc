@@ -94,6 +94,7 @@ export default function NastepnyMecz({
           >
             {/* Team 1 */}
             <div
+              className="nm-team"
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -136,6 +137,7 @@ export default function NastepnyMecz({
 
             {/* Team 2 */}
             <div
+              className="nm-team"
               style={{
                 display: 'flex',
                 flexDirection: 'column',

@@ -23,6 +23,9 @@ body {
   overflow-x: hidden;
 }
 
+/* Schowaj scrollbar w strip miniatur galerii */
+.thumb-strip::-webkit-scrollbar { display: none; }
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -96,5 +99,32 @@ body {
   /* Kadra — kliknięcie zamiast hovera */
   .player-card {
     cursor: pointer !important;
+  }
+}
+
+/* ─── Sub-mobile overrides (below 370px) ──────────────────── */
+@media (max-width: 369px) {
+  /* NavBar: ukryj pill "następny mecz" — za szeroki przy <370px */
+  .nav-next-match { display: none !important; }
+
+  /* Hero: zmniejsz letterSpacing podtytułu — przy 0.3em i 45 znakach to ~486px */
+  .hero-subtitle {
+    letter-spacing: 0.06em !important;
+    font-size: 11px !important;
+  }
+
+  /* NastepnyMecz: pozwól kolumnom drużyn się kurczyć (były minWidth: 120) */
+  .nm-team {
+    min-width: 0 !important;
+    flex: 1 !important;
+  }
+
+  /* OstatniMecz: zmniejsz padding sekcji score */
+  .score-body { padding: 20px 12px !important; }
+
+  /* Statystyki dom/wyjazd: zawijaj wiersz "4W · 2R · 1P" który nie mieści się w ~71px */
+  .stat-side-row {
+    flex-wrap: wrap !important;
+    gap: 4px !important;
   }
 }

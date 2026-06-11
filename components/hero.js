@@ -82,6 +82,7 @@ export default function Hero({ tabela }) {
         </div>
 
         <div
+          className="hero-subtitle"
           style={{
             marginTop: 16,
             fontSize: 13,
