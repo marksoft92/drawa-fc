@@ -2,6 +2,7 @@ import "./globals.css";
 import GlobalAudio from "@/components/GlobalAudio";
 import ServiceWorker from "@/components/ServiceWorker";
 import SplashScreen from "@/components/SplashScreen";
+import DrawaChat from "@/components/DrawaChat";
 
 const BASE_URL = "https://mksdrawadrawno.pl";
 
@@ -69,6 +70,7 @@ export default function RootLayout({ children }) {
         <ServiceWorker />
         <GlobalAudio />
         <SplashScreen />
+        <DrawaChat />
         {children}
       </body>
     </html>
