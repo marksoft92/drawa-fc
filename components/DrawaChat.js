@@ -2,8 +2,8 @@
 import { useState, useRef, useEffect } from 'react';
 
 const MODELS = [
-  { id: 'google/gemini-2.0-flash-001', label: 'Gemini 2.0 Flash' },
   { id: 'openai/gpt-4o-mini', label: 'GPT-4o mini' },
+  { id: 'google/gemini-flash-1.5', label: 'Gemini Flash 1.5' },
   { id: 'anthropic/claude-3-haiku', label: 'Claude 3 Haiku' },
   { id: 'meta-llama/llama-3.3-70b-instruct', label: 'Llama 3.3 70B' },
   { id: 'openrouter/owl-alpha', label: 'Owl Alpha (wolny)' },
@@ -66,7 +66,10 @@ export default function DrawaChat() {
         }),
       });
 
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? 'Błąd połączenia');
+      }
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -102,7 +105,7 @@ export default function DrawaChat() {
     } catch (e) {
       setMessages(prev => {
         const next = [...prev];
-        next[next.length - 1] = { role: 'assistant', content: 'Limit zapytań wyczerpany — wersja beta. Więcej zmian wkrótce! 🔄' };
+        next[next.length - 1] = { role: 'assistant', content: e.message || 'Błąd połączenia' };
         return next;
       });
     } finally {

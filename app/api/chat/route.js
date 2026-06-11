@@ -67,7 +67,7 @@ export async function POST(req) {
       'X-Title': 'MKS Drawa Chat',
     },
     body: JSON.stringify({
-      model: model || 'google/gemini-2.0-flash-001',
+      model: model || 'openai/gpt-4o-mini',
       messages: [
         { role: 'system', content: systemPrompt },
         ...messages,
@@ -78,7 +78,16 @@ export async function POST(req) {
 
   if (!response.ok) {
     const err = await response.text();
-    return Response.json({ error: err }, { status: response.status });
+    let msg = 'Błąd API';
+    try {
+      const parsed = JSON.parse(err);
+      const code = parsed?.error?.code ?? response.status;
+      if (code === 404) msg = 'Model niedostępny — zmień model w prawym górnym rogu';
+      else if (code === 429) msg = 'Limit zapytań wyczerpany — spróbuj za chwilę';
+      else if (code === 401) msg = 'Błąd autoryzacji — nieprawidłowy klucz API';
+      else msg = parsed?.error?.message ?? 'Nieznany błąd';
+    } catch {}
+    return Response.json({ error: msg }, { status: response.status });
   }
 
   return new Response(response.body, {
