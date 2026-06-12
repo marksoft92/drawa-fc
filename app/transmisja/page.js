@@ -16,6 +16,9 @@ function detectStream(input) {
     return { platform: "facebook", url: v };
   }
 
+  const twMatch = v.match(/twitch\.tv\/([A-Za-z0-9_]+)/);
+  if (twMatch) return { platform: "twitch", channel: twMatch[1] };
+
   return null;
 }
 
@@ -25,6 +28,10 @@ function buildEmbedUrl(info) {
     return `https://www.youtube.com/embed/${info.id}?autoplay=1&rel=0`;
   if (info.platform === "facebook")
     return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(info.url)}&show_text=false&autoplay=true`;
+  if (info.platform === "twitch") {
+    const parent = typeof window !== "undefined" ? window.location.hostname : "localhost";
+    return `https://player.twitch.tv/?channel=${info.channel}&parent=${parent}&autoplay=true`;
+  }
   return null;
 }
 

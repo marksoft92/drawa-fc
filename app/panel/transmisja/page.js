@@ -17,6 +17,10 @@ function detectStream(input) {
     return { platform: "facebook", url: v };
   }
 
+  // Twitch — kanał
+  const twMatch = v.match(/twitch\.tv\/([A-Za-z0-9_]+)/);
+  if (twMatch) return { platform: "twitch", channel: twMatch[1] };
+
   return null;
 }
 
@@ -26,12 +30,17 @@ function buildEmbedUrl(info) {
     return `https://www.youtube.com/embed/${info.id}?rel=0&autoplay=1`;
   if (info.platform === "facebook")
     return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(info.url)}&show_text=false&autoplay=true`;
+  if (info.platform === "twitch") {
+    const parent = typeof window !== "undefined" ? window.location.hostname : "localhost";
+    return `https://player.twitch.tv/?channel=${info.channel}&parent=${parent}&autoplay=true`;
+  }
   return null;
 }
 
 const PLATFORM = {
   youtube: { label: "YouTube", color: "#ef4444" },
   facebook: { label: "Facebook", color: "#1877f2" },
+  twitch: { label: "Twitch", color: "#9147ff" },
 };
 
 export default function PanelTransmisja() {
@@ -102,7 +111,7 @@ export default function PanelTransmisja() {
             Transmisja na żywo
           </div>
           <div style={{ fontSize: 12, color: "#475569", marginTop: 2 }}>
-            YouTube lub Facebook Live
+            YouTube, Facebook Live lub Twitch
           </div>
         </div>
       </div>
@@ -138,11 +147,11 @@ export default function PanelTransmisja() {
       {/* Platformy */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 20 }}>
         {[
-          { name: "YouTube", color: "#ef4444", note: "Wymaga 24h do włączenia live", example: "Link do transmisji" },
-          { name: "Facebook", color: "#1877f2", note: "Działa od razu — skopiuj link z live", example: "facebook.com/.../live/..." },
-          { name: "TikTok", color: "#475569", note: "Nie obsługuje osadzania live", example: "brak wsparcia" },
+          { name: "YouTube", color: "#ef4444", note: "Wymaga 24h do włączenia live" },
+          { name: "Facebook", color: "#1877f2", note: "Działa od razu — skopiuj link z live" },
+          { name: "Twitch", color: "#9147ff", note: "Wklej link do kanału: twitch.tv/nazwa" },
         ].map((p) => (
-          <div key={p.name} style={{ padding: "10px 12px", background: "rgba(255,255,255,0.02)", border: `1px solid ${p.name === "TikTok" ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.06)"}`, borderRadius: 8, opacity: p.name === "TikTok" ? 0.5 : 1 }}>
+          <div key={p.name} style={{ padding: "10px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: p.color, marginBottom: 4 }}>{p.name}</div>
             <div style={{ fontSize: 10, color: "#64748b", lineHeight: 1.5 }}>{p.note}</div>
           </div>
@@ -171,12 +180,12 @@ export default function PanelTransmisja() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="https://youtube.com/live/... lub https://facebook.com/.../live/..."
+            placeholder="https://youtube.com/live/..., facebook.com/.../live/... lub twitch.tv/nazwa"
             style={{ ...inputStyle, fontFamily: "monospace", fontSize: 13 }}
           />
           {input.trim() && !detected && (
             <div style={{ fontSize: 11, color: "#f59e0b", marginTop: 5 }}>
-              Nie rozpoznano platformy — wklej pełny link do YouTube lub Facebook Live
+              Nie rozpoznano platformy — wklej pełny link do YouTube, Facebook Live lub Twitch
             </div>
           )}
         </div>
