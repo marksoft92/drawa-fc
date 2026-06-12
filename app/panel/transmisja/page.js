@@ -7,17 +7,14 @@ function detectStream(input) {
   if (!input?.trim()) return null;
   const v = input.trim();
 
-  // YouTube
   const ytMatch = v.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/live\/)([A-Za-z0-9_-]{11})/);
   if (ytMatch) return { platform: "youtube", id: ytMatch[1] };
   if (/^[A-Za-z0-9_-]{11}$/.test(v)) return { platform: "youtube", id: v };
 
-  // Facebook — link do wideo/live
   if (v.includes("facebook.com") || v.includes("fb.watch")) {
     return { platform: "facebook", url: v };
   }
 
-  // Twitch — kanał
   const twMatch = v.match(/twitch\.tv\/([A-Za-z0-9_]+)/);
   if (twMatch) return { platform: "twitch", channel: twMatch[1] };
 
@@ -52,36 +49,55 @@ function fmtTime(s) {
   return `${m}:${String(sec).padStart(2, "0")}`;
 }
 
-const PLATFORM = {
-  youtube: { label: "YouTube", color: "#ef4444" },
-  facebook: { label: "Facebook", color: "#1877f2" },
-  twitch: { label: "Twitch", color: "#9147ff" },
-};
+const PLATFORMS = [
+  { id: "youtube",  label: "YouTube",  color: "#ef4444", hint: "Wklej link do transmisji live",         placeholder: "https://youtube.com/live/..." },
+  { id: "facebook", label: "Facebook", color: "#1877f2", hint: "Wklej link do wideo/live z Facebooka",  placeholder: "https://facebook.com/.../live/..." },
+  { id: "twitch",   label: "Twitch",   color: "#9147ff", hint: "Wpisz nazwę użytkownika",               placeholder: "nazwa_kanalu" },
+];
 
 const HALVES = [
-  { value: "1", label: "1. połowa" },
-  { value: "przerwa", label: "Przerwa" },
-  { value: "2", label: "2. połowa" },
-  { value: "po", label: "Po meczu" },
+  { value: "1",       label: "1. połowa" },
+  { value: "przerwa", label: "Przerwa"   },
+  { value: "2",       label: "2. połowa" },
+  { value: "po",      label: "Po meczu"  },
 ];
 
 export default function PanelTransmisja() {
-  // ── Stream URL ─────────────────────────────────────────────────────────────
-  const [input, setInput] = useState("");
-  const [savedUrl, setSavedUrl] = useState("");
+  // ── Stream ────────────────────────────────────────────────────────────────
+  const [platform, setPlatform]   = useState(null);   // "youtube"|"facebook"|"twitch"
+  const [fieldValue, setFieldValue] = useState("");   // username (twitch) lub pełny link
+  const [savedUrl, setSavedUrl]   = useState("");
   const [saveStatus, setSaveStatus] = useState("");
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving]       = useState(false);
 
   useEffect(() => {
     fetch("/api/stream/url")
-      .then((r) => r.json())
-      .then((d) => { setSavedUrl(d.url || ""); setInput(d.url || ""); });
+      .then(r => r.json())
+      .then(d => {
+        const url = d.url || "";
+        setSavedUrl(url);
+        const info = detectStream(url);
+        if (info) {
+          setPlatform(info.platform);
+          setFieldValue(info.platform === "twitch" ? info.channel : url);
+        }
+      });
   }, []);
 
-  const detected = detectStream(input);
+  const effectiveUrl = platform === "twitch"
+    ? `https://twitch.tv/${fieldValue}`
+    : fieldValue;
+
+  const detected  = detectStream(effectiveUrl);
   const savedInfo = detectStream(savedUrl);
   const previewSrc = buildEmbedUrl(detected);
-  const savedSrc = buildEmbedUrl(savedInfo);
+  const savedSrc   = buildEmbedUrl(savedInfo);
+
+  function switchPlatform(p) {
+    setPlatform(p);
+    setFieldValue("");
+    setSaveStatus("");
+  }
 
   async function handleSave(e) {
     e.preventDefault();
@@ -91,10 +107,10 @@ export default function PanelTransmisja() {
       const r = await fetch("/api/stream/url", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: input.trim() }),
+        body: JSON.stringify({ url: effectiveUrl.trim() }),
       });
       if (r.ok) {
-        setSavedUrl(input.trim());
+        setSavedUrl(effectiveUrl.trim());
         setSaveStatus("Zapisano!");
         setTimeout(() => setSaveStatus(""), 3000);
       } else {
@@ -115,7 +131,7 @@ export default function PanelTransmisja() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: "" }),
       });
-      setInput(""); setSavedUrl("");
+      setFieldValue(""); setSavedUrl(""); setPlatform(null);
       setSaveStatus("Transmisja wyłączona");
       setTimeout(() => setSaveStatus(""), 3000);
     } catch {
@@ -124,6 +140,8 @@ export default function PanelTransmisja() {
       setSaving(false);
     }
   }
+
+  const activePlatform = PLATFORMS.find(p => p.id === platform);
 
   // ── Match state ────────────────────────────────────────────────────────────
   const [match, setMatch] = useState(null);
@@ -171,123 +189,123 @@ export default function PanelTransmisja() {
             Transmisja na żywo
           </div>
           <div style={{ fontSize: 12, color: "#475569", marginTop: 2 }}>
-            YouTube, Facebook Live lub Twitch
-          </div>
-        </div>
-      </div>
-
-      {/* Status */}
-      <div style={{
-        padding: "12px 16px",
-        background: savedSrc ? "rgba(34,197,94,0.06)" : "rgba(255,255,255,0.02)",
-        border: `1px solid ${savedSrc ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.06)"}`,
-        borderRadius: 9, marginBottom: 24, display: "flex", alignItems: "center", gap: 10,
-      }}>
-        <div style={{
-          width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
-          background: savedSrc ? "#22c55e" : "#334155",
-          animation: savedSrc ? "pulse 1.6s ease-in-out infinite" : "none",
-        }} />
-        <div>
-          <div style={{ fontSize: 12, fontWeight: 600, color: savedSrc ? "#22c55e" : "#475569" }}>
             {savedSrc
-              ? `Transmisja aktywna${savedInfo ? ` · ${PLATFORM[savedInfo.platform]?.label}` : ""}`
+              ? `Aktywna · ${PLATFORMS.find(p => p.id === savedInfo?.platform)?.label}`
               : "Brak aktywnej transmisji"}
           </div>
-          {savedSrc && (
-            <div style={{ fontSize: 11, color: "#475569", marginTop: 2 }}>
-              <Link href="/transmisja" target="_blank" style={{ color: "#3b82f6", textDecoration: "none" }}>
-                podgląd na stronie ↗
-              </Link>
-            </div>
-          )}
         </div>
+        {savedSrc && (
+          <Link href="/transmisja" target="_blank" style={{ marginLeft: "auto", fontSize: 12, color: "#3b82f6", textDecoration: "none" }}>
+            podgląd ↗
+          </Link>
+        )}
       </div>
 
-      {/* Platformy */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 20 }}>
-        {[
-          { name: "YouTube", color: "#ef4444", note: "Wymaga 24h do włączenia live" },
-          { name: "Facebook", color: "#1877f2", note: "Działa od razu — skopiuj link z live" },
-          { name: "Twitch", color: "#9147ff", note: "Wklej link do kanału: twitch.tv/nazwa" },
-        ].map((p) => (
-          <div key={p.name} style={{ padding: "10px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: p.color, marginBottom: 4 }}>{p.name}</div>
-            <div style={{ fontSize: 10, color: "#64748b", lineHeight: 1.5 }}>{p.note}</div>
-          </div>
+      {/* Wybór platformy */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 20 }}>
+        {PLATFORMS.map(p => (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => switchPlatform(p.id)}
+            style={{
+              padding: "12px 8px",
+              border: "1px solid",
+              borderColor: platform === p.id ? `${p.color}60` : "rgba(255,255,255,0.08)",
+              background: platform === p.id ? `${p.color}14` : "rgba(255,255,255,0.02)",
+              borderRadius: 10, cursor: "pointer",
+              display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
+            }}
+          >
+            <span style={{ fontSize: 13, fontWeight: 700, color: platform === p.id ? p.color : "#475569" }}>
+              {p.label}
+            </span>
+            {platform === p.id && (
+              <span style={{ fontSize: 9, color: p.color, fontWeight: 600, letterSpacing: "0.05em" }}>WYBRANE</span>
+            )}
+          </button>
         ))}
       </div>
 
-      <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
-            <label style={{ fontSize: 11, color: "#64748b", fontWeight: 600, letterSpacing: "0.06em" }}>
-              Link do transmisji
+      {/* Formularz — pokazuje się po wyborze platformy */}
+      {platform && (
+        <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div>
+            <label style={{ fontSize: 11, color: "#64748b", fontWeight: 600, letterSpacing: "0.06em", display: "block", marginBottom: 7 }}>
+              {activePlatform?.hint}
             </label>
-            {detected && (
-              <span style={{
-                fontSize: 10, fontWeight: 700,
-                color: PLATFORM[detected.platform]?.color,
-                background: `${PLATFORM[detected.platform]?.color}18`,
-                border: `1px solid ${PLATFORM[detected.platform]?.color}40`,
-                borderRadius: 10, padding: "2px 8px",
-              }}>
-                {PLATFORM[detected.platform]?.label}
-              </span>
+
+            {platform === "twitch" ? (
+              <div style={{ display: "flex", alignItems: "center", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, overflow: "hidden" }}>
+                <span style={{ padding: "10px 12px", color: "#475569", fontSize: 13, fontFamily: "monospace", background: "rgba(255,255,255,0.03)", borderRight: "1px solid rgba(255,255,255,0.08)", whiteSpace: "nowrap", flexShrink: 0 }}>
+                  twitch.tv/
+                </span>
+                <input
+                  type="text"
+                  value={fieldValue}
+                  onChange={e => setFieldValue(e.target.value.replace(/[^A-Za-z0-9_]/g, ""))}
+                  placeholder={activePlatform?.placeholder}
+                  autoFocus
+                  style={{ flex: 1, padding: "10px 14px", background: "transparent", border: "none", color: "#fff", fontSize: 14, outline: "none", fontFamily: "monospace" }}
+                />
+              </div>
+            ) : (
+              <input
+                type="text"
+                value={fieldValue}
+                onChange={e => setFieldValue(e.target.value)}
+                placeholder={activePlatform?.placeholder}
+                autoFocus
+                style={{ ...inputStyle, fontFamily: "monospace", fontSize: 13 }}
+              />
+            )}
+
+            {fieldValue.trim() && !detected && (
+              <div style={{ fontSize: 11, color: "#f59e0b", marginTop: 5 }}>
+                {platform === "twitch" ? "Nieprawidłowa nazwa kanału" : "Nie rozpoznano linku"}
+              </div>
             )}
           </div>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="https://youtube.com/live/..., facebook.com/.../live/... lub twitch.tv/nazwa"
-            style={{ ...inputStyle, fontFamily: "monospace", fontSize: 13 }}
-          />
-          {input.trim() && !detected && (
-            <div style={{ fontSize: 11, color: "#f59e0b", marginTop: 5 }}>
-              Nie rozpoznano platformy — wklej pełny link do YouTube, Facebook Live lub Twitch
+
+          {previewSrc && (
+            <div>
+              <div style={{ fontSize: 11, color: "#475569", marginBottom: 6 }}>Podgląd</div>
+              <div style={{ aspectRatio: "16/9", background: "#0a0f1e", borderRadius: 9, overflow: "hidden", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <iframe
+                  src={previewSrc}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ width: "100%", height: "100%", border: "none" }}
+                  title="Podgląd transmisji"
+                />
+              </div>
             </div>
           )}
-        </div>
 
-        {previewSrc && (
-          <div>
-            <div style={{ fontSize: 11, color: "#475569", marginBottom: 6 }}>Podgląd</div>
-            <div style={{ aspectRatio: "16/9", background: "#0a0f1e", borderRadius: 9, overflow: "hidden", border: "1px solid rgba(255,255,255,0.07)" }}>
-              <iframe
-                src={previewSrc}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                style={{ width: "100%", height: "100%", border: "none" }}
-                title="Podgląd transmisji"
-              />
+          {saveStatus && (
+            <div style={{
+              fontSize: 13,
+              color: saveStatus.includes("Błąd") ? "#ef4444" : "#22c55e",
+              background: saveStatus.includes("Błąd") ? "rgba(239,68,68,0.08)" : "rgba(34,197,94,0.08)",
+              border: `1px solid ${saveStatus.includes("Błąd") ? "rgba(239,68,68,0.2)" : "rgba(34,197,94,0.2)"}`,
+              borderRadius: 7, padding: "9px 13px",
+            }}>
+              {saveStatus}
             </div>
-          </div>
-        )}
+          )}
 
-        {saveStatus && (
-          <div style={{
-            fontSize: 13,
-            color: saveStatus.includes("Błąd") ? "#ef4444" : "#22c55e",
-            background: saveStatus.includes("Błąd") ? "rgba(239,68,68,0.08)" : "rgba(34,197,94,0.08)",
-            border: `1px solid ${saveStatus.includes("Błąd") ? "rgba(239,68,68,0.2)" : "rgba(34,197,94,0.2)"}`,
-            borderRadius: 7, padding: "9px 13px",
-          }}>
-            {saveStatus}
-          </div>
-        )}
-
-        <div style={{ display: "flex", gap: 10 }}>
-          <button type="submit" disabled={saving || !detected} style={{ ...btnPrimaryStyle, flex: 1, opacity: !detected ? 0.5 : 1 }}>
-            {saving ? "Zapisuję..." : "Zapisz i uruchom"}
-          </button>
-          {savedUrl && (
-            <button type="button" onClick={handleClear} disabled={saving} style={btnDangerStyle}>
-              Wyłącz
+          <div style={{ display: "flex", gap: 10 }}>
+            <button type="submit" disabled={saving || !detected} style={{ ...btnPrimaryStyle, flex: 1, opacity: !detected ? 0.5 : 1 }}>
+              {saving ? "Zapisuję..." : "Zapisz i uruchom"}
             </button>
-          )}
-        </div>
-      </form>
+            {savedUrl && (
+              <button type="button" onClick={handleClear} disabled={saving} style={btnDangerStyle}>
+                Wyłącz
+              </button>
+            )}
+          </div>
+        </form>
+      )}
 
       {/* ── Tablica wyników ── */}
       <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "36px 0" }} />
@@ -410,7 +428,7 @@ export default function PanelTransmisja() {
   );
 }
 
-const inputStyle = { width: "100%", padding: "10px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#fff", fontSize: 14, transition: "border-color 0.2s, background 0.2s" };
+const inputStyle     = { width: "100%", padding: "10px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#fff", fontSize: 14, transition: "border-color 0.2s, background 0.2s" };
 const btnPrimaryStyle = { padding: "11px 20px", border: "none", borderRadius: 8, color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer" };
-const btnDangerStyle = { padding: "11px 16px", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)", borderRadius: 8, color: "#ef4444", fontSize: 14, fontWeight: 600, cursor: "pointer" };
-const scoreBtnStyle = { width: 40, height: 40, border: "1px solid rgba(255,255,255,0.12)", borderRadius: 8, background: "rgba(255,255,255,0.05)", color: "#fff", fontSize: 22, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 300 };
+const btnDangerStyle  = { padding: "11px 16px", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)", borderRadius: 8, color: "#ef4444", fontSize: 14, fontWeight: 600, cursor: "pointer" };
+const scoreBtnStyle   = { width: 40, height: 40, border: "1px solid rgba(255,255,255,0.12)", borderRadius: 8, background: "rgba(255,255,255,0.05)", color: "#fff", fontSize: 22, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 300 };
