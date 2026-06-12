@@ -5,6 +5,27 @@ import bcrypt from "bcryptjs";
 export async function POST(request) {
   const { login, password } = await request.json();
 
+  if (!login || !password) {
+    return Response.json({ error: "Podaj login i hasło" }, { status: 400 });
+  }
+
+  // Admin z .env — osobna procedura, cookie stream_session
+  if (
+    login === process.env.STREAM_ADMIN_LOGIN &&
+    password === process.env.STREAM_ADMIN_PASSWORD
+  ) {
+    const token = Buffer.from(`${login}:${password}`).toString("base64");
+    const store = await cookies();
+    store.set("stream_session", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+    return Response.json({ role: "ADMIN", redirect: "/admin" });
+  }
+
+  // Konta z bazy danych (piłkarze, sztab)
   const user = await prisma.user.findUnique({
     where: { login },
     include: { player: true },
@@ -32,10 +53,11 @@ export async function POST(request) {
     expires: expiresAt,
   });
 
+  const redirect = user.role === "ADMIN" ? "/admin" : "/konto";
   return Response.json({
-    id: user.id,
-    login: user.login,
     role: user.role,
+    redirect,
+    login: user.login,
     player: user.player,
   });
 }

@@ -1,21 +1,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+function LoginForm() {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const params = useSearchParams();
+  const next = params.get("next");
 
   useEffect(() => {
     fetch("/api/auth/me")
       .then((r) => r.json())
-      .then((d) => { if (d.user) router.replace("/konto"); });
-  }, [router]);
+      .then((d) => { if (d.user) router.replace(next || "/konto"); });
+  }, [router, next]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -27,10 +30,10 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ login, password }),
       });
+      const d = await r.json();
       if (r.ok) {
-        router.push("/konto");
+        router.push(next || d.redirect || "/konto");
       } else {
-        const d = await r.json();
         setError(d.error || "Błąd logowania");
       }
     } catch {
@@ -56,13 +59,18 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div>
             <label style={lbl}>Login</label>
-            <input type="text" value={login} onChange={(e) => setLogin(e.target.value)}
-              style={inp} autoComplete="username" required placeholder="twój login" />
+            <input
+              type="text" value={login} onChange={(e) => setLogin(e.target.value)}
+              style={inp} autoComplete="username" required placeholder="twój login"
+              autoFocus
+            />
           </div>
           <div>
             <label style={lbl}>Hasło</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-              style={inp} autoComplete="current-password" required placeholder="••••••" />
+            <input
+              type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+              style={inp} autoComplete="current-password" required placeholder="••••••"
+            />
           </div>
 
           {error && <div style={alertErr}>{error}</div>}
@@ -72,7 +80,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div style={{ marginTop: 20, textAlign: "center" }}>
+        <div style={{ marginTop: 16, textAlign: "center" }}>
           <Link href="/" style={{ fontSize: 12, color: "#334155", textDecoration: "none" }}>
             ← Strona główna
           </Link>
@@ -87,6 +95,14 @@ export default function LoginPage() {
         input:focus { outline: none; border-color: rgba(59,130,246,0.5) !important; background: rgba(15,23,42,0.8) !important; }
       `}</style>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }
 
