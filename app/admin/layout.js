@@ -117,7 +117,20 @@ function LoginScreen({ onLogin }) {
           </button>
         </form>
 
-        <div style={{ marginTop: 20, textAlign: "center" }}>
+        <div style={{
+          marginTop: 20, padding: "12px 14px",
+          background: "rgba(59,130,246,0.05)",
+          border: "1px solid rgba(59,130,246,0.15)",
+          borderRadius: 8, fontSize: 12, color: "#475569", lineHeight: 1.6,
+        }}>
+          Jesteś piłkarzem?{" "}
+          <Link href="/login" style={{ color: "#3b82f6", textDecoration: "none", fontWeight: 600 }}>
+            Zaloguj się tutaj →
+          </Link>
+          <br />
+          Ten panel jest tylko dla administratorów klubu.
+        </div>
+        <div style={{ marginTop: 12, textAlign: "center" }}>
           <Link href="/" style={{ fontSize: 12, color: "#334155", textDecoration: "none" }}>
             ← Strona główna
           </Link>
