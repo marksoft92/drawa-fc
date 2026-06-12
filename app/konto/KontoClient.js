@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function KontoClient({ initialUser }) {
-  const [user] = useState(initialUser);
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -26,10 +25,6 @@ export default function KontoClient({ initialUser }) {
     if (next !== confirm) { setPwError("Hasła nie są identyczne"); return; }
     if (next.length < 6) { setPwError("Min. 6 znaków"); return; }
 
-    // Przechwytujemy PRZED await — stan się nie zmieni
-    const wasMustChange = user.mustChangePassword;
-    const isAdmin = user.role === "ADMIN";
-
     setSaving(true);
     try {
       const r = await fetch("/api/auth/haslo", {
@@ -40,10 +35,10 @@ export default function KontoClient({ initialUser }) {
       const d = await r.json();
       if (r.ok) {
         setCurrent(""); setNext(""); setConfirm("");
-        if (wasMustChange && isAdmin) {
-          window.location.replace("/panel");
-        } else if (wasMustChange) {
-          window.location.reload();
+        if (initialUser.mustChangePassword && initialUser.role === "ADMIN") {
+          router.push("/panel");
+        } else if (initialUser.mustChangePassword) {
+          router.refresh();
         } else {
           setShowPwForm(false);
           setPwSuccess("Hasło zmienione pomyślnie!");
@@ -58,10 +53,10 @@ export default function KontoClient({ initialUser }) {
     }
   }
 
-  const roleLabel = { ADMIN: "Administrator", PLAYER: "Piłkarz", STAFF: "Sztab" }[user.role] ?? user.role;
-  const initials = (user.player?.imieNazwisko || user.login).charAt(0).toUpperCase();
+  const roleLabel = { ADMIN: "Administrator", PLAYER: "Piłkarz", STAFF: "Sztab" }[initialUser.role] ?? initialUser.role;
+  const initials = (initialUser.player?.imieNazwisko || initialUser.login).charAt(0).toUpperCase();
 
-  if (user.mustChangePassword) {
+  if (initialUser.mustChangePassword) {
     return (
       <div style={pageStyle}>
         <div style={{ ...cardStyle, maxWidth: 400 }}>
@@ -71,7 +66,7 @@ export default function KontoClient({ initialUser }) {
             </div>
             <div style={{ fontSize: 16, fontWeight: 600, color: "#fff" }}>Ustaw hasło</div>
             <div style={{ fontSize: 13, color: "#64748b", marginTop: 6 }}>
-              Cześć <strong style={{ color: "#fff" }}>{user.player?.imieNazwisko || user.login}</strong>!<br />
+              Cześć <strong style={{ color: "#fff" }}>{initialUser.player?.imieNazwisko || initialUser.login}</strong>!<br />
               Przed pierwszym wejściem ustaw własne hasło.
             </div>
           </div>
@@ -118,17 +113,17 @@ export default function KontoClient({ initialUser }) {
               </div>
               <div>
                 <div style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>
-                  {user.player?.imieNazwisko || user.login}
+                  {initialUser.player?.imieNazwisko || initialUser.login}
                 </div>
-                <div style={{ fontSize: 12, color: "#475569" }}>@{user.login} · {roleLabel}</div>
+                <div style={{ fontSize: 12, color: "#475569" }}>@{initialUser.login} · {roleLabel}</div>
               </div>
             </div>
             <button onClick={handleLogout} style={btnGhost}>Wyloguj</button>
           </div>
 
-          {user.player && (
+          {initialUser.player && (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-              {[{ label: "Pozycja", value: user.player.pozycja }, { label: "Numer", value: user.player.numer }]
+              {[{ label: "Pozycja", value: initialUser.player.pozycja }, { label: "Numer", value: initialUser.player.numer }]
                 .filter((r) => r.value)
                 .map((row) => (
                   <div key={row.label} style={{ padding: "10px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8 }}>
