@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
-const NAV_ITEMS = [
+const ADMIN_NAV = [
   {
     label: "Gracze",
     href: "/panel/gracze",
@@ -27,12 +27,38 @@ const NAV_ITEMS = [
       </svg>
     ),
   },
+  {
+    label: "Profil",
+    href: "/panel/profil",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 20v-1a8 8 0 0 1 16 0v1" />
+      </svg>
+    ),
+  },
 ];
 
-export default function PanelLayoutClient({ children }) {
+const PLAYER_NAV = [
+  {
+    label: "Profil",
+    href: "/panel/profil",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 20v-1a8 8 0 0 1 16 0v1" />
+      </svg>
+    ),
+  },
+];
+
+export default function PanelLayoutClient({ role, login, name, children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  const navItems = role === "ADMIN" ? ADMIN_NAV : PLAYER_NAV;
+  const displayName = name || login;
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -57,13 +83,17 @@ export default function PanelLayoutClient({ children }) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="MKS Drawa" width={36} height={36} style={{ objectFit: "contain", borderRadius: 4 }} />
           <div>
-            <div style={{ fontSize: 13, fontFamily: "'Bebas Neue',Impact,sans-serif", letterSpacing: "0.1em", color: "#fff", lineHeight: 1 }}>MKS Drawa</div>
-            <div style={{ fontSize: 9, color: "#3b82f6", letterSpacing: "0.2em" }}>ADMIN</div>
+            <div style={{ fontSize: 13, fontFamily: "'Bebas Neue',Impact,sans-serif", letterSpacing: "0.1em", color: "#fff", lineHeight: 1 }}>
+              MKS Drawa
+            </div>
+            <div style={{ fontSize: 9, color: role === "ADMIN" ? "#3b82f6" : "#22c55e", letterSpacing: "0.2em" }}>
+              {role === "ADMIN" ? "ADMIN" : role === "STAFF" ? "SZTAB" : "PIŁKARZ"}
+            </div>
           </div>
         </div>
 
         <nav style={{ flex: 1, padding: "12px 10px", display: "flex", flexDirection: "column", gap: 2 }}>
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const active = pathname === item.href || pathname.startsWith(item.href + "/");
             return (
               <Link
@@ -88,11 +118,16 @@ export default function PanelLayoutClient({ children }) {
           })}
         </nav>
 
-        <div style={{ padding: "14px 16px", borderTop: "1px solid rgba(255,255,255,0.05)", display: "flex", gap: 10, alignItems: "center" }}>
-          <Link href="/" style={{ fontSize: 11, color: "#334155", textDecoration: "none", flex: 1 }}>← Strona</Link>
-          <button onClick={handleLogout} style={{ background: "none", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, color: "#475569", fontSize: 11, padding: "5px 10px", cursor: "pointer" }}>
-            Wyloguj
-          </button>
+        <div style={{ padding: "14px 16px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+          <div style={{ fontSize: 11, color: "#475569", marginBottom: 10, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {displayName}
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <Link href="/" style={{ fontSize: 11, color: "#334155", textDecoration: "none", flex: 1 }}>← Strona</Link>
+            <button onClick={handleLogout} style={{ background: "none", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, color: "#475569", fontSize: 11, padding: "5px 10px", cursor: "pointer" }}>
+              Wyloguj
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -106,7 +141,7 @@ export default function PanelLayoutClient({ children }) {
             ☰
           </button>
           <div style={{ fontSize: 12, color: "#334155" }}>
-            {NAV_ITEMS.find((i) => pathname.startsWith(i.href))?.label ?? "Dashboard"}
+            {navItems.find((i) => pathname.startsWith(i.href))?.label ?? (role === "ADMIN" ? "Dashboard" : "Panel")}
           </div>
         </div>
         <div style={{ flex: 1, padding: "28px 28px" }}>{children}</div>

@@ -21,7 +21,7 @@ export async function POST(request) {
     return Response.json({ error: "Podaj login i hasło" }, { status: 400 });
   }
 
-  // Admin z .env — upsert do DB żeby sesja działała tak samo jak gracze
+  // Admin z .env
   if (
     login === process.env.STREAM_ADMIN_LOGIN &&
     password === process.env.STREAM_ADMIN_PASSWORD
@@ -30,17 +30,14 @@ export async function POST(request) {
     const adminUser = await prisma.user.upsert({
       where: { login },
       create: { login, password: hash, role: "ADMIN", mustChangePassword: false },
-      update: { role: "ADMIN", mustChangePassword: false },
+      update: { role: "ADMIN" },
     });
     await createSession(adminUser.id);
-    return Response.json({ role: "ADMIN", redirect: "/panel", mustChangePassword: false });
+    return Response.json({ redirect: "/panel" });
   }
 
   // Gracze i sztab z bazy
-  const user = await prisma.user.findUnique({
-    where: { login },
-    include: { player: true },
-  });
+  const user = await prisma.user.findUnique({ where: { login } });
 
   if (!user || !user.active) {
     return Response.json({ error: "Nieprawidłowy login lub hasło" }, { status: 401 });
@@ -52,12 +49,5 @@ export async function POST(request) {
   }
 
   await createSession(user.id);
-
-  const redirect = user.role === "ADMIN" ? "/panel" : "/konto";
-  return Response.json({
-    role: user.role,
-    redirect,
-    mustChangePassword: user.mustChangePassword,
-    login: user.login,
-  });
+  return Response.json({ redirect: "/panel" });
 }

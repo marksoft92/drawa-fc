@@ -4,8 +4,12 @@ import PanelLayoutClient from "./PanelLayoutClient";
 
 export default async function PanelLayout({ children }) {
   const session = await getPlayerSession();
-  if (!session || session.user.role !== "ADMIN") {
-    redirect("/login?next=/panel");
-  }
-  return <PanelLayoutClient>{children}</PanelLayoutClient>;
+  if (!session) redirect("/login?next=/panel");
+
+  const { user } = session;
+  return (
+    <PanelLayoutClient role={user.role} login={user.login} name={user.player?.imieNazwisko || null}>
+      {children}
+    </PanelLayoutClient>
+  );
 }

@@ -17,7 +17,7 @@ function LoginForm() {
   useEffect(() => {
     fetch("/api/auth/me")
       .then((r) => r.json())
-      .then((d) => { if (d.user) router.replace(next || "/konto"); });
+      .then((d) => { if (d.user) router.replace(next || "/panel"); });
   }, [router, next]);
 
   async function handleSubmit(e) {
@@ -32,7 +32,7 @@ function LoginForm() {
       });
       const d = await r.json();
       if (r.ok) {
-        router.push(next || d.redirect || "/konto");
+        router.push(next || d.redirect || "/panel");
       } else {
         setError(d.error || "Błąd logowania");
       }
