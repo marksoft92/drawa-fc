@@ -33,7 +33,7 @@ export async function POST(request) {
       update: { role: "ADMIN", mustChangePassword: false },
     });
     await createSession(adminUser.id);
-    return Response.json({ role: "ADMIN", redirect: "/admin", mustChangePassword: false });
+    return Response.json({ role: "ADMIN", redirect: "/panel", mustChangePassword: false });
   }
 
   // Gracze i sztab z bazy
@@ -53,7 +53,7 @@ export async function POST(request) {
 
   await createSession(user.id);
 
-  const redirect = user.role === "ADMIN" ? "/admin" : "/konto";
+  const redirect = user.role === "ADMIN" ? "/panel" : "/konto";
   return Response.json({
     role: user.role,
     redirect,

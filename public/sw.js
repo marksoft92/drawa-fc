@@ -14,6 +14,7 @@ self.addEventListener('fetch', (e) => {
   if (e.request.url.includes('/api/')) return;
   if (e.request.url.includes('/konto')) return;
   if (e.request.url.includes('/admin')) return;
+  if (e.request.url.includes('/panel')) return;
   if (e.request.url.includes('/login')) return;
   e.respondWith(
     fetch(e.request)

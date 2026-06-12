@@ -7,13 +7,16 @@ export async function PATCH(request, { params }) {
 
   const { id } = await params;
   const body = await request.json();
-  const { email, role, active, newPassword, imieNazwisko, pozycja, numer, dataUrodzenia } = body;
+  const { email, role, active, newPassword, mustChangePassword, imieNazwisko, pozycja, numer, dataUrodzenia } = body;
 
   const userUpdate = {};
   if (email !== undefined) userUpdate.email = email || null;
   if (role !== undefined) userUpdate.role = role;
   if (active !== undefined) userUpdate.active = active;
-  if (newPassword) userUpdate.password = await bcrypt.hash(newPassword, 10);
+  if (newPassword) {
+    userUpdate.password = await bcrypt.hash(newPassword, 10);
+    userUpdate.mustChangePassword = mustChangePassword !== undefined ? mustChangePassword : true;
+  }
 
   const playerUpdate = {};
   if (imieNazwisko !== undefined) playerUpdate.imieNazwisko = imieNazwisko;

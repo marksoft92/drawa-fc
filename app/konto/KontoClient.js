@@ -41,9 +41,9 @@ export default function KontoClient({ initialUser }) {
       if (r.ok) {
         setCurrent(""); setNext(""); setConfirm("");
         if (wasMustChange && isAdmin) {
-          window.location.replace("/admin");
+          window.location.replace("/panel");
         } else if (wasMustChange) {
-          window.location.replace("/konto");
+          window.location.reload();
         } else {
           setShowPwForm(false);
           setPwSuccess("Hasło zmienione pomyślnie!");
