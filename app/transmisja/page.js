@@ -35,15 +35,57 @@ function buildEmbedUrl(info) {
   return null;
 }
 
+function calcElapsed(state) {
+  if (!state) return 0;
+  let t = state.timerOffset || 0;
+  if (state.timerRunning && state.timerStartedAt) {
+    t += (Date.now() - new Date(state.timerStartedAt).getTime()) / 1000;
+  }
+  return Math.floor(t);
+}
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${String(sec).padStart(2, "0")}`;
+}
+
+function halfLabel(h) {
+  if (h === "1") return "1. POŁO.";
+  if (h === "przerwa") return "PRZERWA";
+  if (h === "2") return "2. POŁO.";
+  if (h === "po") return "PO MECZU";
+  return "";
+}
+
 export default function TransmisjaPage() {
   const [streamUrl, setStreamUrl] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [match, setMatch] = useState(null);
+  const [, setTick] = useState(0);
 
+  // Load stream URL
   useEffect(() => {
     fetch("/api/stream/url")
       .then((r) => r.json())
       .then((d) => { setStreamUrl(d.url || ""); setLoading(false); })
       .catch(() => setLoading(false));
+  }, []);
+
+  // Poll match state every 2s
+  useEffect(() => {
+    function load() {
+      fetch("/api/match/state").then(r => r.json()).then(setMatch).catch(() => {});
+    }
+    load();
+    const id = setInterval(load, 2000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Tick every 1s to animate the timer smoothly
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 1000);
+    return () => clearInterval(id);
   }, []);
 
   const info = detectStream(streamUrl);
@@ -57,6 +99,7 @@ export default function TransmisjaPage() {
         body { background: #030712; color: #fff; font-family: -apple-system, 'Segoe UI', sans-serif; }
         .stream-wrap { position: relative; width: 100%; padding-bottom: 56.25%; background: #0a0f1e; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07); }
         .stream-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+        .match-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: center; background: rgba(3,7,18,0.88); backdrop-filter: blur(8px); padding: 8px 14px; gap: 0; }
         @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.7); } }
       `}</style>
 
@@ -90,6 +133,42 @@ export default function TransmisjaPage() {
                 allowFullScreen
                 title="Transmisja MKS Drawa Drawno"
               />
+              {match?.active && (
+                <div className="match-bar">
+                  {/* Drużyna domowa */}
+                  <div style={{ flex: 1, fontSize: "clamp(10px,1.8vw,14px)", fontWeight: 700, color: "#f1f5f9", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {match.homeTeam}
+                  </div>
+
+                  {/* Wynik */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "clamp(6px,1.2vw,12px)", padding: "0 clamp(8px,1.5vw,16px)" }}>
+                    <span style={{ fontSize: "clamp(14px,2.8vw,22px)", fontWeight: 800, color: "#fff", fontVariantNumeric: "tabular-nums", minWidth: "1ch", textAlign: "center" }}>
+                      {match.homeScore}
+                    </span>
+                    <span style={{ fontSize: "clamp(12px,2vw,18px)", color: "#475569", fontWeight: 700 }}>—</span>
+                    <span style={{ fontSize: "clamp(14px,2.8vw,22px)", fontWeight: 800, color: "#fff", fontVariantNumeric: "tabular-nums", minWidth: "1ch", textAlign: "center" }}>
+                      {match.awayScore}
+                    </span>
+                  </div>
+
+                  {/* Drużyna gości */}
+                  <div style={{ flex: 1, fontSize: "clamp(10px,1.8vw,14px)", fontWeight: 700, color: "#f1f5f9", textAlign: "right", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {match.awayTeam}
+                  </div>
+
+                  {/* Czas + połowa */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "clamp(4px,0.8vw,8px)", marginLeft: "clamp(8px,1.5vw,16px)", paddingLeft: "clamp(8px,1.5vw,16px)", borderLeft: "1px solid rgba(255,255,255,0.1)", flexShrink: 0 }}>
+                    <span style={{ fontSize: "clamp(10px,1.8vw,14px)", fontFamily: "monospace", color: "#94a3b8", fontVariantNumeric: "tabular-nums", letterSpacing: 1 }}>
+                      {fmtTime(calcElapsed(match))}
+                    </span>
+                    {match.half && (
+                      <span style={{ fontSize: "clamp(8px,1.3vw,11px)", color: "#64748b", fontWeight: 700, letterSpacing: "0.05em" }}>
+                        {halfLabel(match.half)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div style={{ aspectRatio: "16/9", background: "#0a0f1e", borderRadius: 12, border: "1px solid rgba(255,255,255,0.07)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, color: "#475569", textAlign: "center", padding: 24 }}>

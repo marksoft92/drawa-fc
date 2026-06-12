@@ -37,13 +37,36 @@ function buildEmbedUrl(info) {
   return null;
 }
 
+function calcElapsed(state) {
+  if (!state) return 0;
+  let t = state.timerOffset || 0;
+  if (state.timerRunning && state.timerStartedAt) {
+    t += (Date.now() - new Date(state.timerStartedAt).getTime()) / 1000;
+  }
+  return Math.floor(t);
+}
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${String(sec).padStart(2, "0")}`;
+}
+
 const PLATFORM = {
   youtube: { label: "YouTube", color: "#ef4444" },
   facebook: { label: "Facebook", color: "#1877f2" },
   twitch: { label: "Twitch", color: "#9147ff" },
 };
 
+const HALVES = [
+  { value: "1", label: "1. połowa" },
+  { value: "przerwa", label: "Przerwa" },
+  { value: "2", label: "2. połowa" },
+  { value: "po", label: "Po meczu" },
+];
+
 export default function PanelTransmisja() {
+  // ── Stream URL ─────────────────────────────────────────────────────────────
   const [input, setInput] = useState("");
   const [savedUrl, setSavedUrl] = useState("");
   const [saveStatus, setSaveStatus] = useState("");
@@ -102,8 +125,45 @@ export default function PanelTransmisja() {
     }
   }
 
+  // ── Match state ────────────────────────────────────────────────────────────
+  const [match, setMatch] = useState(null);
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    fetch("/api/match/state").then(r => r.json()).then(setMatch).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  async function patchMatch(updates) {
+    const next = { ...match, ...updates };
+    setMatch(next);
+    await fetch("/api/match/state", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(next),
+    });
+  }
+
+  function startTimer() {
+    patchMatch({ timerRunning: true, timerStartedAt: new Date().toISOString() });
+  }
+  function stopTimer() {
+    const s = calcElapsed(match);
+    patchMatch({ timerRunning: false, timerStartedAt: null, timerOffset: s });
+  }
+  function resetTimer() {
+    patchMatch({ timerRunning: false, timerStartedAt: null, timerOffset: 0 });
+  }
+
+  // ── JSX ───────────────────────────────────────────────────────────────────
   return (
     <div style={{ maxWidth: 640 }}>
+
+      {/* ── Transmisja URL ── */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28 }}>
         <div style={{ width: 4, height: 26, background: "#ef4444", borderRadius: 2 }} />
         <div>
@@ -229,15 +289,128 @@ export default function PanelTransmisja() {
         </div>
       </form>
 
+      {/* ── Tablica wyników ── */}
+      <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "36px 0" }} />
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 4, height: 26, background: "#3b82f6", borderRadius: 2 }} />
+          <div>
+            <div style={{ fontSize: "clamp(20px,4vw,26px)", fontFamily: "'Bebas Neue',Impact,sans-serif", letterSpacing: "0.1em", color: "#fff" }}>
+              Tablica wyników
+            </div>
+            <div style={{ fontSize: 12, color: "#475569", marginTop: 2 }}>Nakładka na transmisji</div>
+          </div>
+        </div>
+        <button
+          onClick={() => patchMatch({ active: !match?.active })}
+          style={{
+            padding: "7px 16px", borderRadius: 20, cursor: "pointer", fontSize: 12, fontWeight: 700,
+            background: match?.active ? "rgba(34,197,94,0.12)" : "rgba(255,255,255,0.04)",
+            color: match?.active ? "#22c55e" : "#475569",
+            border: `1px solid ${match?.active ? "rgba(34,197,94,0.3)" : "rgba(255,255,255,0.1)"}`,
+          }}
+        >
+          {match?.active ? "● WIDOCZNA" : "○ UKRYTA"}
+        </button>
+      </div>
+
+      {/* Drużyny */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 10, alignItems: "flex-end", marginBottom: 20 }}>
+        <div>
+          <div style={{ fontSize: 10, color: "#64748b", fontWeight: 600, marginBottom: 5, letterSpacing: "0.06em" }}>DRUŻYNA DOMOWA</div>
+          <input
+            value={match?.homeTeam ?? ""}
+            onChange={e => setMatch(m => ({ ...m, homeTeam: e.target.value }))}
+            onBlur={e => patchMatch({ homeTeam: e.target.value })}
+            placeholder="MKS Drawa"
+            style={inputStyle}
+          />
+        </div>
+        <div style={{ color: "#334155", fontSize: 20, fontWeight: 700, paddingBottom: 10 }}>vs</div>
+        <div>
+          <div style={{ fontSize: 10, color: "#64748b", fontWeight: 600, marginBottom: 5, letterSpacing: "0.06em" }}>DRUŻYNA GOŚCI</div>
+          <input
+            value={match?.awayTeam ?? ""}
+            onChange={e => setMatch(m => ({ ...m, awayTeam: e.target.value }))}
+            onBlur={e => patchMatch({ awayTeam: e.target.value })}
+            placeholder="Rywal FC"
+            style={inputStyle}
+          />
+        </div>
+      </div>
+
+      {/* Wynik */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 20, marginBottom: 20, padding: "20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <button onClick={() => patchMatch({ homeScore: Math.max(0, (match?.homeScore || 0) - 1) })} style={scoreBtnStyle}>−</button>
+          <div style={{ fontSize: 42, fontWeight: 800, color: "#fff", minWidth: 48, textAlign: "center", fontVariantNumeric: "tabular-nums" }}>
+            {match?.homeScore ?? 0}
+          </div>
+          <button onClick={() => patchMatch({ homeScore: (match?.homeScore || 0) + 1 })} style={scoreBtnStyle}>+</button>
+        </div>
+        <div style={{ fontSize: 28, color: "#334155", fontWeight: 700 }}>:</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <button onClick={() => patchMatch({ awayScore: Math.max(0, (match?.awayScore || 0) - 1) })} style={scoreBtnStyle}>−</button>
+          <div style={{ fontSize: 42, fontWeight: 800, color: "#fff", minWidth: 48, textAlign: "center", fontVariantNumeric: "tabular-nums" }}>
+            {match?.awayScore ?? 0}
+          </div>
+          <button onClick={() => patchMatch({ awayScore: (match?.awayScore || 0) + 1 })} style={scoreBtnStyle}>+</button>
+        </div>
+      </div>
+
+      {/* Połowa */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 20 }}>
+        {HALVES.map(h => (
+          <button
+            key={h.value}
+            onClick={() => patchMatch({ half: h.value })}
+            style={{
+              padding: "9px 4px",
+              border: "1px solid",
+              borderColor: match?.half === h.value ? "rgba(59,130,246,0.5)" : "rgba(255,255,255,0.08)",
+              background: match?.half === h.value ? "rgba(59,130,246,0.12)" : "rgba(255,255,255,0.02)",
+              borderRadius: 8, cursor: "pointer",
+              color: match?.half === h.value ? "#3b82f6" : "#64748b",
+              fontSize: 11, fontWeight: 600,
+            }}
+          >
+            {h.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Zegar */}
+      <div style={{ padding: "16px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ fontSize: 36, fontWeight: 700, fontFamily: "monospace", color: "#fff", letterSpacing: 2, fontVariantNumeric: "tabular-nums" }}>
+          {fmtTime(calcElapsed(match))}
+        </div>
+        <div style={{ display: "flex", gap: 8 }}>
+          {match?.timerRunning ? (
+            <button onClick={stopTimer} style={{ ...btnPrimaryStyle, background: "#f59e0b" }}>⏸ Stop</button>
+          ) : (
+            <button onClick={startTimer} style={{ ...btnPrimaryStyle, background: "#22c55e" }}>▶ Start</button>
+          )}
+          <button
+            onClick={resetTimer}
+            style={{ padding: "11px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#64748b", fontSize: 16, cursor: "pointer" }}
+          >
+            ↺
+          </button>
+        </div>
+      </div>
+
       <style>{`
         @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.7); } }
         input::placeholder { color: #334155; }
         input:focus { outline: none; border-color: rgba(59,130,246,0.5) !important; background: rgba(15,23,42,0.8) !important; }
+        button:active { transform: scale(0.96); }
       `}</style>
     </div>
   );
 }
 
 const inputStyle = { width: "100%", padding: "10px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#fff", fontSize: 14, transition: "border-color 0.2s, background 0.2s" };
-const btnPrimaryStyle = { padding: "11px 20px", background: "#3b82f6", border: "none", borderRadius: 8, color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer" };
+const btnPrimaryStyle = { padding: "11px 20px", border: "none", borderRadius: 8, color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer" };
 const btnDangerStyle = { padding: "11px 16px", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)", borderRadius: 8, color: "#ef4444", fontSize: 14, fontWeight: 600, cursor: "pointer" };
+const scoreBtnStyle = { width: 40, height: 40, border: "1px solid rgba(255,255,255,0.12)", borderRadius: 8, background: "rgba(255,255,255,0.05)", color: "#fff", fontSize: 22, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 300 };
