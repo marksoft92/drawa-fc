@@ -52,7 +52,21 @@ export default function NavBar({ backLabel }) {
  const [mobileOpen, setMobileOpen] = useState(false);
  const [scrolled, setScrolled] = useState(false);
  const [playing, setPlaying] = useState(false);
+ const [streamActive, setStreamActive] = useState(false);
  const nextMatch = getNextMatch();
+
+ useEffect(() => {
+  let cancelled = false;
+  function check() {
+   fetch("/api/stream/url")
+    .then((r) => r.json())
+    .then((d) => { if (!cancelled) setStreamActive(!!d.url); })
+    .catch(() => {});
+  }
+  check();
+  const interval = setInterval(check, 30000);
+  return () => { cancelled = true; clearInterval(interval); };
+ }, []);
 
  useEffect(() => {
   const onState = (e) => setPlaying(e.detail.playing);
@@ -142,6 +156,17 @@ export default function NavBar({ backLabel }) {
  {l.label.toUpperCase()}
  </Link>
  ))}
+ {streamActive && (
+ <Link
+ href="/transmisja"
+ style={{ fontSize: 11, color: "#ef4444", letterSpacing: "0.15em", textDecoration: "none", fontWeight: 700, transition: "color 0.2s", display: "flex", alignItems: "center", gap: 5 }}
+ onMouseEnter={(e) => (e.currentTarget.style.color = "#f87171")}
+ onMouseLeave={(e) => (e.currentTarget.style.color = "#ef4444")}
+ >
+ <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#ef4444", animation: "nav-pulse 1.6s ease-in-out infinite" }} />
+ TRANSMISJA
+ </Link>
+ )}
  </div>
 
  {/* Right side */}
@@ -254,6 +279,16 @@ export default function NavBar({ backLabel }) {
  {l.label}
  </Link>
  ))}
+ {streamActive && (
+ <Link
+ href="/transmisja"
+ onClick={close}
+ style={{ fontSize: 13, color: "#ef4444", fontWeight: 700, textDecoration: "none", padding: "10px 0", letterSpacing: "0.1em", display: "flex", alignItems: "center", gap: 8 }}
+ >
+ <div className="nav-pulse-dot" style={{ width: 7, height: 7, borderRadius: "50%", background: "#ef4444", flexShrink: 0 }} />
+ Transmisja na żywo
+ </Link>
+ )}
  </div>
  )}
  </nav>

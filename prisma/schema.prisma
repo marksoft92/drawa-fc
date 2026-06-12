@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Auth ────────────────────────────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  login     String   @unique
+  email     String?  @unique
+  password  String
+  role      Role     @default(PLAYER)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  player   Player?
+  sessions Session[]
+}
+
+enum Role {
+  ADMIN
+  PLAYER
+  STAFF
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ─── Piłkarze ─────────────────────────────────────────────────────────────────
+
+model Player {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  imieNazwisko  String
+  pozycja       String?
+  numer         Int?
+  dataUrodzenia DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// ─── Przyszłe funkcje (tabele dodamy migracją) ────────────────────────────────
+// Survey, SurveyQuestion, SurveyOption, SurveyVote
+// ChatRoom, ChatMessage
