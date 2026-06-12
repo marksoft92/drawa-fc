@@ -12,6 +12,9 @@ self.addEventListener('fetch', (e) => {
   if (!e.request.url.startsWith(self.location.origin)) return;
   if (e.request.url.includes('manifest.webmanifest')) return;
   if (e.request.url.includes('/api/')) return;
+  if (e.request.url.includes('/konto')) return;
+  if (e.request.url.includes('/admin')) return;
+  if (e.request.url.includes('/login')) return;
   e.respondWith(
     fetch(e.request)
       .then((res) => {

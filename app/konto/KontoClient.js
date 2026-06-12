@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function KontoClient({ initialUser }) {
-  const [user, setUser] = useState(initialUser);
+  const [user] = useState(initialUser);
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -14,10 +14,6 @@ export default function KontoClient({ initialUser }) {
   const [saving, setSaving] = useState(false);
   const [showPwForm, setShowPwForm] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    setUser(initialUser);
-  }, [initialUser]);
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -29,6 +25,11 @@ export default function KontoClient({ initialUser }) {
     setPwError("");
     if (next !== confirm) { setPwError("Hasła nie są identyczne"); return; }
     if (next.length < 6) { setPwError("Min. 6 znaków"); return; }
+
+    // Przechwytujemy PRZED await — stan się nie zmieni
+    const wasMustChange = user.mustChangePassword;
+    const isAdmin = user.role === "ADMIN";
+
     setSaving(true);
     try {
       const r = await fetch("/api/auth/haslo", {
@@ -38,12 +39,11 @@ export default function KontoClient({ initialUser }) {
       });
       const d = await r.json();
       if (r.ok) {
-        const wasMustChange = user.mustChangePassword;
         setCurrent(""); setNext(""); setConfirm("");
-        if (wasMustChange && user.role === "ADMIN") {
-          router.push("/admin");
+        if (wasMustChange && isAdmin) {
+          window.location.replace("/admin");
         } else if (wasMustChange) {
-          window.location.replace("/");
+          window.location.replace("/konto");
         } else {
           setShowPwForm(false);
           setPwSuccess("Hasło zmienione pomyślnie!");
@@ -69,7 +69,7 @@ export default function KontoClient({ initialUser }) {
             <div style={{ width: 48, height: 48, borderRadius: "50%", background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px", fontSize: 22 }}>
               🔑
             </div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: "#fff" }}>Zmień hasło</div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: "#fff" }}>Ustaw hasło</div>
             <div style={{ fontSize: 13, color: "#64748b", marginTop: 6 }}>
               Cześć <strong style={{ color: "#fff" }}>{user.player?.imieNazwisko || user.login}</strong>!<br />
               Przed pierwszym wejściem ustaw własne hasło.
@@ -94,21 +94,14 @@ export default function KontoClient({ initialUser }) {
             </div>
 
             {pwError && <div style={alertErr}>{pwError}</div>}
-            {pwSuccess && <div style={alertOk}>{pwSuccess}</div>}
 
             <button type="submit" disabled={saving} style={{ ...btnPrimary, marginTop: 4 }}>
-              {saving ? "Zmieniam..." : "Ustaw hasło i wejdź"}
+              {saving ? "Zapisuję..." : "Ustaw hasło i wejdź"}
             </button>
           </form>
         </div>
 
-        <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
-          * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { background: #030712; color: #fff; font-family: -apple-system,'Segoe UI',sans-serif; }
-          input::placeholder { color: #334155; }
-          input:focus { outline: none; border-color: rgba(59,130,246,0.5) !important; background: rgba(15,23,42,0.8) !important; }
-        `}</style>
+        <style>{globalStyle}</style>
       </div>
     );
   }
@@ -171,12 +164,11 @@ export default function KontoClient({ initialUser }) {
                 <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} style={inp} required autoComplete="new-password" placeholder="••••••" />
               </div>
               {pwError && <div style={alertErr}>{pwError}</div>}
-              {pwSuccess && <div style={alertOk}>{pwSuccess}</div>}
               <button type="submit" disabled={saving} style={btnPrimary}>{saving ? "Zmieniam..." : "Zmień hasło"}</button>
             </form>
           )}
 
-          {pwSuccess && !showPwForm && <div style={{ ...alertOk, marginTop: 12 }}>{pwSuccess}</div>}
+          {pwSuccess && <div style={{ ...alertOk, marginTop: showPwForm ? 0 : 12 }}>{pwSuccess}</div>}
         </div>
 
         <div style={{ textAlign: "center" }}>
@@ -184,13 +176,7 @@ export default function KontoClient({ initialUser }) {
         </div>
       </div>
 
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #030712; color: #fff; font-family: -apple-system,'Segoe UI',sans-serif; }
-        input::placeholder { color: #334155; }
-        input:focus { outline: none; border-color: rgba(59,130,246,0.5) !important; background: rgba(15,23,42,0.8) !important; }
-      `}</style>
+      <style>{globalStyle}</style>
     </div>
   );
 }
@@ -203,3 +189,10 @@ const btnPrimary = { padding: "10px 20px", background: "#3b82f6", border: "none"
 const btnGhost = { padding: "6px 12px", background: "none", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 7, color: "#64748b", fontSize: 12, cursor: "pointer" };
 const alertErr = { fontSize: 13, color: "#ef4444", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 7, padding: "9px 13px" };
 const alertOk = { fontSize: 13, color: "#22c55e", background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 7, padding: "9px 13px" };
+const globalStyle = `
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #030712; color: #fff; font-family: -apple-system,'Segoe UI',sans-serif; }
+  input::placeholder { color: #334155; }
+  input:focus { outline: none; border-color: rgba(59,130,246,0.5) !important; background: rgba(15,23,42,0.8) !important; }
+`;
