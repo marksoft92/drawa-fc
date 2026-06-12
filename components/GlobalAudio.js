@@ -1,13 +1,19 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function GlobalAudio() {
   const audioRef = useRef(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+    if (pathname.startsWith('/panel') || pathname.startsWith('/transmisja')) {
+      audio.pause();
+      return;
+    }
     audio.volume = 0.4;
 
     const dispatch = (playing) =>
