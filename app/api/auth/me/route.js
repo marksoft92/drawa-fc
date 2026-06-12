@@ -11,6 +11,7 @@ export async function GET() {
       login: user.login,
       email: user.email,
       role: user.role,
+      mustChangePassword: user.mustChangePassword,
       player: user.player,
     },
   });

@@ -15,9 +15,10 @@ model User {
   email     String?  @unique
   password  String
   role      Role     @default(PLAYER)
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  active             Boolean  @default(true)
+  mustChangePassword Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   player   Player?
   sessions Session[]

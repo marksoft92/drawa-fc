@@ -2,30 +2,41 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+const SESSION_MAX = 1000 * 60 * 60 * 24 * 30; // 30 dni
+
+async function createSession(userId) {
+  const expiresAt = new Date(Date.now() + SESSION_MAX);
+  const session = await prisma.session.create({ data: { userId, expiresAt } });
+  const store = await cookies();
+  store.set("player_session", session.token, {
+    httpOnly: true, sameSite: "lax", path: "/",
+    expires: expiresAt,
+  });
+  return session;
+}
+
 export async function POST(request) {
   const { login, password } = await request.json();
-
   if (!login || !password) {
     return Response.json({ error: "Podaj login i hasło" }, { status: 400 });
   }
 
-  // Admin z .env — osobna procedura, cookie stream_session
+  // Admin z .env — upsert do DB żeby sesja działała tak samo jak gracze
   if (
     login === process.env.STREAM_ADMIN_LOGIN &&
     password === process.env.STREAM_ADMIN_PASSWORD
   ) {
-    const token = Buffer.from(`${login}:${password}`).toString("base64");
-    const store = await cookies();
-    store.set("stream_session", token, {
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
+    const hash = await bcrypt.hash(password, 10);
+    const adminUser = await prisma.user.upsert({
+      where: { login },
+      create: { login, password: hash, role: "ADMIN", mustChangePassword: false },
+      update: { role: "ADMIN", mustChangePassword: false },
     });
-    return Response.json({ role: "ADMIN", redirect: "/admin" });
+    await createSession(adminUser.id);
+    return Response.json({ role: "ADMIN", redirect: "/admin", mustChangePassword: false });
   }
 
-  // Konta z bazy danych (piłkarze, sztab)
+  // Gracze i sztab z bazy
   const user = await prisma.user.findUnique({
     where: { login },
     include: { player: true },
@@ -40,24 +51,13 @@ export async function POST(request) {
     return Response.json({ error: "Nieprawidłowy login lub hasło" }, { status: 401 });
   }
 
-  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
-  const session = await prisma.session.create({
-    data: { userId: user.id, expiresAt },
-  });
-
-  const store = await cookies();
-  store.set("player_session", session.token, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    expires: expiresAt,
-  });
+  await createSession(user.id);
 
   const redirect = user.role === "ADMIN" ? "/admin" : "/konto";
   return Response.json({
     role: user.role,
     redirect,
+    mustChangePassword: user.mustChangePassword,
     login: user.login,
-    player: user.player,
   });
 }

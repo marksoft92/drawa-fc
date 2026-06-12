@@ -1,11 +1,8 @@
 "use client";
 
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-
-const AuthContext = createContext(null);
-export const useAuth = () => useContext(AuthContext);
 
 const NAV_ITEMS = [
   {
@@ -33,106 +30,99 @@ const NAV_ITEMS = [
 ];
 
 export default function AdminLayout({ children }) {
-  const [authed, setAuthed] = useState(false);
-  const [checking, setChecking] = useState(true);
+  const [ready, setReady] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/stream/check")
+    fetch("/api/auth/me")
       .then((r) => r.json())
       .then((d) => {
-        setAuthed(d.authed);
-        setChecking(false);
-        if (!d.authed) router.replace("/login?next=/admin");
+        if (!d.user || d.user.role !== "ADMIN") {
+          router.replace("/login?next=" + encodeURIComponent(pathname));
+        } else {
+          setReady(true);
+        }
       })
-      .catch(() => { setChecking(false); router.replace("/login?next=/admin"); });
-  }, [router]);
+      .catch(() => router.replace("/login"));
+  }, [router, pathname]);
 
   async function handleLogout() {
-    await fetch("/api/stream/logout", { method: "POST" });
+    await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
   }
 
-  if (checking || !authed) {
+  if (!ready) {
     return (
       <div style={{ minHeight: "100vh", background: "#030712", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ color: "#334155", fontSize: 14 }}>Ładowanie...</div>
+        <div style={{ width: 24, height: 24, border: "2px solid #1e293b", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
   return (
-    <AuthContext.Provider value={{ authed, logout: handleLogout }}>
-      <div style={{ minHeight: "100vh", background: "#030712", display: "flex" }}>
+    <div style={{ minHeight: "100vh", background: "#030712", display: "flex" }}>
+      {sidebarOpen && (
+        <div onClick={() => setSidebarOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 40, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }} />
+      )}
 
-        {sidebarOpen && (
-          <div onClick={() => setSidebarOpen(false)} style={{
-            position: "fixed", inset: 0, zIndex: 40,
-            background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",
-          }} />
-        )}
-
-        <aside className="admin-sidebar" style={{
-          position: "fixed", top: 0, left: 0, bottom: 0, width: 220,
-          background: "rgba(255,255,255,0.02)",
-          borderRight: "1px solid rgba(255,255,255,0.06)",
-          display: "flex", flexDirection: "column", zIndex: 50,
-          transition: "transform 0.25s",
-        }}>
-          <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", gap: 10 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="MKS Drawa" width={36} height={36} style={{ objectFit: "contain", borderRadius: 4 }} />
-            <div>
-              <div style={{ fontSize: 13, fontFamily: "'Bebas Neue',Impact,sans-serif", letterSpacing: "0.1em", color: "#fff", lineHeight: 1 }}>MKS Drawa</div>
-              <div style={{ fontSize: 9, color: "#3b82f6", letterSpacing: "0.2em" }}>ADMIN</div>
-            </div>
+      <aside className="admin-sidebar" style={{
+        position: "fixed", top: 0, left: 0, bottom: 0, width: 220,
+        background: "rgba(255,255,255,0.02)", borderRight: "1px solid rgba(255,255,255,0.06)",
+        display: "flex", flexDirection: "column", zIndex: 50, transition: "transform 0.25s",
+      }}>
+        <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", gap: 10 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="MKS Drawa" width={36} height={36} style={{ objectFit: "contain", borderRadius: 4 }} />
+          <div>
+            <div style={{ fontSize: 13, fontFamily: "'Bebas Neue',Impact,sans-serif", letterSpacing: "0.1em", color: "#fff", lineHeight: 1 }}>MKS Drawa</div>
+            <div style={{ fontSize: 9, color: "#3b82f6", letterSpacing: "0.2em" }}>ADMIN</div>
           </div>
-
-          <nav style={{ flex: 1, padding: "12px 10px", display: "flex", flexDirection: "column", gap: 2 }}>
-            {NAV_ITEMS.map((item) => {
-              const active = pathname === item.href || pathname.startsWith(item.href + "/");
-              return (
-                <Link key={item.href} href={item.href} onClick={() => setSidebarOpen(false)} style={{
-                  display: "flex", alignItems: "center", gap: 10,
-                  padding: "9px 12px", borderRadius: 8, textDecoration: "none",
-                  fontSize: 13, fontWeight: 500,
-                  color: active ? "#fff" : "#64748b",
-                  background: active ? "rgba(59,130,246,0.12)" : "transparent",
-                  border: active ? "1px solid rgba(59,130,246,0.2)" : "1px solid transparent",
-                  transition: "all 0.15s",
-                }}
-                  onMouseEnter={(e) => { if (!active) e.currentTarget.style.color = "#94a3b8"; }}
-                  onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = "#64748b"; }}
-                >
-                  <span style={{ color: active ? "#3b82f6" : "inherit", opacity: active ? 1 : 0.6 }}>{item.icon}</span>
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div style={{ padding: "14px 16px", borderTop: "1px solid rgba(255,255,255,0.05)", display: "flex", gap: 10, alignItems: "center" }}>
-            <Link href="/" style={{ fontSize: 11, color: "#334155", textDecoration: "none", flex: 1 }}>← Strona</Link>
-            <button onClick={handleLogout} style={{ background: "none", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, color: "#475569", fontSize: 11, padding: "5px 10px", cursor: "pointer" }}>
-              Wyloguj
-            </button>
-          </div>
-        </aside>
-
-        <div className="admin-main" style={{ flex: 1, marginLeft: 220, display: "flex", flexDirection: "column" }}>
-          <div className="admin-topbar" style={{ height: 52, borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "0 16px", display: "flex", alignItems: "center", gap: 12 }}>
-            <button className="admin-hamburger" onClick={() => setSidebarOpen((o) => !o)} style={{
-              display: "none", background: "none", border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: 6, color: "#94a3b8", fontSize: 16, padding: "4px 8px", cursor: "pointer",
-            }}>☰</button>
-            <div style={{ fontSize: 12, color: "#334155" }}>
-              {NAV_ITEMS.find((i) => pathname.startsWith(i.href))?.label ?? "Dashboard"}
-            </div>
-          </div>
-          <div style={{ flex: 1, padding: "28px 28px" }}>{children}</div>
         </div>
+
+        <nav style={{ flex: 1, padding: "12px 10px", display: "flex", flexDirection: "column", gap: 2 }}>
+          {NAV_ITEMS.map((item) => {
+            const active = pathname === item.href || pathname.startsWith(item.href + "/");
+            return (
+              <Link key={item.href} href={item.href} onClick={() => setSidebarOpen(false)} style={{
+                display: "flex", alignItems: "center", gap: 10, padding: "9px 12px",
+                borderRadius: 8, textDecoration: "none", fontSize: 13, fontWeight: 500,
+                color: active ? "#fff" : "#64748b",
+                background: active ? "rgba(59,130,246,0.12)" : "transparent",
+                border: active ? "1px solid rgba(59,130,246,0.2)" : "1px solid transparent",
+                transition: "all 0.15s",
+              }}
+                onMouseEnter={(e) => { if (!active) e.currentTarget.style.color = "#94a3b8"; }}
+                onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = "#64748b"; }}
+              >
+                <span style={{ color: active ? "#3b82f6" : "inherit", opacity: active ? 1 : 0.6 }}>{item.icon}</span>
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div style={{ padding: "14px 16px", borderTop: "1px solid rgba(255,255,255,0.05)", display: "flex", gap: 10, alignItems: "center" }}>
+          <Link href="/" style={{ fontSize: 11, color: "#334155", textDecoration: "none", flex: 1 }}>← Strona</Link>
+          <button onClick={handleLogout} style={{ background: "none", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, color: "#475569", fontSize: 11, padding: "5px 10px", cursor: "pointer" }}>
+            Wyloguj
+          </button>
+        </div>
+      </aside>
+
+      <div className="admin-main" style={{ flex: 1, marginLeft: 220, display: "flex", flexDirection: "column" }}>
+        <div className="admin-topbar" style={{ height: 52, borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "0 16px", display: "flex", alignItems: "center", gap: 12 }}>
+          <button className="admin-hamburger" onClick={() => setSidebarOpen((o) => !o)} style={{
+            display: "none", background: "none", border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: 6, color: "#94a3b8", fontSize: 16, padding: "4px 8px", cursor: "pointer",
+          }}>☰</button>
+          <div style={{ fontSize: 12, color: "#334155" }}>
+            {NAV_ITEMS.find((i) => pathname.startsWith(i.href))?.label ?? "Dashboard"}
+          </div>
+        </div>
+        <div style={{ flex: 1, padding: "28px 28px" }}>{children}</div>
       </div>
 
       <style>{`
@@ -140,13 +130,13 @@ export default function AdminLayout({ children }) {
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #030712; color: #fff; font-family: -apple-system,'Segoe UI',sans-serif; }
         input::placeholder { color: #334155; }
-        input:focus { outline: none; border-color: rgba(59,130,246,0.5) !important; background: rgba(15,23,42,0.8) !important; }
+        input:focus { outline: none; border-color: rgba(59,130,246,0.5) !important; }
         @media (max-width: 640px) {
           .admin-sidebar { transform: translateX(-100%) !important; }
           .admin-main { margin-left: 0 !important; }
           .admin-hamburger { display: flex !important; }
         }
       `}</style>
-    </AuthContext.Provider>
+    </div>
   );
 }

@@ -11,7 +11,6 @@ export async function POST(request) {
   if (!currentPassword || !newPassword) {
     return Response.json({ error: "Podaj aktualne i nowe hasło" }, { status: 400 });
   }
-
   if (newPassword.length < 6) {
     return Response.json({ error: "Nowe hasło musi mieć min. 6 znaków" }, { status: 400 });
   }
@@ -23,7 +22,10 @@ export async function POST(request) {
   }
 
   const hash = await bcrypt.hash(newPassword, 10);
-  await prisma.user.update({ where: { id: session.userId }, data: { password: hash } });
+  await prisma.user.update({
+    where: { id: session.userId },
+    data: { password: hash, mustChangePassword: false },
+  });
 
   return Response.json({ ok: true });
 }
