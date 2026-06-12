@@ -16,7 +16,7 @@ export default function KontoPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/auth/me")
+    fetch("/api/auth/me", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => {
         if (!d.user) { router.replace("/login"); return; }
@@ -45,15 +45,18 @@ export default function KontoPage() {
       const d = await r.json();
       if (r.ok) {
         const wasMustChange = user.mustChangePassword;
-        setUser((u) => ({ ...u, mustChangePassword: false }));
+        const isAdmin = user.role === "ADMIN";
         setCurrent(""); setNext(""); setConfirm("");
-        if (wasMustChange && user.role === "ADMIN") {
+        if (wasMustChange && isAdmin) {
           router.replace("/admin");
-        } else if (!wasMustChange) {
+        } else if (wasMustChange) {
+          // Odśwież dane z serwera (SW mógł mieć zbuforowane mustChangePassword:true)
+          const me = await fetch("/api/auth/me", { cache: "no-store" }).then((x) => x.json());
+          if (me.user) setUser(me.user);
+        } else {
           setPwSuccess("Hasło zmienione pomyślnie!");
           setTimeout(() => setPwSuccess(""), 4000);
         }
-        // wasMustChange + nie-admin: sam state update wystarczy — React rerenderuje profil
       } else {
         setPwError(d.error || "Błąd");
       }
