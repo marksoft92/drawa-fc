@@ -44,15 +44,16 @@ export default function KontoPage() {
       });
       const d = await r.json();
       if (r.ok) {
-        const isMustChange = user.mustChangePassword;
+        const wasMustChange = user.mustChangePassword;
         setUser((u) => ({ ...u, mustChangePassword: false }));
         setCurrent(""); setNext(""); setConfirm("");
-        if (isMustChange) {
-          router.replace(user.role === "ADMIN" ? "/admin" : "/konto");
-        } else {
+        if (wasMustChange && user.role === "ADMIN") {
+          router.replace("/admin");
+        } else if (!wasMustChange) {
           setPwSuccess("Hasło zmienione pomyślnie!");
           setTimeout(() => setPwSuccess(""), 4000);
         }
+        // wasMustChange + nie-admin: sam state update wystarczy — React rerenderuje profil
       } else {
         setPwError(d.error || "Błąd");
       }
