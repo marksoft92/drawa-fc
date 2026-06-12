@@ -44,10 +44,15 @@ export default function KontoPage() {
       });
       const d = await r.json();
       if (r.ok) {
+        const isMustChange = user.mustChangePassword;
         setUser((u) => ({ ...u, mustChangePassword: false }));
-        setPwSuccess("Hasło zmienione — jesteś zalogowany!");
         setCurrent(""); setNext(""); setConfirm("");
-        setTimeout(() => setPwSuccess(""), 4000);
+        if (isMustChange) {
+          router.replace(user.role === "ADMIN" ? "/admin" : "/konto");
+        } else {
+          setPwSuccess("Hasło zmienione pomyślnie!");
+          setTimeout(() => setPwSuccess(""), 4000);
+        }
       } else {
         setPwError(d.error || "Błąd");
       }
