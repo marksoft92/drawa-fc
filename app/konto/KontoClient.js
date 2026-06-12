@@ -12,6 +12,7 @@ export default function KontoClient({ initialUser }) {
   const [pwError, setPwError] = useState("");
   const [pwSuccess, setPwSuccess] = useState("");
   const [saving, setSaving] = useState(false);
+  const [showPwForm, setShowPwForm] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -44,8 +45,8 @@ export default function KontoClient({ initialUser }) {
         } else if (wasMustChange) {
           window.location.replace("/");
         } else {
+          setShowPwForm(false);
           setPwSuccess("Hasło zmienione pomyślnie!");
-          setTimeout(() => setPwSuccess(""), 4000);
         }
       } else {
         setPwError(d.error || "Błąd");
@@ -147,24 +148,35 @@ export default function KontoClient({ initialUser }) {
         </div>
 
         <div style={cardStyle}>
-          <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 16 }}>Zmień hasło</div>
-          <form onSubmit={handlePwChange} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <div>
-              <label style={lbl}>Aktualne hasło</label>
-              <input type="password" value={current} onChange={(e) => setCurrent(e.target.value)} style={inp} required autoComplete="current-password" placeholder="••••••" />
-            </div>
-            <div>
-              <label style={lbl}>Nowe hasło</label>
-              <input type="password" value={next} onChange={(e) => setNext(e.target.value)} style={inp} required autoComplete="new-password" placeholder="min. 6 znaków" />
-            </div>
-            <div>
-              <label style={lbl}>Powtórz nowe hasło</label>
-              <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} style={inp} required autoComplete="new-password" placeholder="••••••" />
-            </div>
-            {pwError && <div style={alertErr}>{pwError}</div>}
-            {pwSuccess && <div style={alertOk}>{pwSuccess}</div>}
-            <button type="submit" disabled={saving} style={btnPrimary}>{saving ? "Zmieniam..." : "Zmień hasło"}</button>
-          </form>
+          <button
+            onClick={() => { setShowPwForm((v) => !v); setPwError(""); setPwSuccess(""); setCurrent(""); setNext(""); setConfirm(""); }}
+            style={{ width: "100%", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", padding: 0 }}
+          >
+            <span style={{ fontSize: 14, fontWeight: 600, color: "#94a3b8" }}>Zmień hasło</span>
+            <span style={{ fontSize: 18, color: "#475569", lineHeight: 1 }}>{showPwForm ? "−" : "+"}</span>
+          </button>
+
+          {showPwForm && (
+            <form onSubmit={handlePwChange} style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 16 }}>
+              <div>
+                <label style={lbl}>Aktualne hasło</label>
+                <input type="password" value={current} onChange={(e) => setCurrent(e.target.value)} style={inp} required autoComplete="current-password" placeholder="••••••" autoFocus />
+              </div>
+              <div>
+                <label style={lbl}>Nowe hasło</label>
+                <input type="password" value={next} onChange={(e) => setNext(e.target.value)} style={inp} required autoComplete="new-password" placeholder="min. 6 znaków" />
+              </div>
+              <div>
+                <label style={lbl}>Powtórz nowe hasło</label>
+                <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} style={inp} required autoComplete="new-password" placeholder="••••••" />
+              </div>
+              {pwError && <div style={alertErr}>{pwError}</div>}
+              {pwSuccess && <div style={alertOk}>{pwSuccess}</div>}
+              <button type="submit" disabled={saving} style={btnPrimary}>{saving ? "Zmieniam..." : "Zmień hasło"}</button>
+            </form>
+          )}
+
+          {pwSuccess && !showPwForm && <div style={{ ...alertOk, marginTop: 12 }}>{pwSuccess}</div>}
         </div>
 
         <div style={{ textAlign: "center" }}>
