@@ -60,15 +60,16 @@ function halfLabel(h) {
 
 export default function TransmisjaPage() {
   const [streamUrl, setStreamUrl] = useState(null);
+  const [rotation, setRotation] = useState(0);
   const [loading, setLoading] = useState(true);
   const [match, setMatch] = useState(null);
   const [, setTick] = useState(0);
 
-  // Load stream URL
+  // Load stream URL + rotation
   useEffect(() => {
     fetch("/api/stream/url")
       .then((r) => r.json())
-      .then((d) => { setStreamUrl(d.url || ""); setLoading(false); })
+      .then((d) => { setStreamUrl(d.url || ""); setRotation(d.rotation ?? 0); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
 
@@ -99,6 +100,7 @@ export default function TransmisjaPage() {
         body { background: #030712; color: #fff; font-family: -apple-system, 'Segoe UI', sans-serif; }
         .stream-wrap { position: relative; width: 100%; padding-bottom: 56.25%; background: #0a0f1e; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07); }
         .stream-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+        .stream-wrap.rotated iframe { width: 177.78%; height: 56.25%; left: -38.89%; top: 21.875%; transform: rotate(90deg); transform-origin: center center; }
         .match-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: center; background: rgba(3,7,18,0.88); backdrop-filter: blur(8px); padding: 8px 14px; gap: 0; }
         @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.7); } }
       `}</style>
@@ -126,7 +128,7 @@ export default function TransmisjaPage() {
               Ładowanie...
             </div>
           ) : embedSrc ? (
-            <div className="stream-wrap">
+            <div className={`stream-wrap${rotation === 90 ? " rotated" : ""}`}>
               <iframe
                 src={embedSrc}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

@@ -64,11 +64,12 @@ const HALVES = [
 
 export default function PanelTransmisja() {
   // ── Stream ────────────────────────────────────────────────────────────────
-  const [platform, setPlatform]   = useState(null);   // "youtube"|"facebook"|"twitch"
-  const [fieldValue, setFieldValue] = useState("");   // username (twitch) lub pełny link
-  const [savedUrl, setSavedUrl]   = useState("");
+  const [platform, setPlatform]     = useState(null);   // "youtube"|"facebook"|"twitch"
+  const [fieldValue, setFieldValue] = useState("");      // username (twitch) lub pełny link
+  const [savedUrl, setSavedUrl]     = useState("");
+  const [rotation, setRotation]     = useState(0);       // 0 lub 90
   const [saveStatus, setSaveStatus] = useState("");
-  const [saving, setSaving]       = useState(false);
+  const [saving, setSaving]         = useState(false);
 
   useEffect(() => {
     fetch("/api/stream/url")
@@ -76,6 +77,7 @@ export default function PanelTransmisja() {
       .then(d => {
         const url = d.url || "";
         setSavedUrl(url);
+        setRotation(d.rotation ?? 0);
         const info = detectStream(url);
         if (info) {
           setPlatform(info.platform);
@@ -83,6 +85,16 @@ export default function PanelTransmisja() {
         }
       });
   }, []);
+
+  async function toggleRotation() {
+    const next = rotation === 0 ? 90 : 0;
+    setRotation(next);
+    await fetch("/api/stream/url", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ rotation: next }),
+    });
+  }
 
   const effectiveUrl = platform === "twitch"
     ? `https://twitch.tv/${fieldValue}`
@@ -107,7 +119,7 @@ export default function PanelTransmisja() {
       const r = await fetch("/api/stream/url", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: effectiveUrl.trim() }),
+        body: JSON.stringify({ url: effectiveUrl.trim(), rotation }),
       });
       if (r.ok) {
         setSavedUrl(effectiveUrl.trim());
@@ -131,7 +143,7 @@ export default function PanelTransmisja() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: "" }),
       });
-      setFieldValue(""); setSavedUrl(""); setPlatform(null);
+      setFieldValue(""); setSavedUrl(""); setPlatform(null); setRotation(0);
       setSaveStatus("Transmisja wyłączona");
       setTimeout(() => setSaveStatus(""), 3000);
     } catch {
@@ -304,6 +316,22 @@ export default function PanelTransmisja() {
               </button>
             )}
           </div>
+
+          <button
+            type="button"
+            onClick={toggleRotation}
+            style={{
+              display: "flex", alignItems: "center", gap: 8, padding: "10px 16px",
+              background: rotation === 90 ? "rgba(251,191,36,0.1)" : "rgba(255,255,255,0.03)",
+              border: `1px solid ${rotation === 90 ? "rgba(251,191,36,0.35)" : "rgba(255,255,255,0.08)"}`,
+              borderRadius: 8, cursor: "pointer",
+              color: rotation === 90 ? "#fbbf24" : "#475569",
+              fontSize: 13, fontWeight: 600, width: "100%", justifyContent: "center",
+            }}
+          >
+            <span style={{ fontSize: 16, display: "inline-block", transform: rotation === 90 ? "rotate(90deg)" : "none", transition: "transform 0.3s" }}>⟳</span>
+            {rotation === 90 ? "Obraz obrócony o 90° — kliknij żeby przywrócić" : "Obróć obraz o 90° (stream pionowy)"}
+          </button>
         </form>
       )}
 
