@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from "react";
 
-const SEZON = "2025/26";
-
 // ─── Tab: Tabela ──────────────────────────────────────────────
 
-function TabelaTab() {
+function TabelaTab({ sezon }) {
   const [tabela, setTabela] = useState([]);
   const [json, setJson] = useState("");
   const [saving, setSaving] = useState(false);
@@ -15,12 +13,13 @@ function TabelaTab() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`/api/admin/liga/tabela?sezon=${encodeURIComponent(SEZON)}`)
+    setTabela([]);
+    fetch(`/api/admin/liga/tabela?sezon=${encodeURIComponent(sezon)}`)
       .then(r => r.json())
       .then(d => { if (!cancelled) setTabela(Array.isArray(d) ? d : []); })
       .catch(() => {});
     return () => { cancelled = true; };
-  }, [tick]);
+  }, [sezon, tick]);
 
   async function handleImport() {
     setMsg({ text: "", err: false }); setSaving(true);
@@ -30,7 +29,7 @@ function TabelaTab() {
       if (!arr) { setMsg({ text: "JSON musi być tablicą lub obiektem z kluczem 'tabela'", err: true }); return; }
       const r = await fetch("/api/admin/liga/tabela", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sezon: SEZON, tabela: arr }),
+        body: JSON.stringify({ sezon, tabela: arr }),
       });
       const d = await r.json();
       if (!r.ok) { setMsg({ text: d.error || "Błąd", err: true }); return; }
@@ -44,7 +43,6 @@ function TabelaTab() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-      {/* Import */}
       <div style={card}>
         <label style={lbl}>WKLEJ JSON TABELI</label>
         <div style={{ fontSize: 11, color: "#334155", marginBottom: 10 }}>
@@ -61,11 +59,10 @@ function TabelaTab() {
         </button>
       </div>
 
-      {/* Podgląd */}
       {tabela.length > 0 && (
         <div style={card}>
           <div style={{ fontSize: 12, color: "#475569", marginBottom: 12 }}>
-            Aktualna tabela · {SEZON} · {tabela.length} drużyn
+            Aktualna tabela · {sezon} · {tabela.length} drużyn
           </div>
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
@@ -198,7 +195,7 @@ function MeczEditor({ mecz, onSave, onClose }) {
 
 // ─── Tab: Terminarz ───────────────────────────────────────────
 
-function TerminarzTab() {
+function TerminarzTab({ sezon }) {
   const [mecze, setMecze] = useState([]);
   const [json, setJson] = useState("");
   const [saving, setSaving] = useState(false);
@@ -208,12 +205,13 @@ function TerminarzTab() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`/api/admin/liga/mecze?sezon=${encodeURIComponent(SEZON)}`)
+    setMecze([]);
+    fetch(`/api/admin/liga/mecze?sezon=${encodeURIComponent(sezon)}`)
       .then(r => r.json())
       .then(d => { if (!cancelled) setMecze(Array.isArray(d) ? d : []); })
       .catch(() => {});
     return () => { cancelled = true; };
-  }, [tick]);
+  }, [sezon, tick]);
 
   async function handleImport() {
     setMsg({ text: "", err: false }); setSaving(true);
@@ -223,7 +221,7 @@ function TerminarzTab() {
       if (!arr) { setMsg({ text: "JSON musi być tablicą lub obiektem z kluczem 'mecze'", err: true }); return; }
       const r = await fetch("/api/admin/liga/mecze", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sezon: SEZON, mecze: arr }),
+        body: JSON.stringify({ sezon, mecze: arr }),
       });
       const d = await r.json();
       if (!r.ok) { setMsg({ text: d.error || "Błąd", err: true }); return; }
@@ -240,7 +238,6 @@ function TerminarzTab() {
   }
 
   const isDrawa = n => n?.toLowerCase().includes("drawa");
-
   const rozegrane = mecze.filter(m => m.score || m.walkower);
   const planowane = mecze.filter(m => !m.score && !m.walkower);
 
@@ -278,7 +275,6 @@ function TerminarzTab() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-      {/* Import */}
       <div style={card}>
         <label style={lbl}>WKLEJ JSON TERMINARZ / MECZE</label>
         <div style={{ fontSize: 11, color: "#334155", marginBottom: 10 }}>
@@ -315,22 +311,95 @@ function TerminarzTab() {
   );
 }
 
-// ─── Główny komponent ────────────────────────────────────────
+// ─── Główny komponent ─────────────────────────────────────────
 
 export default function LigaAdmin() {
   const [tab, setTab] = useState("tabela");
+  const [sezon, setSezon] = useState("");
+  const [nowySezon, setNowySezon] = useState("");
+  const [sezonyList, setSezonyList] = useState([]);
+  const [aktywnySezon, setAktywnySezon] = useState("");
+  const [settingMsg, setSettingMsg] = useState({ text: "", err: false });
+  const [settingSaving, setSettingSaving] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/admin/liga/sezony").then(r => r.json()).then(d => {
+      if (Array.isArray(d) && d.length > 0) setSezonyList(d);
+    }).catch(() => {});
+    fetch("/api/ustawienia").then(r => r.json()).then(u => {
+      const aktywny = u.aktywny_sezon || "2025/26";
+      setAktywnySezon(aktywny);
+      setSezon(aktywny);
+    }).catch(() => { setSezon("2025/26"); setAktywnySezon("2025/26"); });
+  }, []);
+
+  const aktualnySezon = nowySezon.trim() || sezon;
+
+  async function handleSetAktywny() {
+    if (!aktualnySezon) return;
+    setSettingMsg({ text: "", err: false }); setSettingSaving(true);
+    const r = await fetch("/api/admin/ustawienia", {
+      method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ aktywny_sezon: aktualnySezon }),
+    });
+    setSettingSaving(false);
+    if (r.ok) {
+      setAktywnySezon(aktualnySezon);
+      setSettingMsg({ text: `Aktywny sezon ustawiony na: ${aktualnySezon}`, err: false });
+      if (!sezonyList.includes(aktualnySezon)) setSezonyList(prev => [aktualnySezon, ...prev]);
+    } else {
+      setSettingMsg({ text: "Błąd zapisu", err: true });
+    }
+  }
+
+  if (!aktualnySezon) return <div style={{ color: "#475569", padding: 20 }}>Ładowanie...</div>;
 
   return (
     <div>
       <div style={{ fontSize: "clamp(20px,4vw,28px)", fontFamily: "'Bebas Neue',Impact,sans-serif", letterSpacing: "0.1em", color: "#fff", marginBottom: 8 }}>
-        Liga · {SEZON}
+        Liga
       </div>
-      <div style={{ fontSize: 12, color: "#475569", marginBottom: 20 }}>
-        Zarządzanie tabelą i przebiegiem meczów
+
+      {/* Selektor sezonu */}
+      <div style={{ ...card, marginBottom: 24, display: "flex", flexWrap: "wrap", gap: 12, alignItems: "flex-end" }}>
+        <div style={{ flex: "1 1 180px" }}>
+          <label style={lbl}>SEZON</label>
+          <select style={{ ...inp, cursor: "pointer" }} value={sezon} onChange={e => { setSezon(e.target.value); setNowySezon(""); }}>
+            {sezonyList.map(s => (
+              <option key={s} value={s}>{s}{s === aktywnySezon ? " ★ aktywny" : ""}</option>
+            ))}
+            {sezonyList.length === 0 && <option value="2025/26">2025/26</option>}
+          </select>
+        </div>
+        <div style={{ flex: "1 1 180px" }}>
+          <label style={lbl}>LUB WPISZ NOWY SEZON</label>
+          <input
+            style={inp} value={nowySezon}
+            onChange={e => setNowySezon(e.target.value)}
+            placeholder="np. 2026/27"
+          />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <button
+            onClick={handleSetAktywny}
+            disabled={settingSaving || !aktualnySezon || aktualnySezon === aktywnySezon}
+            style={{ ...btnPrimary, opacity: (!aktualnySezon || aktualnySezon === aktywnySezon) ? 0.4 : 1, whiteSpace: "nowrap" }}
+          >
+            {settingSaving ? "Zapisuję..." : aktualnySezon === aktywnySezon ? "★ Aktywny na stronie" : "Ustaw jako aktywny"}
+          </button>
+          {settingMsg.text && <div style={{ fontSize: 11, color: settingMsg.err ? "#ef4444" : "#22c55e" }}>{settingMsg.text}</div>}
+        </div>
+      </div>
+
+      <div style={{ fontSize: 12, color: "#475569", marginBottom: 16 }}>
+        Edytujesz: <span style={{ color: "#fff", fontWeight: 600 }}>{aktualnySezon}</span>
+        {aktualnySezon === aktywnySezon
+          ? <span style={{ marginLeft: 8, color: "#22c55e" }}>★ widoczny na stronie głównej</span>
+          : <span style={{ marginLeft: 8, color: "#f59e0b" }}>· nie jest aktywny — strona pokazuje {aktywnySezon}</span>}
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: 4, marginBottom: 24, borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: 0 }}>
+      <div style={{ display: "flex", gap: 4, marginBottom: 24, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
         {[
           { id: "tabela", label: "Tabela ligowa" },
           { id: "terminarz", label: "Terminarz i przebieg" },
@@ -342,7 +411,10 @@ export default function LigaAdmin() {
         ))}
       </div>
 
-      {tab === "tabela" ? <TabelaTab /> : <TerminarzTab />}
+      {tab === "tabela"
+        ? <TabelaTab key={aktualnySezon + "-tabela"} sezon={aktualnySezon} />
+        : <TerminarzTab key={aktualnySezon + "-terminarz"} sezon={aktualnySezon} />}
+
       <style>{`input:focus,textarea:focus,select:focus{outline:none;border-color:rgba(59,130,246,0.5)!important}*{box-sizing:border-box}`}</style>
     </div>
   );

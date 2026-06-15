@@ -118,8 +118,25 @@ export default function Page() {
   const [mecze, setMecze] = useState([]);
 
   useEffect(() => {
-    fetch("/api/liga/tabela?sezon=2025%2F26").then(r => r.json()).then(d => setTabela(Array.isArray(d) ? d : [])).catch(() => {});
-    fetch("/api/liga/mecze?sezon=2025%2F26").then(r => r.json()).then(d => setMecze(Array.isArray(d) ? d : [])).catch(() => {});
+    let cancelled = false;
+    fetch("/api/ustawienia")
+      .then(r => r.json())
+      .then(u => {
+        if (cancelled) return;
+        const enc = encodeURIComponent(u.aktywny_sezon || "2025/26");
+        return Promise.all([
+          fetch(`/api/liga/tabela?sezon=${enc}`).then(r => r.json()),
+          fetch(`/api/liga/mecze?sezon=${enc}`).then(r => r.json()),
+        ]);
+      })
+      .then(res => {
+        if (!res || cancelled) return;
+        const [t, m] = res;
+        setTabela(Array.isArray(t) ? t : []);
+        setMecze(Array.isArray(m) ? m : []);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
   }, []);
 
   const drawaRow = tabela.find((r) => r.nazwa?.toLowerCase().includes("drawa"));

@@ -95,7 +95,17 @@ export default function StatystykiPage() {
   const [isPortrait, setIsPortrait] = useState(false);
 
   useEffect(() => {
-    fetch("/api/liga/mecze?sezon=2025%2F26").then(r => r.json()).then(d => setMecze(Array.isArray(d) ? d : [])).catch(() => {});
+    let cancelled = false;
+    fetch("/api/ustawienia")
+      .then(r => r.json())
+      .then(u => {
+        if (cancelled) return;
+        const enc = encodeURIComponent(u.aktywny_sezon || "2025/26");
+        return fetch(`/api/liga/mecze?sezon=${enc}`).then(r => r.json());
+      })
+      .then(d => { if (d && !cancelled) setMecze(Array.isArray(d) ? d : []); })
+      .catch(() => {});
+    return () => { cancelled = true; };
   }, []);
 
   const s = computeTeamStats(mecze);
