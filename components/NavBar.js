@@ -167,6 +167,25 @@ export default function NavBar({ backLabel }) {
  TRANSMISJA
  </Link>
  )}
+ <Link
+ href="/login"
+ style={{
+ fontSize: 11,
+ color: "#fff",
+ letterSpacing: "0.12em",
+ textDecoration: "none",
+ fontWeight: 700,
+ padding: "6px 14px",
+ background: "rgba(59,130,246,0.15)",
+ border: "1px solid rgba(59,130,246,0.4)",
+ borderRadius: 20,
+ transition: "background 0.2s, border-color 0.2s",
+ }}
+ onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(59,130,246,0.28)"; e.currentTarget.style.borderColor = "rgba(59,130,246,0.7)"; }}
+ onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(59,130,246,0.15)"; e.currentTarget.style.borderColor = "rgba(59,130,246,0.4)"; }}
+ >
+ MÓJ MKS
+ </Link>
  </div>
 
  {/* Right side */}
@@ -289,6 +308,26 @@ export default function NavBar({ backLabel }) {
  Transmisja na żywo
  </Link>
  )}
+ <Link
+ href="/login"
+ onClick={close}
+ style={{
+ display: "inline-block",
+ marginTop: 8,
+ fontSize: 13,
+ color: "#fff",
+ fontWeight: 700,
+ textDecoration: "none",
+ padding: "10px 20px",
+ background: "rgba(59,130,246,0.15)",
+ border: "1px solid rgba(59,130,246,0.4)",
+ borderRadius: 24,
+ letterSpacing: "0.1em",
+ textAlign: "center",
+ }}
+ >
+ Mój MKS
+ </Link>
  </div>
  )}
  </nav>

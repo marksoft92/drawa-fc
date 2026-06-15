@@ -18,6 +18,16 @@ const ADMIN_NAV = [
     ),
   },
   {
+    label: "Sezony",
+    href: "/panel/sezony",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="4" width="18" height="18" rx="2" />
+        <path d="M16 2v4M8 2v4M3 10h18" />
+      </svg>
+    ),
+  },
+  {
     label: "Transmisja",
     href: "/panel/transmisja",
     icon: (
@@ -47,6 +57,15 @@ const PLAYER_NAV = [
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <circle cx="12" cy="8" r="4" />
         <path d="M4 20v-1a8 8 0 0 1 16 0v1" />
+      </svg>
+    ),
+  },
+  {
+    label: "Statystyki",
+    href: "/panel/statystyki",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M18 20V10M12 20V4M6 20v-6" />
       </svg>
     ),
   },

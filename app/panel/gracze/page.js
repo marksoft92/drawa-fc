@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 const ROLES = [
   { value: "PLAYER", label: "Piłkarz" },
@@ -10,38 +10,65 @@ const ROLES = [
 
 const POSITIONS = ["Bramkarz", "Obrońca", "Pomocnik", "Napastnik", ""];
 
-const emptyForm = {
+const STAT_FIELDS = [
+  { key: "mecze",       label: "Mecze (liga)" },
+  { key: "gole",        label: "Gole (liga)" },
+  { key: "asysty",      label: "Asysty" },
+  { key: "zolte",       label: "Żółte" },
+  { key: "czerwone",    label: "Czerwone" },
+  { key: "meczePuchar", label: "Mecze (puchar)" },
+  { key: "golePuchar",  label: "Gole (puchar)" },
+];
+
+const emptyUserForm = {
   login: "", email: "", password: "", role: "PLAYER",
   imieNazwisko: "", pozycja: "", numer: "", dataUrodzenia: "",
 };
+
+const emptyStats = () => Object.fromEntries(STAT_FIELDS.map((f) => [f.key, 0]));
 
 export default function PanelGracze() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm] = useState(emptyUserForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [resetPwId, setResetPwId] = useState(null);
   const [resetPw, setResetPw] = useState("");
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    const r = await fetch("/api/admin/gracze");
-    const data = await r.json();
-    setUsers(Array.isArray(data) ? data : []);
-    setLoading(false);
-  }, []);
+  // stats panel state
+  const [statsUserId, setStatsUserId] = useState(null);
+  const [statsSezony, setStatsSezony] = useState([]);
+  const [statsAllData, setStatsAllData] = useState([]);
+  const [statsSezonId, setStatsSezonId] = useState("");
+  const [statsForm, setStatsForm] = useState(emptyStats());
+  const [statsSaving, setStatsSaving] = useState(false);
+  const [statsSuccess, setStatsSuccess] = useState("");
+  const [statsError, setStatsError] = useState("");
+  const [statsLoading, setStatsLoading] = useState(false);
 
-  useEffect(() => { load(); }, [load]);
+  const [tick, setTick] = useState(0);
+  const load = () => setTick((t) => t + 1);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/admin/gracze")
+      .then((r) => r.json())
+      .then((d) => { if (!cancelled) setUsers(Array.isArray(d) ? d : []); })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [tick]);
 
   function openCreate() {
     setEditId(null);
-    setForm(emptyForm);
+    setForm(emptyUserForm);
     setError("");
     setFormOpen(true);
+    setStatsUserId(null);
   }
 
   function openEdit(u) {
@@ -60,6 +87,64 @@ export default function PanelGracze() {
     });
     setError("");
     setFormOpen(true);
+    setStatsUserId(null);
+  }
+
+  async function openStats(u) {
+    if (statsUserId === u.id) { setStatsUserId(null); return; }
+    setStatsUserId(u.id);
+    setStatsSuccess(""); setStatsError("");
+    setStatsLoading(true);
+    setStatsForm(emptyStats());
+    try {
+      const r = await fetch(`/api/admin/gracze/${u.id}/stats`);
+      const d = await r.json();
+      setStatsSezony(d.sezony ?? []);
+      setStatsAllData(d.stats ?? []);
+      const aktywny = d.sezony?.find((s) => s.aktywny);
+      const firstSezonId = aktywny?.id ?? d.sezony?.[0]?.id ?? "";
+      setStatsSezonId(firstSezonId);
+      if (firstSezonId) {
+        const existing = (d.stats ?? []).find((s) => s.sezonId === firstSezonId);
+        const vals = emptyStats();
+        if (existing) STAT_FIELDS.forEach((f) => { vals[f.key] = existing[f.key] ?? 0; });
+        setStatsForm(vals);
+      }
+    } catch { setStatsError("Błąd połączenia"); }
+    finally { setStatsLoading(false); }
+  }
+
+  function onSezonChange(sezonId) {
+    setStatsSezonId(sezonId);
+    const existing = statsAllData.find((s) => s.sezonId === sezonId);
+    const vals = emptyStats();
+    if (existing) STAT_FIELDS.forEach((f) => { vals[f.key] = existing[f.key] ?? 0; });
+    setStatsForm(vals);
+  }
+
+  async function saveStats() {
+    if (!statsSezonId || !statsUserId) return;
+    setStatsSaving(true); setStatsError(""); setStatsSuccess("");
+    try {
+      const r = await fetch(`/api/admin/gracze/${statsUserId}/stats`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sezonId: statsSezonId, ...statsForm }),
+      });
+      const d = await r.json();
+      if (r.ok) {
+        setStatsSuccess("Zapisano");
+        setStatsAllData((prev) => {
+          const idx = prev.findIndex((s) => s.sezonId === statsSezonId);
+          if (idx >= 0) return prev.map((s, i) => i === idx ? { ...s, ...d.stats } : s);
+          return [...prev, d.stats];
+        });
+        setTimeout(() => setStatsSuccess(""), 2500);
+      } else {
+        setStatsError(d.error || "Błąd");
+      }
+    } catch { setStatsError("Błąd połączenia"); }
+    finally { setStatsSaving(false); }
   }
 
   async function handleSubmit(e) {
@@ -263,11 +348,19 @@ export default function PanelGracze() {
                       <div style={{ display: "flex", gap: 6 }}>
                         <button onClick={() => openEdit(u)} style={btnRowAction}>Edytuj</button>
                         <button
-                          onClick={() => { setResetPwId(resetPwId === u.id ? null : u.id); setResetPw(""); setError(""); }}
+                          onClick={() => { setResetPwId(resetPwId === u.id ? null : u.id); setResetPw(""); setError(""); setStatsUserId(null); }}
                           style={btnRowAction}
                         >
                           Hasło
                         </button>
+                        {u.player && (
+                          <button
+                            onClick={() => { setResetPwId(null); openStats(u); }}
+                            style={{ ...btnRowAction, color: statsUserId === u.id ? "#3b82f6" : "#64748b", borderColor: statsUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
+                          >
+                            Staty
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -288,6 +381,57 @@ export default function PanelGracze() {
                           </button>
                           {error && <span style={{ fontSize: 12, color: "#ef4444" }}>{error}</span>}
                         </div>
+                      </td>
+                    </tr>
+                  )}
+                  {statsUserId === u.id && (
+                    <tr key={`${u.id}-stats`} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)", background: "rgba(59,130,246,0.03)" }}>
+                      <td colSpan={7} style={{ padding: "14px 16px" }}>
+                        {statsLoading ? (
+                          <span style={{ fontSize: 12, color: "#475569" }}>Ładowanie...</span>
+                        ) : statsSezony.length === 0 ? (
+                          <span style={{ fontSize: 12, color: "#475569" }}>Brak sezonów — utwórz sezon w zakładce Sezony.</span>
+                        ) : (
+                          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                              <span style={{ fontSize: 11, color: "#64748b", fontWeight: 600, letterSpacing: "0.06em" }}>SEZON</span>
+                              <select
+                                value={statsSezonId}
+                                onChange={(e) => onSezonChange(e.target.value)}
+                                style={{ ...inp, width: "auto", minWidth: 120, padding: "5px 10px", fontSize: 12 }}
+                              >
+                                {statsSezony.map((s) => (
+                                  <option key={s.id} value={s.id}>{s.nazwa}{s.aktywny ? " ★" : ""}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(120px,1fr))", gap: 8 }}>
+                              {STAT_FIELDS.map(({ key, label }) => (
+                                <div key={key}>
+                                  <label style={{ ...lbl, fontSize: 10 }}>{label.toUpperCase()}</label>
+                                  <input
+                                    type="number" min="0"
+                                    value={statsForm[key] ?? 0}
+                                    onChange={(e) => setStatsForm((f) => ({ ...f, [key]: e.target.value }))}
+                                    style={{ ...inp, padding: "6px 10px", fontSize: 14, fontWeight: 700 }}
+                                  />
+                                </div>
+                              ))}
+                            </div>
+
+                            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                              <button onClick={saveStats} disabled={statsSaving || !statsSezonId} style={{ ...btnPrimary, padding: "6px 16px", fontSize: 12 }}>
+                                {statsSaving ? "Zapisuję..." : "Zapisz staty"}
+                              </button>
+                              <button onClick={() => setStatsUserId(null)} style={{ ...btnGhost, padding: "6px 12px", fontSize: 12 }}>
+                                Zamknij
+                              </button>
+                              {statsSuccess && <span style={{ fontSize: 12, color: "#22c55e" }}>{statsSuccess}</span>}
+                              {statsError && <span style={{ fontSize: 12, color: "#ef4444" }}>{statsError}</span>}
+                            </div>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   )}

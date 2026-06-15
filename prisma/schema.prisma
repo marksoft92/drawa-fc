@@ -51,8 +51,41 @@ model Player {
   pozycja       String?
   numer         Int?
   dataUrodzenia DateTime?
+  foto          String?
+  pseudonim     String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  stats         SezonStats[]
+}
+
+// ─── Sezony i statystyki ──────────────────────────────────────────────────────
+
+model Sezon {
+  id        String   @id @default(cuid())
+  nazwa     String   @unique
+  aktywny   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  stats     SezonStats[]
+}
+
+model SezonStats {
+  id           String   @id @default(cuid())
+  playerId     String
+  sezonId      String
+  player       Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  sezon        Sezon    @relation(fields: [sezonId], references: [id], onDelete: Cascade)
+  mecze        Int      @default(0)
+  gole         Int      @default(0)
+  asysty       Int      @default(0)
+  zolte        Int      @default(0)
+  czerwone     Int      @default(0)
+  meczePuchar  Int      @default(0)
+  golePuchar   Int      @default(0)
+  updatedAt    DateTime @updatedAt
+
+  @@unique([playerId, sezonId])
 }
 
 // ─── Przyszłe funkcje (tabele dodamy migracją) ────────────────────────────────

@@ -49,3 +49,4 @@ public/sw.js.map
 public/workbox-*.js.map
 
 /lib/generated/prisma
+kadra/uploads/

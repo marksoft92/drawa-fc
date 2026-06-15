@@ -16,6 +16,7 @@ export default async function ProfilPage() {
         imieNazwisko: user.player.imieNazwisko,
         pozycja: user.player.pozycja ?? null,
         numer: user.player.numer ?? null,
+        foto: user.player.foto ?? null,
       } : null}
     />
   );

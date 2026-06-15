@@ -1,26 +1,30 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import Image from 'next/image';
-import { zawodnicy } from '@/lib/kadra';
 import { generatePlayerCard } from '@/lib/playerCard';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 
-const maxGole = Math.max(...zawodnicy.map(z => z.gole ?? 0), 1);
-const maxAsysty = Math.max(...zawodnicy.map(z => z.asysty ?? 0), 1);
-const maxMecze = Math.max(...zawodnicy.map(z => z.mecze ?? 0), 1);
-const maxGM = Math.max(...zawodnicy.map(z => z.mecze > 0 ? z.gole / z.mecze : 0), 0.01);
-const maxKartki = Math.max(...zawodnicy.map(z => (z.zolte ?? 0) + (z.czerwone ?? 0) * 3), 1);
+function computeMaxes(zawodnicy) {
+  return {
+    maxGole:   Math.max(...zawodnicy.map(z => z.gole ?? 0), 1),
+    maxAsysty: Math.max(...zawodnicy.map(z => z.asysty ?? 0), 1),
+    maxMecze:  Math.max(...zawodnicy.map(z => z.mecze ?? 0), 1),
+    maxGM:     Math.max(...zawodnicy.map(z => z.mecze > 0 ? z.gole / z.mecze : 0), 0.01),
+    maxKartki: Math.max(...zawodnicy.map(z => (z.zolte ?? 0) + (z.czerwone ?? 0) * 3), 1),
+  };
+}
 
-function playerRadarData(z) {
+function playerRadarData(z, maxes) {
+  const { maxGole, maxAsysty, maxMecze, maxGM, maxKartki } = maxes;
   const gm = z.mecze > 0 ? z.gole / z.mecze : 0;
   const kartki = (z.zolte ?? 0) + (z.czerwone ?? 0) * 3;
   return [
-    { attr: 'GOLE', val: Math.round((z.gole ?? 0) / maxGole * 100) },
+    { attr: 'GOLE',   val: Math.round((z.gole ?? 0) / maxGole * 100) },
     { attr: 'ASYSTY', val: Math.round((z.asysty ?? 0) / maxAsysty * 100) },
-    { attr: 'MECZE', val: Math.round((z.mecze ?? 0) / maxMecze * 100) },
-    { attr: 'G/M', val: Math.round(gm / maxGM * 100) },
-    { attr: 'DYSC', val: Math.round((1 - kartki / maxKartki) * 100) },
+    { attr: 'MECZE',  val: Math.round((z.mecze ?? 0) / maxMecze * 100) },
+    { attr: 'G/M',    val: Math.round(gm / maxGM * 100) },
+    { attr: 'DYSC',   val: Math.round((1 - kartki / maxKartki) * 100) },
   ];
 }
 
@@ -56,12 +60,11 @@ function initials(imieNazwisko) {
 }
 
 /* ─── Karta desktop (z efektem rozmycia rzędu) ─── */
-function PlayerCard({ z, isHovered, isInRow, onEnter, onLeave, cardRef }) {
+function PlayerCard({ z, maxes, isHovered, isInRow, onEnter, onLeave, cardRef }) {
   const [sharing, setSharing] = useState(false);
   const parts = z.imieNazwisko.split(' ');
   const nazwisko = parts[0];
   const imie = parts.slice(1).join(' ');
-  const goleNaMecz = z.mecze > 0 ? (z.gole / z.mecze).toFixed(2) : '—';
   const expanded = isHovered || isInRow;
 
   const handleShare = async (e) => {
@@ -129,7 +132,7 @@ function PlayerCard({ z, isHovered, isInRow, onEnter, onLeave, cardRef }) {
           {/* Radar chart */}
           <div style={{ width: 120, flexShrink: 0 }}>
             <ResponsiveContainer width={120} height={150}>
-              <RadarChart data={playerRadarData(z)} margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
+              <RadarChart data={playerRadarData(z, maxes)} margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
                 <PolarGrid stroke="rgba(255,255,255,0.08)" />
                 <PolarAngleAxis dataKey="attr" tick={{ fill: '#334155', fontSize: 7 }} />
                 <Radar dataKey="val" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.15} strokeWidth={1.5} />
@@ -139,11 +142,11 @@ function PlayerCard({ z, isHovered, isInRow, onEnter, onLeave, cardRef }) {
           {/* Stats */}
           <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', alignContent: 'center', gap: 4, padding: '8px 6px 8px 0' }}>
             {[
-              { v: z.mecze, l: 'MECZE' },
-              { v: z.gole, l: 'GOLE' },
+              { v: z.mecze,  l: 'MECZE' },
+              { v: z.gole,   l: 'GOLE' },
               { v: z.asysty, l: 'ASYSTY' },
               { v: z.mecze > 0 ? (z.gole / z.mecze).toFixed(2) : '—', l: 'G/M' },
-              { v: z.zolte > 0 || z.czerwone > 0 ? `${z.zolte ?? 0}🟨${z.czerwone > 0 ? z.czerwone+'🟥' : ''}` : '—', l: 'KARTKI' },
+              { v: z.zolte > 0 || z.czerwone > 0 ? `${z.zolte ?? 0}🟨${z.czerwone > 0 ? z.czerwone + '🟥' : ''}` : '—', l: 'KARTKI' },
             ].map(({ v, l }) => (
               <div key={l} style={{ textAlign: 'center', padding: '4px 0' }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#3b82f6', lineHeight: 1 }}>{v}</div>
@@ -170,13 +173,12 @@ function PlayerCard({ z, isHovered, isInRow, onEnter, onLeave, cardRef }) {
 }
 
 /* ─── Karta mobile (lokalne rozwinięcie przez klik) ─── */
-function MobilePlayerCard({ z, defaultExpanded = false }) {
+function MobilePlayerCard({ z, maxes, defaultExpanded = false }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const [sharing, setSharing] = useState(false);
   const parts = z.imieNazwisko.split(' ');
   const nazwisko = parts[0];
   const imie = parts.slice(1).join(' ');
-  const goleNaMecz = z.mecze > 0 ? (z.gole / z.mecze).toFixed(2) : '—';
 
   const handleShare = async (e) => {
     e.stopPropagation();
@@ -224,7 +226,7 @@ function MobilePlayerCard({ z, defaultExpanded = false }) {
             { v: z.mecze,    l: 'MECZE' },
             { v: z.gole,     l: 'GOLE' },
             { v: z.asysty,   l: 'ASYSTY' },
-            { v: goleNaMecz, l: 'G/M' },
+            { v: z.mecze > 0 ? (z.gole / z.mecze).toFixed(2) : '—', l: 'G/M' },
             { v: z.zolte > 0 || z.czerwone > 0 ? `${z.zolte > 0 ? z.zolte + '🟨' : ''}${z.czerwone > 0 ? z.czerwone + '🟥' : ''}` : '—', l: 'KARTKI' },
           ].map(({ v, l }) => (
             <div key={l} style={{ textAlign: 'center', padding: '8px 0' }}>
@@ -237,7 +239,7 @@ function MobilePlayerCard({ z, defaultExpanded = false }) {
         {/* Radar */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', margin: '0 8px' }}>
           <ResponsiveContainer width="100%" height={160}>
-            <RadarChart data={playerRadarData(z)} margin={{ top: 12, right: 20, bottom: 12, left: 20 }}>
+            <RadarChart data={playerRadarData(z, maxes)} margin={{ top: 12, right: 20, bottom: 12, left: 20 }}>
               <PolarGrid stroke="rgba(255,255,255,0.08)" />
               <PolarAngleAxis dataKey="attr" tick={{ fill: '#475569', fontSize: 8 }} />
               <Radar dataKey="val" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.15} strokeWidth={1.5} />
@@ -274,7 +276,7 @@ function MobilePlayerCard({ z, defaultExpanded = false }) {
 }
 
 /* ─── Sekcja pozycji (accordion mobile) ─── */
-function PositionSection({ pozycja }) {
+function PositionSection({ pozycja, zawodnicy, maxes }) {
   const [open, setOpen] = useState(false);
   const players = zawodnicy.filter((z) => z.pozycja === pozycja);
   if (players.length === 0) return null;
@@ -308,7 +310,7 @@ function PositionSection({ pozycja }) {
       {open && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 8, paddingBottom: 16 }}>
           {players.map((z, i) => (
-            <MobilePlayerCard key={z.imieNazwisko} z={z} defaultExpanded={i === 0} />
+            <MobilePlayerCard key={z.id || z.imieNazwisko} z={z} maxes={maxes} defaultExpanded={i === 0} />
           ))}
         </div>
       )}
@@ -318,9 +320,22 @@ function PositionSection({ pozycja }) {
 
 /* ─── Główny komponent ─── */
 export default function Kadra({ SectionLabel }) {
+  const [zawodnicy, setZawodnicy] = useState([]);
+  const [sezon, setSezon] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [hoveredId, setHoveredId] = useState(null);
   const [rowIds, setRowIds] = useState([]);
   const cardRefs = useRef({});
+
+  useEffect(() => {
+    fetch('/api/kadra')
+      .then((r) => r.json())
+      .then((d) => { setZawodnicy(d.players ?? []); setSezon(d.sezon); })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const maxes = zawodnicy.length > 0 ? computeMaxes(zawodnicy) : { maxGole: 1, maxAsysty: 1, maxMecze: 1, maxGM: 0.01, maxKartki: 1 };
 
   const handleEnter = useCallback((id) => {
     setHoveredId(id);
@@ -328,15 +343,17 @@ export default function Kadra({ SectionLabel }) {
     if (!el) return;
     const top = el.offsetTop;
     const same = zawodnicy
-      .filter((z) => cardRefs.current[z.imieNazwisko]?.offsetTop === top && z.imieNazwisko !== id)
-      .map((z) => z.imieNazwisko);
+      .filter((z) => cardRefs.current[z.id]?.offsetTop === top && z.id !== id)
+      .map((z) => z.id);
     setRowIds(same);
-  }, []);
+  }, [zawodnicy]);
 
   const handleLeave = useCallback(() => {
     setHoveredId(null);
     setRowIds([]);
   }, []);
+
+  const zawodnicyBezTrenera = zawodnicy.filter(z => z.pozycja !== 'Trener');
 
   return (
     <section className="mob-pb" style={{ padding: '0 20px 80px', background: '#030712' }}>
@@ -352,37 +369,46 @@ export default function Kadra({ SectionLabel }) {
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         <SectionLabel>Kadra</SectionLabel>
         <div style={{ fontSize: 12, color: '#475569', marginTop: 4 }}>
-          Sezon 2025/26 · {zawodnicy.filter(z => z.pozycja !== 'Trener').length} zawodników + trener
+          {sezon ? `Sezon ${sezon} · ` : ''}{zawodnicyBezTrenera.length} zawodników
         </div>
+
+        {loading && (
+          <div style={{ marginTop: 24, color: '#334155', fontSize: 13 }}>Ładowanie kadry...</div>
+        )}
 
         {/* Mobile — accordion po pozycji */}
-        <div className="kadra-mobile" style={{ marginTop: 24 }}>
-          {POZYCJE.map((p) => (
-            <PositionSection key={p} pozycja={p} />
-          ))}
-        </div>
+        {!loading && (
+          <div className="kadra-mobile" style={{ marginTop: 24 }}>
+            {POZYCJE.map((p) => (
+              <PositionSection key={p} pozycja={p} zawodnicy={zawodnicy} maxes={maxes} />
+            ))}
+          </div>
+        )}
 
         {/* Desktop — siatka ze wszystkimi kartami */}
-        <div
-          className="kadra-desktop"
-          style={{
-            marginTop: 24,
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: 8,
-          }}
-        >
-          {zawodnicy.map((z) => (
-            <PlayerCard
-              key={z.imieNazwisko}
-              z={z}
-              isHovered={hoveredId === z.imieNazwisko}
-              isInRow={rowIds.includes(z.imieNazwisko)}
-              onEnter={() => handleEnter(z.imieNazwisko)}
-              onLeave={handleLeave}
-              cardRef={(el) => { cardRefs.current[z.imieNazwisko] = el; }}
-            />
-          ))}
-        </div>
+        {!loading && (
+          <div
+            className="kadra-desktop"
+            style={{
+              marginTop: 24,
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: 8,
+            }}
+          >
+            {zawodnicy.map((z) => (
+              <PlayerCard
+                key={z.id}
+                z={z}
+                maxes={maxes}
+                isHovered={hoveredId === z.id}
+                isInRow={rowIds.includes(z.id)}
+                onEnter={() => handleEnter(z.id)}
+                onLeave={handleLeave}
+                cardRef={(el) => { cardRefs.current[z.id] = el; }}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

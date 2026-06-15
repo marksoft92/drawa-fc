@@ -13,10 +13,36 @@ export default function ProfilClient({ login, email, role, player }) {
   const [success, setSuccess] = useState("");
   const [saving, setSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [fotoUrl, setFotoUrl] = useState(player?.foto ?? null);
+  const [fotoUploading, setFotoUploading] = useState(false);
+  const [fotoError, setFotoError] = useState("");
   const router = useRouter();
 
   const displayName = player?.imieNazwisko || login;
   const initials = displayName.charAt(0).toUpperCase();
+
+  async function handleFotoUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setFotoError("");
+    setFotoUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("foto", file);
+      const r = await fetch("/api/panel/foto", { method: "POST", body: fd });
+      const d = await r.json();
+      if (r.ok) {
+        setFotoUrl(d.foto + "?t=" + Date.now());
+        router.refresh();
+      } else {
+        setFotoError(d.error || "Błąd uploadu");
+      }
+    } catch {
+      setFotoError("Błąd połączenia");
+    } finally {
+      setFotoUploading(false);
+    }
+  }
 
   async function handlePwChange(e) {
     e.preventDefault();
@@ -60,9 +86,20 @@ export default function ProfilClient({ login, email, role, player }) {
       {/* Karta użytkownika */}
       <div style={card}>
         <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: player ? 20 : 0 }}>
-          <div style={{ width: 48, height: 48, borderRadius: "50%", background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.25)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 700, color: "#3b82f6", flexShrink: 0 }}>
-            {initials}
-          </div>
+          <label style={{ position: "relative", cursor: "pointer", flexShrink: 0 }} title="Zmień zdjęcie">
+            <input type="file" accept="image/jpeg,image/png,image/webp" style={{ display: "none" }} onChange={handleFotoUpload} disabled={fotoUploading} />
+            {fotoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={fotoUrl} alt="Zdjęcie" style={{ width: 56, height: 56, borderRadius: "50%", objectFit: "cover", objectPosition: "top", border: "2px solid rgba(59,130,246,0.35)" }} />
+            ) : (
+              <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.25)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 700, color: "#3b82f6" }}>
+                {initials}
+              </div>
+            )}
+            <div style={{ position: "absolute", bottom: 0, right: 0, width: 18, height: 18, borderRadius: "50%", background: "#3b82f6", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10 }}>
+              {fotoUploading ? "…" : "✎"}
+            </div>
+          </label>
           <div>
             <div style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>{displayName}</div>
             <div style={{ fontSize: 12, color: "#475569", marginTop: 2 }}>@{login} · {ROLE_LABEL[role] ?? role}</div>
@@ -84,6 +121,8 @@ export default function ProfilClient({ login, email, role, player }) {
           </div>
         )}
       </div>
+
+      {fotoError && <div style={{ ...alertErr, marginTop: 8 }}>{fotoError}</div>}
 
       {/* Zmiana hasła */}
       <div style={{ ...card, marginTop: 16 }}>
