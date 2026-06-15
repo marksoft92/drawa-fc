@@ -274,14 +274,8 @@ async function scrapeTabela(context) {
 
   const result = { scraped_at: new Date().toISOString(), club: DRAWA_TEAM_NAME, source: 'regiowyniki.pl', tabela: [], mecze: [], errors: [] };
 
-  try {
-    writeStatus({ status: 'running', startedAt: new Date().toISOString(), progress: 'Pobieranie tabeli...' });
-    result.tabela = await scrapeTabela(context);
-  } catch (e) {
-    console.error('❌ Tabela:', e.message);
-    result.errors.push({ section: 'tabela', error: e.message });
-  }
-
+  // Lista meczów PRZED tabelą — regiowyniki.pl ustawia cookie po wizycie na /tabela/
+  // które ukrywa matcheslist na stronie głównej
   let listaMeczow = [];
   try {
     writeStatus({ status: 'running', startedAt: new Date().toISOString(), progress: 'Pobieranie listy meczów...' });
@@ -289,6 +283,17 @@ async function scrapeTabela(context) {
   } catch (e) {
     console.error('❌ Lista meczów:', e.message);
     result.errors.push({ section: 'lista_meczow', error: e.message });
+  }
+
+  // Czyszczenie ciasteczek przed pobraniem tabeli
+  await context.clearCookies();
+
+  try {
+    writeStatus({ status: 'running', startedAt: new Date().toISOString(), progress: 'Pobieranie tabeli...' });
+    result.tabela = await scrapeTabela(context);
+  } catch (e) {
+    console.error('❌ Tabela:', e.message);
+    result.errors.push({ section: 'tabela', error: e.message });
   }
 
   for (const m of listaMeczow.filter(m => !m.url)) {
