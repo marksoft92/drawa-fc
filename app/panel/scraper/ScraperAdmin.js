@@ -186,6 +186,57 @@ function MeczRow({ mecz, index, edits, onEdit }) {
   );
 }
 
+// ─── JSON Tab ─────────────────────────────────────────────────
+
+function JsonSection({ title, json, defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen);
+  const [copied, setCopied] = useState(false);
+  const text = JSON.stringify(json, null, 2);
+  function copy() {
+    navigator.clipboard.writeText(text).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
+  }
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+        <button onClick={() => setOpen(o => !o)} style={{ ...btnGhost, fontSize: 12, padding: "5px 10px" }}>
+          {open ? "▲" : "▼"} {title}
+        </button>
+        <button onClick={copy} style={{ ...btnGhost, fontSize: 11, padding: "5px 10px", color: copied ? "#22c55e" : "#64748b" }}>
+          {copied ? "✓ Skopiowano!" : "Kopiuj JSON"}
+        </button>
+        <span style={{ fontSize: 11, color: "#334155" }}>{Array.isArray(json) ? `${json.length} wpisów` : ""}</span>
+      </div>
+      {open && (
+        <pre style={{
+          background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8,
+          padding: 14, fontSize: 10, color: "#94a3b8", overflowX: "auto", maxHeight: 400,
+          fontFamily: "monospace", whiteSpace: "pre", lineHeight: 1.5,
+        }}>
+          {text}
+        </pre>
+      )}
+    </div>
+  );
+}
+
+function JsonTab({ data }) {
+  return (
+    <div>
+      <div style={{ fontSize: 12, color: "#475569", marginBottom: 16 }}>
+        Raw JSON do skopiowania lub wklejenia ręcznie. Dane są identyczne z tym co zostanie zapisane do bazy.
+      </div>
+      <JsonSection title="Tabela ligowa" json={data.tabela} defaultOpen />
+      {(data.mecze || []).filter(m => m.score || m.walkower).length > 0 && (
+        <JsonSection title={`Mecze rozegrane (${(data.mecze || []).filter(m => m.score || m.walkower).length})`} json={(data.mecze || []).filter(m => m.score || m.walkower)} defaultOpen={false} />
+      )}
+      {(data.mecze || []).filter(m => !m.score && !m.walkower).length > 0 && (
+        <JsonSection title={`Mecze planowane (${(data.mecze || []).filter(m => !m.score && !m.walkower).length})`} json={(data.mecze || []).filter(m => !m.score && !m.walkower)} defaultOpen={false} />
+      )}
+      <JsonSection title="Wszystkie mecze" json={data.mecze} defaultOpen={false} />
+    </div>
+  );
+}
+
 // ─── Główny komponent ─────────────────────────────────────────
 
 export default function ScraperAdmin() {
@@ -398,6 +449,7 @@ export default function ScraperAdmin() {
             {[
               { id: "tabela", label: `Tabela (${data.tabela?.length || 0})` },
               { id: "mecze", label: `Mecze (${data.mecze?.length || 0})` },
+              { id: "json", label: "JSON" },
             ].map(t => (
               <button key={t.id} onClick={() => setTab(t.id)} style={{
                 padding: "10px 18px", background: "none", border: "none",
@@ -490,6 +542,10 @@ export default function ScraperAdmin() {
                 </div>
               )}
             </div>
+          )}
+          {/* JSON tab */}
+          {tab === "json" && hasData && (
+            <JsonTab data={data} />
           )}
         </>
       )}
