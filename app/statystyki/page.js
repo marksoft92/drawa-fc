@@ -146,7 +146,7 @@ export default function StatystykiPage() {
 
   // ── DNA Sezonu ──────────────────────────────────────────────
   const ligaMeczeWithEvents = mecze.filter(
-    (m) => !m.liga?.includes("Puchar") && m.status !== "planowany" && m.score && m.wszystkie_zdarzenia?.length
+    (m) => !m.liga?.includes("Puchar") && m.status !== "planowany" && m.score && m.wszystkieZdarzenia?.length
   );
   const dnaMatches = ligaMeczeWithEvents.map((m) => {
     const home = isDrawa(m.team1);
@@ -161,7 +161,7 @@ export default function StatystykiPage() {
       opp,
       score: `${gf}:${ga}`,
       result: gf > ga ? "W" : gf < ga ? "L" : "D",
-      events: (m.wszystkie_zdarzenia).map((z) => ({
+      events: (m.wszystkieZdarzenia).map((z) => ({
         min: Math.min(Math.max(parseInt(z.minuta) || 1, 1), 90),
         type: z.typ,
         isDrawa: z.strona === drawaSide,

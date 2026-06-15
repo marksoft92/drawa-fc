@@ -140,10 +140,12 @@ model Mecz {
   walkower  Boolean  @default(false)
   status    String?
   komentarz String?
-  strzelcy  Json     @default("[]")
-  kartki    Json     @default("[]")
-  zmiany    Json     @default("[]")
-  createdAt DateTime @default(now())
+  strzelcy           Json     @default("[]")
+  kartki             Json     @default("[]")
+  zmiany             Json     @default("[]")
+  wszystkieZdarzenia Json     @default("[]")
+  sklady             Json     @default("{}")
+  createdAt          DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([sezon, team1, team2, date])
