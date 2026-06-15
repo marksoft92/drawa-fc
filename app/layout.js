@@ -13,11 +13,12 @@ export const metadata = {
     template: "%s | MKS Drawa Drawno",
   },
   description:
-    "Oficjalna strona MKS Drawa Drawno. Wyniki, tabela, terminarz, kadra i aktualności z Klasy B Zachodniopomorskiej.",
+    "Oficjalna strona MKS Drawa Drawno. Wyniki, tabela, terminarz, kadra i aktualności. Sezon 2026/2027 — A klasa Zachodniopomorska.",
   keywords: [
     "MKS Drawa Drawno", "Drawa Drawno", "piłka nożna Drawno",
-    "Klasa B Zachodniopomorska", "MKS Drawa", "wyniki mecze Drawno",
-    "tabela Klasa B", "terminarz Drawno", "klub piłkarski Drawno",
+    "A klasa Zachodniopomorska", "MKS Drawa", "wyniki mecze Drawno",
+    "tabela A klasa", "terminarz Drawno", "klub piłkarski Drawno",
+    "awans A klasa Drawno",
   ],
   authors: [{ name: "MKS Drawa Drawno", url: BASE_URL }],
   creator: "MKS Drawa Drawno",
@@ -27,7 +28,7 @@ export const metadata = {
     url: BASE_URL,
     siteName: "MKS Drawa Drawno",
     title: "MKS Drawa Drawno — Oficjalna Strona Klubu",
-    description: "Wyniki, tabela, terminarz, kadra i aktualności MKS Drawa Drawno z Klasy B Zachodniopomorskiej.",
+    description: "Wyniki, tabela, terminarz, kadra i aktualności MKS Drawa Drawno. Sezon 2026/2027 — A klasa Zachodniopomorska.",
     locale: "pl_PL",
     images: [
       {
@@ -39,7 +40,7 @@ export const metadata = {
     ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "MKS Drawa Drawno",
     description: "Wyniki, tabela, terminarz i aktualności MKS Drawa Drawno.",
     images: ["/logo.png"],

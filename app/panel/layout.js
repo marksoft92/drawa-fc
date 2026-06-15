@@ -1,3 +1,7 @@
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 import { getPlayerSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import PanelLayoutClient from "./PanelLayoutClient";

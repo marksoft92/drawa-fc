@@ -86,8 +86,8 @@ export default function Image() {
           {[
             { v: '#1', l: 'MIEJSCE' },
             { v: '52', l: 'PUNKTÓW' },
-            { v: '85', l: 'GOLI' },
-            { v: '21', l: 'MECZÓW' },
+            { v: '88', l: 'GOLI' },
+            { v: '22', l: 'MECZÓW' },
           ].map(({ v, l }) => (
             <div key={l} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
               <div style={{ fontSize: 48, fontWeight: 800, color: '#3b82f6', lineHeight: 1, display: 'flex' }}>{v}</div>
@@ -105,7 +105,7 @@ export default function Image() {
           letterSpacing: '0.15em',
           display: 'flex',
         }}>
-          mksdrawadrawno.pl · Klasa B Zachodniopomorska · Sezon 2025/26
+          mksdrawadrawno.pl · A klasa Zachodniopomorska · Sezon 2026/27
         </div>
       </div>
     ),
