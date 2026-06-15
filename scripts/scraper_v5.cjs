@@ -128,8 +128,14 @@ async function scrapeListaMeczow(context) {
   return dane;
 }
 
-async function scrapeMecz(context, meczMeta) {
-  const page = await openPage(context, meczMeta.url);
+async function scrapeMecz(browser, meczMeta) {
+  // Świeży kontekst bez cookies — regiowyniki.pl ukrywa events table
+  // dla sesji które wcześniej odwiedziły inne strony drużyny
+  const freshCtx = await browser.newContext({
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36',
+    locale: 'pl-PL', viewport: { width: 1280, height: 900 },
+  });
+  const page = await openPage(freshCtx, meczMeta.url);
 
   const data = await page.evaluate(() => {
     const zdarzenia = [];
@@ -194,6 +200,7 @@ async function scrapeMecz(context, meczMeta) {
   const zmiany = wszystkieZdarzenia.filter(z => z.typ === 'zmiana');
 
   await page.close();
+  await freshCtx.close();
   return { ...meczMeta, ...data, zdarzenia_raw: undefined, strzelcy, kartki, zmiany, wszystkieZdarzenia };
 }
 
@@ -309,7 +316,7 @@ async function scrapeTabela(context) {
       writeStatus({ status: 'running', startedAt: new Date().toISOString(), progress: `Mecz ${i+1}/${doPobrania.length}: ${m.team1} vs ${m.team2}` });
       process.stdout.write(`     [${i+1}/${doPobrania.length}] ${m.team1} vs ${m.team2}... `);
       try {
-        const detail = await scrapeMecz(context, m);
+        const detail = await scrapeMecz(browser, m);
         const sklady = await scrapeSkladyMeczu(context, m.id);
         if (sklady) detail.sklady = sklady;
         result.mecze.push({ ...detail, status: detail.status || 'koniec' });
