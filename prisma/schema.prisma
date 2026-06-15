@@ -106,6 +106,49 @@ model Artykul {
   updatedAt DateTime @updatedAt
 }
 
+// ─── Liga (tabela + mecze) ────────────────────────────────────────────────────
+
+model TabelaDruzyna {
+  id        String   @id @default(cuid())
+  sezon     String
+  pozycja   Int
+  nazwa     String
+  herb      String?
+  pkt       Int      @default(0)
+  mecze     Int      @default(0)
+  wygrane   Int      @default(0)
+  remisy    Int      @default(0)
+  przegrane Int      @default(0)
+  bramkiZd  Int      @default(0)
+  bramkiStr Int      @default(0)
+  forma     String?
+  updatedAt DateTime @updatedAt
+
+  @@unique([sezon, pozycja])
+}
+
+model Mecz {
+  id        String   @id @default(cuid())
+  sezon     String
+  liga      String?
+  team1     String
+  team2     String
+  herb1     String?
+  herb2     String?
+  score     String?
+  date      String?
+  walkower  Boolean  @default(false)
+  status    String?
+  komentarz String?
+  strzelcy  Json     @default("[]")
+  kartki    Json     @default("[]")
+  zmiany    Json     @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([sezon, team1, team2, date])
+}
+
 // ─── Galeria ──────────────────────────────────────────────────────────────────
 
 model Album {

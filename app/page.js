@@ -1,7 +1,5 @@
 "use client";
-import data from "@/lib/drawa_data_b_klasa_2025_2026";
 import {computeTeamStats} from "@/lib/computeStats";
-
 import {useState, useEffect} from "react";
 import NavBar from "@/components/NavBar";
 import Hero from "@/components/hero";
@@ -116,18 +114,24 @@ const ScrollToTop = () => {
 // ─── Page ─────────────────────────────────────────────────────
 
 export default function Page() {
-  const drawaRow = (data.tabela)?.find((r) =>
-    r.nazwa.toLowerCase().includes("drawa")
-  );
+  const [tabela, setTabela] = useState([]);
+  const [mecze, setMecze] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/liga/tabela?sezon=2025%2F26").then(r => r.json()).then(d => setTabela(Array.isArray(d) ? d : [])).catch(() => {});
+    fetch("/api/liga/mecze?sezon=2025%2F26").then(r => r.json()).then(d => setMecze(Array.isArray(d) ? d : [])).catch(() => {});
+  }, []);
+
+  const drawaRow = tabela.find((r) => r.nazwa?.toLowerCase().includes("drawa"));
 
   const heroData = {
-    punkty: parseInt(drawaRow?.pkt ?? "0"),
-    mecze: parseInt(drawaRow?.mecze ?? "0"),
-    gole: parseInt((drawaRow?.bramki ?? "0:0").split(":")[0]),
-    pozycja: parseInt(drawaRow?.pozycja ?? "0"),
+    punkty: drawaRow?.pkt ?? 0,
+    mecze: drawaRow?.mecze ?? 0,
+    gole: drawaRow?.bramkiZd ?? 0,
+    pozycja: drawaRow?.pozycja ?? 0,
   };
 
-  const teamStats = computeTeamStats(data.mecze);
+  const teamStats = computeTeamStats(mecze);
 
   // Matchday detection
   function parseSimpleDate(str) {
@@ -148,14 +152,14 @@ export default function Page() {
   }
 
   const today = new Date();
-  const isMatchday = data.mecze.some(m => {
+  const isMatchday = mecze.some(m => {
     if (!m.date || m.score || m.walkower) return false;
     const d = parseSimpleDate(m.date);
     return d && d.toDateString() === today.toDateString();
   });
 
   const MatchdayBanner = isMatchday ? () => {
-    const next = data.mecze.find(m => !m.score && !m.walkower);
+    const next = mecze.find(m => !m.score && !m.walkower);
     const opp = next ? (isDrawa(next.team1) ? next.team2 : next.team1) : '';
     const time = next?.date?.split(' ').find(p => p.includes(':')) ?? '';
     return (
@@ -199,19 +203,19 @@ export default function Page() {
 
         <div id="mecze">
           <NastepnyMecz
-            mecze={data.mecze}
+            mecze={mecze}
             SectionLabel={SectionLabel}
             HerbImg={HerbImg}
             isDrawa={isDrawa}
           />
           <OstatniMecz
-            mecze={data.mecze}
+            mecze={mecze}
             SectionLabel={SectionLabel}
             HerbImg={HerbImg}
             isDrawa={isDrawa}
           />
           <Terminarz
-            mecze={data.mecze}
+            mecze={mecze}
             SectionLabel={SectionLabel}
             HerbImg={HerbImg}
             isDrawa={isDrawa}
@@ -220,7 +224,7 @@ export default function Page() {
 
         <div id="tabela">
           <Tabela
-            tabela={data.tabela}
+            tabela={tabela}
             SectionLabel={SectionLabel}
             HerbImg={HerbImg}
             getFormaColor={getFormaColor}

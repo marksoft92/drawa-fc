@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import NavBar from "@/components/NavBar";
-import data from "@/lib/drawa_data_b_klasa_2025_2026";
 import {computeTeamStats} from "@/lib/computeStats";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
@@ -92,9 +91,14 @@ const ChartTooltip = ({active, payload, label}) => {
 // ── page ──────────────────────────────────────────────────────
 
 export default function StatystykiPage() {
-  const s = computeTeamStats(data.mecze);
-
+  const [mecze, setMecze] = useState([]);
   const [isPortrait, setIsPortrait] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/liga/mecze?sezon=2025%2F26").then(r => r.json()).then(d => setMecze(Array.isArray(d) ? d : [])).catch(() => {});
+  }, []);
+
+  const s = computeTeamStats(mecze);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px) and (orientation: portrait)");
     setIsPortrait(mq.matches);
@@ -113,7 +117,7 @@ export default function StatystykiPage() {
 
   // scorers
   const scorerMap = {};
-  for (const mecz of data.mecze) {
+  for (const mecz of mecze) {
     if (!mecz.strzelcy?.length) continue;
     const drawaSide = isDrawa(mecz.team1) ? "gospodarze" : "goscie";
     for (const g of mecz.strzelcy) {
@@ -131,7 +135,7 @@ export default function StatystykiPage() {
   const maxMinute = Math.max(...minuteData.map((d) => d.count));
 
   // ── DNA Sezonu ──────────────────────────────────────────────
-  const ligaMeczeWithEvents = (data.mecze).filter(
+  const ligaMeczeWithEvents = mecze.filter(
     (m) => !m.liga?.includes("Puchar") && m.status !== "planowany" && m.score && m.wszystkie_zdarzenia?.length
   );
   const dnaMatches = ligaMeczeWithEvents.map((m) => {
@@ -156,7 +160,7 @@ export default function StatystykiPage() {
   });
 
   // ── Portret Drużyny (squad heatmap) ────────────────────────
-  const allLigaMecze = (data.mecze)
+  const allLigaMecze = mecze
     .filter((m) => !m.liga?.includes("Puchar") && m.status !== "planowany" && m.score)
     .sort((a, b) => parsePolishDate(a.date).getTime() - parsePolishDate(b.date).getTime());
 
