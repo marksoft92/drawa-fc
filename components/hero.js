@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-import DRAWA_HERB from '@/public/drawa-herb.png';
+import DRAWA_HERB from '@/public/drawa-herb_awans.png';
 
 export default function Hero({ tabela }) {
   const stats = [

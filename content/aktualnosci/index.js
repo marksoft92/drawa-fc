@@ -1,3 +1,4 @@
+import a027 from './027-awans-do-a-klasy';
 import a026 from './026-wyjazd-do-sokol-granowo-wygrywamy-6-2';
 import a025 from './025-walkower-drawa-3-0-z-pomorzanka-jaroslaw';
 import a001 from './001-liderzy-tabeli';
@@ -25,7 +26,7 @@ import a005 from './005-ina-stradzewo-2-5';
 import a004 from './004-swit-barnimie-2-2';
 
 const aktualnosci = [
-  a026, a025, a001, a022, a024, a023, a003,
+  a027, a026, a025, a001, a022, a024, a023, a003,
   a021, a020, a019, a018, a017, a016, a015, a014,
   a013, a012, a011, a010, a009, a008, a007, a006, a005, a004,
 ];
