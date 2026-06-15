@@ -368,7 +368,7 @@ export default function OstatniMecz({
           </div>
 
           {/* Events */}
-          {open && last.wszystkie_zdarzenia && (
+          {open && last.wszystkieZdarzenia && (
             <div
               style={{
                 padding: '0 24px 24px',
@@ -381,7 +381,7 @@ export default function OstatniMecz({
                   paddingTop: 20,
                 }}
               >
-                {last.wszystkie_zdarzenia.map((z, i) => {
+                {last.wszystkieZdarzenia.map((z, i) => {
                   const isLeft =
                     z.strona === 'gospodarze';
 

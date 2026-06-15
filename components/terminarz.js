@@ -176,7 +176,7 @@ function MatchDetails({ mecz, drawaSide, isDrawa }) {
             PRZEBIEG MECZU
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {mecz.wszystkie_zdarzenia?.map((z, i) => {
+            {mecz.wszystkieZdarzenia?.map((z, i) => {
               const isDrawaEvent = z.strona === 'gospodarze';
               const icon = z.typ === 'gol' ? '⚽'
                 : z.typ === 'żółta kartka' ? '🟨'
