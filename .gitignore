@@ -55,3 +55,5 @@ public/aktualnosci/uploads/*
 !public/aktualnosci/uploads/.gitkeep
 public/sponsorzy/uploads/*
 !public/sponsorzy/uploads/.gitkeep
+public/galeria/uploads/*
+!public/galeria/uploads/.gitkeep

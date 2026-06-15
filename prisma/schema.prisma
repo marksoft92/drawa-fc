@@ -106,6 +106,46 @@ model Artykul {
   updatedAt DateTime @updatedAt
 }
 
+// ─── Galeria ──────────────────────────────────────────────────────────────────
+
+model Album {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  tytul      String
+  date       String
+  tags       String[]
+  thumbnail  String?
+  author     String?
+  hrefAuthor String?
+  photos     Json     @default("[]")
+  kolejnosc  Int      @default(0)
+  published  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ─── Ustawienia (klucz-wartość) ───────────────────────────────────────────────
+
+model Ustawienie {
+  klucz     String   @id
+  wartosc   String   @default("")
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Struktura klubu ──────────────────────────────────────────────────────────
+
+model ZarzadOsoba {
+  id        String   @id @default(cuid())
+  rola      String
+  imie      String
+  telefon   String?
+  email     String?
+  kolejnosc Int      @default(0)
+  aktywny   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // ─── Sponsorzy ────────────────────────────────────────────────────────────────
 
 model Sponsor {
