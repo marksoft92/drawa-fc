@@ -32,6 +32,8 @@ export async function POST(request) {
         strzelcy: Array.isArray(m.strzelcy) ? m.strzelcy : [],
         kartki: Array.isArray(m.kartki) ? m.kartki : [],
         zmiany: Array.isArray(m.zmiany) ? m.zmiany : [],
+        wszystkieZdarzenia: Array.isArray(m.wszystkieZdarzenia) ? m.wszystkieZdarzenia : [],
+        sklady: m.sklady && typeof m.sklady === "object" ? m.sklady : {},
       },
       create: {
         sezon,
@@ -48,6 +50,8 @@ export async function POST(request) {
         strzelcy: Array.isArray(m.strzelcy) ? m.strzelcy : [],
         kartki: Array.isArray(m.kartki) ? m.kartki : [],
         zmiany: Array.isArray(m.zmiany) ? m.zmiany : [],
+        wszystkieZdarzenia: Array.isArray(m.wszystkieZdarzenia) ? m.wszystkieZdarzenia : [],
+        sklady: m.sklady && typeof m.sklady === "object" ? m.sklady : {},
       },
     });
     upserted++;

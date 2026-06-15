@@ -83,6 +83,15 @@ const ADMIN_NAV = [
     ),
   },
   {
+    label: "Scraper",
+    href: "/panel/scraper",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><path d="M20 12v6"/><path d="M17 15h6"/>
+      </svg>
+    ),
+  },
+  {
     label: "Transmisja",
     href: "/panel/transmisja",
     icon: (

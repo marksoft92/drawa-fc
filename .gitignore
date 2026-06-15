@@ -57,3 +57,5 @@ public/sponsorzy/uploads/*
 !public/sponsorzy/uploads/.gitkeep
 public/galeria/uploads/*
 !public/galeria/uploads/.gitkeep
+tmp/*
+!tmp/.gitkeep
