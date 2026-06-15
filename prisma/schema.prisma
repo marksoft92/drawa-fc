@@ -106,6 +106,19 @@ model Artykul {
   updatedAt DateTime @updatedAt
 }
 
+// ─── Sponsorzy ────────────────────────────────────────────────────────────────
+
+model Sponsor {
+  id         String   @id @default(cuid())
+  nazwa      String
+  logo       String?
+  href       String?
+  kolejnosc  Int      @default(0)
+  aktywny    Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
 // ─── Przyszłe funkcje (tabele dodamy migracją) ────────────────────────────────
 // Survey, SurveyQuestion, SurveyOption, SurveyVote
 // ChatRoom, ChatMessage

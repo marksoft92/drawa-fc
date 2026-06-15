@@ -53,3 +53,5 @@ public/kadra/uploads/*
 !public/kadra/uploads/.gitkeep
 public/aktualnosci/uploads/*
 !public/aktualnosci/uploads/.gitkeep
+public/sponsorzy/uploads/*
+!public/sponsorzy/uploads/.gitkeep
