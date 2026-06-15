@@ -1,7 +1,7 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import artykuly from '@/content/aktualnosci/index';
 
 // ── Placeholder zdjęcia ───────────────────────────────────────
 
@@ -52,6 +52,7 @@ const NewsCard = ({ artykul }) => (
       {/* Miniaturka */}
       <div style={{ position: 'relative', aspectRatio: '16/9' }}>
         {artykul.thumbnail ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={artykul.thumbnail}
             alt={artykul.title}
@@ -113,6 +114,15 @@ const NewsCard = ({ artykul }) => (
 // ── Główny komponent ──────────────────────────────────────────
 
 export default function Aktualnosci({ SectionLabel, showAll = false }) {
+  const [artykuly, setArtykuly] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/aktualnosci')
+      .then(r => r.json())
+      .then(d => setArtykuly(Array.isArray(d) ? d : []))
+      .catch(() => {});
+  }, []);
+
   const visible = showAll ? artykuly : artykuly.slice(0, 3);
 
   return (
@@ -120,7 +130,7 @@ export default function Aktualnosci({ SectionLabel, showAll = false }) {
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         <SectionLabel>Aktualności</SectionLabel>
         <div style={{ fontSize: 12, color: '#475569', marginTop: 4 }}>
-          {artykuly.length} aktualności · sezon 2025/26
+          {artykuly.length > 0 ? `${artykuly.length} aktualności` : ''}
         </div>
 
         <div

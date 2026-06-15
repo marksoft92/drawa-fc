@@ -88,6 +88,24 @@ model SezonStats {
   @@unique([playerId, sezonId])
 }
 
+// ─── Aktualności ─────────────────────────────────────────────────────────────
+
+model Artykul {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  excerpt   String
+  content   String
+  thumbnail String?
+  kolor     String?
+  tags      String[]
+  photos    Json     @default("[]")
+  published Boolean  @default(true)
+  date      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // ─── Przyszłe funkcje (tabele dodamy migracją) ────────────────────────────────
 // Survey, SurveyQuestion, SurveyOption, SurveyVote
 // ChatRoom, ChatMessage
