@@ -4,7 +4,7 @@ const BASE = 'https://mksdrawadrawno.pl';
 
 export default function sitemap() {
   const newsUrls = aktualnosci.map((a) => ({
-    url: `${BASE}/aktualnosci#${a.slug}`,
+    url: `${BASE}/aktualnosci/${a.slug}`,
     lastModified: new Date(a.date),
     changeFrequency: 'monthly',
     priority: 0.7,
