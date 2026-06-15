@@ -1,11 +1,19 @@
-import aktualnosci from '@/content/aktualnosci';
+import { prisma } from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
 
 const BASE = 'https://mksdrawadrawno.pl';
 
-export default function sitemap() {
-  const newsUrls = aktualnosci.map((a) => ({
+export default async function sitemap() {
+  const artykuly = await prisma.artykul.findMany({
+    where: { published: true },
+    select: { slug: true, updatedAt: true },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const newsUrls = artykuly.map(a => ({
     url: `${BASE}/aktualnosci/${a.slug}`,
-    lastModified: new Date(a.date),
+    lastModified: a.updatedAt,
     changeFrequency: 'monthly',
     priority: 0.7,
   }));

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import data from "@/lib/drawa_data_b_klasa_2025_2026";
 
 const isDrawa = (name) => name?.toLowerCase().includes("drawa");
 
@@ -18,16 +17,6 @@ const NAV_LINKS = [
  { label: "Kontakt", id: "kontakt" },
 ];
 
-function getNextMatch() {
- const raw = (data.mecze).find((m) => m.status === "planowany");
- if (!raw) return null;
- const opp = isDrawa(raw.team1) ? raw.team2 : raw.team1;
- const oppShort = opp.replace(/^(MKS|KS|LKS|SKS|GKS|UKS|FC)\s+/i, "").split(" ")[0];
- const parts = (raw.date).split(" ");
- const time = parts.find((p) => p.includes(":")) ?? "";
- const date = parts.filter((p) => !p.includes(":")).join(" ");
- return { opp: oppShort, date, time };
-}
 
 const IconMusicOn = () => (
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -53,7 +42,24 @@ export default function NavBar({ backLabel }) {
  const [scrolled, setScrolled] = useState(false);
  const [playing, setPlaying] = useState(false);
  const [streamActive, setStreamActive] = useState(false);
- const nextMatch = getNextMatch();
+ const [nextMatch, setNextMatch] = useState(null);
+
+ useEffect(() => {
+  let cancelled = false;
+  fetch("/api/liga/nextmatch")
+   .then(r => r.json())
+   .then(raw => {
+    if (cancelled || !raw) return;
+    const opp = isDrawa(raw.team1) ? raw.team2 : raw.team1;
+    const oppShort = opp.replace(/^(MKS|KS|LKS|SKS|GKS|UKS|FC)\s+/i, "").split(" ")[0];
+    const parts = (raw.date || "").split(" ");
+    const time = parts.find(p => p.includes(":")) ?? "";
+    const date = parts.filter(p => !p.includes(":")).join(" ");
+    setNextMatch({ opp: oppShort, date, time });
+   })
+   .catch(() => {});
+  return () => { cancelled = true; };
+ }, []);
 
  useEffect(() => {
   let cancelled = false;

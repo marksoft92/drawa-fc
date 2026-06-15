@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import data from '@/lib/drawa_data_b_klasa_2025_2026';
 
 const MONTHS = {
   sty: 0, styczeń: 0, lut: 1, luty: 1, mar: 2, marzec: 2,
@@ -29,7 +28,7 @@ async function maybeNotify() {
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
   if (!navigator.serviceWorker) return;
 
-  const next = data.mecze.find(m => !m.score && !m.walkower);
+  const next = await fetch('/api/liga/nextmatch').then(r => r.json()).catch(() => null);
   if (!next) return;
 
   const matchDate = parseDate(next.date);
