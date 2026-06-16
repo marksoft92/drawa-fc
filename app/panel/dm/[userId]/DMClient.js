@@ -103,15 +103,16 @@ export default function DMClient({ myId, otherId }) {
   // mark as read gdy dolna wiadomość widoczna
   useEffect(() => {
     if (messages.length === 0) return;
-    const last = messages[messages.length - 1];
-    if (!last || last.id === lastReadSentRef.current) return;
+    // tylko ID ostatniej wiadomości OD DRUGIEJ OSOBY — badge query porównuje po ID
+    const lastFromOther = [...messages].reverse().find((m) => !m.author.isMe && !m.usunieta);
+    if (!lastFromOther || lastFromOther.id === lastReadSentRef.current) return;
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        lastReadSentRef.current = last.id;
+        lastReadSentRef.current = lastFromOther.id;
         fetch(`/api/panel/dm/${otherId}/przeczytaj`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ msgId: last.id }),
+          body: JSON.stringify({ msgId: lastFromOther.id }),
         });
         observer.disconnect();
       }
