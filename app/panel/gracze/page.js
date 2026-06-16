@@ -109,6 +109,12 @@ export default function PanelGracze() {
     return () => { cancelled = true; };
   }, [tick]);
 
+  // odświeżaj listę co 30s żeby status online był aktualny bez reload
+  useEffect(() => {
+    const interval = setInterval(load, 30000);
+    return () => clearInterval(interval);
+  }, [load]);
+
   const isAdmin = data.currentRole === "ADMIN";
 
   function openCreate() {
@@ -327,7 +333,14 @@ export default function PanelGracze() {
         <div style={{ color: "#475569", fontSize: 14, padding: 20, textAlign: "center" }}>Brak zawodników.</div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          {data.users.map((u) => {
+          {[...data.users].sort((a, b) => {
+            const ao = isOnline(a.lastSeen), bo = isOnline(b.lastSeen);
+            if (ao !== bo) return ao ? -1 : 1;
+            if (!a.lastSeen && !b.lastSeen) return 0;
+            if (!a.lastSeen) return 1;
+            if (!b.lastSeen) return -1;
+            return new Date(b.lastSeen) - new Date(a.lastSeen);
+          }).map((u) => {
             const online = isOnline(u.lastSeen);
             const ago = timeAgo(u.lastSeen);
             const name = u.player?.imieNazwisko || u.login;
