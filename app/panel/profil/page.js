@@ -18,6 +18,10 @@ export default async function ProfilPage() {
         numer: user.player.numer ?? null,
         foto: user.player.foto ?? null,
       } : null}
+      showOnline={user.showOnline ?? true}
+      notifChat={user.notifChat ?? true}
+      notifDm={user.notifDm ?? true}
+      notifAnkiety={user.notifAnkiety ?? true}
     />
   );
 }

@@ -24,7 +24,7 @@ export async function GET() {
       email: u.email,
       role: u.role,
       active: u.active,
-      lastSeen: u.lastSeen,
+      lastSeen: u.showOnline ? u.lastSeen : null,
       createdAt: u.createdAt,
       player: u.player
         ? {

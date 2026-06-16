@@ -147,7 +147,7 @@ export async function POST(request, { params }) {
 
 async function sendPush(toUserId, payload) {
   try {
-    const subs = await prisma.pushSubscription.findMany({ where: { userId: toUserId } });
+    const subs = await prisma.pushSubscription.findMany({ where: { userId: toUserId, user: { notifDm: true } } });
     const p = JSON.stringify(payload);
     await Promise.allSettled(
       subs.map((s) =>

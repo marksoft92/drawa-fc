@@ -78,7 +78,7 @@ export async function POST(request) {
 
   // push notification do wszystkich subskrybentów
   try {
-    const subs = await prisma.pushSubscription.findMany();
+    const subs = await prisma.pushSubscription.findMany({ where: { user: { notifAnkiety: true } } });
     const payload = JSON.stringify({
       title: "📊 Nowa ankieta",
       body: tytul,

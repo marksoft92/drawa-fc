@@ -118,7 +118,9 @@ export async function POST(request) {
 
 async function sendPush(exceptUserId, payload) {
   try {
-    const subs = await prisma.pushSubscription.findMany({ where: { userId: { not: exceptUserId } } });
+    const subs = await prisma.pushSubscription.findMany({
+      where: { userId: { not: exceptUserId }, user: { notifChat: true } },
+    });
     const p = JSON.stringify(payload);
     await Promise.allSettled(
       subs.map((s) =>

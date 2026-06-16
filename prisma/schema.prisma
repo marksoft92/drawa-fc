@@ -18,6 +18,10 @@ model User {
   active             Boolean  @default(true)
   mustChangePassword Boolean  @default(true)
   lastSeen           DateTime?
+  showOnline         Boolean  @default(true)
+  notifChat          Boolean  @default(true)
+  notifDm            Boolean  @default(true)
+  notifAnkiety       Boolean  @default(true)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
