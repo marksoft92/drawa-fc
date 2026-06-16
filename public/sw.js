@@ -27,13 +27,28 @@ self.addEventListener('fetch', (e) => {
   );
 });
 
+self.addEventListener('push', (e) => {
+  if (!e.data) return;
+  let data;
+  try { data = e.data.json(); } catch { data = { title: 'MKS Drawa', body: e.data.text() }; }
+  e.waitUntil(
+    self.registration.showNotification(data.title || 'MKS Drawa', {
+      body: data.body || '',
+      icon: '/android-chrome-192x192.png',
+      badge: '/android-chrome-192x192.png',
+      data: { url: data.url || '/panel/ankiety' },
+    })
+  );
+});
+
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
+  const url = e.notification.data?.url || '/';
   e.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
       const existing = list.find((c) => c.url.includes(self.location.origin));
-      if (existing) return existing.focus();
-      return self.clients.openWindow('/');
+      if (existing) { existing.navigate(url); return existing.focus(); }
+      return self.clients.openWindow(url);
     })
   );
 });

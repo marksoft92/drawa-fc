@@ -20,8 +20,11 @@ model User {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  player   Player?
-  sessions Session[]
+  player            Player?
+  sessions          Session[]
+  ankietyUtworzono  Ankieta[]         @relation("AnkietaCreator")
+  ankietyGlosy      AnkietaGlos[]     @relation("AnkietaGlosy")
+  pushSubscriptions PushSubscription[]
 }
 
 enum Role {
@@ -204,6 +207,54 @@ model Sponsor {
   updatedAt  DateTime @updatedAt
 }
 
-// ─── Przyszłe funkcje (tabele dodamy migracją) ────────────────────────────────
-// Survey, SurveyQuestion, SurveyOption, SurveyVote
-// ChatRoom, ChatMessage
+// ─── Ankiety ──────────────────────────────────────────────────────────────────
+
+model Ankieta {
+  id        String    @id @default(cuid())
+  tytul     String
+  pytanie   String
+  deadline  DateTime?
+  aktywna   Boolean   @default(true)
+  createdBy String
+  creator   User      @relation("AnkietaCreator", fields: [createdBy], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  opcje     AnkietaOpcja[]
+  glosy     AnkietaGlos[]
+}
+
+model AnkietaOpcja {
+  id        String   @id @default(cuid())
+  ankietaId String
+  ankieta   Ankieta  @relation(fields: [ankietaId], references: [id], onDelete: Cascade)
+  tresc     String
+  kolejnosc Int      @default(0)
+
+  glosy     AnkietaGlos[]
+}
+
+model AnkietaGlos {
+  id        String   @id @default(cuid())
+  ankietaId String
+  ankieta   Ankieta      @relation(fields: [ankietaId], references: [id], onDelete: Cascade)
+  opcjaId   String
+  opcja     AnkietaOpcja @relation(fields: [opcjaId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User         @relation("AnkietaGlosy", fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@unique([ankietaId, userId])
+}
+
+// ─── Push powiadomienia ───────────────────────────────────────────────────────
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+}

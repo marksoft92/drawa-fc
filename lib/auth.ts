@@ -19,3 +19,8 @@ export async function isAdmin(): Promise<boolean> {
   const session = await getPlayerSession();
   return session?.user.role === "ADMIN";
 }
+
+export async function isAdminOrStaff(): Promise<boolean> {
+  const session = await getPlayerSession();
+  return session?.user.role === "ADMIN" || session?.user.role === "STAFF";
+}
