@@ -1,8 +1,8 @@
 import { getPlayerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { dmEmitter } from "@/lib/dmEmitter";
+import { chatEmitter } from "@/lib/chatEmitter";
 
-function convKey(a, b) { return [a, b].sort(); }
+function convKey(a, b) { return [a, b].sort().join(":"); }
 
 export async function DELETE(request, { params }) {
   const session = await getPlayerSession();
@@ -18,14 +18,8 @@ export async function DELETE(request, { params }) {
     data: { usunieta: true, tresc: null, plik: null },
   });
 
-  const [u1, u2] = convKey(myId, userId);
-  const conv = await prisma.privateConversation.findUnique({
-    where: { user1Id_user2Id: { user1Id: u1, user2Id: u2 } },
-  });
-  if (conv) {
-    const channel = [myId, userId].sort().join(":");
-    dmEmitter.emit(channel, { type: "delete", data: { msgId } });
-  }
+  const eventName = "dm:" + convKey(myId, userId);
+  chatEmitter.emit(eventName, { type: "delete", data: { msgId } });
 
   return Response.json({ ok: true });
 }

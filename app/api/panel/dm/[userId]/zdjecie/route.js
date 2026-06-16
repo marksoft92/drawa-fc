@@ -1,6 +1,6 @@
 import { getPlayerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { dmEmitter } from "@/lib/dmEmitter";
+import { chatEmitter } from "@/lib/chatEmitter";
 import { randomBytes } from "crypto";
 import { writeFile } from "fs/promises";
 import path from "path";
@@ -72,8 +72,8 @@ export async function POST(request, { params }) {
     include: INCLUDE_FULL,
   });
 
-  const channel = convKey(myId, userId);
+  const eventName = "dm:" + convKey(myId, userId);
   const formatted = formatMsg(msg, myId);
-  dmEmitter.emit(channel, { type: "message", data: formatted });
+  chatEmitter.emit(eventName, { type: "message", data: formatted });
   return Response.json(formatted, { status: 201 });
 }

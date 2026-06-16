@@ -1,5 +1,5 @@
 import { getPlayerSession } from "@/lib/auth";
-import { dmEmitter } from "@/lib/dmEmitter";
+import { chatEmitter } from "@/lib/chatEmitter";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +11,7 @@ export async function GET(request, { params }) {
   const myId = session.user.id;
   const { userId } = await params;
 
-  const channel = convKey(myId, userId);
+  const eventName = "dm:" + convKey(myId, userId);
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
@@ -20,7 +20,7 @@ export async function GET(request, { params }) {
         try { controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`)); } catch {}
       };
 
-      dmEmitter.on(channel, send);
+      chatEmitter.on(eventName, send);
 
       const ping = setInterval(() => {
         try { controller.enqueue(encoder.encode(": ping\n\n")); } catch { clearInterval(ping); }
@@ -28,7 +28,7 @@ export async function GET(request, { params }) {
 
       request.signal.addEventListener("abort", () => {
         clearInterval(ping);
-        dmEmitter.off(channel, send);
+        chatEmitter.off(eventName, send);
         try { controller.close(); } catch {}
       });
     },

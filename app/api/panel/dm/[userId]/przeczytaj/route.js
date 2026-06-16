@@ -1,6 +1,6 @@
 import { getPlayerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { dmEmitter } from "@/lib/dmEmitter";
+import { chatEmitter } from "@/lib/chatEmitter";
 
 function convKey(a, b) { return [a, b].sort().join(":"); }
 
@@ -11,7 +11,7 @@ export async function POST(request, { params }) {
   const { userId } = await params;
   const { msgId } = await request.json();
 
-  const channel = convKey(myId, userId);
+  const eventName = "dm:" + convKey(myId, userId);
   const [sortU1, sortU2] = [myId, userId].sort();
   const conv = await prisma.privateConversation.findUnique({
     where: { user1Id_user2Id: { user1Id: sortU1, user2Id: sortU2 } },
@@ -30,7 +30,7 @@ export async function POST(request, { params }) {
   });
   const name = me?.player?.imieNazwisko ?? me?.login ?? "?";
 
-  dmEmitter.emit(channel, {
+  chatEmitter.emit(eventName, {
     type: "odczytanie",
     data: {
       userId: myId,

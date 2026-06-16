@@ -1,6 +1,6 @@
 import { getPlayerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { dmEmitter } from "@/lib/dmEmitter";
+import { chatEmitter } from "@/lib/chatEmitter";
 import { randomBytes } from "crypto";
 
 function convKey(a, b) { return [a, b].sort().join(":"); }
@@ -12,7 +12,7 @@ export async function POST(request, { params }) {
   const { userId } = await params;
   const { msgId, emoji } = await request.json();
 
-  const channel = convKey(myId, userId);
+  const eventName = "dm:" + convKey(myId, userId);
   const [sortU1, sortU2] = [myId, userId].sort();
   const conv = await prisma.privateConversation.findUnique({
     where: { user1Id_user2Id: { user1Id: sortU1, user2Id: sortU2 } },
@@ -48,6 +48,6 @@ export async function POST(request, { params }) {
     return acc;
   }, {});
 
-  dmEmitter.emit(channel, { type: "reakcja", data: { msgId, reakcje } });
+  chatEmitter.emit(eventName, { type: "reakcja", data: { msgId, reakcje } });
   return Response.json({ ok: true });
 }

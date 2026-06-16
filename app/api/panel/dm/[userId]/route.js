@@ -1,6 +1,6 @@
 import { getPlayerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { dmEmitter } from "@/lib/dmEmitter";
+import { chatEmitter } from "@/lib/chatEmitter";
 import { randomBytes } from "crypto";
 import webpush from "web-push";
 
@@ -114,7 +114,7 @@ export async function POST(request, { params }) {
   const { tresc, replyToId } = await request.json();
   if (!tresc?.trim()) return Response.json({ error: "Pusta wiadomość" }, { status: 400 });
 
-  const channel = convKey(myId, userId);
+  const eventName = "dm:" + convKey(myId, userId);
   const conv = await getOrCreateConv(myId, userId);
 
   const msg = await prisma.privateWiadomosc.create({
@@ -129,7 +129,7 @@ export async function POST(request, { params }) {
   });
 
   const formatted = formatMsg(msg, myId);
-  dmEmitter.emit(channel, { type: "message", data: formatted });
+  chatEmitter.emit(eventName, { type: "message", data: formatted });
 
   // push do odbiorcy
   const myName = formatted.author.name;
