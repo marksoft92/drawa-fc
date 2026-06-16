@@ -1,10 +1,9 @@
 import { getPlayerSession } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 import { dmEmitter } from "@/lib/dmEmitter";
 
 export const dynamic = "force-dynamic";
 
-function convKey(a, b) { return [a, b].sort(); }
+function convKey(a, b) { return [a, b].sort().join(":"); }
 
 export async function GET(request, { params }) {
   const session = await getPlayerSession();
@@ -12,27 +11,21 @@ export async function GET(request, { params }) {
   const myId = session.user.id;
   const { userId } = await params;
 
-  const [u1, u2] = convKey(myId, userId);
+  const channel = convKey(myId, userId);
 
   const encoder = new TextEncoder();
   let controller;
 
   const stream = new ReadableStream({
     start(c) { controller = c; },
-    cancel() { dmEmitter.off("event", handler); },
+    cancel() { dmEmitter.off(channel, send); },
   });
 
   function send(data) {
     try { controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`)); } catch {}
   }
 
-  function handler(evt) {
-    // filtruj po parze userów — działa też gdy konwersacja dopiero powstaje
-    if (evt.u1 !== u1 || evt.u2 !== u2) return;
-    send(evt);
-  }
-
-  dmEmitter.on("event", handler);
+  dmEmitter.on(channel, send);
 
   const ping = setInterval(() => {
     try { controller.enqueue(encoder.encode(": ping\n\n")); } catch { clearInterval(ping); }
@@ -40,7 +33,7 @@ export async function GET(request, { params }) {
 
   request.signal.addEventListener("abort", () => {
     clearInterval(ping);
-    dmEmitter.off("event", handler);
+    dmEmitter.off(channel, send);
     try { controller.close(); } catch {}
   });
 

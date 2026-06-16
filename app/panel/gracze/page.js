@@ -392,8 +392,9 @@ export default function PanelGracze() {
 
                   {/* DM link (nie dla siebie) */}
                   {u.id !== data.currentUserId && (
-                    <Link href={`/panel/dm/${u.id}`} style={{ padding: "4px 10px", background: "none", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, color: "#64748b", fontSize: 11, cursor: "pointer", textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center" }}>
-                      ✉
+                    <Link href={`/panel/dm/${u.id}`} style={{ padding: "4px 10px", background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: 6, color: "#3b82f6", fontSize: 11, fontWeight: 600, cursor: "pointer", textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                      Napisz
                     </Link>
                   )}
 

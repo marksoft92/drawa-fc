@@ -2,7 +2,7 @@ import { getPlayerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { dmEmitter } from "@/lib/dmEmitter";
 
-function convKey(a, b) { return [a, b].sort(); }
+function convKey(a, b) { return [a, b].sort().join(":"); }
 
 export async function POST(request, { params }) {
   const session = await getPlayerSession();
@@ -11,9 +11,10 @@ export async function POST(request, { params }) {
   const { userId } = await params;
   const { msgId } = await request.json();
 
-  const [u1, u2] = convKey(myId, userId);
+  const channel = convKey(myId, userId);
+  const [sortU1, sortU2] = [myId, userId].sort();
   const conv = await prisma.privateConversation.findUnique({
-    where: { user1Id_user2Id: { user1Id: u1, user2Id: u2 } },
+    where: { user1Id_user2Id: { user1Id: sortU1, user2Id: sortU2 } },
   });
   if (!conv) return Response.json({ ok: true });
 
@@ -29,8 +30,7 @@ export async function POST(request, { params }) {
   });
   const name = me?.player?.imieNazwisko ?? me?.login ?? "?";
 
-  dmEmitter.emit("event", {
-    convId: conv.id, u1, u2,
+  dmEmitter.emit(channel, {
     type: "odczytanie",
     data: {
       userId: myId,

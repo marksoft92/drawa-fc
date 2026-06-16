@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { dmEmitter } from "@/lib/dmEmitter";
 import { randomBytes } from "crypto";
 
-function convKey(a, b) { return [a, b].sort(); }
+function convKey(a, b) { return [a, b].sort().join(":"); }
 
 export async function POST(request, { params }) {
   const session = await getPlayerSession();
@@ -12,9 +12,10 @@ export async function POST(request, { params }) {
   const { userId } = await params;
   const { msgId, emoji } = await request.json();
 
-  const [u1, u2] = convKey(myId, userId);
+  const channel = convKey(myId, userId);
+  const [sortU1, sortU2] = [myId, userId].sort();
   const conv = await prisma.privateConversation.findUnique({
-    where: { user1Id_user2Id: { user1Id: u1, user2Id: u2 } },
+    where: { user1Id_user2Id: { user1Id: sortU1, user2Id: sortU2 } },
   });
   if (!conv) return Response.json({ error: "Brak konwersacji" }, { status: 404 });
 
@@ -47,6 +48,6 @@ export async function POST(request, { params }) {
     return acc;
   }, {});
 
-  dmEmitter.emit("event", { convId: conv.id, u1, u2, type: "reakcja", data: { msgId, reakcje } });
+  dmEmitter.emit(channel, { type: "reakcja", data: { msgId, reakcje } });
   return Response.json({ ok: true });
 }

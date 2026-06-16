@@ -5,7 +5,7 @@ import { randomBytes } from "crypto";
 import { writeFile } from "fs/promises";
 import path from "path";
 
-function convKey(a, b) { return [a, b].sort(); }
+function convKey(a, b) { return [a, b].sort().join(":"); }
 
 async function getOrCreateConv(uid1, uid2) {
   const [u1, u2] = convKey(uid1, uid2);
@@ -72,8 +72,8 @@ export async function POST(request, { params }) {
     include: INCLUDE_FULL,
   });
 
-  const [u1, u2] = convKey(myId, userId);
+  const channel = convKey(myId, userId);
   const formatted = formatMsg(msg, myId);
-  dmEmitter.emit("event", { convId: conv.id, u1, u2, type: "message", data: formatted });
+  dmEmitter.emit(channel, { type: "message", data: formatted });
   return Response.json(formatted, { status: 201 });
 }

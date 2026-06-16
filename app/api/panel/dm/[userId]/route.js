@@ -11,7 +11,7 @@ webpush.setVapidDetails(
 );
 
 function convKey(a, b) {
-  return [a, b].sort();
+  return [a, b].sort().join(":");
 }
 
 async function getOrCreateConv(uid1, uid2) {
@@ -114,7 +114,7 @@ export async function POST(request, { params }) {
   const { tresc, replyToId } = await request.json();
   if (!tresc?.trim()) return Response.json({ error: "Pusta wiadomość" }, { status: 400 });
 
-  const [u1, u2] = convKey(myId, userId);
+  const channel = convKey(myId, userId);
   const conv = await getOrCreateConv(myId, userId);
 
   const msg = await prisma.privateWiadomosc.create({
@@ -129,7 +129,7 @@ export async function POST(request, { params }) {
   });
 
   const formatted = formatMsg(msg, myId);
-  dmEmitter.emit("event", { convId: conv.id, u1, u2, type: "message", data: formatted });
+  dmEmitter.emit(channel, { type: "message", data: formatted });
 
   // push do odbiorcy
   const myName = formatted.author.name;
