@@ -217,9 +217,17 @@ const STAFF_NAV = [
   },
 ];
 
+function urlBase64ToUint8Array(b) {
+  const pad = "=".repeat((4 - (b.length % 4)) % 4);
+  const base64 = (b + pad).replace(/-/g, "+").replace(/_/g, "/");
+  const raw = atob(base64);
+  return Uint8Array.from([...raw].map((c) => c.charCodeAt(0)));
+}
+
 export default function PanelLayoutClient({ role, login, name, foto, children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [badges, setBadges] = useState({ chat: 0, ankiety: 0 });
+  const [pushBanner, setPushBanner] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -233,6 +241,42 @@ export default function PanelLayoutClient({ role, login, name, foto, children })
     const interval = setInterval(ping, 2 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // auto push subscription
+  useEffect(() => {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+    const perm = Notification.permission;
+    if (perm === "denied") return;
+
+    navigator.serviceWorker.ready.then(async (reg) => {
+      const existing = await reg.pushManager.getSubscription();
+      if (existing) return; // już subskrybowany
+
+      if (perm === "granted") {
+        // cicha auto-subskrypcja
+        try {
+          const { publicKey } = await fetch("/api/panel/push").then((r) => r.json());
+          const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(publicKey) });
+          await fetch("/api/panel/push", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(sub.toJSON()) });
+        } catch {}
+      } else {
+        // "default" — pokaż banner po 3s
+        setTimeout(() => setPushBanner(true), 3000);
+      }
+    });
+  }, []);
+
+  async function enablePush() {
+    setPushBanner(false);
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const perm = await Notification.requestPermission();
+      if (perm !== "granted") return;
+      const { publicKey } = await fetch("/api/panel/push").then((r) => r.json());
+      const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(publicKey) });
+      await fetch("/api/panel/push", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(sub.toJSON()) });
+    } catch {}
+  }
 
   useEffect(() => {
     // zero out immediately before fetch so badge doesn't flash
@@ -381,6 +425,18 @@ export default function PanelLayoutClient({ role, login, name, foto, children })
         </div>
         <div className="panel-content" style={{ flex: 1, padding: "24px 24px" }}>{children}</div>
       </div>
+
+      {pushBanner && (
+        <div style={{ position: "fixed", bottom: 20, left: "50%", transform: "translateX(-50%)", zIndex: 300, background: "#0f172a", border: "1px solid rgba(59,130,246,0.3)", borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12, boxShadow: "0 8px 32px rgba(0,0,0,0.6)", maxWidth: "calc(100vw - 32px)", width: 380 }}>
+          <span style={{ fontSize: 22, flexShrink: 0 }}>🔔</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Włącz powiadomienia</div>
+            <div style={{ fontSize: 11, color: "#64748b", marginTop: 1 }}>Treningi, mecze, wiadomości — na bieżąco</div>
+          </div>
+          <button onClick={enablePush} style={{ padding: "7px 14px", background: "#2563eb", border: "none", borderRadius: 8, color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", flexShrink: 0 }}>Włącz</button>
+          <button onClick={() => setPushBanner(false)} style={{ background: "none", border: "none", color: "#475569", fontSize: 18, cursor: "pointer", padding: "0 2px", flexShrink: 0, lineHeight: 1 }}>✕</button>
+        </div>
+      )}
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
