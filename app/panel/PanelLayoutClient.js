@@ -14,6 +14,17 @@ const CHAT_NAV_ITEM = {
   ),
 };
 
+const PUSH_NAV_ITEM = {
+  label: "Powiadomienie",
+  href: "/panel/powiadomienie",
+  icon: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3z"/>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </svg>
+  ),
+};
+
 const DM_NAV_ITEM = {
   label: "Wiadomości",
   href: "/panel/dm",
@@ -136,6 +147,7 @@ const ADMIN_NAV = [
   DM_NAV_ITEM,
   CHAT_NAV_ITEM,
   ANKIETY_NAV_ITEM,
+  PUSH_NAV_ITEM,
   {
     label: "Profil",
     href: "/panel/profil",
@@ -192,6 +204,7 @@ const STAFF_NAV = [
   DM_NAV_ITEM,
   CHAT_NAV_ITEM,
   ANKIETY_NAV_ITEM,
+  PUSH_NAV_ITEM,
   {
     label: "Profil",
     href: "/panel/profil",
