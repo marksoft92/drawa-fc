@@ -17,6 +17,7 @@ export async function GET() {
 
   return Response.json({
     currentRole: session.user.role,
+    currentUserId: session.user.id,
     users: users.map((u) => ({
       id: u.id,
       login: u.login,

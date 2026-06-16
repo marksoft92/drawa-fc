@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const ROLES = [
   { value: "PLAYER", label: "Piłkarz" },
@@ -73,7 +74,7 @@ function Avatar({ foto, name, size = 38 }) {
 }
 
 export default function PanelGracze() {
-  const [data, setData] = useState({ users: [], currentRole: null });
+  const [data, setData] = useState({ users: [], currentRole: null, currentUserId: null });
   const [loading, setLoading] = useState(true);
   const [tick, setTick] = useState(0);
 
@@ -388,6 +389,13 @@ export default function PanelGracze() {
                       </span>
                     </div>
                   </div>
+
+                  {/* DM link (nie dla siebie) */}
+                  {u.id !== data.currentUserId && (
+                    <Link href={`/panel/dm/${u.id}`} style={{ padding: "4px 10px", background: "none", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, color: "#64748b", fontSize: 11, cursor: "pointer", textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center" }}>
+                      ✉
+                    </Link>
+                  )}
 
                   {/* Admin actions */}
                   {isAdmin && (

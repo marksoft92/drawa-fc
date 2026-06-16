@@ -14,6 +14,17 @@ const CHAT_NAV_ITEM = {
   ),
 };
 
+const DM_NAV_ITEM = {
+  label: "Wiadomości",
+  href: "/panel/dm",
+  badgeKey: "dm",
+  icon: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-5l-3 3v-3z" />
+    </svg>
+  ),
+};
+
 const ANKIETY_NAV_ITEM = {
   label: "Ankiety",
   href: "/panel/ankiety",
@@ -122,6 +133,7 @@ const ADMIN_NAV = [
       </svg>
     ),
   },
+  DM_NAV_ITEM,
   CHAT_NAV_ITEM,
   ANKIETY_NAV_ITEM,
   {
@@ -170,12 +182,14 @@ const PLAYER_NAV = [
     ),
   },
   DRUZYNA_NAV_ITEM,
+  DM_NAV_ITEM,
   CHAT_NAV_ITEM,
   ANKIETY_NAV_ITEM,
 ];
 
 const STAFF_NAV = [
   DRUZYNA_NAV_ITEM,
+  DM_NAV_ITEM,
   CHAT_NAV_ITEM,
   ANKIETY_NAV_ITEM,
   {
@@ -220,6 +234,7 @@ export default function PanelLayoutClient({ role, login, name, foto, children })
   useEffect(() => {
     if (pathname.startsWith("/panel/chat")) setBadges((b) => ({ ...b, chat: 0 }));
     if (pathname.startsWith("/panel/ankiety")) setBadges((b) => ({ ...b, ankiety: 0 }));
+    if (pathname.startsWith("/panel/dm")) setBadges((b) => ({ ...b, dm: 0 }));
   }, [pathname]);
 
   async function handleLogout() {
@@ -230,6 +245,7 @@ export default function PanelLayoutClient({ role, login, name, foto, children })
   function getBadge(href) {
     if (href === "/panel/chat") return badges.chat;
     if (href === "/panel/ankiety") return badges.ankiety;
+    if (href === "/panel/dm") return badges.dm ?? 0;
     return 0;
   }
 

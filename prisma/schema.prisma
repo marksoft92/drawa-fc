@@ -29,6 +29,11 @@ model User {
   chatWiadomosci    ChatWiadomosc[]   @relation("ChatAuthor")
   chatReakcje       ChatReakcja[]     @relation("ChatReakcje")
   chatOdczytanie    ChatOdczytanie?
+  dmConvUser1       PrivateConversation[] @relation("DmUser1")
+  dmConvUser2       PrivateConversation[] @relation("DmUser2")
+  dmWiadomosci      PrivateWiadomosc[]    @relation("DmAuthor")
+  dmReakcje         PrivateReakcja[]      @relation("DmReakcje")
+  dmOdczytania      PrivateOdczytanie[]   @relation("DmOdczytanie")
 }
 
 enum Role {
@@ -298,4 +303,60 @@ model PushSubscription {
   p256dh    String
   auth      String
   createdAt DateTime @default(now())
+}
+
+// ─── Prywatne wiadomości (1-do-1) ────────────────────────────────────────────
+
+model PrivateConversation {
+  id         String   @id @default(cuid())
+  user1Id    String
+  user2Id    String
+  user1      User     @relation("DmUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2      User     @relation("DmUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  wiadomosci PrivateWiadomosc[]
+  odczytania PrivateOdczytanie[]
+
+  @@unique([user1Id, user2Id])
+}
+
+model PrivateWiadomosc {
+  id        String              @id @default(cuid())
+  convId    String
+  conv      PrivateConversation @relation(fields: [convId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User                @relation("DmAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  tresc     String?
+  typ       String              @default("text")
+  plik      String?
+  usunieta  Boolean             @default(false)
+  replyToId String?
+  replyTo   PrivateWiadomosc?  @relation("DmReply", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies   PrivateWiadomosc[] @relation("DmReply")
+  reakcje   PrivateReakcja[]
+  createdAt DateTime            @default(now())
+  editedAt  DateTime?
+}
+
+model PrivateReakcja {
+  id     String           @id @default(cuid())
+  wiadId String
+  wiad   PrivateWiadomosc @relation(fields: [wiadId], references: [id], onDelete: Cascade)
+  userId String
+  user   User             @relation("DmReakcje", fields: [userId], references: [id], onDelete: Cascade)
+  emoji  String
+
+  @@unique([wiadId, userId, emoji])
+}
+
+model PrivateOdczytanie {
+  convId     String
+  userId     String
+  conv       PrivateConversation @relation(fields: [convId], references: [id], onDelete: Cascade)
+  user       User                @relation("DmOdczytanie", fields: [userId], references: [id], onDelete: Cascade)
+  ostatniaId String?
+  updatedAt  DateTime            @updatedAt
+
+  @@id([convId, userId])
 }

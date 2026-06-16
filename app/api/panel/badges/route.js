@@ -39,5 +39,25 @@ export async function GET() {
     ankiety = ids.length - zaglosowane;
   }
 
-  return Response.json({ chat, ankiety });
+  // nieodczytane DM (liczba konwersacji z nowymi wiadomościami)
+  const myConvs = await prisma.privateConversation.findMany({
+    where: { OR: [{ user1Id: userId }, { user2Id: userId }] },
+    include: {
+      odczytania: { where: { userId }, select: { ostatniaId: true } },
+      wiadomosci: {
+        where: { authorId: { not: userId }, usunieta: false },
+        orderBy: { createdAt: "desc" },
+        take: 1,
+        select: { id: true },
+      },
+    },
+  });
+  const dm = myConvs.filter((c) => {
+    const lastMsg = c.wiadomosci[0];
+    if (!lastMsg) return false;
+    const read = c.odczytania[0];
+    return !read || read.ostatniaId !== lastMsg.id;
+  }).length;
+
+  return Response.json({ chat, ankiety, dm });
 }
