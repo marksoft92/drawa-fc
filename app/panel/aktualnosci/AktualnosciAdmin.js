@@ -18,12 +18,18 @@ function slugify(str) {
 
 // ─── Upload helper ───────────────────────────────────────────
 async function uploadFile(file, onError) {
-  const fd = new FormData();
-  fd.append("file", file);
-  const r = await fetch("/api/admin/artykuly/upload", { method: "POST", body: fd });
-  const d = await r.json();
-  if (!r.ok) { onError(d.error || "Błąd uploadu"); return null; }
-  return d.url;
+  try {
+    const fd = new FormData();
+    fd.append("file", file);
+    const r = await fetch("/api/admin/artykuly/upload", { method: "POST", body: fd });
+    if (r.status === 413) { onError("Plik za duży (max 10 MB)"); return null; }
+    const d = await r.json();
+    if (!r.ok) { onError(d.error || "Błąd uploadu"); return null; }
+    return d.url;
+  } catch {
+    onError("Błąd połączenia podczas wgrywania");
+    return null;
+  }
 }
 
 // ─── Pole z uploadem zdjęcia ─────────────────────────────────
@@ -34,9 +40,12 @@ function ImageUploadField({ value, onChange, label, onError }) {
   async function handleFile(file) {
     if (!file) return;
     setUploading(true);
-    const url = await uploadFile(file, onError);
-    if (url) onChange(url);
-    setUploading(false);
+    try {
+      const url = await uploadFile(file, onError);
+      if (url) onChange(url);
+    } finally {
+      setUploading(false);
+    }
   }
 
   return (
@@ -92,9 +101,12 @@ function PhotoRow({ photo, onChange, onRemove, onError, onMoveUp, onMoveDown, is
   async function handleFile(file) {
     if (!file) return;
     setUploading(true);
-    const url = await uploadFile(file, onError);
-    if (url) onChange("src", url);
-    setUploading(false);
+    try {
+      const url = await uploadFile(file, onError);
+      if (url) onChange("src", url);
+    } finally {
+      setUploading(false);
+    }
   }
 
   return (

@@ -27,9 +27,9 @@ export async function POST(request) {
 
   const ext = extname(file.name) || (file.type === "image/png" ? ".png" : file.type === "image/webp" ? ".webp" : ".jpg");
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}${ext}`;
-  const path = join(process.cwd(), "public", "aktualnosci", "uploads", filename);
+  const path = join(process.cwd(), "public", "uploads", filename);
 
   await writeFile(path, Buffer.from(bytes));
 
-  return Response.json({ url: `/aktualnosci/uploads/${filename}` });
+  return Response.json({ url: `/uploads/${filename}` });
 }

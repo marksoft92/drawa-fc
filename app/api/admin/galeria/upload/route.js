@@ -17,6 +17,6 @@ export async function POST(request) {
   if (bytes.byteLength > MAX_SIZE) return Response.json({ error: "Maks. 15 MB" }, { status: 400 });
   const ext = extname(file.name) || ".jpg";
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}${ext}`;
-  await writeFile(join(process.cwd(), "public", "galeria", "uploads", filename), Buffer.from(bytes));
-  return Response.json({ url: `/galeria/uploads/${filename}` });
+  await writeFile(join(process.cwd(), "public", "uploads", filename), Buffer.from(bytes));
+  return Response.json({ url: `/uploads/${filename}` });
 }
