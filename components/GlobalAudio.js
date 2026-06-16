@@ -12,6 +12,13 @@ export default function GlobalAudio() {
     if (!audio) return;
     if (pathname.startsWith('/panel') || pathname.startsWith('/transmisja')) {
       audio.pause();
+    }
+  }, [pathname]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (pathname.startsWith('/panel') || pathname.startsWith('/transmisja')) {
       return;
     }
     audio.volume = 0.4;

@@ -1,5 +1,7 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 const MODELS = [
   { id: 'google/gemma-4-31b-it:free', label: 'Gemma 4 31B' },
@@ -27,6 +29,7 @@ const IconSend = () => (
 );
 
 export default function DrawaChat() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [model, setModel] = useState(MODELS[0].id);
   const [messages, setMessages] = useState([
@@ -152,34 +155,60 @@ export default function DrawaChat() {
         @keyframes blink { 50% { opacity: 0; } }
       `}</style>
 
-      {/* Floating button */}
-      <button
-        onClick={() => setOpen(o => !o)}
-        aria-label="Chat z asystentem Drawy"
-        style={{
-          position: 'fixed',
-          bottom: 28,
-          left: 24,
-          zIndex: 200,
-          width: 44,
-          height: 44,
-          borderRadius: '50%',
-          background: open ? '#1d4ed8' : '#0f172a',
-          border: `1px solid ${open ? 'rgba(59,130,246,0.6)' : 'rgba(59,130,246,0.3)'}`,
-          color: '#3b82f6',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-          transition: 'background 0.2s, border-color 0.2s',
-        }}
-      >
-        {open ? <IconClose /> : <IconChat />}
-      </button>
+      {/* W panelu: link do wewnętrznego chatu; poza panelem: AI chat */}
+      {pathname.startsWith('/panel') ? (
+        <Link
+          href="/panel/chat"
+          aria-label="Przejdź do chatu drużyny"
+          style={{
+            position: 'fixed',
+            bottom: 28,
+            left: 24,
+            zIndex: 200,
+            width: 44,
+            height: 44,
+            borderRadius: '50%',
+            background: '#0f172a',
+            border: '1px solid rgba(59,130,246,0.3)',
+            color: '#3b82f6',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+            textDecoration: 'none',
+          }}
+        >
+          <IconChat />
+        </Link>
+      ) : (
+        <button
+          onClick={() => setOpen(o => !o)}
+          aria-label="Chat z asystentem Drawy"
+          style={{
+            position: 'fixed',
+            bottom: 28,
+            left: 24,
+            zIndex: 200,
+            width: 44,
+            height: 44,
+            borderRadius: '50%',
+            background: open ? '#1d4ed8' : '#0f172a',
+            border: `1px solid ${open ? 'rgba(59,130,246,0.6)' : 'rgba(59,130,246,0.3)'}`,
+            color: '#3b82f6',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+            transition: 'background 0.2s, border-color 0.2s',
+          }}
+        >
+          {open ? <IconClose /> : <IconChat />}
+        </button>
+      )}
 
-      {/* Panel */}
-      {open && (
+      {/* Panel AI chatu (tylko poza panelem) */}
+      {!pathname.startsWith('/panel') && open && (
         <div className="drawa-chat-panel">
           {/* Header */}
           <div style={{ padding: '12px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
