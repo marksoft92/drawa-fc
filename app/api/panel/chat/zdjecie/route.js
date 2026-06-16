@@ -34,7 +34,7 @@ export async function POST(request) {
       authorId: session.user.id,
     },
     include: {
-      author: { select: { id: true, login: true, player: { select: { imieNazwisko: true } } } },
+      author: { select: { id: true, login: true, player: { select: { imieNazwisko: true, foto: true } } } },
       reakcje: true,
     },
   });
@@ -51,6 +51,7 @@ export async function POST(request) {
       id: msg.author.id,
       name: msg.author.player?.imieNazwisko ?? msg.author.login,
       initials: (msg.author.player?.imieNazwisko ?? msg.author.login).charAt(0).toUpperCase(),
+      foto: msg.author.player?.foto ?? null,
       isMe: true,
     },
     reakcje: {},

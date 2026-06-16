@@ -4,6 +4,20 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 const EMOJI_LIST = ["👍", "❤️", "😂", "😮", "😢", "😡"];
 
+function Avatar({ foto, initials, size = 32, color = "#3b82f6" }) {
+  if (foto) {
+    return (
+      /* eslint-disable-next-line @next/next/no-img-element */
+      <img src={foto} alt={initials} style={{ width: size, height: size, borderRadius: "50%", objectFit: "cover", objectPosition: "top", flexShrink: 0, border: "1.5px solid rgba(255,255,255,0.1)" }} />
+    );
+  }
+  return (
+    <div style={{ width: size, height: size, borderRadius: "50%", background: `rgba(${color === "#3b82f6" ? "59,130,246" : "100,116,139"},0.15)`, border: `1px solid rgba(${color === "#3b82f6" ? "59,130,246" : "100,116,139"},0.25)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: Math.round(size * 0.4), fontWeight: 700, color, flexShrink: 0 }}>
+      {initials}
+    </div>
+  );
+}
+
 export default function ChatClient({ myId, myName, isAdmin }) {
   const [messages, setMessages] = useState([]);
   const [odczytania, setOdczytania] = useState([]);
@@ -230,9 +244,7 @@ export default function ChatClient({ myId, myName, isAdmin }) {
 
               <div style={{ display: "flex", alignItems: "flex-end", gap: 8, flexDirection: isMe ? "row-reverse" : "row" }}>
                 {!isMe && !msg.grouped && (
-                  <div style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(59,130,246,0.15)", border: "1px solid rgba(59,130,246,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#3b82f6", flexShrink: 0 }}>
-                    {msg.author.initials}
-                  </div>
+                  <Avatar foto={msg.author.foto} initials={msg.author.initials} size={32} />
                 )}
                 {!isMe && msg.grouped && <div style={{ width: 32, flexShrink: 0 }} />}
 

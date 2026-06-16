@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -175,17 +175,46 @@ const STAFF_NAV = [
   },
 ];
 
-export default function PanelLayoutClient({ role, login, name, children }) {
+export default function PanelLayoutClient({ role, login, name, foto, children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [badges, setBadges] = useState({ chat: 0, ankiety: 0 });
   const pathname = usePathname();
   const router = useRouter();
 
   const navItems = role === "ADMIN" ? ADMIN_NAV : role === "STAFF" ? STAFF_NAV : PLAYER_NAV;
   const displayName = name || login;
+  const initials = displayName.charAt(0).toUpperCase();
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const r = await fetch("/api/panel/badges");
+        if (!r.ok || cancelled) return;
+        const d = await r.json();
+        setBadges(d);
+      } catch {}
+    }
+    load();
+    const iv = setInterval(load, 30000);
+    return () => { cancelled = true; clearInterval(iv); };
+  }, [pathname]);
+
+  // wyczyść badge gdy user jest na danej stronie
+  useEffect(() => {
+    if (pathname.startsWith("/panel/chat")) setBadges((b) => ({ ...b, chat: 0 }));
+    if (pathname.startsWith("/panel/ankiety")) setBadges((b) => ({ ...b, ankiety: 0 }));
+  }, [pathname]);
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
+  }
+
+  function getBadge(href) {
+    if (href === "/panel/chat") return badges.chat;
+    if (href === "/panel/ankiety") return badges.ankiety;
+    return 0;
   }
 
   return (
@@ -219,6 +248,7 @@ export default function PanelLayoutClient({ role, login, name, children }) {
         <nav style={{ flex: 1, padding: "12px 10px", display: "flex", flexDirection: "column", gap: 2 }}>
           {navItems.map((item) => {
             const active = pathname === item.href || pathname.startsWith(item.href + "/");
+            const badge = getBadge(item.href);
             return (
               <Link
                 key={item.href}
@@ -231,21 +261,44 @@ export default function PanelLayoutClient({ role, login, name, children }) {
                   background: active ? "rgba(59,130,246,0.12)" : "transparent",
                   border: active ? "1px solid rgba(59,130,246,0.2)" : "1px solid transparent",
                   transition: "all 0.15s",
-                  minHeight: 44,
+                  minHeight: 44, position: "relative",
                 }}
                 onMouseEnter={(e) => { if (!active) e.currentTarget.style.color = "#94a3b8"; }}
                 onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = "#64748b"; }}
               >
-                <span style={{ color: active ? "#3b82f6" : "inherit", opacity: active ? 1 : 0.6, flexShrink: 0 }}>{item.icon}</span>
-                {item.label}
+                <span style={{ color: active ? "#3b82f6" : "inherit", opacity: active ? 1 : 0.6, flexShrink: 0, position: "relative" }}>
+                  {item.icon}
+                  {badge > 0 && !active && (
+                    <span style={{ position: "absolute", top: -5, right: -5, minWidth: 14, height: 14, borderRadius: 7, background: "#ef4444", color: "#fff", fontSize: 9, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 3px", lineHeight: 1 }}>
+                      {badge > 99 ? "99+" : badge}
+                    </span>
+                  )}
+                </span>
+                <span style={{ flex: 1 }}>{item.label}</span>
+                {badge > 0 && !active && (
+                  <span style={{ minWidth: 18, height: 18, borderRadius: 9, background: "#ef4444", color: "#fff", fontSize: 10, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 5px", marginLeft: "auto" }}>
+                    {badge > 99 ? "99+" : badge}
+                  </span>
+                )}
               </Link>
             );
           })}
         </nav>
 
-        <div style={{ padding: "14px 16px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-          <div style={{ fontSize: 11, color: "#475569", marginBottom: 10, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-            {displayName}
+        <div style={{ padding: "12px 14px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            {foto ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={foto} alt={initials} style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover", objectPosition: "top", flexShrink: 0, border: "1.5px solid rgba(255,255,255,0.12)" }} />
+            ) : (
+              <div style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#3b82f6", flexShrink: 0 }}>
+                {initials}
+              </div>
+            )}
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{displayName}</div>
+              <div style={{ fontSize: 10, color: "#334155" }}>{role === "ADMIN" ? "Admin" : role === "STAFF" ? "Sztab" : "Piłkarz"}</div>
+            </div>
           </div>
           <div style={{ display: "flex", gap: 8 }}>
             <Link href="/" style={{ fontSize: 12, color: "#475569", textDecoration: "none", flex: 1, display: "flex", alignItems: "center" }}>← Strona</Link>

@@ -23,6 +23,7 @@ function formatMsg(m, myId) {
       id: m.author.id,
       name: m.author.player?.imieNazwisko ?? m.author.login,
       initials: (m.author.player?.imieNazwisko ?? m.author.login).charAt(0).toUpperCase(),
+      foto: m.author.player?.foto ?? null,
       isMe: m.author.id === myId,
     },
     reakcje: m.reakcje.reduce((acc, r) => {
@@ -42,7 +43,7 @@ export async function GET() {
     orderBy: { createdAt: "asc" },
     take: 150,
     include: {
-      author: { select: { id: true, login: true, player: { select: { imieNazwisko: true } } } },
+      author: { select: { id: true, login: true, player: { select: { imieNazwisko: true, foto: true } } } },
       reakcje: true,
     },
   });
@@ -76,7 +77,7 @@ export async function POST(request) {
       authorId: session.user.id,
     },
     include: {
-      author: { select: { id: true, login: true, player: { select: { imieNazwisko: true } } } },
+      author: { select: { id: true, login: true, player: { select: { imieNazwisko: true, foto: true } } } },
       reakcje: true,
     },
   });
