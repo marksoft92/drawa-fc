@@ -245,9 +245,11 @@ export default function ChatClient({ myId, myName, isAdmin }) {
 
               <div style={{ display: "flex", alignItems: "flex-end", gap: 8, flexDirection: isMe ? "row-reverse" : "row" }}>
                 {!isMe && !msg.grouped && (
-                  <Avatar foto={msg.author.foto} initials={msg.author.initials} size={32} />
+                  <div className="chat-avatar" style={{ flexShrink: 0, display: "flex" }}>
+                    <Avatar foto={msg.author.foto} initials={msg.author.initials} size={32} />
+                  </div>
                 )}
-                {!isMe && msg.grouped && <div style={{ width: 32, flexShrink: 0 }} />}
+                {!isMe && msg.grouped && <div className="chat-avatar-spacer" style={{ width: 32, flexShrink: 0 }} />}
 
                 <div style={{ maxWidth: "72%", position: "relative" }}>
                   {msg.usunieta ? (
@@ -270,8 +272,14 @@ export default function ChatClient({ myId, myName, isAdmin }) {
                       }}
                     >
                       {msg.typ === "image" ? (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img src={msg.plik} alt="zdjęcie" onClick={(e) => { e.stopPropagation(); setLightbox(msg.plik); }} style={{ maxWidth: 260, maxHeight: 320, borderRadius: 13, display: "block", cursor: "zoom-in" }} />
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setLightbox(msg.plik); }}
+                          onTouchEnd={(e) => { e.stopPropagation(); e.preventDefault(); setLightbox(msg.plik); }}
+                          style={{ background: "none", border: "none", padding: 0, cursor: "zoom-in", display: "block", WebkitTouchCallout: "none" }}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={msg.plik} alt="zdjęcie" draggable={false} style={{ maxWidth: 260, maxHeight: 320, borderRadius: 13, display: "block", pointerEvents: "none" }} />
+                        </button>
                       ) : (
                         msg.tresc
                       )}
@@ -360,7 +368,7 @@ export default function ChatClient({ myId, myName, isAdmin }) {
       )}
 
       {/* input */}
-      <div style={{ padding: "10px 12px", borderTop: "1px solid rgba(255,255,255,0.06)", background: "#030712", flexShrink: 0, display: "flex", alignItems: "flex-end", gap: 8 }}>
+      <div className="chat-input-bar" style={{ padding: "10px 12px", borderTop: "1px solid rgba(255,255,255,0.06)", background: "#030712", flexShrink: 0, display: "flex", alignItems: "flex-end", gap: 8 }}>
         <input
           ref={fileRef}
           type="file"
@@ -372,6 +380,7 @@ export default function ChatClient({ myId, myName, isAdmin }) {
           onClick={() => fileRef.current?.click()}
           disabled={uploading}
           title="Wyślij zdjęcie"
+          className="chat-icon-btn"
           style={{ ...iconBtn, flexShrink: 0 }}
         >
           {uploading ? (
@@ -390,14 +399,15 @@ export default function ChatClient({ myId, myName, isAdmin }) {
           onKeyDown={onKeyDown}
           placeholder="Napisz wiadomość…"
           rows={1}
+          className="chat-textarea"
           style={{
             flex: 1, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
             borderRadius: 20, padding: "10px 16px", color: "#fff", fontSize: 14, resize: "none",
-            lineHeight: 1.5, maxHeight: 120, overflowY: "auto", fontFamily: "inherit",
+            lineHeight: 1.5, maxHeight: 120, overflowY: "auto", fontFamily: "inherit", minWidth: 0,
           }}
         />
 
-        <button onClick={sendText} disabled={!input.trim() || sending} style={{
+        <button onClick={sendText} disabled={!input.trim() || sending} className="chat-icon-btn" style={{
           ...iconBtn, flexShrink: 0,
           background: input.trim() ? "#2563eb" : "rgba(255,255,255,0.04)",
           border: input.trim() ? "none" : "1px solid rgba(255,255,255,0.08)",
@@ -418,6 +428,14 @@ export default function ChatClient({ myId, myName, isAdmin }) {
         textarea::placeholder { color: #334155; }
         @media (max-width: 768px) {
           div[style*="height: calc(100vh - 52px)"] { margin: -16px -14px 0 !important; }
+        }
+        @media (max-width: 380px) {
+          .chat-input-bar { padding: 6px !important; gap: 4px !important; }
+          .chat-icon-btn { width: 34px !important; height: 34px !important; min-width: 34px !important; border-radius: 50% !important; }
+          .chat-textarea { padding: 8px 10px !important; font-size: 13px !important; }
+          .chat-avatar > img,
+          .chat-avatar > div { width: 26px !important; height: 26px !important; min-width: 26px !important; font-size: 10px !important; }
+          .chat-avatar-spacer { width: 26px !important; min-width: 26px !important; }
         }
       `}</style>
 
