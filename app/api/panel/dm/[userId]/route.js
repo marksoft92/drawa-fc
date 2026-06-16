@@ -15,7 +15,7 @@ function convKey(a, b) {
 }
 
 async function getOrCreateConv(uid1, uid2) {
-  const [u1, u2] = convKey(uid1, uid2);
+  const [u1, u2] = [uid1, uid2].sort();
   return prisma.privateConversation.upsert({
     where: { user1Id_user2Id: { user1Id: u1, user2Id: u2 } },
     create: { user1Id: u1, user2Id: u2 },
