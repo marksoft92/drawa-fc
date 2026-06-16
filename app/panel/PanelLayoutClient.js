@@ -136,6 +136,19 @@ const ADMIN_NAV = [
   },
 ];
 
+const DRUZYNA_NAV_ITEM = {
+  label: "Drużyna",
+  href: "/panel/gracze",
+  icon: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="9" cy="7" r="4" />
+      <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      <path d="M21 21v-2a4 4 0 0 0-3-3.87" />
+    </svg>
+  ),
+};
+
 const PLAYER_NAV = [
   {
     label: "Profil",
@@ -156,11 +169,13 @@ const PLAYER_NAV = [
       </svg>
     ),
   },
+  DRUZYNA_NAV_ITEM,
   CHAT_NAV_ITEM,
   ANKIETY_NAV_ITEM,
 ];
 
 const STAFF_NAV = [
+  DRUZYNA_NAV_ITEM,
   CHAT_NAV_ITEM,
   ANKIETY_NAV_ITEM,
   {
@@ -184,6 +199,13 @@ export default function PanelLayoutClient({ role, login, name, foto, children })
   const navItems = role === "ADMIN" ? ADMIN_NAV : role === "STAFF" ? STAFF_NAV : PLAYER_NAV;
   const displayName = name || login;
   const initials = displayName.charAt(0).toUpperCase();
+
+  useEffect(() => {
+    const ping = () => fetch("/api/panel/heartbeat", { method: "POST" }).catch(() => {});
+    ping();
+    const interval = setInterval(ping, 2 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;

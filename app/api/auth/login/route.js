@@ -48,6 +48,7 @@ export async function POST(request) {
     return Response.json({ error: "Nieprawidłowy login lub hasło" }, { status: 401 });
   }
 
+  await prisma.user.update({ where: { id: user.id }, data: { lastSeen: new Date() } });
   await createSession(user.id);
   return Response.json({ redirect: "/panel" });
 }

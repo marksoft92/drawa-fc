@@ -17,6 +17,7 @@ model User {
   role      Role     @default(PLAYER)
   active             Boolean  @default(true)
   mustChangePassword Boolean  @default(true)
+  lastSeen           DateTime?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
