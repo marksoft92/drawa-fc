@@ -30,7 +30,7 @@ export async function POST(request, { params }) {
   const name = me?.player?.imieNazwisko ?? me?.login ?? "?";
 
   dmEmitter.emit("event", {
-    convId: conv.id,
+    convId: conv.id, u1, u2,
     type: "odczytanie",
     data: {
       userId: myId,

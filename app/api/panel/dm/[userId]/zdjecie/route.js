@@ -72,7 +72,8 @@ export async function POST(request, { params }) {
     include: INCLUDE_FULL,
   });
 
+  const [u1, u2] = convKey(myId, userId);
   const formatted = formatMsg(msg, myId);
-  dmEmitter.emit("event", { convId: conv.id, type: "message", data: formatted });
+  dmEmitter.emit("event", { convId: conv.id, u1, u2, type: "message", data: formatted });
   return Response.json(formatted, { status: 201 });
 }

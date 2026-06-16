@@ -47,6 +47,6 @@ export async function POST(request, { params }) {
     return acc;
   }, {});
 
-  dmEmitter.emit("event", { convId: conv.id, type: "reakcja", data: { msgId, reakcje } });
+  dmEmitter.emit("event", { convId: conv.id, u1, u2, type: "reakcja", data: { msgId, reakcje } });
   return Response.json({ ok: true });
 }

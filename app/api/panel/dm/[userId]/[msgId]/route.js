@@ -23,7 +23,8 @@ export async function DELETE(request, { params }) {
     where: { user1Id_user2Id: { user1Id: u1, user2Id: u2 } },
   });
   if (conv) {
-    dmEmitter.emit("event", { convId: conv.id, type: "delete", data: { msgId } });
+    const [u1, u2] = [myId, userId].sort();
+    dmEmitter.emit("event", { convId: conv.id, u1, u2, type: "delete", data: { msgId } });
   }
 
   return Response.json({ ok: true });

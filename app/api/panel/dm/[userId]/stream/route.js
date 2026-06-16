@@ -13,10 +13,6 @@ export async function GET(request, { params }) {
   const { userId } = await params;
 
   const [u1, u2] = convKey(myId, userId);
-  const conv = await prisma.privateConversation.findUnique({
-    where: { user1Id_user2Id: { user1Id: u1, user2Id: u2 } },
-  });
-  const convId = conv?.id ?? null;
 
   const encoder = new TextEncoder();
   let controller;
@@ -31,7 +27,8 @@ export async function GET(request, { params }) {
   }
 
   function handler(evt) {
-    if (evt.convId !== convId) return;
+    // filtruj po parze userów — działa też gdy konwersacja dopiero powstaje
+    if (evt.u1 !== u1 || evt.u2 !== u2) return;
     send(evt);
   }
 

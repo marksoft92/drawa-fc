@@ -114,6 +114,7 @@ export async function POST(request, { params }) {
   const { tresc, replyToId } = await request.json();
   if (!tresc?.trim()) return Response.json({ error: "Pusta wiadomość" }, { status: 400 });
 
+  const [u1, u2] = convKey(myId, userId);
   const conv = await getOrCreateConv(myId, userId);
 
   const msg = await prisma.privateWiadomosc.create({
@@ -128,7 +129,7 @@ export async function POST(request, { params }) {
   });
 
   const formatted = formatMsg(msg, myId);
-  dmEmitter.emit("event", { convId: conv.id, type: "message", data: formatted });
+  dmEmitter.emit("event", { convId: conv.id, u1, u2, type: "message", data: formatted });
 
   // push do odbiorcy
   const myName = formatted.author.name;
