@@ -7,9 +7,14 @@ export async function PATCH(request, { params }) {
 
   const { id } = await params;
   const body = await request.json();
-  const { email, role, active, newPassword, mustChangePassword, imieNazwisko, pozycja, numer, dataUrodzenia } = body;
+  const { login, email, role, active, newPassword, mustChangePassword, imieNazwisko, pozycja, numer, dataUrodzenia } = body;
 
   const userUpdate = {};
+  if (login !== undefined && login.trim()) {
+    const exists = await prisma.user.findFirst({ where: { login: login.trim(), NOT: { id } } });
+    if (exists) return Response.json({ error: "Login jest już zajęty" }, { status: 409 });
+    userUpdate.login = login.trim();
+  }
   if (email !== undefined) userUpdate.email = email || null;
   if (role !== undefined) userUpdate.role = role;
   if (active !== undefined) userUpdate.active = active;

@@ -155,8 +155,8 @@ export default function DrawaChat() {
         @keyframes blink { 50% { opacity: 0; } }
       `}</style>
 
-      {/* W panelu: link do wewnętrznego chatu; poza panelem: AI chat */}
-      {pathname.startsWith('/panel') ? (
+      {/* W panelu: link do chatu (ukryty na /panel/chat); poza panelem: AI chat */}
+      {pathname === '/panel/chat' ? null : pathname.startsWith('/panel') ? (
         <Link
           href="/panel/chat"
           aria-label="Przejdź do chatu drużyny"

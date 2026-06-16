@@ -240,9 +240,9 @@ export default function PanelGracze() {
               <div>
                 <label style={lbl}>Login *</label>
                 <input
-                  style={{ ...inp, opacity: editId ? 0.5 : 1 }}
+                  style={inp}
                   value={form.login} onChange={f("login")} required
-                  disabled={!!editId} placeholder="jkowalski"
+                  placeholder="jkowalski"
                 />
               </div>
               <div>
