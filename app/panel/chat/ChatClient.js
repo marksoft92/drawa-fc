@@ -25,6 +25,7 @@ export default function ChatClient({ myId, myName, isAdmin }) {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [picker, setPicker] = useState(null); // { id, x, y }
+  const [lightbox, setLightbox] = useState(null); // url
   const [uploading, setUploading] = useState(false);
   const bottomRef = useRef(null);
   const messagesRef = useRef(null);
@@ -270,7 +271,7 @@ export default function ChatClient({ myId, myName, isAdmin }) {
                     >
                       {msg.typ === "image" ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
-                        <img src={msg.plik} alt="zdjęcie" style={{ maxWidth: 260, maxHeight: 320, borderRadius: 13, display: "block" }} />
+                        <img src={msg.plik} alt="zdjęcie" onClick={(e) => { e.stopPropagation(); setLightbox(msg.plik); }} style={{ maxWidth: 260, maxHeight: 320, borderRadius: 13, display: "block", cursor: "zoom-in" }} />
                       ) : (
                         msg.tresc
                       )}
@@ -410,6 +411,7 @@ export default function ChatClient({ myId, myName, isAdmin }) {
 
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
         div[style*="flexDirection: column"] { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
         .msg-wrap:hover .msg-actions { display: flex !important; }
         textarea:focus { outline: none; border-color: rgba(59,130,246,0.4) !important; }
@@ -418,6 +420,47 @@ export default function ChatClient({ myId, myName, isAdmin }) {
           div[style*="height: calc(100vh - 52px)"] { margin: -16px -14px 0 !important; }
         }
       `}</style>
+
+      {/* lightbox */}
+      {lightbox && <Lightbox url={lightbox} onClose={() => setLightbox(null)} />}
+    </div>
+  );
+}
+
+function Lightbox({ url, onClose }) {
+  useEffect(() => {
+    const handler = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  return (
+    <div
+      onClick={onClose}
+      style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.92)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, backdropFilter: "blur(6px)" }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={url}
+        alt="powiększone zdjęcie"
+        onClick={(e) => e.stopPropagation()}
+        style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: 12, objectFit: "contain", animation: "fadeIn 0.18s ease", boxShadow: "0 24px 64px rgba(0,0,0,0.7)" }}
+      />
+      <button
+        onClick={onClose}
+        style={{ position: "fixed", top: 16, right: 16, width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}
+      >
+        ✕
+      </button>
+      <a
+        href={url}
+        download
+        onClick={(e) => e.stopPropagation()}
+        style={{ position: "fixed", top: 16, right: 64, width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", color: "#fff", fontSize: 16, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)", textDecoration: "none" }}
+        title="Pobierz"
+      >
+        ↓
+      </a>
     </div>
   );
 }
