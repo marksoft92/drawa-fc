@@ -187,17 +187,11 @@ export default function PanelLayoutClient({ role, login, name, foto, children })
 
   useEffect(() => {
     let cancelled = false;
-    async function load() {
-      try {
-        const r = await fetch("/api/panel/badges");
-        if (!r.ok || cancelled) return;
-        const d = await r.json();
-        setBadges(d);
-      } catch {}
-    }
-    load();
-    const iv = setInterval(load, 30000);
-    return () => { cancelled = true; clearInterval(iv); };
+    fetch("/api/panel/badges")
+      .then((r) => r.ok ? r.json() : null)
+      .then((d) => { if (d && !cancelled) setBadges(d); })
+      .catch(() => {});
+    return () => { cancelled = true; };
   }, [pathname]);
 
   // wyczyść badge gdy user jest na danej stronie

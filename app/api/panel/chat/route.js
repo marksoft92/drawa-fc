@@ -49,17 +49,21 @@ export async function GET() {
   });
 
   const odczytania = await prisma.chatOdczytanie.findMany({
-    include: { user: { select: { id: true, login: true, player: { select: { imieNazwisko: true } } } } },
+    include: { user: { select: { id: true, login: true, player: { select: { imieNazwisko: true, foto: true } } } } },
   });
 
   return Response.json({
     messages: msgs.map((m) => formatMsg(m, session.user.id)),
-    odczytania: odczytania.map((o) => ({
-      userId: o.userId,
-      name: o.user.player?.imieNazwisko ?? o.user.login,
-      initials: (o.user.player?.imieNazwisko ?? o.user.login).charAt(0).toUpperCase(),
-      ostatniaId: o.ostatniaId,
-    })),
+    odczytania: odczytania.map((o) => {
+      const name = o.user.player?.imieNazwisko ?? o.user.login;
+      return {
+        userId: o.userId,
+        name,
+        initials: name.charAt(0).toUpperCase(),
+        foto: o.user.player?.foto ?? null,
+        ostatniaId: o.ostatniaId,
+      };
+    }),
   });
 }
 

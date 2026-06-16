@@ -85,7 +85,7 @@ export default function ChatClient({ myId, myName, isAdmin }) {
         if (ev.type === "odczytanie") {
           setOdczytania((prev) => {
             const next = prev.filter((o) => o.userId !== ev.userId);
-            next.push({ userId: ev.userId, name: ev.name, initials: ev.initials, ostatniaId: ev.ostatniaId });
+            next.push({ userId: ev.userId, name: ev.name, initials: ev.initials, foto: ev.foto ?? null, ostatniaId: ev.ostatniaId });
             return next;
           });
         }
@@ -317,8 +317,15 @@ export default function ChatClient({ myId, myName, isAdmin }) {
               {isLast && seenBy.length > 0 && (
                 <div style={{ display: "flex", justifyContent: isMe ? "flex-end" : "flex-start", gap: 3, marginTop: 4, paddingRight: isMe ? 4 : 0, paddingLeft: isMe ? 0 : 44 }}>
                   {seenBy.slice(0, 5).map((o) => (
-                    <div key={o.userId} title={`Widziane przez ${o.name}`} style={{ width: 16, height: 16, borderRadius: "50%", background: "rgba(34,197,94,0.2)", border: "1px solid rgba(34,197,94,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, color: "#22c55e", fontWeight: 700 }}>
-                      {o.initials}
+                    <div key={o.userId} title={`Widziane przez ${o.name}`} style={{ width: 16, height: 16, borderRadius: "50%", overflow: "hidden", flexShrink: 0, border: "1px solid rgba(34,197,94,0.3)" }}>
+                      {o.foto ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img src={o.foto} alt={o.initials} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }} />
+                      ) : (
+                        <div style={{ width: "100%", height: "100%", background: "rgba(34,197,94,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, color: "#22c55e", fontWeight: 700 }}>
+                          {o.initials}
+                        </div>
+                      )}
                     </div>
                   ))}
                   {seenBy.length > 5 && <span style={{ fontSize: 10, color: "#475569" }}>+{seenBy.length - 5}</span>}

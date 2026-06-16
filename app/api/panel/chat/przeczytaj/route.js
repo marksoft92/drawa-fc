@@ -17,7 +17,7 @@ export async function POST(request) {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, login: true, player: { select: { imieNazwisko: true } } },
+    select: { id: true, login: true, player: { select: { imieNazwisko: true, foto: true } } },
   });
 
   const name = user.player?.imieNazwisko ?? user.login;
@@ -27,6 +27,7 @@ export async function POST(request) {
     userId: session.user.id,
     name,
     initials: name.charAt(0).toUpperCase(),
+    foto: user.player?.foto ?? null,
     ostatniaId: wiadId,
   });
 

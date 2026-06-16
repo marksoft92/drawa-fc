@@ -31,12 +31,25 @@ self.addEventListener('push', (e) => {
   if (!e.data) return;
   let data;
   try { data = e.data.json(); } catch { data = { title: 'MKS Drawa', body: e.data.text() }; }
+
+  const targetPath = data.url || '/panel';
+
   e.waitUntil(
-    self.registration.showNotification(data.title || 'MKS Drawa', {
-      body: data.body || '',
-      icon: '/android-chrome-192x192.png',
-      badge: '/android-chrome-192x192.png',
-      data: { url: data.url || '/panel/ankiety' },
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+      // nie pokazuj powiadomienia jeśli użytkownik już jest na tej stronie i ją widzi
+      const alreadyThere = clients.some((c) => {
+        try {
+          const path = new URL(c.url).pathname;
+          return path.startsWith(targetPath) && c.visibilityState === 'visible';
+        } catch { return false; }
+      });
+      if (alreadyThere) return;
+
+      return self.registration.showNotification(data.title || 'MKS Drawa', {
+        body: data.body || '',
+        icon: '/android-chrome-192x192.png',
+        data: { url: targetPath },
+      });
     })
   );
 });
