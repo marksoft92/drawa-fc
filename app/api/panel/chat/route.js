@@ -108,6 +108,9 @@ export async function POST(request) {
     title: formatted.author.name,
     body: tresc.trim().slice(0, 80),
     url: "/panel/chat",
+    tag: "chat",
+    groupTitle: "💬 Drużyna",
+    groupBody: "nowych wiadomości",
   });
 
   return Response.json(formatted, { status: 201 });

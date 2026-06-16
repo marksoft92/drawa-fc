@@ -80,9 +80,12 @@ export async function POST(request) {
   try {
     const subs = await prisma.pushSubscription.findMany();
     const payload = JSON.stringify({
-      title: "Nowa ankieta",
+      title: "📊 Nowa ankieta",
       body: tytul,
       url: "/panel/ankiety/" + ankieta.id,
+      tag: "ankiety",
+      groupTitle: "📊 Ankiety",
+      groupBody: "nowych ankiet",
     });
 
     await Promise.allSettled(
