@@ -144,7 +144,7 @@ function MeczEditor({ mecz, onSave, onClose }) {
         <button onClick={onClose} style={{ ...btnGhost, padding: "3px 10px", fontSize: 12 }}>✕ Zamknij</button>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(140px,1fr))", gap: 10, marginBottom: 12 }}>
         <div>
           <label style={lbl}>WYNIK</label>
           <input style={inp} value={form.score} onChange={e => setForm(p => ({ ...p, score: e.target.value }))} placeholder="2:1" />
@@ -169,7 +169,7 @@ function MeczEditor({ mecz, onSave, onClose }) {
         <input style={inp} value={form.komentarz} onChange={e => setForm(p => ({ ...p, komentarz: e.target.value }))} placeholder="(walkower), opis meczu..." />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 10, marginBottom: 12 }}>
         {[
           { key: "strzelcyJson", label: "STRZELCY / ZDARZENIA (JSON)" },
           { key: "kartkiJson",   label: "KARTKI (JSON)" },

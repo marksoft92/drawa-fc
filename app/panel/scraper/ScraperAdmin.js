@@ -114,7 +114,7 @@ function MeczRow({ mecz, index, edits, onEdit }) {
       {open && (
         <div style={{ background: "rgba(59,130,246,0.03)", border: "1px solid rgba(59,130,246,0.1)", borderTop: "none", borderRadius: "0 0 10px 10px", padding: 14 }}>
           {/* Editable fields */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(120px,1fr))", gap: 8, marginBottom: 14 }}>
             <div>
               <label style={lbl}>WYNIK</label>
               <input style={inp} value={score} onChange={e => onEdit(index, "score", e.target.value)} placeholder="2:1" onClick={e => e.stopPropagation()} />

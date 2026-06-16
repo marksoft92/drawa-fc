@@ -153,19 +153,20 @@ export default function PanelLayoutClient({ role, login, name, children }) {
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
-          style={{ position: "fixed", inset: 0, zIndex: 40, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
+          style={{ position: "fixed", inset: 0, zIndex: 40, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)" }}
         />
       )}
 
-      <aside className="panel-sidebar" style={{
-        position: "fixed", top: 0, left: 0, bottom: 0, width: 220,
-        background: "rgba(255,255,255,0.02)", borderRight: "1px solid rgba(255,255,255,0.06)",
+      <aside className={`panel-sidebar${sidebarOpen ? " panel-sidebar-open" : ""}`} style={{
+        position: "fixed", top: 0, left: 0, bottom: 0, width: 240,
+        background: "#0a0f1a", borderRight: "1px solid rgba(255,255,255,0.06)",
         display: "flex", flexDirection: "column", zIndex: 50, transition: "transform 0.25s",
+        overflowY: "auto",
       }}>
         <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", gap: 10 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="MKS Drawa" width={36} height={36} style={{ objectFit: "contain", borderRadius: 4 }} />
-          <div>
+          <img src="/logo.png" alt="MKS Drawa" width={36} height={36} style={{ objectFit: "contain", borderRadius: 4, flexShrink: 0 }} />
+          <div style={{ minWidth: 0 }}>
             <div style={{ fontSize: 13, fontFamily: "'Bebas Neue',Impact,sans-serif", letterSpacing: "0.1em", color: "#fff", lineHeight: 1 }}>
               MKS Drawa
             </div>
@@ -184,17 +185,18 @@ export default function PanelLayoutClient({ role, login, name, children }) {
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
                 style={{
-                  display: "flex", alignItems: "center", gap: 10, padding: "9px 12px",
-                  borderRadius: 8, textDecoration: "none", fontSize: 13, fontWeight: 500,
+                  display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
+                  borderRadius: 8, textDecoration: "none", fontSize: 14, fontWeight: 500,
                   color: active ? "#fff" : "#64748b",
                   background: active ? "rgba(59,130,246,0.12)" : "transparent",
                   border: active ? "1px solid rgba(59,130,246,0.2)" : "1px solid transparent",
                   transition: "all 0.15s",
+                  minHeight: 44,
                 }}
                 onMouseEnter={(e) => { if (!active) e.currentTarget.style.color = "#94a3b8"; }}
                 onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = "#64748b"; }}
               >
-                <span style={{ color: active ? "#3b82f6" : "inherit", opacity: active ? 1 : 0.6 }}>{item.icon}</span>
+                <span style={{ color: active ? "#3b82f6" : "inherit", opacity: active ? 1 : 0.6, flexShrink: 0 }}>{item.icon}</span>
                 {item.label}
               </Link>
             );
@@ -206,40 +208,46 @@ export default function PanelLayoutClient({ role, login, name, children }) {
             {displayName}
           </div>
           <div style={{ display: "flex", gap: 8 }}>
-            <Link href="/" style={{ fontSize: 11, color: "#334155", textDecoration: "none", flex: 1 }}>← Strona</Link>
-            <button onClick={handleLogout} style={{ background: "none", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, color: "#475569", fontSize: 11, padding: "5px 10px", cursor: "pointer" }}>
+            <Link href="/" style={{ fontSize: 12, color: "#475569", textDecoration: "none", flex: 1, display: "flex", alignItems: "center" }}>← Strona</Link>
+            <button onClick={handleLogout} style={{ background: "none", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, color: "#64748b", fontSize: 12, padding: "6px 12px", cursor: "pointer" }}>
               Wyloguj
             </button>
           </div>
         </div>
       </aside>
 
-      <div className="panel-main" style={{ flex: 1, marginLeft: 220, display: "flex", flexDirection: "column" }}>
-        <div className="panel-topbar" style={{ height: 52, borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "0 16px", display: "flex", alignItems: "center", gap: 12 }}>
+      <div className="panel-main" style={{ flex: 1, marginLeft: 240, display: "flex", flexDirection: "column", minWidth: 0 }}>
+        <div className="panel-topbar" style={{
+          height: 52, borderBottom: "1px solid rgba(255,255,255,0.06)",
+          padding: "0 16px", display: "flex", alignItems: "center", gap: 12,
+          background: "#030712", position: "sticky", top: 0, zIndex: 30,
+        }}>
           <button
             className="panel-hamburger"
             onClick={() => setSidebarOpen((o) => !o)}
-            style={{ display: "none", background: "none", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, color: "#94a3b8", fontSize: 16, padding: "4px 8px", cursor: "pointer" }}
+            style={{ display: "none", background: "none", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 8, color: "#94a3b8", fontSize: 18, padding: "6px 10px", cursor: "pointer", lineHeight: 1, flexShrink: 0, minWidth: 40, minHeight: 40 }}
           >
-            ☰
+            {sidebarOpen ? "✕" : "☰"}
           </button>
-          <div style={{ fontSize: 12, color: "#334155" }}>
+          <div style={{ fontSize: 13, color: "#94a3b8", fontWeight: 500 }}>
             {navItems.find((i) => pathname.startsWith(i.href))?.label ?? (role === "ADMIN" ? "Dashboard" : "Panel")}
           </div>
         </div>
-        <div style={{ flex: 1, padding: "28px 28px" }}>{children}</div>
+        <div className="panel-content" style={{ flex: 1, padding: "24px 24px" }}>{children}</div>
       </div>
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #030712; color: #fff; font-family: -apple-system,'Segoe UI',sans-serif; }
+        html, body { background: #030712; color: #fff; font-family: -apple-system,'Segoe UI',sans-serif; overflow-x: hidden; }
         input::placeholder { color: #334155; }
         input:focus { outline: none; border-color: rgba(59,130,246,0.5) !important; }
-        @media (max-width: 640px) {
-          .panel-sidebar { transform: translateX(-100%) !important; }
+        @media (max-width: 768px) {
+          .panel-sidebar { transform: translateX(-100%); }
+          .panel-sidebar-open { transform: translateX(0) !important; }
           .panel-main { margin-left: 0 !important; }
-          .panel-hamburger { display: flex !important; }
+          .panel-hamburger { display: flex !important; align-items: center; justify-content: center; }
+          .panel-content { padding: 16px 14px !important; }
         }
       `}</style>
     </div>
