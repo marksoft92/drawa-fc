@@ -92,6 +92,15 @@ export default async function ArticlePage({ params }) {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginBottom: 40 }}>
             {paragraphs.map((p, i) => {
+              const imgMatch = p.trim().match(/^\[img:(.+)\]$/);
+              if (imgMatch) {
+                return (
+                  <div key={i} style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)', lineHeight: 0 }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={imgMatch[1]} alt="" style={{ display: 'block', width: '100%', height: 'auto' }} />
+                  </div>
+                );
+              }
               const isHeader = /^[A-ZŁŚÓĄŻŹĆĘŃ\s!—–]+$/.test(p.trim()) && p.trim().length < 80;
               return isHeader
                 ? <p key={i} className="article-h">{p}</p>

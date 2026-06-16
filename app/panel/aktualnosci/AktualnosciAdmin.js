@@ -32,7 +32,26 @@ async function uploadFile(file, onError) {
   }
 }
 
-// ─── Pole z uploadem zdjęcia ─────────────────────────────────
+// ─── Pasek URL z kopiowaniem ──────────────────────────────────
+function CopyUrlBar({ url }) {
+  const [copied, setCopied] = useState(false);
+  const full = `https://mksdrawadrawno.pl${url}`;
+  function copy() {
+    navigator.clipboard.writeText(full);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6, padding: "5px 8px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 6 }}>
+      <span style={{ fontSize: 10, color: "#475569", fontFamily: "monospace", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{url}</span>
+      <button type="button" onClick={copy} style={{ fontSize: 10, padding: "3px 8px", background: copied ? "rgba(34,197,94,0.1)" : "none", border: `1px solid ${copied ? "rgba(34,197,94,0.3)" : "rgba(255,255,255,0.1)"}`, borderRadius: 4, color: copied ? "#22c55e" : "#64748b", cursor: "pointer", flexShrink: 0, whiteSpace: "nowrap" }}>
+        {copied ? "✓ Skopiowano" : "Kopiuj URL"}
+      </button>
+    </div>
+  );
+}
+
+// ─── Pole z uploadem miniaturki ──────────────────────────────
 function ImageUploadField({ value, onChange, label, onError }) {
   const ref = useRef();
   const [uploading, setUploading] = useState(false);
@@ -53,24 +72,21 @@ function ImageUploadField({ value, onChange, label, onError }) {
       {label && <label style={lbl}>{label}</label>}
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {value && (
-          <div style={{ position: "relative", display: "inline-block" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={value} alt="" style={{ maxHeight: 120, maxWidth: "100%", borderRadius: 6, objectFit: "cover", border: "1px solid rgba(255,255,255,0.1)" }} />
-            <button
-              type="button"
-              onClick={() => onChange("")}
-              style={{ position: "absolute", top: 4, right: 4, width: 22, height: 22, borderRadius: "50%", background: "rgba(0,0,0,0.7)", border: "none", color: "#fff", fontSize: 12, cursor: "pointer", lineHeight: 1 }}
-            >✕</button>
-          </div>
+          <>
+            <div style={{ position: "relative", display: "inline-block" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={value} alt="" style={{ maxHeight: 120, maxWidth: "100%", borderRadius: 6, objectFit: "cover", border: "1px solid rgba(255,255,255,0.1)" }} />
+              <button
+                type="button"
+                onClick={() => onChange("")}
+                style={{ position: "absolute", top: 4, right: 4, width: 22, height: 22, borderRadius: "50%", background: "rgba(0,0,0,0.7)", border: "none", color: "#fff", fontSize: 12, cursor: "pointer", lineHeight: 1 }}
+              >✕</button>
+            </div>
+            <CopyUrlBar url={value} />
+          </>
         )}
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <input
-            ref={ref}
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            onChange={e => handleFile(e.target.files?.[0])}
-          />
+          <input ref={ref} type="file" accept="image/*" style={{ display: "none" }} onChange={e => handleFile(e.target.files?.[0])} />
           <button
             type="button"
             onClick={() => ref.current?.click()}
@@ -84,7 +100,7 @@ function ImageUploadField({ value, onChange, label, onError }) {
               style={{ ...inp, flex: 1, fontSize: 12 }}
               value={value}
               onChange={e => onChange(e.target.value)}
-              placeholder="lub wklej URL / ścieżkę"
+              placeholder="lub wklej URL"
             />
           )}
         </div>
@@ -93,26 +109,91 @@ function ImageUploadField({ value, onChange, label, onError }) {
   );
 }
 
-// ─── Wiersz zdjęcia w galerii ────────────────────────────────
-function PhotoRow({ photo, onChange, onRemove, onError, onMoveUp, onMoveDown, isFirst, isLast }) {
+// ─── Upload zdjęcia do wstawienia w treść ────────────────────
+function InlineImageUpload({ onInsert, onError }) {
   const ref = useRef();
   const [uploading, setUploading] = useState(false);
+  const [lastUrl, setLastUrl] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   async function handleFile(file) {
     if (!file) return;
     setUploading(true);
     try {
       const url = await uploadFile(file, onError);
-      if (url) onChange("src", url);
+      if (url) { setLastUrl(url); setCopied(false); }
     } finally {
       setUploading(false);
     }
   }
 
+  function copyUrl() {
+    if (!lastUrl) return;
+    navigator.clipboard.writeText(`https://mksdrawadrawno.pl${lastUrl}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <div style={{ marginTop: 10, padding: "10px 12px", background: "rgba(59,130,246,0.04)", border: "1px dashed rgba(59,130,246,0.2)", borderRadius: 8 }}>
+      <div style={{ fontSize: 10, color: "#3b82f6", fontWeight: 700, letterSpacing: "0.08em", marginBottom: 8 }}>ZDJĘCIE W TREŚCI</div>
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+        <input ref={ref} type="file" accept="image/*" style={{ display: "none" }} onChange={e => handleFile(e.target.files?.[0])} />
+        <button type="button" onClick={() => ref.current?.click()} disabled={uploading}
+          style={{ ...btnGhost, fontSize: 11, padding: "6px 12px", opacity: uploading ? 0.6 : 1, flexShrink: 0 }}>
+          {uploading ? "Wgrywam..." : "Wgraj zdjęcie"}
+        </button>
+        {lastUrl && (
+          <>
+            <span style={{ fontSize: 10, color: "#475569", fontFamily: "monospace", flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {lastUrl}
+            </span>
+            <button type="button" onClick={copyUrl}
+              style={{ fontSize: 10, padding: "4px 8px", background: copied ? "rgba(34,197,94,0.1)" : "rgba(255,255,255,0.04)", border: `1px solid ${copied ? "rgba(34,197,94,0.3)" : "rgba(255,255,255,0.1)"}`, borderRadius: 4, color: copied ? "#22c55e" : "#64748b", cursor: "pointer", flexShrink: 0 }}>
+              {copied ? "✓" : "Kopiuj URL"}
+            </button>
+            <button type="button" onClick={() => onInsert(lastUrl)}
+              style={{ ...btnGhost, fontSize: 11, padding: "5px 12px", color: "#60a5fa", borderColor: "rgba(59,130,246,0.35)", flexShrink: 0 }}>
+              Wstaw w tekst ↑
+            </button>
+          </>
+        )}
+      </div>
+      {lastUrl && (
+        <div style={{ fontSize: 10, color: "#334155", marginTop: 6 }}>
+          Ustaw kursor w treści gdzie chcesz wstawić zdjęcie, potem kliknij &quot;Wstaw w tekst&quot;
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Wiersz zdjęcia w galerii ────────────────────────────────
+function PhotoRow({ photo, onChange, onRemove, onError, onMoveUp, onMoveDown, isFirst, isLast }) {
+  const ref = useRef();
+  const [uploading, setUploading] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  async function handleFile(file) {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadFile(file, onError);
+      if (url) { onChange("src", url); setCopied(false); }
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function copyUrl() {
+    navigator.clipboard.writeText(`https://mksdrawadrawno.pl${photo.src}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
   return (
     <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8, padding: 12 }}>
       <div style={{ display: "flex", gap: 8 }}>
-        {/* Podgląd */}
         <div style={{ width: 80, height: 60, flexShrink: 0, borderRadius: 6, overflow: "hidden", background: "#0f172a", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
           {photo.src
             // eslint-disable-next-line @next/next/no-img-element
@@ -121,20 +202,26 @@ function PhotoRow({ photo, onChange, onRemove, onError, onMoveUp, onMoveDown, is
           }
         </div>
 
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
-          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6, minWidth: 0 }}>
+          <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
             <input ref={ref} type="file" accept="image/*" style={{ display: "none" }} onChange={e => handleFile(e.target.files?.[0])} />
             <button type="button" onClick={() => ref.current?.click()} disabled={uploading}
-              style={{ ...btnGhost, fontSize: 11, padding: "5px 10px", opacity: uploading ? 0.6 : 1 }}>
+              style={{ ...btnGhost, fontSize: 11, padding: "5px 10px", opacity: uploading ? 0.6 : 1, flexShrink: 0 }}>
               {uploading ? "Wgrywam..." : photo.src ? "Zmień" : "Wgraj"}
             </button>
             {!photo.src && (
               <input style={{ ...inp, flex: 1, fontSize: 12, padding: "6px 10px" }}
                 value={photo.src} onChange={e => onChange("src", e.target.value)}
-                placeholder="lub wklej URL / ścieżkę" />
+                placeholder="lub wklej URL" />
             )}
             {photo.src && (
-              <span style={{ fontSize: 11, color: "#334155", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{photo.src}</span>
+              <>
+                <span style={{ fontSize: 10, color: "#334155", fontFamily: "monospace", flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{photo.src}</span>
+                <button type="button" onClick={copyUrl}
+                  style={{ fontSize: 10, padding: "3px 7px", background: copied ? "rgba(34,197,94,0.1)" : "none", border: `1px solid ${copied ? "rgba(34,197,94,0.3)" : "rgba(255,255,255,0.1)"}`, borderRadius: 4, color: copied ? "#22c55e" : "#64748b", cursor: "pointer", flexShrink: 0 }}>
+                  {copied ? "✓" : "Kopiuj URL"}
+                </button>
+              </>
             )}
           </div>
           <input style={{ ...inp, fontSize: 12, padding: "5px 10px" }}
@@ -163,6 +250,7 @@ export default function AktualnosciAdmin() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [tick, setTick] = useState(0);
+  const contentRef = useRef();
 
   useEffect(() => {
     let cancelled = false;
@@ -192,6 +280,29 @@ export default function AktualnosciAdmin() {
       published: d.published,
     });
     setView("form");
+  }
+
+  function insertIntoContent(url) {
+    const tag = `[img:${url}]`;
+    const el = contentRef.current;
+    const content = form.content;
+    if (!el) {
+      setForm(p => ({ ...p, content: content + (content ? "\n\n" : "") + tag }));
+      return;
+    }
+    const start = el.selectionStart ?? content.length;
+    const end = el.selectionEnd ?? content.length;
+    const before = content.slice(0, start);
+    const after = content.slice(end);
+    const prefix = before.length > 0 && !before.endsWith("\n\n") ? "\n\n" : "";
+    const suffix = after.length > 0 && !after.startsWith("\n\n") ? "\n\n" : "";
+    const newContent = before + prefix + tag + suffix + after;
+    setForm(p => ({ ...p, content: newContent }));
+    setTimeout(() => {
+      const pos = before.length + prefix.length + tag.length;
+      el.setSelectionRange(pos, pos);
+      el.focus();
+    }, 50);
   }
 
   async function handleSubmit(e) {
@@ -305,7 +416,14 @@ export default function AktualnosciAdmin() {
         {/* Treść */}
         <div style={card}>
           <label style={lbl}>TREŚĆ (akapity oddziel pustą linią)</label>
-          <textarea style={{ ...inp, height: 300, resize: "vertical", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6 }} value={form.content} onChange={f("content")} placeholder="Treść artykułu..." />
+          <textarea
+            ref={contentRef}
+            style={{ ...inp, height: 300, resize: "vertical", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6 }}
+            value={form.content}
+            onChange={f("content")}
+            placeholder={"Treść artykułu...\n\nAby wstawić zdjęcie w tekst: wgraj je poniżej i kliknij 'Wstaw w tekst'"}
+          />
+          <InlineImageUpload onInsert={insertIntoContent} onError={setError} />
         </div>
 
         {/* Zdjęcia galerii */}
