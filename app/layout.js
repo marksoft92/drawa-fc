@@ -3,6 +3,7 @@ import GlobalAudio from "@/components/GlobalAudio";
 import ServiceWorker from "@/components/ServiceWorker";
 import SplashScreen from "@/components/SplashScreen";
 import DrawaChat from "@/components/DrawaChat";
+import AntiCopy from "@/components/AntiCopy";
 
 const BASE_URL = "https://mksdrawadrawno.pl";
 
@@ -23,6 +24,9 @@ export const metadata = {
   authors: [{ name: "MKS Drawa Drawno", url: BASE_URL }],
   creator: "MKS Drawa Drawno",
   robots: { index: true, follow: true },
+  other: {
+    copyright: `© ${new Date().getFullYear()} MKS Drawa Drawno. Wszelkie prawa zastrzeżone. Projekt i kod strony są chronione prawem autorskim.`,
+  },
   openGraph: {
     type: "website",
     url: BASE_URL,
@@ -70,6 +74,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pl" className="h-full">
       <body className="min-h-full flex flex-col">
+        <AntiCopy />
         <ServiceWorker />
         <GlobalAudio />
         <SplashScreen />

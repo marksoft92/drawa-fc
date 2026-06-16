@@ -78,7 +78,7 @@ export default function Footer({ HerbImg, herb }) {
                 fontWeight: 600,
               }}
             >
-              KLASA B · SEZON 2025/26
+              A KLASA · SEZON 2025/26
             </div>
           </div>
 
@@ -186,28 +186,26 @@ export default function Footer({ HerbImg, herb }) {
             borderTop: '1px solid rgba(255,255,255,0.05)',
             padding: '20px 0 28px',
             display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 8,
+            flexDirection: 'column',
+            gap: 10,
           }}
         >
-          <div className="footer-bottom-text" style={{ fontSize: 11, color: '#1e293b' }}>
-            © {new Date().getFullYear()} MKS Drawa Drawno. Wszelkie prawa zastrzeżone.
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: '50%',
-                background: '#22c55e',
-                boxShadow: '0 0 6px #22c55e88',
-              }}
-            />
-            <div className="footer-bottom-text" style={{ fontSize: 11, color: '#1e293b' }}>
-              Sezon 2025/26 · Klasa B · Zachodniopomorskie
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+            <div style={{ fontSize: 11, color: '#475569' }}>
+              © {new Date().getFullYear()} MKS Drawa Drawno · Wszelkie prawa zastrzeżone
             </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e88' }} />
+              <div style={{ fontSize: 11, color: '#334155' }}>
+                Sezon 2025/26 · A klasa · Zachodniopomorskie
+              </div>
+            </div>
+          </div>
+          <div style={{ fontSize: 10, color: '#1e293b', letterSpacing: '0.02em' }}>
+            Projekt graficzny, kod źródłowy i treści strony{' '}
+            <span style={{ color: '#334155' }}>mksdrawadrawno.pl</span>{' '}
+            są chronione prawem autorskim. Kopiowanie, reprodukowanie lub rozpowszechnianie
+            bez zgody właściciela jest zabronione.
           </div>
         </div>
 
