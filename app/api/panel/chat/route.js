@@ -26,6 +26,14 @@ function formatMsg(m, myId) {
       foto: m.author.player?.foto ?? null,
       isMe: m.author.id === myId,
     },
+    replyTo: m.replyTo ? {
+      id: m.replyTo.id,
+      tresc: m.replyTo.usunieta ? null : m.replyTo.tresc,
+      typ: m.replyTo.typ,
+      plik: m.replyTo.usunieta ? null : m.replyTo.plik,
+      usunieta: m.replyTo.usunieta,
+      authorName: m.replyTo.author?.player?.imieNazwisko ?? m.replyTo.author?.login ?? "?",
+    } : null,
     reakcje: m.reakcje.reduce((acc, r) => {
       if (!acc[r.emoji]) acc[r.emoji] = { count: 0, mine: false };
       acc[r.emoji].count++;
@@ -45,6 +53,9 @@ export async function GET() {
     include: {
       author: { select: { id: true, login: true, player: { select: { imieNazwisko: true, foto: true } } } },
       reakcje: true,
+      replyTo: {
+        include: { author: { select: { login: true, player: { select: { imieNazwisko: true } } } } },
+      },
     },
   });
 
@@ -71,7 +82,7 @@ export async function POST(request) {
   const session = await getPlayerSession();
   if (!session) return Response.json({ error: "Brak dostępu" }, { status: 401 });
 
-  const { tresc } = await request.json();
+  const { tresc, replyToId } = await request.json();
   if (!tresc?.trim()) return Response.json({ error: "Pusta wiadomość" }, { status: 400 });
 
   const msg = await prisma.chatWiadomosc.create({
@@ -79,10 +90,14 @@ export async function POST(request) {
       id: randomBytes(8).toString("hex"),
       tresc: tresc.trim(),
       authorId: session.user.id,
+      replyToId: replyToId ?? null,
     },
     include: {
       author: { select: { id: true, login: true, player: { select: { imieNazwisko: true, foto: true } } } },
       reakcje: true,
+      replyTo: {
+        include: { author: { select: { login: true, player: { select: { imieNazwisko: true } } } } },
+      },
     },
   });
 

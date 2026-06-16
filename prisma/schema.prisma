@@ -213,17 +213,20 @@ model Sponsor {
 // ─── Chat ─────────────────────────────────────────────────────────────────────
 
 model ChatWiadomosc {
-  id        String   @id @default(cuid())
-  tresc     String?
-  typ       String   @default("text")
-  plik      String?
-  authorId  String
-  author    User     @relation("ChatAuthor", fields: [authorId], references: [id], onDelete: Cascade)
-  usunieta  Boolean  @default(false)
-  createdAt DateTime @default(now())
-  editedAt  DateTime?
+  id          String   @id @default(cuid())
+  tresc       String?
+  typ         String   @default("text")
+  plik        String?
+  authorId    String
+  author      User     @relation("ChatAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  usunieta    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  editedAt    DateTime?
+  replyToId   String?
+  replyTo     ChatWiadomosc?  @relation("ChatReply", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies     ChatWiadomosc[] @relation("ChatReply")
 
-  reakcje   ChatReakcja[]
+  reakcje     ChatReakcja[]
 }
 
 model ChatReakcja {

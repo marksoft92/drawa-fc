@@ -26,6 +26,7 @@ export default function ChatClient({ myId, myName, isAdmin }) {
   const [sending, setSending] = useState(false);
   const [picker, setPicker] = useState(null); // { id, x, y }
   const [lightbox, setLightbox] = useState(null); // url
+  const [replyTo, setReplyTo] = useState(null); // { id, authorName, tresc, typ, plik }
   const [uploading, setUploading] = useState(false);
   const bottomRef = useRef(null);
   const messagesRef = useRef(null);
@@ -136,12 +137,14 @@ export default function ChatClient({ myId, myName, isAdmin }) {
     const text = input.trim();
     if (!text || sending) return;
     setInput("");
+    const replyId = replyTo?.id ?? null;
+    setReplyTo(null);
     setSending(true);
     try {
       await fetch("/api/panel/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tresc: text }),
+        body: JSON.stringify({ tresc: text, replyToId: replyId }),
       });
       scrollToBottom(true);
     } finally {
@@ -260,7 +263,7 @@ export default function ChatClient({ myId, myName, isAdmin }) {
                     <div
                       onContextMenu={(e) => { e.preventDefault(); setPicker({ id: msg.id, x: e.clientX, y: e.clientY }); }}
                       style={{
-                        padding: msg.typ === "image" ? 4 : "9px 14px",
+                        padding: msg.typ === "image" && !msg.replyTo ? 4 : "9px 14px",
                         borderRadius: 16,
                         background: isMe ? "#2563eb" : "rgba(255,255,255,0.06)",
                         border: isMe ? "none" : "1px solid rgba(255,255,255,0.07)",
@@ -269,8 +272,25 @@ export default function ChatClient({ myId, myName, isAdmin }) {
                         lineHeight: 1.5,
                         cursor: "context-menu",
                         wordBreak: "break-word",
+                        overflow: "hidden",
                       }}
                     >
+                      {msg.replyTo && (
+                        <div style={{
+                          borderLeft: `3px solid ${isMe ? "rgba(255,255,255,0.4)" : "#3b82f6"}`,
+                          paddingLeft: 8, marginBottom: 6,
+                          background: isMe ? "rgba(0,0,0,0.12)" : "rgba(59,130,246,0.08)",
+                          borderRadius: "0 6px 6px 0", padding: "5px 8px",
+                          borderLeft: `3px solid ${isMe ? "rgba(255,255,255,0.35)" : "#3b82f6"}`,
+                        }}>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: isMe ? "rgba(255,255,255,0.7)" : "#3b82f6", marginBottom: 2 }}>
+                            {msg.replyTo.authorName}
+                          </div>
+                          <div style={{ fontSize: 12, color: isMe ? "rgba(255,255,255,0.55)" : "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 220 }}>
+                            {msg.replyTo.usunieta ? "Wiadomość usunięta" : msg.replyTo.typ === "image" ? "📷 Zdjęcie" : msg.replyTo.tresc}
+                          </div>
+                        </div>
+                      )}
                       {msg.typ === "image" ? (
                         <button
                           onClick={(e) => { e.stopPropagation(); setLightbox(msg.plik); }}
@@ -278,7 +298,7 @@ export default function ChatClient({ myId, myName, isAdmin }) {
                           style={{ background: "none", border: "none", padding: 0, cursor: "zoom-in", display: "block", WebkitTouchCallout: "none" }}
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={msg.plik} alt="zdjęcie" draggable={false} style={{ maxWidth: 260, maxHeight: 320, borderRadius: 13, display: "block", pointerEvents: "none" }} />
+                          <img src={msg.plik} alt="zdjęcie" draggable={false} style={{ maxWidth: 240, maxHeight: 300, borderRadius: msg.replyTo ? 8 : 13, display: "block", pointerEvents: "none" }} />
                         </button>
                       ) : (
                         msg.tresc
@@ -349,21 +369,45 @@ export default function ChatClient({ myId, myName, isAdmin }) {
       {/* context picker */}
       {picker && (
         <div onClick={(e) => e.stopPropagation()} style={{
-          position: "fixed", left: picker.x, top: picker.y, zIndex: 200,
+          position: "fixed", left: Math.min(picker.x, window.innerWidth - 280), top: Math.max(picker.y - 60, 8), zIndex: 200,
           background: "#0f172a", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 16,
-          padding: "6px 8px", display: "flex", gap: 4,
-          boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+          padding: "6px 8px", display: "flex", flexDirection: "column", gap: 2,
+          boxShadow: "0 8px 32px rgba(0,0,0,0.5)", minWidth: 200,
         }}>
-          {EMOJI_LIST.map((e) => (
-            <button key={e} onClick={() => toggleReakcja(picker.id, e)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, padding: "2px 4px", borderRadius: 8, lineHeight: 1 }}>
-              {e}
-            </button>
-          ))}
+          <div style={{ display: "flex", gap: 2, padding: "2px 2px 6px", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+            {EMOJI_LIST.map((e) => (
+              <button key={e} onClick={() => { toggleReakcja(picker.id, e); setPicker(null); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, padding: "2px 4px", borderRadius: 8, lineHeight: 1 }}>
+                {e}
+              </button>
+            ))}
+          </div>
+          <button onClick={() => {
+            const msg = messages.find((m) => m.id === picker.id);
+            if (msg) { setReplyTo({ id: msg.id, authorName: msg.author.name, tresc: msg.tresc, typ: msg.typ, plik: msg.plik }); }
+            setPicker(null);
+            setTimeout(() => inputRef.current?.focus(), 50);
+          }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#94a3b8", padding: "7px 10px", borderRadius: 8, textAlign: "left", display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontSize: 16 }}>↩️</span> Odpowiedz
+          </button>
           {(messages.find((m) => m.id === picker.id)?.author.id === myId || isAdmin) && (
-            <button onClick={() => { deleteMsg(picker.id); setPicker(null); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#ef4444", padding: "2px 8px", borderRadius: 8 }}>
-              Usuń
+            <button onClick={() => { deleteMsg(picker.id); setPicker(null); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#ef4444", padding: "7px 10px", borderRadius: 8, textAlign: "left", display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 16 }}>🗑️</span> Usuń
             </button>
           )}
+        </div>
+      )}
+
+      {/* reply preview bar */}
+      {replyTo && (
+        <div style={{ padding: "8px 14px", background: "rgba(59,130,246,0.06)", borderTop: "1px solid rgba(59,130,246,0.15)", display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+          <div style={{ width: 3, alignSelf: "stretch", background: "#3b82f6", borderRadius: 2, flexShrink: 0 }} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 11, color: "#3b82f6", fontWeight: 600, marginBottom: 2 }}>{replyTo.authorName}</div>
+            <div style={{ fontSize: 12, color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {replyTo.typ === "image" ? "📷 Zdjęcie" : replyTo.tresc ?? "Wiadomość usunięta"}
+            </div>
+          </div>
+          <button onClick={() => setReplyTo(null)} style={{ background: "none", border: "none", color: "#475569", fontSize: 16, cursor: "pointer", padding: 4, flexShrink: 0 }}>✕</button>
         </div>
       )}
 
