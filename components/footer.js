@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 
 const kolumny = [
   {
@@ -30,6 +31,19 @@ const kolumny = [
 ];
 
 export default function Footer({ HerbImg, herb }) {
+  const [sezon, setSezon] = useState('2025/26');
+  const [klasa, setKlasa] = useState('A klasa');
+
+  useEffect(() => {
+    fetch('/api/ustawienia')
+      .then(r => r.json())
+      .then(d => {
+        if (d.aktywny_sezon) setSezon(d.aktywny_sezon);
+        if (d.aktywny_klasa) setKlasa(d.aktywny_klasa);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <footer
       className="footer-top"
@@ -78,7 +92,7 @@ export default function Footer({ HerbImg, herb }) {
                 fontWeight: 600,
               }}
             >
-              A KLASA · SEZON 2025/26
+              {klasa.toUpperCase()} · SEZON {sezon}
             </div>
           </div>
 
@@ -197,7 +211,7 @@ export default function Footer({ HerbImg, herb }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e88' }} />
               <div style={{ fontSize: 11, color: '#334155' }}>
-                Sezon 2025/26 · A klasa · Zachodniopomorskie
+                Sezon {sezon} · {klasa} · Zachodniopomorskie
               </div>
             </div>
           </div>

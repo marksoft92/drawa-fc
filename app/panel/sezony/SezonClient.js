@@ -11,6 +11,8 @@ export default function SezonClient() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [tick, setTick] = useState(0);
+  const [klasa, setKlasa] = useState("");
+  const [klasaSaving, setKlasaSaving] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -22,7 +24,29 @@ export default function SezonClient() {
     return () => { cancelled = true; };
   }, [tick]);
 
+  useEffect(() => {
+    fetch("/api/admin/ustawienia")
+      .then(r => r.json())
+      .then(d => { if (d.aktywny_klasa) setKlasa(d.aktywny_klasa); })
+      .catch(() => {});
+  }, []);
+
   const load = () => setTick((t) => t + 1);
+
+  async function saveKlasa(e) {
+    e.preventDefault();
+    setKlasaSaving(true);
+    try {
+      const r = await fetch("/api/admin/ustawienia", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ aktywny_klasa: klasa }),
+      });
+      if (r.ok) setSuccess("Klasa rozgrywkowa zapisana");
+      else setError("Błąd zapisu");
+    } catch { setError("Błąd połączenia"); }
+    finally { setKlasaSaving(false); }
+  }
 
   async function handleCreate(e) {
     e.preventDefault();
@@ -100,6 +124,24 @@ export default function SezonClient() {
             {saving ? "Tworzę..." : "Utwórz sezon"}
           </button>
         </form>
+      </div>
+
+      {/* Klasa rozgrywkowa */}
+      <div style={{ ...card, marginTop: 16 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", letterSpacing: "0.08em", marginBottom: 14 }}>KLASA ROZGRYWKOWA</div>
+        <form onSubmit={saveKlasa} style={{ display: "flex", gap: 8 }}>
+          <input
+            value={klasa}
+            onChange={e => setKlasa(e.target.value)}
+            style={{ ...inp, flex: 1 }}
+            placeholder="np. A klasa"
+            required
+          />
+          <button type="submit" disabled={klasaSaving} style={{ ...btnPrimary, width: "auto", padding: "9px 20px" }}>
+            {klasaSaving ? "..." : "Zapisz"}
+          </button>
+        </form>
+        <div style={{ fontSize: 11, color: "#475569", marginTop: 8 }}>Wyświetlana w stopce i opisach strony</div>
       </div>
 
       {error && <div style={{ ...alertErr, marginTop: 12 }}>{error}</div>}
