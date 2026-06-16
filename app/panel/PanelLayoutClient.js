@@ -222,19 +222,27 @@ export default function PanelLayoutClient({ role, login, name, foto, children })
   }, []);
 
   useEffect(() => {
+    // zero out immediately before fetch so badge doesn't flash
+    setBadges((b) => ({
+      ...b,
+      ...(pathname.startsWith("/panel/chat") ? { chat: 0 } : {}),
+      ...(pathname.startsWith("/panel/ankiety") ? { ankiety: 0 } : {}),
+      ...(pathname.startsWith("/panel/dm") ? { dm: 0 } : {}),
+    }));
+
     let cancelled = false;
     fetch("/api/panel/badges")
       .then((r) => r.ok ? r.json() : null)
-      .then((d) => { if (d && !cancelled) setBadges(d); })
+      .then((d) => {
+        if (!d || cancelled) return;
+        // never show badge for page the user is actively viewing
+        if (pathname.startsWith("/panel/chat")) d.chat = 0;
+        if (pathname.startsWith("/panel/ankiety")) d.ankiety = 0;
+        if (pathname.startsWith("/panel/dm")) d.dm = 0;
+        setBadges(d);
+      })
       .catch(() => {});
     return () => { cancelled = true; };
-  }, [pathname]);
-
-  // wyczyść badge gdy user jest na danej stronie
-  useEffect(() => {
-    if (pathname.startsWith("/panel/chat")) setBadges((b) => ({ ...b, chat: 0 }));
-    if (pathname.startsWith("/panel/ankiety")) setBadges((b) => ({ ...b, ankiety: 0 }));
-    if (pathname.startsWith("/panel/dm")) setBadges((b) => ({ ...b, dm: 0 }));
   }, [pathname]);
 
   async function handleLogout() {
