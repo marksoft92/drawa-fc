@@ -25,6 +25,9 @@ model User {
   ankietyUtworzono  Ankieta[]         @relation("AnkietaCreator")
   ankietyGlosy      AnkietaGlos[]     @relation("AnkietaGlosy")
   pushSubscriptions PushSubscription[]
+  chatWiadomosci    ChatWiadomosc[]   @relation("ChatAuthor")
+  chatReakcje       ChatReakcja[]     @relation("ChatReakcje")
+  chatOdczytanie    ChatOdczytanie?
 }
 
 enum Role {
@@ -204,6 +207,40 @@ model Sponsor {
   kolejnosc  Int      @default(0)
   aktywny    Boolean  @default(true)
   createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ─── Chat ─────────────────────────────────────────────────────────────────────
+
+model ChatWiadomosc {
+  id        String   @id @default(cuid())
+  tresc     String?
+  typ       String   @default("text")
+  plik      String?
+  authorId  String
+  author    User     @relation("ChatAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  usunieta  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  editedAt  DateTime?
+
+  reakcje   ChatReakcja[]
+}
+
+model ChatReakcja {
+  id      String        @id @default(cuid())
+  wiadId  String
+  wiad    ChatWiadomosc @relation(fields: [wiadId], references: [id], onDelete: Cascade)
+  userId  String
+  user    User          @relation("ChatReakcje", fields: [userId], references: [id], onDelete: Cascade)
+  emoji   String
+
+  @@unique([wiadId, userId, emoji])
+}
+
+model ChatOdczytanie {
+  userId     String   @id
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ostatniaId String?
   updatedAt  DateTime @updatedAt
 }
 

@@ -4,6 +4,16 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
+const CHAT_NAV_ITEM = {
+  label: "Chat",
+  href: "/panel/chat",
+  icon: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  ),
+};
+
 const ANKIETY_NAV_ITEM = {
   label: "Ankiety",
   href: "/panel/ankiety",
@@ -112,6 +122,7 @@ const ADMIN_NAV = [
       </svg>
     ),
   },
+  CHAT_NAV_ITEM,
   ANKIETY_NAV_ITEM,
   {
     label: "Profil",
@@ -145,10 +156,12 @@ const PLAYER_NAV = [
       </svg>
     ),
   },
+  CHAT_NAV_ITEM,
   ANKIETY_NAV_ITEM,
 ];
 
 const STAFF_NAV = [
+  CHAT_NAV_ITEM,
   ANKIETY_NAV_ITEM,
   {
     label: "Profil",
