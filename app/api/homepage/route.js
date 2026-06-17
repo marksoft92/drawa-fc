@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 const CACHE = "public, s-maxage=30, stale-while-revalidate=120";
 
 export async function GET() {
-  const [ustawienia, aktualnosci, galeria, sponsorzy, struktura, kadraData] = await Promise.all([
+  const [ustawienia, aktualnosci, galeria, sponsorzy, struktura, kadraData, archiwumStats] = await Promise.all([
     prisma.ustawienie.findMany(),
     prisma.artykul.findMany({
       where: { published: true },
@@ -46,6 +46,26 @@ export async function GET() {
       mapped.sort((a, b) => b.gole - a.gole || b.asysty - a.asysty || b.mecze - a.mecze || a.imieNazwisko.localeCompare(b.imieNazwisko, "pl"));
       return { sezon: sezon?.nazwa ?? null, players: mapped };
     })(),
+    (async () => {
+      const sezony = await prisma.archiwumSezon.findMany({
+        where: { NOT: { liga: { contains: "Puchar" } } },
+        select: { sezon: true, mecze: { select: { score: true, team1: true, team2: true } } },
+      });
+      const uniqueSezony = new Set(sezony.map((s) => s.sezon).filter(Boolean));
+      let mecze = 0, gole = 0, wygrane = 0;
+      for (const s of sezony) {
+        for (const m of s.mecze) {
+          if (!m.score) continue;
+          mecze++;
+          const [g1, g2] = m.score.split(":").map(Number);
+          if (isNaN(g1) || isNaN(g2)) continue;
+          const dHome = m.team1?.toLowerCase().includes("drawa drawno");
+          gole += dHome ? g1 : g2;
+          if ((dHome ? g1 : g2) > (dHome ? g2 : g1)) wygrane++;
+        }
+      }
+      return { sezony: uniqueSezony.size, mecze, gole, wygrane };
+    })(),
   ]);
 
   const ust = Object.fromEntries(ustawienia.map((r) => [r.klucz, r.wartosc]));
@@ -58,7 +78,7 @@ export async function GET() {
   ]);
 
   return Response.json(
-    { ustawienia: ust, aktualnosci, galeria, sponsorzy, struktura, kadra: kadraData, tabela, mecze },
+    { ustawienia: ust, aktualnosci, galeria, sponsorzy, struktura, kadra: kadraData, tabela, mecze, allTimeStats: archiwumStats },
     { headers: { "Cache-Control": CACHE } }
   );
 }

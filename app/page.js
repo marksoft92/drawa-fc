@@ -204,7 +204,7 @@ export default function Page() {
       <MatchdayBanner />
 
       <main style={{paddingTop: 64}}>
-        <Hero tabela={heroData}/>
+        <Hero tabela={heroData} allTimeStats={hp?.allTimeStats}/>
 
         <div id="aktualnosci">
           <Aktualnosci SectionLabel={SectionLabel} data={hp?.aktualnosci}/>
