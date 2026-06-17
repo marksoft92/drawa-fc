@@ -1,7 +1,9 @@
 // @ts-nocheck
 import "dotenv/config";
 import { prisma } from "../lib/prisma";
-import data from "../tmp/archiwum_ligowiec.json";
+import ligowiecData from "../tmp/archiwum_ligowiec.json";
+import min90Data from "../tmp/archiwum_90minut.json";
+const data = [...min90Data, ...ligowiecData];
 
 async function main() {
   console.log(`\nImport archiwum: ${data.length} sezonów\n`);
