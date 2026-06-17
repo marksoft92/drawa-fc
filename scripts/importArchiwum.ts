@@ -38,9 +38,12 @@ async function main() {
       });
     }
 
-    if (s.tabela?.length) {
+    const validTabela = (s.tabela || []).filter(
+      (t: any) => t.pozycja > 0 && t.pozycja < 100 && t.nazwa && !t.nazwa.includes("Klasa") && !t.nazwa.includes("Liga") && !t.bramki?.includes("+/-")
+    );
+    if (validTabela.length) {
       await prisma.archiwumTabela.createMany({
-        data: s.tabela.map((t: any) => ({
+        data: validTabela.map((t: any) => ({
           sezonId: sezon.id,
           pozycja: t.pozycja,
           nazwa: t.nazwa,
