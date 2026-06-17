@@ -13,7 +13,7 @@ export default function Hero({ tabela, allTimeStats }) {
   ];
 
   const allTime = allTimeStats ? [
-    { label: 'LAT HISTORII', value: (allTimeStats.sezony || 0) + 1 },
+    { label: 'ROK ZAŁOŻENIA', value: 1947 },
     { label: 'MECZÓW', value: allTimeStats.mecze || 0 },
     { label: 'GOLI', value: allTimeStats.gole || 0 },
     { label: 'ZWYCIĘSTW', value: allTimeStats.wygrane || 0 },
@@ -69,7 +69,7 @@ export default function Hero({ tabela, allTimeStats }) {
         {allTime && (
           <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
             <div style={{ fontSize: 10, letterSpacing: '0.3em', color: '#334155', marginBottom: 16, textTransform: 'uppercase' }}>
-              Historia klubu od 2002 roku
+              Gramy z pasją od 1947 roku
             </div>
             <div style={{ display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap' }}>
               {allTime.map(({ label, value }) => (
