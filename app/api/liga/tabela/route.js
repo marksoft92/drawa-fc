@@ -8,5 +8,5 @@ export async function GET(request) {
     where: { sezon },
     orderBy: { pozycja: "asc" },
   });
-  return Response.json(tabela);
+  return Response.json(tabela, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } });
 }

@@ -8,5 +8,5 @@ export async function GET(request) {
     where: { sezon },
     orderBy: { createdAt: "asc" },
   });
-  return Response.json(mecze);
+  return Response.json(mecze, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } });
 }

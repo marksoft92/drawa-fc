@@ -9,6 +9,6 @@ export async function GET() {
     where: { sezon, score: null, walkower: false },
     orderBy: { date: "asc" },
   });
-  if (!mecz) return Response.json(null);
-  return Response.json(mecz);
+  if (!mecz) return Response.json(null, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } });
+  return Response.json(mecz, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } });
 }

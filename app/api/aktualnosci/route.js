@@ -11,5 +11,5 @@ export async function GET() {
       thumbnail: true, kolor: true, tags: true, date: true, pinned: true,
     },
   });
-  return Response.json(artykuly);
+  return Response.json(artykuly, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } });
 }

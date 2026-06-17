@@ -45,15 +45,16 @@ function buildItems(u) {
   return items;
 }
 
-export default function Kontakt({ SectionLabel }) {
-  const [items, setItems] = useState([]);
+export default function Kontakt({ SectionLabel, ustawienia }) {
+  const [items, setItems] = useState(ustawienia ? buildItems(ustawienia) : []);
 
   useEffect(() => {
+    if (ustawienia) return;
     fetch('/api/ustawienia')
       .then(r => r.json())
       .then(u => setItems(buildItems(u)))
       .catch(() => {});
-  }, []);
+  }, [ustawienia]);
 
   return (
     <section className="mob-pb" style={{ padding: '0 20px 80px', background: '#030712' }}>

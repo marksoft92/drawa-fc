@@ -8,5 +8,5 @@ export async function GET() {
     orderBy: [{ kolejnosc: "asc" }, { createdAt: "asc" }],
     select: { id: true, nazwa: true, logo: true, href: true },
   });
-  return Response.json(sponsorzy);
+  return Response.json(sponsorzy, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } });
 }

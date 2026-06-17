@@ -58,15 +58,16 @@ const NewsCard = ({ artykul, featured }) => (
   </Link>
 );
 
-export default function Aktualnosci({ SectionLabel, showAll = false }) {
-  const [artykuly, setArtykuly] = useState([]);
+export default function Aktualnosci({ SectionLabel, showAll = false, data }) {
+  const [artykuly, setArtykuly] = useState(data || []);
 
   useEffect(() => {
+    if (data) return;
     fetch('/api/aktualnosci')
       .then(r => r.json())
       .then(d => setArtykuly(Array.isArray(d) ? d : []))
       .catch(() => {});
-  }, []);
+  }, [data]);
 
   const pinned = artykuly.filter(a => a.pinned);
   const regular = artykuly.filter(a => !a.pinned);

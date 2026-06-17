@@ -116,22 +116,17 @@ const ScrollToTop = () => {
 export default function Page() {
   const [tabela, setTabela] = useState([]);
   const [mecze, setMecze] = useState([]);
+  const [hp, setHp] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/ustawienia")
+    fetch("/api/homepage")
       .then(r => r.json())
-      .then(u => {
+      .then(d => {
         if (cancelled) return;
-        const enc = encodeURIComponent(u.aktywny_sezon || "2025/26");
-        Promise.all([
-          fetch(`/api/liga/tabela?sezon=${enc}`).then(r => r.json()),
-          fetch(`/api/liga/mecze?sezon=${enc}`).then(r => r.json()),
-        ]).then(([t, m]) => {
-          if (cancelled) return;
-          setTabela(Array.isArray(t) ? t : []);
-          setMecze(Array.isArray(m) ? m : []);
-        });
+        setTabela(Array.isArray(d.tabela) ? d.tabela : []);
+        setMecze(Array.isArray(d.mecze) ? d.mecze : []);
+        setHp(d);
       })
       .catch(() => {});
     return () => { cancelled = true; };
@@ -197,7 +192,6 @@ export default function Page() {
   return (
     <>
       <style>{`
- @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
  * { box-sizing: border-box; margin: 0; padding: 0; }
  html { scroll-behavior: smooth; }
  body { background: #030712; color: #fff; font-family: -apple-system, 'Segoe UI', sans-serif; }
@@ -213,7 +207,7 @@ export default function Page() {
         <Hero tabela={heroData}/>
 
         <div id="aktualnosci">
-          <Aktualnosci SectionLabel={SectionLabel}/>
+          <Aktualnosci SectionLabel={SectionLabel} data={hp?.aktualnosci}/>
         </div>
 
         <div id="mecze">
@@ -252,19 +246,19 @@ export default function Page() {
         </div>
 
         <div id="galeria">
-          <Galeria SectionLabel={SectionLabel}/>
+          <Galeria SectionLabel={SectionLabel} data={hp?.galeria}/>
         </div>
 
         <div id="sponsorzy">
-          <Sponsorzy SectionLabel={SectionLabel}/>
+          <Sponsorzy SectionLabel={SectionLabel} data={hp?.sponsorzy}/>
         </div>
 
         <div id="kadra">
-          <Kadra SectionLabel={SectionLabel}/>
+          <Kadra SectionLabel={SectionLabel} kadraData={hp?.kadra}/>
         </div>
 
         <div id="struktura">
-          <Struktura SectionLabel={SectionLabel}/>
+          <Struktura SectionLabel={SectionLabel} data={hp?.struktura} ustawienia={hp?.ustawienia}/>
         </div>
 
         <div id="dojazd">
@@ -272,7 +266,7 @@ export default function Page() {
         </div>
 
         <div id="kontakt">
-          <Kontakt SectionLabel={SectionLabel}/>
+          <Kontakt SectionLabel={SectionLabel} ustawienia={hp?.ustawienia}/>
         </div>
       </main>
 

@@ -15,7 +15,7 @@ export async function GET(request) {
       },
     });
     if (!sezon) return Response.json({ error: "Nie znaleziono" }, { status: 404 });
-    return Response.json(sezon);
+    return Response.json(sezon, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } });
   }
 
   const sezony = await prisma.archiwumSezon.findMany({
@@ -29,5 +29,5 @@ export async function GET(request) {
     },
   });
 
-  return Response.json(sezony);
+  return Response.json(sezony, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } });
 }

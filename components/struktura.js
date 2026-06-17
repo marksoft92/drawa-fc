@@ -30,20 +30,15 @@ const RolaBadge = ({ rola }) => {
   );
 };
 
-export default function Struktura({ SectionLabel }) {
-  const [zarzad, setZarzad] = useState([]);
-  const [emailKlub, setEmailKlub] = useState('');
+export default function Struktura({ SectionLabel, data, ustawienia }) {
+  const [zarzad, setZarzad] = useState(data || []);
+  const [emailKlub, setEmailKlub] = useState(ustawienia?.emailKlub || '');
 
   useEffect(() => {
-    fetch('/api/struktura')
-      .then(r => r.json())
-      .then(d => setZarzad(Array.isArray(d) ? d : []))
-      .catch(() => {});
-    fetch('/api/ustawienia')
-      .then(r => r.json())
-      .then(u => setEmailKlub(u.emailKlub || ''))
-      .catch(() => {});
-  }, []);
+    if (data && ustawienia) return;
+    if (!data) fetch('/api/struktura').then(r => r.json()).then(d => setZarzad(Array.isArray(d) ? d : [])).catch(() => {});
+    if (!ustawienia) fetch('/api/ustawienia').then(r => r.json()).then(u => setEmailKlub(u.emailKlub || '')).catch(() => {});
+  }, [data, ustawienia]);
 
   return (
     <section style={{ padding: '0 20px 80px', background: '#030712' }}>

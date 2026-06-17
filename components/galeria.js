@@ -118,16 +118,17 @@ const Lightbox = ({ album, startIndex, onClose }) => {
   );
 };
 
-export default function Galeria({ SectionLabel }) {
-  const [albumy, setAlumy] = useState([]);
+export default function Galeria({ SectionLabel, data }) {
+  const [albumy, setAlumy] = useState(data || []);
   const [lightbox, setLightbox] = useState(null);
 
   useEffect(() => {
+    if (data) return;
     fetch('/api/galeria')
       .then(r => r.json())
       .then(d => setAlumy(Array.isArray(d) ? d : []))
       .catch(() => {});
-  }, []);
+  }, [data]);
 
   const activeAlbum = lightbox ? albumy.find((a) => a.id === lightbox.albumId) : null;
 

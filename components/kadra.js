@@ -315,7 +315,7 @@ function PositionSection({ pozycja, zawodnicy, maxes }) {
 }
 
 /* ─── Główny komponent ─── */
-export default function Kadra({ SectionLabel }) {
+export default function Kadra({ SectionLabel, kadraData }) {
   const [zawodnicy, setZawodnicy] = useState([]);
   const [sezon, setSezon] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -324,12 +324,18 @@ export default function Kadra({ SectionLabel }) {
   const cardRefs = useRef({});
 
   useEffect(() => {
+    if (kadraData) {
+      setZawodnicy(kadraData.players ?? []);
+      setSezon(kadraData.sezon);
+      setLoading(false);
+      return;
+    }
     fetch('/api/kadra')
       .then((r) => r.json())
       .then((d) => { setZawodnicy(d.players ?? []); setSezon(d.sezon); })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, []);
+  }, [kadraData]);
 
   const maxes = zawodnicy.length > 0 ? computeMaxes(zawodnicy) : { maxGole: 1, maxAsysty: 1, maxMecze: 1, maxGM: 0.01, maxKartki: 1 };
 

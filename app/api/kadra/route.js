@@ -36,5 +36,5 @@ export async function GET() {
     b.gole - a.gole || b.asysty - a.asysty || b.mecze - a.mecze || a.imieNazwisko.localeCompare(b.imieNazwisko, "pl")
   );
 
-  return Response.json({ sezon: sezon?.nazwa ?? null, players: mapped });
+  return Response.json({ sezon: sezon?.nazwa ?? null, players: mapped }, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } });
 }

@@ -85,15 +85,16 @@ function SponsorItem({ s }) {
   );
 }
 
-export default function Sponsorzy({ SectionLabel }) {
-  const [sponsorzy, setSponsorzy] = useState([]);
+export default function Sponsorzy({ SectionLabel, data }) {
+  const [sponsorzy, setSponsorzy] = useState(data || []);
 
   useEffect(() => {
+    if (data) return;
     fetch('/api/sponsorzy')
       .then(r => r.json())
       .then(d => setSponsorzy(Array.isArray(d) ? d : []))
       .catch(() => {});
-  }, []);
+  }, [data]);
 
   const doubled = [...sponsorzy, ...sponsorzy];
 
