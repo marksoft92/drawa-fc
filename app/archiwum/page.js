@@ -272,34 +272,29 @@ export default function ArchiwumPage() {
               <div style={{ fontSize: 12, color: "#475569", marginTop: 4, marginBottom: 24 }}>
                 {rywale.length} drużyn · historia spotkań od 2002 roku
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 8 }}>
+              <style>{`.rywale-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; } @media (max-width: 768px) { .rywale-grid { grid-template-columns: repeat(2, 1fr); } } @media (max-width: 480px) { .rywale-grid { grid-template-columns: 1fr; } }`}</style>
+              <div className="rywale-grid">
                 {rywale.map((r) => {
-                  const total = r.wygrane + r.remisy + r.przegrane;
-                  const winPct = total > 0 ? Math.round((r.wygrane / total) * 100) : 0;
                   const dominacja = r.wygrane > r.przegrane ? "#22c55e" : r.wygrane < r.przegrane ? "#ef4444" : "#f59e0b";
+                  const HerbImg = ({ src, name, size = 36 }) => src
+                    // eslint-disable-next-line @next/next/no-img-element
+                    ? <img src={src} alt={name} style={{ width: size, height: size, objectFit: "contain", borderRadius: 4 }} />
+                    : <div style={{ width: size, height: size, borderRadius: 4, background: "rgba(148,163,184,0.1)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: size * 0.35, fontWeight: 700, color: "#64748b" }}>{name.charAt(0)}</div>;
                   return (
                     <Link key={r.slug} href={`/druzyna/${r.slug}`} style={{ textDecoration: "none" }}>
-                      <div style={{
-                        background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10,
-                        padding: "14px 16px", transition: "border-color 0.2s, transform 0.2s, box-shadow 0.2s",
-                        cursor: "pointer",
-                      }}
-                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(59,130,246,0.35)"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.4)"; }}
+                      <div style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "16px", transition: "border-color 0.2s, transform 0.2s, box-shadow 0.2s", cursor: "pointer" }}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(59,130,246,0.35)"; e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.5)"; }}
                         onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
                       >
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, minWidth: 0 }}>
-                            {r.herb
-                              // eslint-disable-next-line @next/next/no-img-element
-                              ? <img src={r.herb} alt={r.nazwa} style={{ width: 24, height: 24, objectFit: "contain", borderRadius: 3, flexShrink: 0 }} />
-                              : <div style={{ width: 24, height: 24, borderRadius: 3, background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: "#3b82f6", flexShrink: 0 }}>{r.nazwa.charAt(0)}</div>
-                            }
-                            <span style={{ fontSize: 13, fontWeight: 600, color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{r.nazwa}</span>
-                          </div>
-                          <div style={{ display: "flex", gap: 4, alignItems: "center", flexShrink: 0, marginLeft: 8 }}>
-                            {r.hasLiga && <span style={{ fontSize: 8, color: "#3b82f6", background: "rgba(59,130,246,0.1)", padding: "1px 5px", borderRadius: 3, fontWeight: 700 }}>LIGA</span>}
-                            {r.hasPuchar && <span style={{ fontSize: 8, color: "#f59e0b", background: "rgba(245,158,11,0.1)", padding: "1px 5px", borderRadius: 3, fontWeight: 700 }}>PP</span>}
-                          </div>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 12 }}>
+                          <HerbImg src="/herby/drawa-drawno.jpg" name="Drawa" size={40} />
+                          <span style={{ fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: 16, color: "#1e3a5f", letterSpacing: "0.08em" }}>VS</span>
+                          <HerbImg src={r.herb} name={r.nazwa} size={40} />
+                        </div>
+
+                        <div style={{ textAlign: "center", marginBottom: 8 }}>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{r.nazwa}</div>
+                          <div style={{ fontSize: 9, color: "#334155", marginTop: 2 }}>{r.mecze} meczów · {r.sezony} sez.</div>
                         </div>
 
                         <div style={{ display: "flex", gap: 3, marginBottom: 8, height: 4, borderRadius: 2, overflow: "hidden" }}>
@@ -309,12 +304,16 @@ export default function ArchiwumPage() {
                         </div>
 
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <div style={{ display: "flex", gap: 6 }}>
-                            <span style={{ fontSize: 11, color: "#22c55e", fontWeight: 700 }}>{r.wygrane}W</span>
-                            <span style={{ fontSize: 11, color: "#f59e0b" }}>{r.remisy}R</span>
-                            <span style={{ fontSize: 11, color: "#ef4444" }}>{r.przegrane}P</span>
+                          <div style={{ display: "flex", gap: 4 }}>
+                            <span style={{ fontSize: 10, color: "#22c55e", fontWeight: 700 }}>{r.wygrane}W</span>
+                            <span style={{ fontSize: 10, color: "#f59e0b" }}>{r.remisy}R</span>
+                            <span style={{ fontSize: 10, color: "#ef4444" }}>{r.przegrane}P</span>
                           </div>
-                          <div style={{ fontSize: 11, fontWeight: 700, color: dominacja }}>{r.bramkiZdobyte}:{r.bramkiStracone}</div>
+                          <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                            {r.hasLiga && <span style={{ fontSize: 7, color: "#3b82f6", background: "rgba(59,130,246,0.1)", padding: "1px 4px", borderRadius: 3, fontWeight: 700 }}>LIGA</span>}
+                            {r.hasPuchar && <span style={{ fontSize: 7, color: "#f59e0b", background: "rgba(245,158,11,0.1)", padding: "1px 4px", borderRadius: 3, fontWeight: 700 }}>PP</span>}
+                          </div>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: dominacja, fontFamily: "'Bebas Neue', Impact, sans-serif" }}>{r.bramkiZdobyte}:{r.bramkiStracone}</div>
                         </div>
                       </div>
                     </Link>
