@@ -84,7 +84,7 @@
         "kolejka": 0,
         "date": "28 paź 2006",
         "team1": "Drawa Drawno",
-        "team2": "Trojan Str±pie",
+        "team2": "Trojan Strąpie",
         "score": "2:4"
       },
       {
@@ -174,7 +174,7 @@
       {
         "kolejka": 0,
         "date": "17 cze 2007",
-        "team1": "Trojan Str±pie",
+        "team1": "Trojan Strąpie",
         "team2": "Drawa Drawno",
         "score": "0:0"
       },
@@ -239,7 +239,7 @@
       {
         "kolejka": 7,
         "date": "23 wrz 2007",
-        "team1": "Trojan Str±pie",
+        "team1": "Trojan Strąpie",
         "team2": "Drawa Drawno",
         "score": "2:5"
       },
@@ -331,7 +331,7 @@
         "kolejka": 20,
         "date": "03 maj 2008",
         "team1": "Drawa Drawno",
-        "team2": "Trojan Str±pie",
+        "team2": "Trojan Strąpie",
         "score": "0:1"
       },
       {
@@ -402,7 +402,7 @@
       {
         "kolejka": 3,
         "date": "07 wrz 2008",
-        "team1": "Trojan Str±pie",
+        "team1": "Trojan Strąpie",
         "team2": "Drawa Drawno",
         "score": "1:4"
       },
@@ -494,7 +494,7 @@
         "kolejka": 16,
         "date": "05 kwi 2009",
         "team1": "Drawa Drawno",
-        "team2": "Trojan Str±pie",
+        "team2": "Trojan Strąpie",
         "score": "4:1"
       },
       {
@@ -570,16 +570,6 @@
     ],
     "tabela": [
       {
-        "pozycja": 5.200820091267324e+203,
-        "nazwa": "A klasa gr. 5 2008/2009",
-        "mecze": 0,
-        "pkt": 0,
-        "wygrane": 0,
-        "remisy": 0,
-        "przegrane": 0,
-        "bramki": "+/-"
-      },
-      {
         "pozycja": 1,
         "nazwa": "Drawa Drawno",
         "mecze": 26,
@@ -641,147 +631,7 @@
       },
       {
         "pozycja": 7,
-        "nazwa": "Trojan Str±pie",
-        "mecze": 26,
-        "pkt": 35,
-        "wygrane": 11,
-        "remisy": 2,
-        "przegrane": 13,
-        "bramki": "73/67"
-      },
-      {
-        "pozycja": 8,
-        "nazwa": "Iskra Warszyn",
-        "mecze": 26,
-        "pkt": 35,
-        "wygrane": 10,
-        "remisy": 5,
-        "przegrane": 11,
-        "bramki": "58/73"
-      },
-      {
-        "pozycja": 9,
-        "nazwa": "Błyskawica Kluki",
-        "mecze": 26,
-        "pkt": 33,
-        "wygrane": 11,
-        "remisy": 0,
-        "przegrane": 15,
-        "bramki": "50/75"
-      },
-      {
-        "pozycja": 10,
-        "nazwa": "Pomorzanin Zamęcin",
-        "mecze": 26,
-        "pkt": 29,
-        "wygrane": 8,
-        "remisy": 5,
-        "przegrane": 13,
-        "bramki": "54/77"
-      },
-      {
-        "pozycja": 11,
-        "nazwa": "Ina Nadarzyn",
-        "mecze": 26,
-        "pkt": 28,
-        "wygrane": 8,
-        "remisy": 4,
-        "przegrane": 14,
-        "bramki": "56/66"
-      },
-      {
-        "pozycja": 12,
-        "nazwa": "Korona Raduń",
-        "mecze": 26,
-        "pkt": 26,
-        "wygrane": 7,
-        "remisy": 5,
-        "przegrane": 14,
-        "bramki": "46/87"
-      },
-      {
-        "pozycja": 13,
-        "nazwa": "AP Gavia Choszczno",
-        "mecze": 26,
-        "pkt": 24,
-        "wygrane": 7,
-        "remisy": 3,
-        "przegrane": 16,
-        "bramki": "42/97"
-      },
-      {
-        "pozycja": 14,
-        "nazwa": "Orzeł Żeńsko",
-        "mecze": 26,
-        "pkt": 16,
-        "wygrane": 5,
-        "remisy": 1,
-        "przegrane": 20,
-        "bramki": "37/83"
-      },
-      {
-        "pozycja": 1,
-        "nazwa": "Drawa Drawno",
-        "mecze": 26,
-        "pkt": 73,
-        "wygrane": 24,
-        "remisy": 1,
-        "przegrane": 1,
-        "bramki": "122/26"
-      },
-      {
-        "pozycja": 2,
-        "nazwa": "Wicher Przelewice",
-        "mecze": 26,
-        "pkt": 67,
-        "wygrane": 22,
-        "remisy": 1,
-        "przegrane": 3,
-        "bramki": "97/21"
-      },
-      {
-        "pozycja": 3,
-        "nazwa": "Orzeł Bierzwnik",
-        "mecze": 26,
-        "pkt": 46,
-        "wygrane": 15,
-        "remisy": 1,
-        "przegrane": 10,
-        "bramki": "98/61"
-      },
-      {
-        "pozycja": 4,
-        "nazwa": "Iskra Pomień",
-        "mecze": 26,
-        "pkt": 42,
-        "wygrane": 13,
-        "remisy": 3,
-        "przegrane": 10,
-        "bramki": "66/63"
-      },
-      {
-        "pozycja": 5,
-        "nazwa": "Świt Barnimie",
-        "mecze": 26,
-        "pkt": 37,
-        "wygrane": 11,
-        "remisy": 4,
-        "przegrane": 11,
-        "bramki": "56/51"
-      },
-      {
-        "pozycja": 6,
-        "nazwa": "Piast Karsko",
-        "mecze": 26,
-        "pkt": 36,
-        "wygrane": 11,
-        "remisy": 3,
-        "przegrane": 12,
-        "bramki": "50/58"
-      },
-      {
-        "pozycja": 7,
-        "nazwa": "Trojan Str±pie",
+        "nazwa": "Trojan Strąpie",
         "mecze": 26,
         "pkt": 35,
         "wygrane": 11,
@@ -1080,16 +930,6 @@
     ],
     "tabela": [
       {
-        "pozycja": 2.2009201013070226e+228,
-        "nazwa": "1.",
-        "mecze": 0,
-        "pkt": 30,
-        "wygrane": 70,
-        "remisy": 22,
-        "przegrane": 4,
-        "bramki": "4"
-      },
-      {
         "pozycja": 1,
         "nazwa": "Sęp Brzesko",
         "mecze": 30,
@@ -1260,7 +1100,7 @@
       {
         "kolejka": null,
         "date": "02 wrz 2009",
-        "team1": "Pomorzanin Kr±piel",
+        "team1": "Pomorzanin Krąpiel",
         "team2": "Drawa Drawno",
         "score": "2:3"
       },
@@ -1492,16 +1332,6 @@
       }
     ],
     "tabela": [
-      {
-        "pozycja": 2.2010201113072235e+228,
-        "nazwa": "1.",
-        "mecze": 0,
-        "pkt": 30,
-        "wygrane": 72,
-        "remisy": 23,
-        "przegrane": 3,
-        "bramki": "4"
-      },
       {
         "pozycja": 1,
         "nazwa": "Morzycko Moryń",
@@ -2057,166 +1887,6 @@
         "remisy": 5,
         "przegrane": 19,
         "bramki": "29/56"
-      },
-      {
-        "pozycja": 1,
-        "nazwa": "Iskierka Szczecin",
-        "mecze": 30,
-        "pkt": 64,
-        "wygrane": 19,
-        "remisy": 7,
-        "przegrane": 4,
-        "bramki": "77/24"
-      },
-      {
-        "pozycja": 2,
-        "nazwa": "Klon Krzęcin",
-        "mecze": 30,
-        "pkt": 63,
-        "wygrane": 20,
-        "remisy": 3,
-        "przegrane": 7,
-        "bramki": "85/43"
-      },
-      {
-        "pozycja": 3,
-        "nazwa": "Osadnik Myślibórz",
-        "mecze": 30,
-        "pkt": 53,
-        "wygrane": 15,
-        "remisy": 8,
-        "przegrane": 7,
-        "bramki": "66/33"
-      },
-      {
-        "pozycja": 4,
-        "nazwa": "Wicher Przelewice",
-        "mecze": 30,
-        "pkt": 50,
-        "wygrane": 12,
-        "remisy": 14,
-        "przegrane": 4,
-        "bramki": "65/44"
-      },
-      {
-        "pozycja": 5,
-        "nazwa": "Myśla Dargomyśl",
-        "mecze": 30,
-        "pkt": 47,
-        "wygrane": 14,
-        "remisy": 5,
-        "przegrane": 11,
-        "bramki": "49/37"
-      },
-      {
-        "pozycja": 6,
-        "nazwa": "Orzeł Pęzino",
-        "mecze": 30,
-        "pkt": 45,
-        "wygrane": 13,
-        "remisy": 6,
-        "przegrane": 11,
-        "bramki": "50/61"
-      },
-      {
-        "pozycja": 7,
-        "nazwa": "Orkan Suchań",
-        "mecze": 30,
-        "pkt": 44,
-        "wygrane": 13,
-        "remisy": 5,
-        "przegrane": 12,
-        "bramki": "48/48"
-      },
-      {
-        "pozycja": 8,
-        "nazwa": "Orzeł Trzcińsko-Zdrój",
-        "mecze": 30,
-        "pkt": 41,
-        "wygrane": 12,
-        "remisy": 5,
-        "przegrane": 13,
-        "bramki": "54/47"
-      },
-      {
-        "pozycja": 9,
-        "nazwa": "Polonia Giżyn",
-        "mecze": 30,
-        "pkt": 38,
-        "wygrane": 10,
-        "remisy": 8,
-        "przegrane": 12,
-        "bramki": "51/46"
-      },
-      {
-        "pozycja": 10,
-        "nazwa": "Mieszko Mieszkowice",
-        "mecze": 30,
-        "pkt": 37,
-        "wygrane": 10,
-        "remisy": 7,
-        "przegrane": 13,
-        "bramki": "44/69"
-      },
-      {
-        "pozycja": 11,
-        "nazwa": "Orzeł Bierzwnik",
-        "mecze": 30,
-        "pkt": 37,
-        "wygrane": 12,
-        "remisy": 1,
-        "przegrane": 17,
-        "bramki": "63/85"
-      },
-      {
-        "pozycja": 12,
-        "nazwa": "Ogniwo Babinek",
-        "mecze": 30,
-        "pkt": 35,
-        "wygrane": 10,
-        "remisy": 5,
-        "przegrane": 15,
-        "bramki": "57/67"
-      },
-      {
-        "pozycja": 13,
-        "nazwa": "Remor Recz",
-        "mecze": 30,
-        "pkt": 34,
-        "wygrane": 10,
-        "remisy": 4,
-        "przegrane": 16,
-        "bramki": "57/73"
-      },
-      {
-        "pozycja": 14,
-        "nazwa": "Czcibor Cedynia",
-        "mecze": 30,
-        "pkt": 34,
-        "wygrane": 10,
-        "remisy": 4,
-        "przegrane": 16,
-        "bramki": "55/75"
-      },
-      {
-        "pozycja": 15,
-        "nazwa": "Drawa Drawno",
-        "mecze": 30,
-        "pkt": 28,
-        "wygrane": 7,
-        "remisy": 7,
-        "przegrane": 16,
-        "bramki": "39/81"
-      },
-      {
-        "pozycja": 16,
-        "nazwa": "Zootechnik Kołbacz",
-        "mecze": 30,
-        "pkt": 23,
-        "wygrane": 6,
-        "remisy": 5,
-        "przegrane": 19,
-        "bramki": "29/56"
       }
     ],
     "sourceId": 397,
@@ -2398,136 +2068,6 @@
       }
     ],
     "tabela": [
-      {
-        "pozycja": 5.20122013122612e+168,
-        "nazwa": "A klasa Szczecin gr. 5 2012/2013",
-        "mecze": 0,
-        "pkt": 0,
-        "wygrane": 0,
-        "remisy": 0,
-        "przegrane": 0,
-        "bramki": "+/-"
-      },
-      {
-        "pozycja": 1,
-        "nazwa": "Mechanik Warnice",
-        "mecze": 22,
-        "pkt": 61,
-        "wygrane": 20,
-        "remisy": 1,
-        "przegrane": 1,
-        "bramki": "90/22"
-      },
-      {
-        "pozycja": 2,
-        "nazwa": "Świt Barnimie",
-        "mecze": 22,
-        "pkt": 46,
-        "wygrane": 15,
-        "remisy": 1,
-        "przegrane": 6,
-        "bramki": "59/29"
-      },
-      {
-        "pozycja": 3,
-        "nazwa": "Ina Nadarzyn",
-        "mecze": 22,
-        "pkt": 43,
-        "wygrane": 14,
-        "remisy": 1,
-        "przegrane": 7,
-        "bramki": "80/51"
-      },
-      {
-        "pozycja": 4,
-        "nazwa": "Korona Raduń",
-        "mecze": 22,
-        "pkt": 36,
-        "wygrane": 11,
-        "remisy": 3,
-        "przegrane": 8,
-        "bramki": "62/54"
-      },
-      {
-        "pozycja": 5,
-        "nazwa": "Jedność Przewłoki",
-        "mecze": 22,
-        "pkt": 33,
-        "wygrane": 10,
-        "remisy": 3,
-        "przegrane": 9,
-        "bramki": "48/43"
-      },
-      {
-        "pozycja": 6,
-        "nazwa": "Gwiazda Żalęcino",
-        "mecze": 22,
-        "pkt": 31,
-        "wygrane": 10,
-        "remisy": 1,
-        "przegrane": 11,
-        "bramki": "46/51"
-      },
-      {
-        "pozycja": 7,
-        "nazwa": "Sokół Granowo",
-        "mecze": 22,
-        "pkt": 30,
-        "wygrane": 9,
-        "remisy": 3,
-        "przegrane": 10,
-        "bramki": "55/60"
-      },
-      {
-        "pozycja": 8,
-        "nazwa": "Gryf Objezierze",
-        "mecze": 22,
-        "pkt": 24,
-        "wygrane": 7,
-        "remisy": 3,
-        "przegrane": 12,
-        "bramki": "35/62"
-      },
-      {
-        "pozycja": 9,
-        "nazwa": "Sokół Sokoliniec",
-        "mecze": 22,
-        "pkt": 23,
-        "wygrane": 7,
-        "remisy": 2,
-        "przegrane": 13,
-        "bramki": "46/53"
-      },
-      {
-        "pozycja": 10,
-        "nazwa": "Błyskawica Kluki",
-        "mecze": 22,
-        "pkt": 23,
-        "wygrane": 6,
-        "remisy": 5,
-        "przegrane": 11,
-        "bramki": "40/71"
-      },
-      {
-        "pozycja": 11,
-        "nazwa": "Drawa Drawno",
-        "mecze": 22,
-        "pkt": 21,
-        "wygrane": 6,
-        "remisy": 3,
-        "przegrane": 13,
-        "bramki": "48/68"
-      },
-      {
-        "pozycja": 12,
-        "nazwa": "Pomorzanin Zamęcin",
-        "mecze": 22,
-        "pkt": 12,
-        "wygrane": 4,
-        "remisy": 0,
-        "przegrane": 18,
-        "bramki": "45/90"
-      },
       {
         "pozycja": 1,
         "nazwa": "Mechanik Warnice",
@@ -2799,126 +2339,6 @@
     ],
     "tabela": [
       {
-        "pozycja": 4.201420151205016e+152,
-        "nazwa": "B klasa Szczecin gr. 4 2014/2015",
-        "mecze": 0,
-        "pkt": 0,
-        "wygrane": 0,
-        "remisy": 0,
-        "przegrane": 0,
-        "bramki": "+/-"
-      },
-      {
-        "pozycja": 1,
-        "nazwa": "Błękitni Sarnik",
-        "mecze": 20,
-        "pkt": 50,
-        "wygrane": 16,
-        "remisy": 2,
-        "przegrane": 2,
-        "bramki": "60/15"
-      },
-      {
-        "pozycja": 2,
-        "nazwa": "Piast II Karsko",
-        "mecze": 20,
-        "pkt": 46,
-        "wygrane": 15,
-        "remisy": 1,
-        "przegrane": 4,
-        "bramki": "77/37"
-      },
-      {
-        "pozycja": 3,
-        "nazwa": "Orzeł II Bierzwnik",
-        "mecze": 20,
-        "pkt": 42,
-        "wygrane": 14,
-        "remisy": 0,
-        "przegrane": 6,
-        "bramki": "70/43"
-      },
-      {
-        "pozycja": 4,
-        "nazwa": "Iskra Warszyn",
-        "mecze": 20,
-        "pkt": 40,
-        "wygrane": 13,
-        "remisy": 1,
-        "przegrane": 6,
-        "bramki": "90/37"
-      },
-      {
-        "pozycja": 5,
-        "nazwa": "Gavia II Choszczno",
-        "mecze": 20,
-        "pkt": 31,
-        "wygrane": 10,
-        "remisy": 1,
-        "przegrane": 9,
-        "bramki": "54/43"
-      },
-      {
-        "pozycja": 6,
-        "nazwa": "Orzeł Żeńsko",
-        "mecze": 20,
-        "pkt": 28,
-        "wygrane": 9,
-        "remisy": 1,
-        "przegrane": 10,
-        "bramki": "49/52"
-      },
-      {
-        "pozycja": 7,
-        "nazwa": "Grom Płonno",
-        "mecze": 20,
-        "pkt": 28,
-        "wygrane": 9,
-        "remisy": 1,
-        "przegrane": 10,
-        "bramki": "37/45"
-      },
-      {
-        "pozycja": 8,
-        "nazwa": "Pionier Zwierzyn",
-        "mecze": 20,
-        "pkt": 25,
-        "wygrane": 8,
-        "remisy": 1,
-        "przegrane": 11,
-        "bramki": "40/60"
-      },
-      {
-        "pozycja": 9,
-        "nazwa": "Drawa Drawno",
-        "mecze": 20,
-        "pkt": 19,
-        "wygrane": 6,
-        "remisy": 1,
-        "przegrane": 13,
-        "bramki": "47/72"
-      },
-      {
-        "pozycja": 10,
-        "nazwa": "Klon II Krzęcin",
-        "mecze": 20,
-        "pkt": 10,
-        "wygrane": 3,
-        "remisy": 1,
-        "przegrane": 16,
-        "bramki": "27/73"
-      },
-      {
-        "pozycja": 11,
-        "nazwa": "Pomorzanka Jarosławsko",
-        "mecze": 20,
-        "pkt": 5,
-        "wygrane": 1,
-        "remisy": 2,
-        "przegrane": 17,
-        "bramki": "25/99"
-      },
-      {
         "pozycja": 1,
         "nazwa": "Błękitni Sarnik",
         "mecze": 20,
@@ -3150,106 +2570,6 @@
       }
     ],
     "tabela": [
-      {
-        "pozycja": 4.201520161164214e+118,
-        "nazwa": "B klasa Szczecin gr. 4 2015/2016",
-        "mecze": 0,
-        "pkt": 0,
-        "wygrane": 0,
-        "remisy": 0,
-        "przegrane": 0,
-        "bramki": "+/-"
-      },
-      {
-        "pozycja": 1,
-        "nazwa": "Drawa Drawno",
-        "mecze": 16,
-        "pkt": 42,
-        "wygrane": 14,
-        "remisy": 0,
-        "przegrane": 2,
-        "bramki": "99/20"
-      },
-      {
-        "pozycja": 2,
-        "nazwa": "Iskra Warszyn",
-        "mecze": 16,
-        "pkt": 40,
-        "wygrane": 13,
-        "remisy": 1,
-        "przegrane": 2,
-        "bramki": "57/14"
-      },
-      {
-        "pozycja": 3,
-        "nazwa": "Merkury Nowogródek Pom.",
-        "mecze": 16,
-        "pkt": 29,
-        "wygrane": 9,
-        "remisy": 2,
-        "przegrane": 5,
-        "bramki": "43/22"
-      },
-      {
-        "pozycja": 4,
-        "nazwa": "Pomorzanka Jarosławsko",
-        "mecze": 16,
-        "pkt": 23,
-        "wygrane": 7,
-        "remisy": 2,
-        "przegrane": 7,
-        "bramki": "33/45"
-      },
-      {
-        "pozycja": 5,
-        "nazwa": "Pionier Zwierzyn",
-        "mecze": 16,
-        "pkt": 19,
-        "wygrane": 6,
-        "remisy": 1,
-        "przegrane": 9,
-        "bramki": "30/51"
-      },
-      {
-        "pozycja": 6,
-        "nazwa": "Orzeł Żeńsko",
-        "mecze": 16,
-        "pkt": 17,
-        "wygrane": 5,
-        "remisy": 2,
-        "przegrane": 9,
-        "bramki": "37/53"
-      },
-      {
-        "pozycja": 7,
-        "nazwa": "Grom Płonno",
-        "mecze": 16,
-        "pkt": 15,
-        "wygrane": 4,
-        "remisy": 3,
-        "przegrane": 9,
-        "bramki": "25/50"
-      },
-      {
-        "pozycja": 8,
-        "nazwa": "Gavia II Choszczno",
-        "mecze": 16,
-        "pkt": 13,
-        "wygrane": 3,
-        "remisy": 4,
-        "przegrane": 9,
-        "bramki": "27/48"
-      },
-      {
-        "pozycja": 9,
-        "nazwa": "Gryf Przekolno",
-        "mecze": 16,
-        "pkt": 9,
-        "wygrane": 2,
-        "remisy": 3,
-        "przegrane": 11,
-        "bramki": "18/66"
-      },
       {
         "pozycja": 1,
         "nazwa": "Drawa Drawno",
@@ -3532,156 +2852,6 @@
       }
     ],
     "tabela": [
-      {
-        "pozycja": 5.201620171267224e+205,
-        "nazwa": "A klasa Szczecin gr. 5 2016/2017",
-        "mecze": 0,
-        "pkt": 0,
-        "wygrane": 0,
-        "remisy": 0,
-        "przegrane": 0,
-        "bramki": "+/-"
-      },
-      {
-        "pozycja": 1,
-        "nazwa": "Drawa Drawno",
-        "mecze": 26,
-        "pkt": 72,
-        "wygrane": 24,
-        "remisy": 0,
-        "przegrane": 2,
-        "bramki": "134/31"
-      },
-      {
-        "pozycja": 2,
-        "nazwa": "Orzeł Bierzwnik",
-        "mecze": 26,
-        "pkt": 67,
-        "wygrane": 22,
-        "remisy": 1,
-        "przegrane": 3,
-        "bramki": "130/39"
-      },
-      {
-        "pozycja": 3,
-        "nazwa": "Iskra Pomień",
-        "mecze": 26,
-        "pkt": 55,
-        "wygrane": 18,
-        "remisy": 1,
-        "przegrane": 7,
-        "bramki": "118/50"
-      },
-      {
-        "pozycja": 4,
-        "nazwa": "Pomorzanin Zamęcin",
-        "mecze": 26,
-        "pkt": 48,
-        "wygrane": 16,
-        "remisy": 0,
-        "przegrane": 10,
-        "bramki": "57/50"
-      },
-      {
-        "pozycja": 5,
-        "nazwa": "Remor Recz",
-        "mecze": 26,
-        "pkt": 44,
-        "wygrane": 14,
-        "remisy": 2,
-        "przegrane": 10,
-        "bramki": "56/47"
-      },
-      {
-        "pozycja": 6,
-        "nazwa": "Ina Nadarzyn",
-        "mecze": 26,
-        "pkt": 42,
-        "wygrane": 13,
-        "remisy": 3,
-        "przegrane": 10,
-        "bramki": "75/67"
-      },
-      {
-        "pozycja": 7,
-        "nazwa": "Iskra Warszyn",
-        "mecze": 26,
-        "pkt": 41,
-        "wygrane": 13,
-        "remisy": 2,
-        "przegrane": 11,
-        "bramki": "54/68"
-      },
-      {
-        "pozycja": 8,
-        "nazwa": "Gryf Objezierze",
-        "mecze": 26,
-        "pkt": 33,
-        "wygrane": 10,
-        "remisy": 3,
-        "przegrane": 13,
-        "bramki": "47/65"
-      },
-      {
-        "pozycja": 9,
-        "nazwa": "Korona Raduń",
-        "mecze": 26,
-        "pkt": 31,
-        "wygrane": 9,
-        "remisy": 4,
-        "przegrane": 13,
-        "bramki": "84/76"
-      },
-      {
-        "pozycja": 10,
-        "nazwa": "Świt Barnimie",
-        "mecze": 26,
-        "pkt": 23,
-        "wygrane": 6,
-        "remisy": 5,
-        "przegrane": 15,
-        "bramki": "56/79"
-      },
-      {
-        "pozycja": 11,
-        "nazwa": "Saturn Szadzko",
-        "mecze": 26,
-        "pkt": 23,
-        "wygrane": 7,
-        "remisy": 2,
-        "przegrane": 17,
-        "bramki": "57/81"
-      },
-      {
-        "pozycja": 12,
-        "nazwa": "Sokół Sokoliniec",
-        "mecze": 26,
-        "pkt": 20,
-        "wygrane": 5,
-        "remisy": 5,
-        "przegrane": 16,
-        "bramki": "29/78"
-      },
-      {
-        "pozycja": 13,
-        "nazwa": "Błękitni Sarnik",
-        "mecze": 26,
-        "pkt": 19,
-        "wygrane": 5,
-        "remisy": 4,
-        "przegrane": 17,
-        "bramki": "34/110"
-      },
-      {
-        "pozycja": 14,
-        "nazwa": "Sokół Granowo",
-        "mecze": 26,
-        "pkt": 10,
-        "wygrane": 2,
-        "remisy": 4,
-        "przegrane": 20,
-        "bramki": "41/131"
-      },
       {
         "pozycja": 1,
         "nazwa": "Drawa Drawno",
@@ -4201,166 +3371,6 @@
         "remisy": 3,
         "przegrane": 21,
         "bramki": "32/86"
-      },
-      {
-        "pozycja": 1,
-        "nazwa": "Sokół Pyrzyce",
-        "mecze": 30,
-        "pkt": 68,
-        "wygrane": 21,
-        "remisy": 5,
-        "przegrane": 4,
-        "bramki": "75/42"
-      },
-      {
-        "pozycja": 2,
-        "nazwa": "Gavia Choszczno",
-        "mecze": 30,
-        "pkt": 57,
-        "wygrane": 16,
-        "remisy": 9,
-        "przegrane": 5,
-        "bramki": "66/36"
-      },
-      {
-        "pozycja": 3,
-        "nazwa": "Kłos Pełczyce",
-        "mecze": 30,
-        "pkt": 56,
-        "wygrane": 16,
-        "remisy": 8,
-        "przegrane": 6,
-        "bramki": "59/32"
-      },
-      {
-        "pozycja": 4,
-        "nazwa": "Orkan Suchań",
-        "mecze": 30,
-        "pkt": 54,
-        "wygrane": 17,
-        "remisy": 3,
-        "przegrane": 10,
-        "bramki": "59/39"
-      },
-      {
-        "pozycja": 5,
-        "nazwa": "Unia Dolice",
-        "mecze": 30,
-        "pkt": 50,
-        "wygrane": 15,
-        "remisy": 5,
-        "przegrane": 10,
-        "bramki": "78/46"
-      },
-      {
-        "pozycja": 6,
-        "nazwa": "Drawa Drawno",
-        "mecze": 30,
-        "pkt": 49,
-        "wygrane": 15,
-        "remisy": 4,
-        "przegrane": 11,
-        "bramki": "94/63"
-      },
-      {
-        "pozycja": 7,
-        "nazwa": "Czcibor Cedynia",
-        "mecze": 30,
-        "pkt": 48,
-        "wygrane": 15,
-        "remisy": 3,
-        "przegrane": 12,
-        "bramki": "73/64"
-      },
-      {
-        "pozycja": 8,
-        "nazwa": "Sęp Brzesko",
-        "mecze": 30,
-        "pkt": 48,
-        "wygrane": 15,
-        "remisy": 3,
-        "przegrane": 12,
-        "bramki": "57/54"
-      },
-      {
-        "pozycja": 9,
-        "nazwa": "Piast Karsko",
-        "mecze": 30,
-        "pkt": 39,
-        "wygrane": 10,
-        "remisy": 9,
-        "przegrane": 11,
-        "bramki": "53/55"
-      },
-      {
-        "pozycja": 10,
-        "nazwa": "Zieloni Zielin",
-        "mecze": 30,
-        "pkt": 35,
-        "wygrane": 10,
-        "remisy": 5,
-        "przegrane": 15,
-        "bramki": "51/69"
-      },
-      {
-        "pozycja": 11,
-        "nazwa": "Polonia Giżyn",
-        "mecze": 30,
-        "pkt": 34,
-        "wygrane": 10,
-        "remisy": 4,
-        "przegrane": 16,
-        "bramki": "53/67"
-      },
-      {
-        "pozycja": 12,
-        "nazwa": "SCRS Barlinek",
-        "mecze": 30,
-        "pkt": 33,
-        "wygrane": 10,
-        "remisy": 3,
-        "przegrane": 17,
-        "bramki": "52/59"
-      },
-      {
-        "pozycja": 13,
-        "nazwa": "Klon Krzęcin",
-        "mecze": 30,
-        "pkt": 32,
-        "wygrane": 10,
-        "remisy": 2,
-        "przegrane": 18,
-        "bramki": "56/80"
-      },
-      {
-        "pozycja": 14,
-        "nazwa": "Myśla Dargomyśl",
-        "mecze": 30,
-        "pkt": 31,
-        "wygrane": 10,
-        "remisy": 1,
-        "przegrane": 19,
-        "bramki": "57/87"
-      },
-      {
-        "pozycja": 15,
-        "nazwa": "Orzeł Trzcińsko-Zdrój",
-        "mecze": 30,
-        "pkt": 29,
-        "wygrane": 8,
-        "remisy": 5,
-        "przegrane": 17,
-        "bramki": "56/92"
-      },
-      {
-        "pozycja": 16,
-        "nazwa": "Czarni Lubanowo",
-        "mecze": 30,
-        "pkt": 21,
-        "wygrane": 6,
-        "remisy": 3,
-        "przegrane": 21,
-        "bramki": "32/86"
       }
     ],
     "sourceId": 1096,
@@ -4599,176 +3609,6 @@
     ],
     "tabela": [
       {
-        "pozycja": 2.0182019130692166e+230,
-        "nazwa": "A klasa Szczecin gr. płd 2018/2019",
-        "mecze": 0,
-        "pkt": 0,
-        "wygrane": 0,
-        "remisy": 0,
-        "przegrane": 0,
-        "bramki": "+/-"
-      },
-      {
-        "pozycja": 1,
-        "nazwa": "Czcibor Cedynia",
-        "mecze": 30,
-        "pkt": 69,
-        "wygrane": 21,
-        "remisy": 6,
-        "przegrane": 3,
-        "bramki": "85/28"
-      },
-      {
-        "pozycja": 2,
-        "nazwa": "Orkan Suchań",
-        "mecze": 30,
-        "pkt": 68,
-        "wygrane": 21,
-        "remisy": 5,
-        "przegrane": 4,
-        "bramki": "101/34"
-      },
-      {
-        "pozycja": 3,
-        "nazwa": "Piast Karsko",
-        "mecze": 30,
-        "pkt": 64,
-        "wygrane": 21,
-        "remisy": 1,
-        "przegrane": 8,
-        "bramki": "101/43"
-      },
-      {
-        "pozycja": 4,
-        "nazwa": "Kłos Pełczyce",
-        "mecze": 30,
-        "pkt": 59,
-        "wygrane": 19,
-        "remisy": 2,
-        "przegrane": 9,
-        "bramki": "60/35"
-      },
-      {
-        "pozycja": 5,
-        "nazwa": "Unia Dolice",
-        "mecze": 30,
-        "pkt": 57,
-        "wygrane": 18,
-        "remisy": 3,
-        "przegrane": 9,
-        "bramki": "72/47"
-      },
-      {
-        "pozycja": 6,
-        "nazwa": "Drawa Drawno",
-        "mecze": 30,
-        "pkt": 52,
-        "wygrane": 17,
-        "remisy": 1,
-        "przegrane": 12,
-        "bramki": "80/69"
-      },
-      {
-        "pozycja": 7,
-        "nazwa": "Energetyk Gryfino",
-        "mecze": 30,
-        "pkt": 51,
-        "wygrane": 16,
-        "remisy": 3,
-        "przegrane": 11,
-        "bramki": "71/60"
-      },
-      {
-        "pozycja": 8,
-        "nazwa": "Stal Lipiany",
-        "mecze": 30,
-        "pkt": 47,
-        "wygrane": 15,
-        "remisy": 2,
-        "przegrane": 13,
-        "bramki": "88/63"
-      },
-      {
-        "pozycja": 9,
-        "nazwa": "Ina Ińsko",
-        "mecze": 30,
-        "pkt": 43,
-        "wygrane": 12,
-        "remisy": 7,
-        "przegrane": 11,
-        "bramki": "65/66"
-      },
-      {
-        "pozycja": 10,
-        "nazwa": "SCRS Barlinek",
-        "mecze": 30,
-        "pkt": 43,
-        "wygrane": 12,
-        "remisy": 7,
-        "przegrane": 11,
-        "bramki": "70/48"
-      },
-      {
-        "pozycja": 11,
-        "nazwa": "Polonia Giżyn",
-        "mecze": 30,
-        "pkt": 36,
-        "wygrane": 11,
-        "remisy": 3,
-        "przegrane": 16,
-        "bramki": "61/69"
-      },
-      {
-        "pozycja": 12,
-        "nazwa": "Zieloni Zielin",
-        "mecze": 30,
-        "pkt": 35,
-        "wygrane": 9,
-        "remisy": 8,
-        "przegrane": 13,
-        "bramki": "50/59"
-      },
-      {
-        "pozycja": 13,
-        "nazwa": "Sęp Brzesko",
-        "mecze": 30,
-        "pkt": 21,
-        "wygrane": 5,
-        "remisy": 6,
-        "przegrane": 19,
-        "bramki": "32/72"
-      },
-      {
-        "pozycja": 14,
-        "nazwa": "Świt Barnimie",
-        "mecze": 30,
-        "pkt": 18,
-        "wygrane": 5,
-        "remisy": 3,
-        "przegrane": 22,
-        "bramki": "44/130"
-      },
-      {
-        "pozycja": 15,
-        "nazwa": "Klon Krzęcin",
-        "mecze": 30,
-        "pkt": 8,
-        "wygrane": 2,
-        "remisy": 2,
-        "przegrane": 26,
-        "bramki": "30/134"
-      },
-      {
-        "pozycja": 16,
-        "nazwa": "Błękit Pniewo",
-        "mecze": 30,
-        "pkt": 0,
-        "wygrane": 6,
-        "remisy": 1,
-        "przegrane": 23,
-        "bramki": "24/77"
-      },
-      {
         "pozycja": 1,
         "nazwa": "Czcibor Cedynia",
         "mecze": 30,
@@ -4963,7 +3803,7 @@
         "kolejka": 2,
         "date": "25 sie 2019",
         "team1": "Drawa Drawno",
-        "team2": "D±b Dębno",
+        "team2": "Dąb Dębno",
         "score": "0:0"
       },
       {
@@ -4991,7 +3831,7 @@
         "kolejka": 6,
         "date": "22 wrz 2019",
         "team1": "Drawa Drawno",
-        "team2": "Biali S±dów",
+        "team2": "Biali Sądów",
         "score": "1:2"
       },
       {
@@ -5061,7 +3901,7 @@
     "tabela": [
       {
         "pozycja": 1,
-        "nazwa": "Biali S±dów",
+        "nazwa": "Biali Sądów",
         "mecze": 15,
         "pkt": 34,
         "wygrane": 10,
@@ -5091,167 +3931,7 @@
       },
       {
         "pozycja": 4,
-        "nazwa": "D±b Dębno",
-        "mecze": 15,
-        "pkt": 29,
-        "wygrane": 9,
-        "remisy": 2,
-        "przegrane": 4,
-        "bramki": "25/25"
-      },
-      {
-        "pozycja": 5,
-        "nazwa": "Sokół Pyrzyce",
-        "mecze": 15,
-        "pkt": 25,
-        "wygrane": 8,
-        "remisy": 1,
-        "przegrane": 6,
-        "bramki": "30/34"
-      },
-      {
-        "pozycja": 6,
-        "nazwa": "Kłos Pełczyce",
-        "mecze": 15,
-        "pkt": 25,
-        "wygrane": 8,
-        "remisy": 1,
-        "przegrane": 6,
-        "bramki": "29/24"
-      },
-      {
-        "pozycja": 7,
-        "nazwa": "Czcibor Cedynia",
-        "mecze": 15,
-        "pkt": 25,
-        "wygrane": 8,
-        "remisy": 1,
-        "przegrane": 6,
-        "bramki": "25/20"
-      },
-      {
-        "pozycja": 8,
-        "nazwa": "Odra Chojna",
-        "mecze": 15,
-        "pkt": 21,
-        "wygrane": 6,
-        "remisy": 3,
-        "przegrane": 6,
-        "bramki": "35/25"
-      },
-      {
-        "pozycja": 9,
-        "nazwa": "Morzycko Moryń",
-        "mecze": 15,
-        "pkt": 19,
-        "wygrane": 6,
-        "remisy": 1,
-        "przegrane": 8,
-        "bramki": "30/33"
-      },
-      {
-        "pozycja": 10,
-        "nazwa": "A.P. Gavia Choszczno",
-        "mecze": 15,
-        "pkt": 17,
-        "wygrane": 5,
-        "remisy": 2,
-        "przegrane": 8,
-        "bramki": "25/35"
-      },
-      {
-        "pozycja": 11,
-        "nazwa": "Unia Dolice",
-        "mecze": 15,
-        "pkt": 16,
-        "wygrane": 4,
-        "remisy": 4,
-        "przegrane": 7,
-        "bramki": "25/26"
-      },
-      {
-        "pozycja": 12,
-        "nazwa": "Iskra Banie",
-        "mecze": 15,
-        "pkt": 15,
-        "wygrane": 4,
-        "remisy": 3,
-        "przegrane": 8,
-        "bramki": "31/39"
-      },
-      {
-        "pozycja": 13,
-        "nazwa": "Stal Lipiany",
-        "mecze": 15,
-        "pkt": 15,
-        "wygrane": 4,
-        "remisy": 3,
-        "przegrane": 8,
-        "bramki": "33/53"
-      },
-      {
-        "pozycja": 14,
-        "nazwa": "Orkan Suchań",
-        "mecze": 15,
-        "pkt": 13,
-        "wygrane": 3,
-        "remisy": 4,
-        "przegrane": 8,
-        "bramki": "24/33"
-      },
-      {
-        "pozycja": 15,
-        "nazwa": "Piast Karsko",
-        "mecze": 15,
-        "pkt": 13,
-        "wygrane": 4,
-        "remisy": 1,
-        "przegrane": 10,
-        "bramki": "22/49"
-      },
-      {
-        "pozycja": 16,
-        "nazwa": "Drawa Drawno",
-        "mecze": 15,
-        "pkt": 13,
-        "wygrane": 4,
-        "remisy": 1,
-        "przegrane": 10,
-        "bramki": "20/28"
-      },
-      {
-        "pozycja": 1,
-        "nazwa": "Biali S±dów",
-        "mecze": 15,
-        "pkt": 34,
-        "wygrane": 10,
-        "remisy": 4,
-        "przegrane": 1,
-        "bramki": "61/19"
-      },
-      {
-        "pozycja": 2,
-        "nazwa": "Energetyk Gryfino",
-        "mecze": 15,
-        "pkt": 32,
-        "wygrane": 10,
-        "remisy": 2,
-        "przegrane": 3,
-        "bramki": "47/31"
-      },
-      {
-        "pozycja": 3,
-        "nazwa": "Osadnik Myślibórz",
-        "mecze": 15,
-        "pkt": 30,
-        "wygrane": 9,
-        "remisy": 3,
-        "przegrane": 3,
-        "bramki": "35/23"
-      },
-      {
-        "pozycja": 4,
-        "nazwa": "D±b Dębno",
+        "nazwa": "Dąb Dębno",
         "mecze": 15,
         "pkt": 29,
         "wygrane": 9,
@@ -5476,7 +4156,7 @@
       {
         "kolejka": 13,
         "date": "24 paź 2020",
-        "team1": "Zawisza Grzmi±ca",
+        "team1": "Zawisza Grzmiąca",
         "team2": "Drawa Drawno",
         "score": "4:1"
       },
@@ -5590,177 +4270,7 @@
       },
       {
         "pozycja": 6,
-        "nazwa": "Zawisza Grzmi±ca",
-        "mecze": 19,
-        "pkt": 34,
-        "wygrane": 11,
-        "remisy": 1,
-        "przegrane": 7,
-        "bramki": "63/46"
-      },
-      {
-        "pozycja": 7,
-        "nazwa": "Mechanik Turowo",
-        "mecze": 18,
-        "pkt": 32,
-        "wygrane": 9,
-        "remisy": 5,
-        "przegrane": 4,
-        "bramki": "33/24"
-      },
-      {
-        "pozycja": 8,
-        "nazwa": "Korona Człopa",
-        "mecze": 18,
-        "pkt": 30,
-        "wygrane": 9,
-        "remisy": 3,
-        "przegrane": 6,
-        "bramki": "40/36"
-      },
-      {
-        "pozycja": 9,
-        "nazwa": "Wiarus Żółtnica",
-        "mecze": 19,
-        "pkt": 24,
-        "wygrane": 7,
-        "remisy": 3,
-        "przegrane": 9,
-        "bramki": "39/45"
-      },
-      {
-        "pozycja": 10,
-        "nazwa": "Drawa Drawno",
-        "mecze": 19,
-        "pkt": 23,
-        "wygrane": 7,
-        "remisy": 2,
-        "przegrane": 10,
-        "bramki": "45/47"
-      },
-      {
-        "pozycja": 11,
-        "nazwa": "Ikar Krosino",
-        "mecze": 19,
-        "pkt": 23,
-        "wygrane": 7,
-        "remisy": 2,
-        "przegrane": 10,
-        "bramki": "41/42"
-      },
-      {
-        "pozycja": 12,
-        "nazwa": "Światowid 63 Łobez",
-        "mecze": 19,
-        "pkt": 20,
-        "wygrane": 6,
-        "remisy": 2,
-        "przegrane": 11,
-        "bramki": "28/41"
-      },
-      {
-        "pozycja": 13,
-        "nazwa": "Spójnia Świdwin",
-        "mecze": 18,
-        "pkt": 19,
-        "wygrane": 5,
-        "remisy": 4,
-        "przegrane": 9,
-        "bramki": "28/36"
-      },
-      {
-        "pozycja": 14,
-        "nazwa": "Orzeł Łubowo",
-        "mecze": 18,
-        "pkt": 11,
-        "wygrane": 3,
-        "remisy": 2,
-        "przegrane": 13,
-        "bramki": "27/52"
-      },
-      {
-        "pozycja": 15,
-        "nazwa": "Redłovia Redło",
-        "mecze": 18,
-        "pkt": 9,
-        "wygrane": 2,
-        "remisy": 3,
-        "przegrane": 13,
-        "bramki": "22/65"
-      },
-      {
-        "pozycja": 16,
-        "nazwa": "Drzewiarz Świerczyna",
-        "mecze": 18,
-        "pkt": 2,
-        "wygrane": 0,
-        "remisy": 2,
-        "przegrane": 16,
-        "bramki": "19/82"
-      },
-      {
-        "pozycja": 17,
-        "nazwa": "Błonie Barwice",
-        "mecze": 23,
-        "pkt": 27,
-        "wygrane": 9,
-        "remisy": 0,
-        "przegrane": 14,
-        "bramki": "46/60"
-      },
-      {
-        "pozycja": 1,
-        "nazwa": "Pogoń Połczyn Zdrój",
-        "mecze": 18,
-        "pkt": 49,
-        "wygrane": 16,
-        "remisy": 1,
-        "przegrane": 1,
-        "bramki": "73/20"
-      },
-      {
-        "pozycja": 2,
-        "nazwa": "Calisia Kalisz Pomorski",
-        "mecze": 18,
-        "pkt": 41,
-        "wygrane": 12,
-        "remisy": 5,
-        "przegrane": 1,
-        "bramki": "47/17"
-      },
-      {
-        "pozycja": 3,
-        "nazwa": "Olimp Złocieniec",
-        "mecze": 19,
-        "pkt": 38,
-        "wygrane": 12,
-        "remisy": 2,
-        "przegrane": 5,
-        "bramki": "54/30"
-      },
-      {
-        "pozycja": 4,
-        "nazwa": "KP Drawsko Pomorskie",
-        "mecze": 19,
-        "pkt": 38,
-        "wygrane": 11,
-        "remisy": 5,
-        "przegrane": 3,
-        "bramki": "61/28"
-      },
-      {
-        "pozycja": 5,
-        "nazwa": "Orzeł Bierzwnik",
-        "mecze": 18,
-        "pkt": 35,
-        "wygrane": 11,
-        "remisy": 2,
-        "przegrane": 5,
-        "bramki": "45/40"
-      },
-      {
-        "pozycja": 6,
-        "nazwa": "Zawisza Grzmi±ca",
+        "nazwa": "Zawisza Grzmiąca",
         "mecze": 19,
         "pkt": 34,
         "wygrane": 11,
@@ -5967,96 +4477,6 @@
       }
     ],
     "tabela": [
-      {
-        "pozycja": 1,
-        "nazwa": "Ikar Krosino",
-        "mecze": 7,
-        "pkt": 40,
-        "wygrane": 5,
-        "remisy": 2,
-        "przegrane": 0,
-        "bramki": "21/6"
-      },
-      {
-        "pozycja": 2,
-        "nazwa": "Spójnia Świdwin",
-        "mecze": 7,
-        "pkt": 37,
-        "wygrane": 5,
-        "remisy": 0,
-        "przegrane": 2,
-        "bramki": "26/8"
-      },
-      {
-        "pozycja": 3,
-        "nazwa": "Drawa Drawno",
-        "mecze": 7,
-        "pkt": 33,
-        "wygrane": 3,
-        "remisy": 1,
-        "przegrane": 3,
-        "bramki": "12/14"
-      },
-      {
-        "pozycja": 4,
-        "nazwa": "Wiarus Żółtnica",
-        "mecze": 7,
-        "pkt": 32,
-        "wygrane": 2,
-        "remisy": 2,
-        "przegrane": 3,
-        "bramki": "7/16"
-      },
-      {
-        "pozycja": 5,
-        "nazwa": "Światowid 63 Łobez",
-        "mecze": 7,
-        "pkt": 30,
-        "wygrane": 3,
-        "remisy": 1,
-        "przegrane": 3,
-        "bramki": "12/7"
-      },
-      {
-        "pozycja": 6,
-        "nazwa": "Orzeł Łubowo",
-        "mecze": 7,
-        "pkt": 23,
-        "wygrane": 3,
-        "remisy": 0,
-        "przegrane": 4,
-        "bramki": "13/15"
-      },
-      {
-        "pozycja": 7,
-        "nazwa": "Drzewiarz Świerczyna",
-        "mecze": 7,
-        "pkt": 16,
-        "wygrane": 3,
-        "remisy": 2,
-        "przegrane": 2,
-        "bramki": "13/14"
-      },
-      {
-        "pozycja": 8,
-        "nazwa": "Redłovia Redło",
-        "mecze": 7,
-        "pkt": 12,
-        "wygrane": 0,
-        "remisy": 0,
-        "przegrane": 7,
-        "bramki": "6/30"
-      },
-      {
-        "pozycja": 9,
-        "nazwa": "Błonie Barwice",
-        "mecze": 0,
-        "pkt": 0,
-        "wygrane": 0,
-        "remisy": 0,
-        "przegrane": 0,
-        "bramki": "0/0"
-      },
       {
         "pozycja": 1,
         "nazwa": "Ikar Krosino",
@@ -6367,16 +4787,6 @@
       }
     ],
     "tabela": [
-      {
-        "pozycja": 4.2021202213073236e+232,
-        "nazwa": "1.",
-        "mecze": 0,
-        "pkt": 30,
-        "wygrane": 73,
-        "remisy": 23,
-        "przegrane": 4,
-        "bramki": "3"
-      },
       {
         "pozycja": 1,
         "nazwa": "Gavia Choszczno",

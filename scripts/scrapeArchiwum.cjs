@@ -91,6 +91,7 @@ function parsePage(html) {
   });
 
   const tabela = [];
+  const seenNames = new Set();
   $('table.tabela').each((_, table) => {
     $(table).find('tr').each((_, tr) => {
       const tds = $(tr).find('td');
@@ -104,18 +105,22 @@ function parsePage(html) {
         const p = tds.eq(6).text().trim();
         const goals = tds.eq(7).text().replace(/\s/g, '').trim();
 
-        if (pos && name && !name.includes('Klasa') && !name.includes('Liga')) {
-          tabela.push({
-            pozycja: parseInt(pos),
-            nazwa: name,
-            mecze: parseInt(m) || 0,
-            pkt: parseInt(pkt) || 0,
-            wygrane: parseInt(w) || 0,
-            remisy: parseInt(r) || 0,
-            przegrane: parseInt(p) || 0,
-            bramki: goals,
-          });
+        const posNum = parseInt(pos);
+        if (!posNum || posNum > 50 || !name || seenNames.has(name) || goals.includes('+/-')
+          || name.includes('Klasa') || name.includes('Liga') || name.includes('klasa')) {
+          return;
         }
+        seenNames.add(name);
+        tabela.push({
+          pozycja: posNum,
+          nazwa: name,
+          mecze: parseInt(m) || 0,
+          pkt: parseInt(pkt) || 0,
+          wygrane: parseInt(w) || 0,
+          remisy: parseInt(r) || 0,
+          przegrane: parseInt(p) || 0,
+          bramki: goals,
+        });
       }
     });
   });

@@ -4,7 +4,7 @@ import NavBar from "@/components/NavBar";
 import Link from "next/link";
 import { computeTeamStats } from "@/lib/computeStats";
 
-const isDrawa = (n) => n?.toLowerCase().includes("drawa");
+const isDrawa = (n) => n?.toLowerCase().includes("drawa drawno");
 
 function SezonCard({ sezon, aktywny }) {
   const [tabela, setTabela] = useState(null);
