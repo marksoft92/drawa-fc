@@ -211,7 +211,7 @@ model ArchiwumTabela {
   przegrane Int            @default(0)
   bramki    String?
 
-  @@unique([sezonId, pozycja])
+  @@index([sezonId])
 }
 
 // ─── Galeria ──────────────────────────────────────────────────────────────────
