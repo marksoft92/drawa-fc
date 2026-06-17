@@ -108,6 +108,7 @@ export default async function DruzynaPage({ params }) {
                     <span style={{ fontSize: 14, fontWeight: 800, color: resultColor(m), fontFamily: "'Bebas Neue', Impact, sans-serif", flexShrink: 0, minWidth: 40, textAlign: "center" }}>{m.score || "—"}</span>
                     <span style={{ fontSize: 12, color: isDrawa(m.team2) ? "#fff" : "#64748b", fontWeight: isDrawa(m.team2) ? 700 : 400, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", flex: 1 }}>{m.team2}</span>
                   </div>
+                  {m.puchar && <span style={{ fontSize: 8, color: "#f59e0b", background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.25)", borderRadius: 4, padding: "1px 5px", fontWeight: 700, letterSpacing: "0.08em", flexShrink: 0 }}>PUCHAR</span>}
                   <span style={{ fontSize: 9, color: "#1e293b", flexShrink: 0 }}>{m.sezon}</span>
                 </div>
               ))}

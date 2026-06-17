@@ -81,7 +81,7 @@ function ArchiwumSezonCard({ s }) {
   const [open, setOpen] = useState(false);
   const [detail, setDetail] = useState(null);
 
-  const isPuchar = s.liga.toLowerCase().includes("puchar");
+  const isPuchar = s.liga?.toLowerCase().includes("puchar");
 
   useEffect(() => {
     if (open && !detail) {
@@ -289,7 +289,10 @@ export default function ArchiwumPage() {
                       >
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                           <div style={{ fontSize: 13, fontWeight: 600, color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", flex: 1 }}>{r.nazwa}</div>
-                          <div style={{ fontSize: 10, color: "#334155", flexShrink: 0, marginLeft: 8 }}>{r.sezony} sez.</div>
+                          <div style={{ display: "flex", gap: 4, alignItems: "center", flexShrink: 0, marginLeft: 8 }}>
+                            {r.hasLiga && <span style={{ fontSize: 8, color: "#3b82f6", background: "rgba(59,130,246,0.1)", padding: "1px 5px", borderRadius: 3, fontWeight: 700 }}>LIGA</span>}
+                            {r.hasPuchar && <span style={{ fontSize: 8, color: "#f59e0b", background: "rgba(245,158,11,0.1)", padding: "1px 5px", borderRadius: 3, fontWeight: 700 }}>PP</span>}
+                          </div>
                         </div>
 
                         <div style={{ display: "flex", gap: 3, marginBottom: 8, height: 4, borderRadius: 2, overflow: "hidden" }}>
