@@ -182,17 +182,20 @@ export default function ArchiwumPage() {
   const [sezony, setSezony] = useState(null);
   const [aktywnySezon, setAktywnySezon] = useState(null);
   const [archiwum, setArchiwum] = useState(null);
+  const [rywale, setRywale] = useState(null);
 
   useEffect(() => {
     Promise.all([
       fetch("/api/liga/sezony").then((r) => r.json()),
       fetch("/api/ustawienia").then((r) => r.json()),
       fetch("/api/archiwum").then((r) => r.json()),
+      fetch("/api/druzyny").then((r) => r.json()),
     ])
-      .then(([s, u, a]) => {
+      .then(([s, u, a, r]) => {
         setSezony(Array.isArray(s) ? s : []);
         setAktywnySezon(u?.aktywny_sezon || null);
         setArchiwum(Array.isArray(a) ? a : []);
+        setRywale(Array.isArray(r) ? r : []);
       })
       .catch(() => { setSezony([]); setArchiwum([]); });
   }, []);
@@ -257,6 +260,32 @@ export default function ArchiwumPage() {
               <div style={{ fontSize: 12, color: "#475569", marginTop: 4 }}>{pucharowe.length} edycji</div>
               <div style={{ marginTop: 24 }}>
                 {pucharowe.map((s) => <ArchiwumSezonCard key={s.id} s={s} />)}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {rywale && rywale.length > 0 && (
+          <section style={{ padding: "0 20px 48px", background: "#030712" }}>
+            <div style={{ maxWidth: 900, margin: "0 auto" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+                <div style={{ width: 4, height: 24, background: "#3b82f6", borderRadius: 2, boxShadow: "0 0 12px rgba(59,130,246,0.65)" }} />
+                <div style={{ fontSize: "clamp(20px, 4vw, 28px)", fontFamily: "'Bebas Neue', Impact, sans-serif", letterSpacing: "0.1em", color: "#fff" }}>
+                  Rywale Drawy
+                  <span style={{ fontSize: 13, color: "#334155", marginLeft: 12 }}>{rywale.length} drużyn</span>
+                </div>
+              </div>
+              <div style={{ fontSize: 12, color: "#475569", marginBottom: 20 }}>Historia spotkań z każdą drużyną, z którą grała Drawa od 2002 roku</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {rywale.map((r) => (
+                  <Link key={r.slug} href={`/druzyna/${r.slug}`} style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, padding: "8px 14px", textDecoration: "none", fontSize: 12, color: "#94a3b8", transition: "border-color 0.2s, color 0.2s", display: "inline-flex", alignItems: "center", gap: 6 }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(59,130,246,0.4)"; e.currentTarget.style.color = "#fff"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "#94a3b8"; }}
+                  >
+                    {r.nazwa}
+                    <span style={{ fontSize: 10, color: "#334155" }}>{r.mecze}</span>
+                  </Link>
+                ))}
               </div>
             </div>
           </section>
