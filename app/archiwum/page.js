@@ -268,24 +268,48 @@ export default function ArchiwumPage() {
         {rywale && rywale.length > 0 && (
           <section style={{ padding: "0 20px 48px", background: "#030712" }}>
             <div style={{ maxWidth: 900, margin: "0 auto" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 4, height: 24, background: "#3b82f6", borderRadius: 2, boxShadow: "0 0 12px rgba(59,130,246,0.65)" }} />
-                <div style={{ fontSize: "clamp(20px, 4vw, 28px)", fontFamily: "'Bebas Neue', Impact, sans-serif", letterSpacing: "0.1em", color: "#fff" }}>
-                  Rywale Drawy
-                  <span style={{ fontSize: 13, color: "#334155", marginLeft: 12 }}>{rywale.length} drużyn</span>
-                </div>
+              <SectionLabel>Rywale Drawy</SectionLabel>
+              <div style={{ fontSize: 12, color: "#475569", marginTop: 4, marginBottom: 24 }}>
+                {rywale.length} drużyn · historia spotkań od 2002 roku
               </div>
-              <div style={{ fontSize: 12, color: "#475569", marginBottom: 20 }}>Historia spotkań z każdą drużyną, z którą grała Drawa od 2002 roku</div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                {rywale.map((r) => (
-                  <Link key={r.slug} href={`/druzyna/${r.slug}`} style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, padding: "8px 14px", textDecoration: "none", fontSize: 12, color: "#94a3b8", transition: "border-color 0.2s, color 0.2s", display: "inline-flex", alignItems: "center", gap: 6 }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(59,130,246,0.4)"; e.currentTarget.style.color = "#fff"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "#94a3b8"; }}
-                  >
-                    {r.nazwa}
-                    <span style={{ fontSize: 10, color: "#334155" }}>{r.mecze}</span>
-                  </Link>
-                ))}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 8 }}>
+                {rywale.map((r) => {
+                  const total = r.wygrane + r.remisy + r.przegrane;
+                  const winPct = total > 0 ? Math.round((r.wygrane / total) * 100) : 0;
+                  const dominacja = r.wygrane > r.przegrane ? "#22c55e" : r.wygrane < r.przegrane ? "#ef4444" : "#f59e0b";
+                  return (
+                    <Link key={r.slug} href={`/druzyna/${r.slug}`} style={{ textDecoration: "none" }}>
+                      <div style={{
+                        background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10,
+                        padding: "14px 16px", transition: "border-color 0.2s, transform 0.2s, box-shadow 0.2s",
+                        cursor: "pointer",
+                      }}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(59,130,246,0.35)"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.4)"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+                      >
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", flex: 1 }}>{r.nazwa}</div>
+                          <div style={{ fontSize: 10, color: "#334155", flexShrink: 0, marginLeft: 8 }}>{r.sezony} sez.</div>
+                        </div>
+
+                        <div style={{ display: "flex", gap: 3, marginBottom: 8, height: 4, borderRadius: 2, overflow: "hidden" }}>
+                          {r.wygrane > 0 && <div style={{ flex: r.wygrane, background: "#22c55e", borderRadius: 2 }} />}
+                          {r.remisy > 0 && <div style={{ flex: r.remisy, background: "#f59e0b", borderRadius: 2 }} />}
+                          {r.przegrane > 0 && <div style={{ flex: r.przegrane, background: "#ef4444", borderRadius: 2 }} />}
+                        </div>
+
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <div style={{ display: "flex", gap: 6 }}>
+                            <span style={{ fontSize: 11, color: "#22c55e", fontWeight: 700 }}>{r.wygrane}W</span>
+                            <span style={{ fontSize: 11, color: "#f59e0b" }}>{r.remisy}R</span>
+                            <span style={{ fontSize: 11, color: "#ef4444" }}>{r.przegrane}P</span>
+                          </div>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: dominacja }}>{r.bramkiZdobyte}:{r.bramkiStracone}</div>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </section>
