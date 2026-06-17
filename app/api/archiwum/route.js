@@ -19,7 +19,7 @@ export async function GET(request) {
   }
 
   const sezony = await prisma.archiwumSezon.findMany({
-    orderBy: { sourceId: "desc" },
+    orderBy: { sezon: "desc" },
     select: {
       id: true,
       sourceId: true,

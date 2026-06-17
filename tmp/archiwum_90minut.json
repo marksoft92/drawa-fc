@@ -1390,5 +1390,669 @@
     "tabela": [],
     "sourceId": 91991,
     "sourceUrl": "http://www.90minut.pl/liga/0/liga1991.html"
+  },
+  {
+    "liga": "Klasa A",
+    "sezon": "2006/2007",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": null,
+        "team1": "Iskra Pomień",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 2,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Zjednoczeni Zieleniewo",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 3,
+        "date": null,
+        "team1": "Polonia Giżyn",
+        "team2": "Drawa Drawno",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 4,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "SKL Jagów 2000",
+        "score": "3:1"
+      },
+      {
+        "kolejka": 5,
+        "date": null,
+        "team1": "Klon Krzęcin",
+        "team2": "Drawa Drawno",
+        "score": "0:0"
+      },
+      {
+        "kolejka": 6,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Koral Mostkowo",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 7,
+        "date": null,
+        "team1": "Pomorzanin Zamęcin",
+        "team2": "Drawa Drawno",
+        "score": "0:2"
+      },
+      {
+        "kolejka": 8,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Błękitni Sarnik",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 9,
+        "date": null,
+        "team1": "Mercury Nowogródek Pomorski",
+        "team2": "Drawa Drawno",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 10,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Sława Sławęcin",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 11,
+        "date": null,
+        "team1": "Pomorzanka Jarosławsko",
+        "team2": "Drawa Drawno",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 12,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Trojan Strąpie",
+        "score": "2:4"
+      },
+      {
+        "kolejka": 13,
+        "date": null,
+        "team1": "Świt Barnimie",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 14,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Pomień",
+        "score": "5:1"
+      },
+      {
+        "kolejka": 15,
+        "date": null,
+        "team1": "Zjednoczeni Zieleniewo",
+        "team2": "Drawa Drawno",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 16,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Polonia Giżyn",
+        "score": "2:2"
+      },
+      {
+        "kolejka": 17,
+        "date": null,
+        "team1": "SKL Jagów 2000",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 18,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Klon Krzęcin",
+        "score": "2:2"
+      },
+      {
+        "kolejka": 19,
+        "date": null,
+        "team1": "Koral Mostkowo",
+        "team2": "Drawa Drawno",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 20,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanin Zamęcin",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 21,
+        "date": null,
+        "team1": "Błękitni Sarnik",
+        "team2": "Drawa Drawno",
+        "score": "0:0"
+      },
+      {
+        "kolejka": 22,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Mercury Nowogródek Pomorski",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 23,
+        "date": null,
+        "team1": "Sława Sławęcin",
+        "team2": "Drawa Drawno",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 24,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanka Jarosławsko",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 25,
+        "date": null,
+        "team1": "Trojan Strąpie",
+        "team2": "Drawa Drawno",
+        "score": "0:0"
+      },
+      {
+        "kolejka": 26,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Świt Barnimie",
+        "score": "5:1"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 1,
+        "nazwa": "Klon Krzęcin",
+        "mecze": 26,
+        "pkt": 54,
+        "wygrane": 16,
+        "remisy": 6,
+        "przegrane": 4,
+        "bramki": "81-26"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Koral Mostkowo",
+        "mecze": 26,
+        "pkt": 47,
+        "wygrane": 14,
+        "remisy": 5,
+        "przegrane": 7,
+        "bramki": "76-45"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Zjednoczeni Zieleniewo",
+        "mecze": 26,
+        "pkt": 45,
+        "wygrane": 13,
+        "remisy": 6,
+        "przegrane": 7,
+        "bramki": "71-39"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Iskra Pomień",
+        "mecze": 26,
+        "pkt": 42,
+        "wygrane": 12,
+        "remisy": 6,
+        "przegrane": 8,
+        "bramki": "65-68"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Pomorzanin Zamęcin",
+        "mecze": 26,
+        "pkt": 39,
+        "wygrane": 12,
+        "remisy": 3,
+        "przegrane": 11,
+        "bramki": "65-63"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Drawa Drawno",
+        "mecze": 26,
+        "pkt": 38,
+        "wygrane": 10,
+        "remisy": 8,
+        "przegrane": 8,
+        "bramki": "38-31"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Trojan Strąpie",
+        "mecze": 26,
+        "pkt": 37,
+        "wygrane": 10,
+        "remisy": 7,
+        "przegrane": 9,
+        "bramki": "57-55"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Świt Barnimie",
+        "mecze": 26,
+        "pkt": 33,
+        "wygrane": 9,
+        "remisy": 6,
+        "przegrane": 11,
+        "bramki": "49-54"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Polonia Giżyn",
+        "mecze": 26,
+        "pkt": 33,
+        "wygrane": 9,
+        "remisy": 6,
+        "przegrane": 11,
+        "bramki": "46-52"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Mercury Nowogródek Pomorski",
+        "mecze": 26,
+        "pkt": 32,
+        "wygrane": 9,
+        "remisy": 5,
+        "przegrane": 12,
+        "bramki": "52-59"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Pomorzanka Jarosławsko",
+        "mecze": 26,
+        "pkt": 30,
+        "wygrane": 9,
+        "remisy": 3,
+        "przegrane": 14,
+        "bramki": "38-83"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Sława Sławęcin",
+        "mecze": 26,
+        "pkt": 28,
+        "wygrane": 7,
+        "remisy": 7,
+        "przegrane": 12,
+        "bramki": "44-68"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "SKL Jagów 2000",
+        "mecze": 26,
+        "pkt": 26,
+        "wygrane": 6,
+        "remisy": 8,
+        "przegrane": 12,
+        "bramki": "48-53"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Błękitni Sarnik",
+        "mecze": 26,
+        "pkt": 20,
+        "wygrane": 4,
+        "remisy": 8,
+        "przegrane": 14,
+        "bramki": "34-68"
+      }
+    ],
+    "sourceId": 92600,
+    "sourceUrl": "http://www.90minut.pl/liga/0/liga2600.html"
+  },
+  {
+    "liga": "Klasa A",
+    "sezon": "2007/2008",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Bierzwnik",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 2,
+        "date": null,
+        "team1": "Polonia Giżyn",
+        "team2": "Drawa Drawno",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 3,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Sława Sławęcin",
+        "score": "7:1"
+      },
+      {
+        "kolejka": 4,
+        "date": null,
+        "team1": "Świt Barnimie",
+        "team2": "Drawa Drawno",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 5,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Orkan Suchań",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 6,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "SKL Jagów 2000",
+        "score": "8:1"
+      },
+      {
+        "kolejka": 7,
+        "date": null,
+        "team1": "Trojan Strąpie",
+        "team2": "Drawa Drawno",
+        "score": "2:5"
+      },
+      {
+        "kolejka": 8,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Sokół II/Wicher Przelewice",
+        "score": "3:2"
+      },
+      {
+        "kolejka": 9,
+        "date": null,
+        "team1": "Pomorzanin Zamęcin",
+        "team2": "Drawa Drawno",
+        "score": "1:6"
+      },
+      {
+        "kolejka": 10,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Mercury Nowogródek Pomorski",
+        "score": "8:0"
+      },
+      {
+        "kolejka": 11,
+        "date": null,
+        "team1": "Iskra Pomień",
+        "team2": "Drawa Drawno",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 12,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Korona Raduń",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 13,
+        "date": null,
+        "team1": "Pomorzanka Jarosławsko",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 14,
+        "date": null,
+        "team1": "Orzeł Bierzwnik",
+        "team2": "Drawa Drawno",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 15,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Polonia Giżyn",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 16,
+        "date": null,
+        "team1": "Sława Sławęcin",
+        "team2": "Drawa Drawno",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 17,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Świt Barnimie",
+        "score": "4:2"
+      },
+      {
+        "kolejka": 18,
+        "date": null,
+        "team1": "Orkan Suchań",
+        "team2": "Drawa Drawno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 19,
+        "date": null,
+        "team1": "SKL Jagów 2000",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 20,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Trojan Strąpie",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 21,
+        "date": null,
+        "team1": "Sokół II/Wicher Przelewice",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 22,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanin Zamęcin",
+        "score": "6:1"
+      },
+      {
+        "kolejka": 23,
+        "date": null,
+        "team1": "Mercury Nowogródek Pomorski",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 24,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Pomień",
+        "score": "5:2"
+      },
+      {
+        "kolejka": 25,
+        "date": null,
+        "team1": "Korona Raduń",
+        "team2": "Drawa Drawno",
+        "score": "2:5"
+      },
+      {
+        "kolejka": 26,
+        "date": null,
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanka Jarosławsko",
+        "score": "3:0"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 1,
+        "nazwa": "Orkan Suchań",
+        "mecze": 26,
+        "pkt": 66,
+        "wygrane": 22,
+        "remisy": 0,
+        "przegrane": 4,
+        "bramki": "78-26"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Drawa Drawno",
+        "mecze": 26,
+        "pkt": 64,
+        "wygrane": 21,
+        "remisy": 1,
+        "przegrane": 4,
+        "bramki": "91-31"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Polonia Giżyn",
+        "mecze": 26,
+        "pkt": 55,
+        "wygrane": 17,
+        "remisy": 4,
+        "przegrane": 5,
+        "bramki": "70-38"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Sokół II/Wicher Przelewice",
+        "mecze": 26,
+        "pkt": 53,
+        "wygrane": 16,
+        "remisy": 5,
+        "przegrane": 5,
+        "bramki": "59-22"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Orzeł Bierzwnik",
+        "mecze": 26,
+        "pkt": 45,
+        "wygrane": 14,
+        "remisy": 3,
+        "przegrane": 9,
+        "bramki": "82-42"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Trojan Strąpie",
+        "mecze": 26,
+        "pkt": 42,
+        "wygrane": 13,
+        "remisy": 3,
+        "przegrane": 10,
+        "bramki": "61-56"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Sława Sławęcin",
+        "mecze": 26,
+        "pkt": 39,
+        "wygrane": 12,
+        "remisy": 3,
+        "przegrane": 11,
+        "bramki": "54-63"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Pomorzanin Zamęcin",
+        "mecze": 26,
+        "pkt": 37,
+        "wygrane": 11,
+        "remisy": 4,
+        "przegrane": 11,
+        "bramki": "61-70"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Świt Barnimie",
+        "mecze": 26,
+        "pkt": 32,
+        "wygrane": 10,
+        "remisy": 2,
+        "przegrane": 14,
+        "bramki": "49-54"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Iskra Pomień",
+        "mecze": 26,
+        "pkt": 31,
+        "wygrane": 10,
+        "remisy": 1,
+        "przegrane": 15,
+        "bramki": "66-64"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Korona Raduń",
+        "mecze": 26,
+        "pkt": 27,
+        "wygrane": 8,
+        "remisy": 3,
+        "przegrane": 15,
+        "bramki": "54-80"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Pomorzanka Jarosławsko",
+        "mecze": 26,
+        "pkt": 18,
+        "wygrane": 6,
+        "remisy": 0,
+        "przegrane": 20,
+        "bramki": "32-96"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Mercury Nowogródek Pomorski",
+        "mecze": 26,
+        "pkt": 11,
+        "wygrane": 3,
+        "remisy": 2,
+        "przegrane": 21,
+        "bramki": "31-89"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "SKL Jagów 2000",
+        "mecze": 0,
+        "pkt": 0,
+        "wygrane": 2,
+        "remisy": 0,
+        "przegrane": 0,
+        "bramki": "1-4"
+      }
+    ],
+    "sourceId": 93219,
+    "sourceUrl": "http://www.90minut.pl/liga/0/liga3219.html"
   }
 ]

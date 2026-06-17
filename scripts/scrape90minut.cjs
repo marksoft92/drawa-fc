@@ -11,6 +11,8 @@ const PAGES = [
   { id: 1352, url: 'http://www.90minut.pl/liga/0/liga1352.html' },
   { id: 1969, url: 'http://www.90minut.pl/liga/0/liga1969.html' },
   { id: 1991, url: 'http://www.90minut.pl/liga/0/liga1991.html' },
+  { id: 2600, url: 'http://www.90minut.pl/liga/0/liga2600.html', tabelaOnly: true },
+  { id: 3219, url: 'http://www.90minut.pl/liga/0/liga3219.html', tabelaOnly: true },
 ];
 
 const DELAY = 1500;
