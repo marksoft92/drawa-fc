@@ -1,6 +1,7 @@
 import { isAdmin } from "@/lib/auth";
+import { validateImageBytes } from "@/lib/validateImage";
 import { writeFile } from "fs/promises";
-import { join, extname } from "path";
+import { join } from "path";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,12 @@ export async function POST(request) {
   if (!ALLOWED.includes(file.type)) return Response.json({ error: "Dozwolone formaty: JPG, PNG, WebP, GIF, SVG" }, { status: 400 });
   const bytes = await file.arrayBuffer();
   if (bytes.byteLength > MAX_SIZE) return Response.json({ error: "Maksymalny rozmiar: 5 MB" }, { status: 400 });
-  const ext = extname(file.name) || ".jpg";
+
+  if (!validateImageBytes(bytes, file.type)) {
+    return Response.json({ error: "Plik nie jest prawidłowym obrazem" }, { status: 400 });
+  }
+
+  const ext = file.type === "image/png" ? ".png" : file.type === "image/webp" ? ".webp" : file.type === "image/gif" ? ".gif" : file.type === "image/svg+xml" ? ".svg" : ".jpg";
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}${ext}`;
   const path = join(process.cwd(), "public", "uploads", filename);
   await writeFile(path, Buffer.from(bytes));

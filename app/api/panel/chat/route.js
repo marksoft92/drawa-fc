@@ -84,6 +84,7 @@ export async function POST(request) {
 
   const { tresc, replyToId } = await request.json();
   if (!tresc?.trim()) return Response.json({ error: "Pusta wiadomość" }, { status: 400 });
+  if (tresc.length > 5000) return Response.json({ error: "Wiadomość zbyt długa (max 5000 znaków)" }, { status: 400 });
 
   const msg = await prisma.chatWiadomosc.create({
     data: {

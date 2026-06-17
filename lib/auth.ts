@@ -1,6 +1,16 @@
 import { cookies } from "next/headers";
 import { prisma } from "./prisma";
 
+let lastCleanup = 0;
+const CLEANUP_INTERVAL = 1000 * 60 * 60; // 1h
+
+async function cleanupExpiredSessions() {
+  const now = Date.now();
+  if (now - lastCleanup < CLEANUP_INTERVAL) return;
+  lastCleanup = now;
+  prisma.session.deleteMany({ where: { expiresAt: { lt: new Date() } } }).catch(() => {});
+}
+
 export async function getPlayerSession() {
   const store = await cookies();
   const token = store.get("player_session")?.value;
@@ -12,6 +22,9 @@ export async function getPlayerSession() {
   });
 
   if (!session || session.expiresAt < new Date()) return null;
+
+  cleanupExpiredSessions();
+
   return session;
 }
 

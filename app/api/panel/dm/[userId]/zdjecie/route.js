@@ -1,4 +1,5 @@
 import { getPlayerSession } from "@/lib/auth";
+import { validateImageBytes } from "@/lib/validateImage";
 import { prisma } from "@/lib/prisma";
 import { chatEmitter } from "@/lib/chatEmitter";
 import { randomBytes } from "crypto";
@@ -54,10 +55,15 @@ export async function POST(request, { params }) {
   if (!allowed.includes(file.type)) return Response.json({ error: "Nieobsługiwany format" }, { status: 400 });
   if (file.size > 10 * 1024 * 1024) return Response.json({ error: "Max 10MB" }, { status: 400 });
 
+  const bytes = await file.arrayBuffer();
+  if (!validateImageBytes(bytes, file.type)) {
+    return Response.json({ error: "Plik nie jest prawidłowym obrazem" }, { status: 400 });
+  }
+
   const ext = file.type.split("/")[1].replace("jpeg", "jpg");
   const name = `dm-${randomBytes(8).toString("hex")}.${ext}`;
   const dest = path.join(process.cwd(), "public", "uploads", name);
-  await writeFile(dest, Buffer.from(await file.arrayBuffer()));
+  await writeFile(dest, Buffer.from(bytes));
 
   const conv = await getOrCreateConv(myId, userId);
 

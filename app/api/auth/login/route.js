@@ -1,21 +1,33 @@
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit } from "@/lib/rateLimit";
+import { randomBytes } from "crypto";
 import bcrypt from "bcryptjs";
 
 const SESSION_MAX = 1000 * 60 * 60 * 24 * 30; // 30 dni
+const IS_PROD = process.env.NODE_ENV === "production";
 
 async function createSession(userId) {
+  const token = randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + SESSION_MAX);
-  const session = await prisma.session.create({ data: { userId, expiresAt } });
+  await prisma.session.create({ data: { token, userId, expiresAt } });
   const store = await cookies();
-  store.set("player_session", session.token, {
-    httpOnly: true, sameSite: "lax", path: "/",
+  store.set("player_session", token, {
+    httpOnly: true, sameSite: "lax", secure: IS_PROD, path: "/",
     expires: expiresAt,
   });
-  return session;
 }
 
 export async function POST(request) {
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const limit = checkRateLimit(ip);
+  if (limit.blocked) {
+    return Response.json(
+      { error: `Zbyt wiele prób logowania. Spróbuj za ${limit.retryAfter}s` },
+      { status: 429 }
+    );
+  }
+
   const { login, password } = await request.json();
   if (!login || !password) {
     return Response.json({ error: "Podaj login i hasło" }, { status: 400 });

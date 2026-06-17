@@ -1,8 +1,9 @@
 import { getPlayerSession } from "@/lib/auth";
+import { validateImageBytes } from "@/lib/validateImage";
 import { prisma } from "@/lib/prisma";
 import { chatEmitter } from "@/lib/chatEmitter";
 import { writeFile } from "fs/promises";
-import { join, extname } from "path";
+import { join } from "path";
 import { randomBytes } from "crypto";
 
 const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif"];
@@ -21,7 +22,11 @@ export async function POST(request) {
   const bytes = await file.arrayBuffer();
   if (bytes.byteLength > MAX_SIZE) return Response.json({ error: "Maks. 10 MB" }, { status: 400 });
 
-  const ext = extname(file.name) || ".jpg";
+  if (!validateImageBytes(bytes, file.type)) {
+    return Response.json({ error: "Plik nie jest prawidłowym obrazem" }, { status: 400 });
+  }
+
+  const ext = file.type === "image/png" ? ".png" : file.type === "image/webp" ? ".webp" : file.type === "image/gif" ? ".gif" : ".jpg";
   const filename = `chat-${Date.now()}-${randomBytes(4).toString("hex")}${ext}`;
   await writeFile(join(process.cwd(), "public", "uploads", filename), Buffer.from(bytes));
   const plik = `/uploads/${filename}`;

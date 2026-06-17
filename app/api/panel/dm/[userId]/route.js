@@ -113,6 +113,7 @@ export async function POST(request, { params }) {
 
   const { tresc, replyToId } = await request.json();
   if (!tresc?.trim()) return Response.json({ error: "Pusta wiadomość" }, { status: 400 });
+  if (tresc.length > 5000) return Response.json({ error: "Wiadomość zbyt długa (max 5000 znaków)" }, { status: 400 });
 
   const eventName = "dm:" + convKey(myId, userId);
   const conv = await getOrCreateConv(myId, userId);

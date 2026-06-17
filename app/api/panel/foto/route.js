@@ -1,4 +1,5 @@
 import { getPlayerSession } from "@/lib/auth";
+import { validateImageBytes } from "@/lib/validateImage";
 import { prisma } from "@/lib/prisma";
 import { writeFile } from "fs/promises";
 import { join } from "path";
@@ -29,6 +30,10 @@ export async function POST(request) {
   const bytes = await file.arrayBuffer();
   if (bytes.byteLength > MAX_SIZE) {
     return Response.json({ error: "Maksymalny rozmiar pliku: 5 MB" }, { status: 400 });
+  }
+
+  if (!validateImageBytes(bytes, file.type)) {
+    return Response.json({ error: "Plik nie jest prawidłowym obrazem" }, { status: 400 });
   }
 
   const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
