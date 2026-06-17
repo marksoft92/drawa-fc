@@ -1,0 +1,6560 @@
+[
+  {
+    "liga": "A klasa gr. 5",
+    "sezon": "2006/2007",
+    "mecze": [
+      {
+        "kolejka": 0,
+        "date": "12 sie 2006",
+        "team1": "Iskra Pomień",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 0,
+        "date": "19 sie 2006",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Bierzwnik",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 0,
+        "date": "26 sie 2006",
+        "team1": "Polonia Giżyn",
+        "team2": "Drawa Drawno",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 0,
+        "date": "02 wrz 2006",
+        "team1": "Drawa Drawno",
+        "team2": "Kłos II Pełczyce",
+        "score": "3:1"
+      },
+      {
+        "kolejka": 0,
+        "date": "09 wrz 2006",
+        "team1": "Klon Krzęcin",
+        "team2": "Drawa Drawno",
+        "score": "0:0"
+      },
+      {
+        "kolejka": 0,
+        "date": "16 wrz 2006",
+        "team1": "Drawa Drawno",
+        "team2": "Koral Mostkowo",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 0,
+        "date": "23 wrz 2006",
+        "team1": "Pomorzanin Zamęcin",
+        "team2": "Drawa Drawno",
+        "score": "0:2"
+      },
+      {
+        "kolejka": 0,
+        "date": "30 wrz 2006",
+        "team1": "Drawa Drawno",
+        "team2": "Błękitni Sarnik",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 0,
+        "date": "07 paź 2006",
+        "team1": "Merkury Nowogródek Pom.",
+        "team2": "Drawa Drawno",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 0,
+        "date": "14 paź 2006",
+        "team1": "Drawa Drawno",
+        "team2": "AP Gavia Choszczno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 0,
+        "date": "21 paź 2006",
+        "team1": "Pomorzanka Jarosławsko",
+        "team2": "Drawa Drawno",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 0,
+        "date": "28 paź 2006",
+        "team1": "Drawa Drawno",
+        "team2": "Trojan Str±pie",
+        "score": "2:4"
+      },
+      {
+        "kolejka": 0,
+        "date": "04 lis 2006",
+        "team1": "Świt Barnimie",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 0,
+        "date": "11 lis 2006",
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Pomień",
+        "score": "5:1"
+      },
+      {
+        "kolejka": 0,
+        "date": "31 mar 2007",
+        "team1": "Orzeł Bierzwnik",
+        "team2": "Drawa Drawno",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 0,
+        "date": "14 kwi 2007",
+        "team1": "Drawa Drawno",
+        "team2": "Polonia Giżyn",
+        "score": "2:2"
+      },
+      {
+        "kolejka": 0,
+        "date": "21 kwi 2007",
+        "team1": "Kłos II Pełczyce",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 0,
+        "date": "28 kwi 2007",
+        "team1": "Drawa Drawno",
+        "team2": "Klon Krzęcin",
+        "score": "2:2"
+      },
+      {
+        "kolejka": 0,
+        "date": "05 maj 2007",
+        "team1": "Koral Mostkowo",
+        "team2": "Drawa Drawno",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 0,
+        "date": "12 maj 2007",
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanin Zamęcin",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 0,
+        "date": "19 maj 2007",
+        "team1": "Błękitni Sarnik",
+        "team2": "Drawa Drawno",
+        "score": "0:0"
+      },
+      {
+        "kolejka": 0,
+        "date": "26 maj 2007",
+        "team1": "Drawa Drawno",
+        "team2": "Merkury Nowogródek Pom.",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 0,
+        "date": "02 cze 2007",
+        "team1": "AP Gavia Choszczno",
+        "team2": "Drawa Drawno",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 0,
+        "date": "09 cze 2007",
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanka Jarosławsko",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 0,
+        "date": "17 cze 2007",
+        "team1": "Trojan Str±pie",
+        "team2": "Drawa Drawno",
+        "score": "0:0"
+      },
+      {
+        "kolejka": 0,
+        "date": "24 cze 2007",
+        "team1": "Drawa Drawno",
+        "team2": "Świt Barnimie",
+        "score": "5:1"
+      }
+    ],
+    "tabela": [],
+    "sourceId": 19,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/19"
+  },
+  {
+    "liga": "A klasa gr. 5",
+    "sezon": "2007/2008",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "11 sie 2007",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Bierzwnik",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 2,
+        "date": "18 sie 2007",
+        "team1": "Polonia Giżyn",
+        "team2": "Drawa Drawno",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 3,
+        "date": "25 sie 2007",
+        "team1": "Drawa Drawno",
+        "team2": "AP Gavia Choszczno",
+        "score": "7:1"
+      },
+      {
+        "kolejka": 4,
+        "date": "02 wrz 2007",
+        "team1": "Świt Barnimie",
+        "team2": "Drawa Drawno",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 5,
+        "date": "09 wrz 2007",
+        "team1": "Drawa Drawno",
+        "team2": "Orkan Suchań",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 6,
+        "date": "16 wrz 2007",
+        "team1": "Drawa Drawno",
+        "team2": "Kłos II Pełczyce",
+        "score": "8:1"
+      },
+      {
+        "kolejka": 7,
+        "date": "23 wrz 2007",
+        "team1": "Trojan Str±pie",
+        "team2": "Drawa Drawno",
+        "score": "2:5"
+      },
+      {
+        "kolejka": 8,
+        "date": "30 wrz 2007",
+        "team1": "Drawa Drawno",
+        "team2": "Wicher Przelewice",
+        "score": "3:2"
+      },
+      {
+        "kolejka": 9,
+        "date": "07 paź 2007",
+        "team1": "Pomorzanin Zamęcin",
+        "team2": "Drawa Drawno",
+        "score": "1:6"
+      },
+      {
+        "kolejka": 10,
+        "date": "14 paź 2007",
+        "team1": "Drawa Drawno",
+        "team2": "Merkury Nowogródek Pom.",
+        "score": "8:0"
+      },
+      {
+        "kolejka": 11,
+        "date": "21 paź 2007",
+        "team1": "Iskra Pomień",
+        "team2": "Drawa Drawno",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 12,
+        "date": "28 paź 2007",
+        "team1": "Drawa Drawno",
+        "team2": "Korona Raduń",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 13,
+        "date": "04 lis 2007",
+        "team1": "Pomorzanka Jarosławsko",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 14,
+        "date": "11 lis 2007",
+        "team1": "Orzeł Bierzwnik",
+        "team2": "Drawa Drawno",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 15,
+        "date": "29 mar 2008",
+        "team1": "Drawa Drawno",
+        "team2": "Polonia Giżyn",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 16,
+        "date": "06 kwi 2008",
+        "team1": "AP Gavia Choszczno",
+        "team2": "Drawa Drawno",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 17,
+        "date": "13 kwi 2008",
+        "team1": "Drawa Drawno",
+        "team2": "Świt Barnimie",
+        "score": "4:2"
+      },
+      {
+        "kolejka": 18,
+        "date": "19 kwi 2008",
+        "team1": "Orkan Suchań",
+        "team2": "Drawa Drawno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 19,
+        "date": "26 kwi 2008",
+        "team1": "Kłos II Pełczyce",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 20,
+        "date": "03 maj 2008",
+        "team1": "Drawa Drawno",
+        "team2": "Trojan Str±pie",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 21,
+        "date": "10 maj 2008",
+        "team1": "Wicher Przelewice",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 22,
+        "date": "18 maj 2008",
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanin Zamęcin",
+        "score": "6:1"
+      },
+      {
+        "kolejka": 23,
+        "date": "24 maj 2008",
+        "team1": "Merkury Nowogródek Pom.",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 24,
+        "date": "01 cze 2008",
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Pomień",
+        "score": "5:2"
+      },
+      {
+        "kolejka": 25,
+        "date": "08 cze 2008",
+        "team1": "Korona Raduń",
+        "team2": "Drawa Drawno",
+        "score": "2:5"
+      },
+      {
+        "kolejka": 26,
+        "date": "15 cze 2008",
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanka Jarosławsko",
+        "score": "3:0"
+      }
+    ],
+    "tabela": [],
+    "sourceId": 84,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/84"
+  },
+  {
+    "liga": "A klasa gr. 5",
+    "sezon": "2008/2009",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "24 sie 2008",
+        "team1": "Orzeł Żeńsko",
+        "team2": "Drawa Drawno",
+        "score": "0:4"
+      },
+      {
+        "kolejka": 2,
+        "date": "31 sie 2008",
+        "team1": "Drawa Drawno",
+        "team2": "Piast Karsko",
+        "score": "7:3"
+      },
+      {
+        "kolejka": 3,
+        "date": "07 wrz 2008",
+        "team1": "Trojan Str±pie",
+        "team2": "Drawa Drawno",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 4,
+        "date": "14 wrz 2008",
+        "team1": "Drawa Drawno",
+        "team2": "Świt Barnimie",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 5,
+        "date": "21 wrz 2008",
+        "team1": "Wicher Przelewice",
+        "team2": "Drawa Drawno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 6,
+        "date": "28 wrz 2008",
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanin Zamęcin",
+        "score": "5:1"
+      },
+      {
+        "kolejka": 7,
+        "date": "05 paź 2008",
+        "team1": "Błyskawica Kluki",
+        "team2": "Drawa Drawno",
+        "score": "0:7"
+      },
+      {
+        "kolejka": 8,
+        "date": "12 paź 2008",
+        "team1": "Korona Raduń",
+        "team2": "Drawa Drawno",
+        "score": "1:11"
+      },
+      {
+        "kolejka": 9,
+        "date": "19 paź 2008",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Bierzwnik",
+        "score": "5:1"
+      },
+      {
+        "kolejka": 10,
+        "date": "26 paź 2008",
+        "team1": "Iskra Pomień",
+        "team2": "Drawa Drawno",
+        "score": "1:8"
+      },
+      {
+        "kolejka": 11,
+        "date": "02 lis 2008",
+        "team1": "Drawa Drawno",
+        "team2": "AP Gavia Choszczno",
+        "score": "7:1"
+      },
+      {
+        "kolejka": 12,
+        "date": "09 lis 2008",
+        "team1": "Ina Nadarzyn",
+        "team2": "Drawa Drawno",
+        "score": "0:5"
+      },
+      {
+        "kolejka": 13,
+        "date": "16 lis 2008",
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Warszyn",
+        "score": "5:2"
+      },
+      {
+        "kolejka": 14,
+        "date": "22 mar 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Żeńsko",
+        "score": "9:2"
+      },
+      {
+        "kolejka": 15,
+        "date": "28 mar 2009",
+        "team1": "Piast Karsko",
+        "team2": "Drawa Drawno",
+        "score": "1:3"
+      },
+      {
+        "kolejka": 16,
+        "date": "05 kwi 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Trojan Str±pie",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 17,
+        "date": "19 kwi 2009",
+        "team1": "Świt Barnimie",
+        "team2": "Drawa Drawno",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 18,
+        "date": "26 kwi 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Wicher Przelewice",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 19,
+        "date": "03 maj 2009",
+        "team1": "Pomorzanin Zamęcin",
+        "team2": "Drawa Drawno",
+        "score": "2:4"
+      },
+      {
+        "kolejka": 20,
+        "date": "10 maj 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Błyskawica Kluki",
+        "score": "6:2"
+      },
+      {
+        "kolejka": 21,
+        "date": "17 maj 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Korona Raduń",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 22,
+        "date": "24 maj 2009",
+        "team1": "Orzeł Bierzwnik",
+        "team2": "Drawa Drawno",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 23,
+        "date": "31 maj 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Pomień",
+        "score": "6:0"
+      },
+      {
+        "kolejka": 24,
+        "date": "07 cze 2009",
+        "team1": "AP Gavia Choszczno",
+        "team2": "Drawa Drawno",
+        "score": "0:6"
+      },
+      {
+        "kolejka": 25,
+        "date": "14 cze 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Ina Nadarzyn",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 26,
+        "date": "21 cze 2009",
+        "team1": "Iskra Warszyn",
+        "team2": "Drawa Drawno",
+        "score": "1:3"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 5.200820091267324e+203,
+        "nazwa": "A klasa gr. 5 2008/2009",
+        "mecze": 0,
+        "pkt": 0,
+        "wygrane": 0,
+        "remisy": 0,
+        "przegrane": 0,
+        "bramki": "+/-"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Drawa Drawno",
+        "mecze": 26,
+        "pkt": 73,
+        "wygrane": 24,
+        "remisy": 1,
+        "przegrane": 1,
+        "bramki": "122/26"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Wicher Przelewice",
+        "mecze": 26,
+        "pkt": 67,
+        "wygrane": 22,
+        "remisy": 1,
+        "przegrane": 3,
+        "bramki": "97/21"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Orzeł Bierzwnik",
+        "mecze": 26,
+        "pkt": 46,
+        "wygrane": 15,
+        "remisy": 1,
+        "przegrane": 10,
+        "bramki": "98/61"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Iskra Pomień",
+        "mecze": 26,
+        "pkt": 42,
+        "wygrane": 13,
+        "remisy": 3,
+        "przegrane": 10,
+        "bramki": "66/63"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Świt Barnimie",
+        "mecze": 26,
+        "pkt": 37,
+        "wygrane": 11,
+        "remisy": 4,
+        "przegrane": 11,
+        "bramki": "56/51"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Piast Karsko",
+        "mecze": 26,
+        "pkt": 36,
+        "wygrane": 11,
+        "remisy": 3,
+        "przegrane": 12,
+        "bramki": "50/58"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Trojan Str±pie",
+        "mecze": 26,
+        "pkt": 35,
+        "wygrane": 11,
+        "remisy": 2,
+        "przegrane": 13,
+        "bramki": "73/67"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Iskra Warszyn",
+        "mecze": 26,
+        "pkt": 35,
+        "wygrane": 10,
+        "remisy": 5,
+        "przegrane": 11,
+        "bramki": "58/73"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Błyskawica Kluki",
+        "mecze": 26,
+        "pkt": 33,
+        "wygrane": 11,
+        "remisy": 0,
+        "przegrane": 15,
+        "bramki": "50/75"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Pomorzanin Zamęcin",
+        "mecze": 26,
+        "pkt": 29,
+        "wygrane": 8,
+        "remisy": 5,
+        "przegrane": 13,
+        "bramki": "54/77"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Ina Nadarzyn",
+        "mecze": 26,
+        "pkt": 28,
+        "wygrane": 8,
+        "remisy": 4,
+        "przegrane": 14,
+        "bramki": "56/66"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Korona Raduń",
+        "mecze": 26,
+        "pkt": 26,
+        "wygrane": 7,
+        "remisy": 5,
+        "przegrane": 14,
+        "bramki": "46/87"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "AP Gavia Choszczno",
+        "mecze": 26,
+        "pkt": 24,
+        "wygrane": 7,
+        "remisy": 3,
+        "przegrane": 16,
+        "bramki": "42/97"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Orzeł Żeńsko",
+        "mecze": 26,
+        "pkt": 16,
+        "wygrane": 5,
+        "remisy": 1,
+        "przegrane": 20,
+        "bramki": "37/83"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Drawa Drawno",
+        "mecze": 26,
+        "pkt": 73,
+        "wygrane": 24,
+        "remisy": 1,
+        "przegrane": 1,
+        "bramki": "122/26"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Wicher Przelewice",
+        "mecze": 26,
+        "pkt": 67,
+        "wygrane": 22,
+        "remisy": 1,
+        "przegrane": 3,
+        "bramki": "97/21"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Orzeł Bierzwnik",
+        "mecze": 26,
+        "pkt": 46,
+        "wygrane": 15,
+        "remisy": 1,
+        "przegrane": 10,
+        "bramki": "98/61"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Iskra Pomień",
+        "mecze": 26,
+        "pkt": 42,
+        "wygrane": 13,
+        "remisy": 3,
+        "przegrane": 10,
+        "bramki": "66/63"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Świt Barnimie",
+        "mecze": 26,
+        "pkt": 37,
+        "wygrane": 11,
+        "remisy": 4,
+        "przegrane": 11,
+        "bramki": "56/51"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Piast Karsko",
+        "mecze": 26,
+        "pkt": 36,
+        "wygrane": 11,
+        "remisy": 3,
+        "przegrane": 12,
+        "bramki": "50/58"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Trojan Str±pie",
+        "mecze": 26,
+        "pkt": 35,
+        "wygrane": 11,
+        "remisy": 2,
+        "przegrane": 13,
+        "bramki": "73/67"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Iskra Warszyn",
+        "mecze": 26,
+        "pkt": 35,
+        "wygrane": 10,
+        "remisy": 5,
+        "przegrane": 11,
+        "bramki": "58/73"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Błyskawica Kluki",
+        "mecze": 26,
+        "pkt": 33,
+        "wygrane": 11,
+        "remisy": 0,
+        "przegrane": 15,
+        "bramki": "50/75"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Pomorzanin Zamęcin",
+        "mecze": 26,
+        "pkt": 29,
+        "wygrane": 8,
+        "remisy": 5,
+        "przegrane": 13,
+        "bramki": "54/77"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Ina Nadarzyn",
+        "mecze": 26,
+        "pkt": 28,
+        "wygrane": 8,
+        "remisy": 4,
+        "przegrane": 14,
+        "bramki": "56/66"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Korona Raduń",
+        "mecze": 26,
+        "pkt": 26,
+        "wygrane": 7,
+        "remisy": 5,
+        "przegrane": 14,
+        "bramki": "46/87"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "AP Gavia Choszczno",
+        "mecze": 26,
+        "pkt": 24,
+        "wygrane": 7,
+        "remisy": 3,
+        "przegrane": 16,
+        "bramki": "42/97"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Orzeł Żeńsko",
+        "mecze": 26,
+        "pkt": 16,
+        "wygrane": 5,
+        "remisy": 1,
+        "przegrane": 20,
+        "bramki": "37/83"
+      }
+    ],
+    "sourceId": 155,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/155"
+  },
+  {
+    "liga": "Klasa okręgowa Szczecin gr.2",
+    "sezon": "2009/2010",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "16 sie 2009",
+        "team1": "Myśla Dargomyśl",
+        "team2": "Drawa Drawno",
+        "score": "3:3"
+      },
+      {
+        "kolejka": 2,
+        "date": "19 sie 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Sokół Różańsko",
+        "score": "5:1"
+      },
+      {
+        "kolejka": 3,
+        "date": "23 sie 2009",
+        "team1": "Mieszko Mieszkowice",
+        "team2": "Drawa Drawno",
+        "score": "2:4"
+      },
+      {
+        "kolejka": 4,
+        "date": "30 sie 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Odrzanka Radziszewo",
+        "score": "0:2"
+      },
+      {
+        "kolejka": 5,
+        "date": "06 wrz 2009",
+        "team1": "Orkan Suchań",
+        "team2": "Drawa Drawno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 6,
+        "date": "13 wrz 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Sęp Brzesko",
+        "score": "4:0"
+      },
+      {
+        "kolejka": 7,
+        "date": "20 wrz 2009",
+        "team1": "Sokół Granowo",
+        "team2": "Drawa Drawno",
+        "score": "3:6"
+      },
+      {
+        "kolejka": 8,
+        "date": "27 wrz 2009",
+        "team1": "Odra II Chojna",
+        "team2": "Drawa Drawno",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 9,
+        "date": "04 paź 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Ina Recz",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 10,
+        "date": "11 paź 2009",
+        "team1": "Czcibor Cedynia",
+        "team2": "Drawa Drawno",
+        "score": "2:4"
+      },
+      {
+        "kolejka": 11,
+        "date": "18 paź 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Morzycko Moryń",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 12,
+        "date": "25 paź 2009",
+        "team1": "Klon Krzęcin",
+        "team2": "Drawa Drawno",
+        "score": "2:2"
+      },
+      {
+        "kolejka": 13,
+        "date": "08 lis 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Unia Dolice",
+        "score": "2:2"
+      },
+      {
+        "kolejka": 14,
+        "date": "11 lis 2009",
+        "team1": "Jedność Przewłoki",
+        "team2": "Drawa Drawno",
+        "score": "3:1"
+      },
+      {
+        "kolejka": 15,
+        "date": "15 lis 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Koral Mostkowo",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 17,
+        "date": "27 mar 2010",
+        "team1": "Sokół Różańsko",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 18,
+        "date": "03 kwi 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Mieszko Mieszkowice",
+        "score": "3:1"
+      },
+      {
+        "kolejka": 21,
+        "date": "25 kwi 2010",
+        "team1": "Sęp Brzesko",
+        "team2": "Drawa Drawno",
+        "score": "0:0"
+      },
+      {
+        "kolejka": 22,
+        "date": "02 maj 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Sokół Granowo",
+        "score": "4:0"
+      },
+      {
+        "kolejka": 16,
+        "date": "05 maj 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Myśla Dargomyśl",
+        "score": "4:0"
+      },
+      {
+        "kolejka": 23,
+        "date": "09 maj 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Odra II Chojna",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 20,
+        "date": "12 maj 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Orkan Suchań",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 24,
+        "date": "15 maj 2010",
+        "team1": "Ina Recz",
+        "team2": "Drawa Drawno",
+        "score": "1:3"
+      },
+      {
+        "kolejka": 25,
+        "date": "23 maj 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Czcibor Cedynia",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 26,
+        "date": "26 maj 2010",
+        "team1": "Morzycko Moryń",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 27,
+        "date": "30 maj 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Klon Krzęcin",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 28,
+        "date": "05 cze 2010",
+        "team1": "Unia Dolice",
+        "team2": "Drawa Drawno",
+        "score": "0:0"
+      },
+      {
+        "kolejka": 29,
+        "date": "12 cze 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Jedność Przewłoki",
+        "score": "4:0"
+      },
+      {
+        "kolejka": 19,
+        "date": "16 cze 2010",
+        "team1": "Odrzanka Radziszewo",
+        "team2": "Drawa Drawno",
+        "score": "5:1"
+      },
+      {
+        "kolejka": 30,
+        "date": "19 cze 2010",
+        "team1": "Koral Mostkowo",
+        "team2": "Drawa Drawno",
+        "score": "4:1"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 2.2009201013070226e+228,
+        "nazwa": "1.",
+        "mecze": 0,
+        "pkt": 30,
+        "wygrane": 70,
+        "remisy": 22,
+        "przegrane": 4,
+        "bramki": "4"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Sęp Brzesko",
+        "mecze": 30,
+        "pkt": 70,
+        "wygrane": 22,
+        "remisy": 4,
+        "przegrane": 4,
+        "bramki": "69/32"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Unia Dolice",
+        "mecze": 30,
+        "pkt": 63,
+        "wygrane": 19,
+        "remisy": 6,
+        "przegrane": 5,
+        "bramki": "89/40"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Morzycko Moryń",
+        "mecze": 30,
+        "pkt": 58,
+        "wygrane": 18,
+        "remisy": 4,
+        "przegrane": 8,
+        "bramki": "57/33"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Orkan Suchań",
+        "mecze": 30,
+        "pkt": 55,
+        "wygrane": 17,
+        "remisy": 4,
+        "przegrane": 9,
+        "bramki": "66/37"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Myśla Dargomyśl",
+        "mecze": 30,
+        "pkt": 53,
+        "wygrane": 16,
+        "remisy": 5,
+        "przegrane": 9,
+        "bramki": "60/46"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Drawa Drawno",
+        "mecze": 30,
+        "pkt": 52,
+        "wygrane": 15,
+        "remisy": 7,
+        "przegrane": 8,
+        "bramki": "70/43"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Ina Recz",
+        "mecze": 30,
+        "pkt": 47,
+        "wygrane": 14,
+        "remisy": 5,
+        "przegrane": 11,
+        "bramki": "50/44"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Odrzanka Radziszewo",
+        "mecze": 30,
+        "pkt": 46,
+        "wygrane": 13,
+        "remisy": 7,
+        "przegrane": 10,
+        "bramki": "70/50"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Mieszko Mieszkowice",
+        "mecze": 30,
+        "pkt": 41,
+        "wygrane": 12,
+        "remisy": 5,
+        "przegrane": 13,
+        "bramki": "51/62"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Czcibor Cedynia",
+        "mecze": 30,
+        "pkt": 40,
+        "wygrane": 12,
+        "remisy": 4,
+        "przegrane": 14,
+        "bramki": "57/63"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Koral Mostkowo",
+        "mecze": 30,
+        "pkt": 32,
+        "wygrane": 10,
+        "remisy": 2,
+        "przegrane": 18,
+        "bramki": "52/61"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Jedność Przewłoki",
+        "mecze": 30,
+        "pkt": 31,
+        "wygrane": 9,
+        "remisy": 4,
+        "przegrane": 17,
+        "bramki": "33/57"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Klon Krzęcin",
+        "mecze": 30,
+        "pkt": 30,
+        "wygrane": 7,
+        "remisy": 9,
+        "przegrane": 14,
+        "bramki": "38/54"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Odra II Chojna",
+        "mecze": 30,
+        "pkt": 26,
+        "wygrane": 7,
+        "remisy": 5,
+        "przegrane": 18,
+        "bramki": "39/64"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Sokół Różańsko",
+        "mecze": 30,
+        "pkt": 18,
+        "wygrane": 5,
+        "remisy": 3,
+        "przegrane": 22,
+        "bramki": "32/93"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Sokół Granowo",
+        "mecze": 30,
+        "pkt": 17,
+        "wygrane": 3,
+        "remisy": 8,
+        "przegrane": 19,
+        "bramki": "39/93"
+      }
+    ],
+    "sourceId": 211,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/211"
+  },
+  {
+    "liga": "Puchar Polski ZZPN",
+    "sezon": "2009/2010",
+    "mecze": [
+      {
+        "kolejka": null,
+        "date": "02 wrz 2009",
+        "team1": "Pomorzanin Kr±piel",
+        "team2": "Drawa Drawno",
+        "score": "2:3"
+      },
+      {
+        "kolejka": null,
+        "date": "30 wrz 2009",
+        "team1": "Drawa Drawno",
+        "team2": "Kłos Pełczyce",
+        "score": "1:3"
+      }
+    ],
+    "tabela": [],
+    "sourceId": 250,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/250"
+  },
+  {
+    "liga": "Klasa okręgowa Szczecin gr.2",
+    "sezon": "2010/2011",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "14 sie 2010",
+        "team1": "Mieszko Mieszkowice",
+        "team2": "Drawa Drawno",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 2,
+        "date": "18 sie 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Chrobry Boleszkowice",
+        "score": "6:0"
+      },
+      {
+        "kolejka": 3,
+        "date": "22 sie 2010",
+        "team1": "Wicher Przelewice",
+        "team2": "Drawa Drawno",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 4,
+        "date": "29 sie 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Odra II Chojna",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 5,
+        "date": "04 wrz 2010",
+        "team1": "Orkan Suchań",
+        "team2": "Drawa Drawno",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 6,
+        "date": "11 wrz 2010",
+        "team1": "Morzycko Moryń",
+        "team2": "Drawa Drawno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 7,
+        "date": "19 wrz 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Ina Recz",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 8,
+        "date": "25 wrz 2010",
+        "team1": "Mirand Szczecin",
+        "team2": "Drawa Drawno",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 9,
+        "date": "03 paź 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Koral Mostkowo",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 10,
+        "date": "10 paź 2010",
+        "team1": "Czcibor Cedynia",
+        "team2": "Drawa Drawno",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 11,
+        "date": "17 paź 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Klon Krzęcin",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 12,
+        "date": "23 paź 2010",
+        "team1": "Odrzanka Radziszewo",
+        "team2": "Drawa Drawno",
+        "score": "4:0"
+      },
+      {
+        "kolejka": 13,
+        "date": "31 paź 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Jedność Przewłoki",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 14,
+        "date": "07 lis 2010",
+        "team1": "Zootechnik Kołbacz",
+        "team2": "Drawa Drawno",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 15,
+        "date": "14 lis 2010",
+        "team1": "Drawa Drawno",
+        "team2": "Myśla Dargomyśl",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 16,
+        "date": "20 mar 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Mieszko Mieszkowice",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 17,
+        "date": "27 mar 2011",
+        "team1": "Chrobry Boleszkowice",
+        "team2": "Drawa Drawno",
+        "score": "0:0"
+      },
+      {
+        "kolejka": 18,
+        "date": "03 kwi 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Wicher Przelewice",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 19,
+        "date": "10 kwi 2011",
+        "team1": "Odra II Chojna",
+        "team2": "Drawa Drawno",
+        "score": "3:3"
+      },
+      {
+        "kolejka": 20,
+        "date": "17 kwi 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Orkan Suchań",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 21,
+        "date": "23 kwi 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Morzycko Moryń",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 22,
+        "date": "30 kwi 2011",
+        "team1": "Ina Recz",
+        "team2": "Drawa Drawno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 23,
+        "date": "08 maj 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Mirand Szczecin",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 24,
+        "date": "15 maj 2011",
+        "team1": "Koral Mostkowo",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 25,
+        "date": "21 maj 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Czcibor Cedynia",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 26,
+        "date": "28 maj 2011",
+        "team1": "Klon Krzęcin",
+        "team2": "Drawa Drawno",
+        "score": "2:2"
+      },
+      {
+        "kolejka": 27,
+        "date": "01 cze 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Odrzanka Radziszewo",
+        "score": "3:2"
+      },
+      {
+        "kolejka": 28,
+        "date": "05 cze 2011",
+        "team1": "Jedność Przewłoki",
+        "team2": "Drawa Drawno",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 29,
+        "date": "11 cze 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Zootechnik Kołbacz",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 30,
+        "date": "18 cze 2011",
+        "team1": "Myśla Dargomyśl",
+        "team2": "Drawa Drawno",
+        "score": "4:1"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 2.2010201113072235e+228,
+        "nazwa": "1.",
+        "mecze": 0,
+        "pkt": 30,
+        "wygrane": 72,
+        "remisy": 23,
+        "przegrane": 3,
+        "bramki": "4"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Morzycko Moryń",
+        "mecze": 30,
+        "pkt": 72,
+        "wygrane": 23,
+        "remisy": 3,
+        "przegrane": 4,
+        "bramki": "90/38"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Odrzanka Radziszewo",
+        "mecze": 30,
+        "pkt": 62,
+        "wygrane": 19,
+        "remisy": 5,
+        "przegrane": 6,
+        "bramki": "67/36"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Wicher Przelewice",
+        "mecze": 30,
+        "pkt": 56,
+        "wygrane": 17,
+        "remisy": 5,
+        "przegrane": 8,
+        "bramki": "93/41"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Ina Recz",
+        "mecze": 30,
+        "pkt": 50,
+        "wygrane": 15,
+        "remisy": 5,
+        "przegrane": 10,
+        "bramki": "55/46"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Orkan Suchań",
+        "mecze": 30,
+        "pkt": 50,
+        "wygrane": 14,
+        "remisy": 8,
+        "przegrane": 8,
+        "bramki": "49/41"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Drawa Drawno",
+        "mecze": 30,
+        "pkt": 49,
+        "wygrane": 14,
+        "remisy": 7,
+        "przegrane": 9,
+        "bramki": "51/40"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Zootechnik Kołbacz",
+        "mecze": 30,
+        "pkt": 48,
+        "wygrane": 15,
+        "remisy": 3,
+        "przegrane": 12,
+        "bramki": "61/42"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Myśla Dargomyśl",
+        "mecze": 30,
+        "pkt": 47,
+        "wygrane": 14,
+        "remisy": 5,
+        "przegrane": 11,
+        "bramki": "61/47"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Mieszko Mieszkowice",
+        "mecze": 30,
+        "pkt": 47,
+        "wygrane": 14,
+        "remisy": 5,
+        "przegrane": 11,
+        "bramki": "59/41"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Klon Krzęcin",
+        "mecze": 30,
+        "pkt": 45,
+        "wygrane": 13,
+        "remisy": 6,
+        "przegrane": 11,
+        "bramki": "55/40"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Iskierka Szczecin",
+        "mecze": 30,
+        "pkt": 32,
+        "wygrane": 9,
+        "remisy": 5,
+        "przegrane": 16,
+        "bramki": "36/54"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Czcibor Cedynia",
+        "mecze": 30,
+        "pkt": 30,
+        "wygrane": 8,
+        "remisy": 6,
+        "przegrane": 16,
+        "bramki": "52/67"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Chrobry Boleszkowice",
+        "mecze": 30,
+        "pkt": 26,
+        "wygrane": 6,
+        "remisy": 8,
+        "przegrane": 16,
+        "bramki": "31/74"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Koral Mostkowo",
+        "mecze": 30,
+        "pkt": 25,
+        "wygrane": 7,
+        "remisy": 4,
+        "przegrane": 19,
+        "bramki": "34/86"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Jedność Przewłoki",
+        "mecze": 30,
+        "pkt": 25,
+        "wygrane": 7,
+        "remisy": 4,
+        "przegrane": 19,
+        "bramki": "42/70"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Odra II Chojna",
+        "mecze": 30,
+        "pkt": 12,
+        "wygrane": 1,
+        "remisy": 9,
+        "przegrane": 20,
+        "bramki": "21/94"
+      }
+    ],
+    "sourceId": 309,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/309"
+  },
+  {
+    "liga": "Puchar Polski ZZPN",
+    "sezon": "2010/2011",
+    "mecze": [
+      {
+        "kolejka": null,
+        "date": "15 wrz 2010",
+        "team1": "Ogniwo Babinek",
+        "team2": "Drawa Drawno",
+        "score": "4:3"
+      }
+    ],
+    "tabela": [],
+    "sourceId": 343,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/343"
+  },
+  {
+    "liga": "Reg. Klasa Okręgowa - gr. Szczecin Płd.",
+    "sezon": "2011/2012",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "13 sie 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Czcibor Cedynia",
+        "score": "6:2"
+      },
+      {
+        "kolejka": 2,
+        "date": "20 sie 2011",
+        "team1": "Orzeł Trzcińsko-Zdrój",
+        "team2": "Drawa Drawno",
+        "score": "6:0"
+      },
+      {
+        "kolejka": 3,
+        "date": "28 sie 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Orkan Suchań",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 4,
+        "date": "31 sie 2011",
+        "team1": "Myśla Dargomyśl",
+        "team2": "Drawa Drawno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 5,
+        "date": "04 wrz 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Ina Recz",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 6,
+        "date": "11 wrz 2011",
+        "team1": "Polonia Giżyn",
+        "team2": "Drawa Drawno",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 7,
+        "date": "18 wrz 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Ogniwo Babinek",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 8,
+        "date": "25 wrz 2011",
+        "team1": "Orzeł Bierzwnik",
+        "team2": "Drawa Drawno",
+        "score": "7:2"
+      },
+      {
+        "kolejka": 9,
+        "date": "02 paź 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Pęzino",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 10,
+        "date": "08 paź 2011",
+        "team1": "Mieszko Mieszkowice",
+        "team2": "Drawa Drawno",
+        "score": "2:2"
+      },
+      {
+        "kolejka": 11,
+        "date": "15 paź 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Osadnik Myślibórz",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 12,
+        "date": "23 paź 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Zootechnik Kołbacz",
+        "score": "0:0"
+      },
+      {
+        "kolejka": 13,
+        "date": "29 paź 2011",
+        "team1": "Klon Krzęcin",
+        "team2": "Drawa Drawno",
+        "score": "2:2"
+      },
+      {
+        "kolejka": 14,
+        "date": "06 lis 2011",
+        "team1": "Drawa Drawno",
+        "team2": "Wicher Przelewice",
+        "score": "0:0"
+      },
+      {
+        "kolejka": 15,
+        "date": "12 lis 2011",
+        "team1": "Mirand Szczecin",
+        "team2": "Drawa Drawno",
+        "score": "4:0"
+      },
+      {
+        "kolejka": 16,
+        "date": "20 lis 2011",
+        "team1": "Czcibor Cedynia",
+        "team2": "Drawa Drawno",
+        "score": "5:0"
+      },
+      {
+        "kolejka": 17,
+        "date": "18 mar 2012",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Trzcińsko-Zdrój",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 18,
+        "date": "24 mar 2012",
+        "team1": "Orkan Suchań",
+        "team2": "Drawa Drawno",
+        "score": "4:2"
+      },
+      {
+        "kolejka": 19,
+        "date": "31 mar 2012",
+        "team1": "Drawa Drawno",
+        "team2": "Myśla Dargomyśl",
+        "score": "1:3"
+      },
+      {
+        "kolejka": 20,
+        "date": "07 kwi 2012",
+        "team1": "Ina Recz",
+        "team2": "Drawa Drawno",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 21,
+        "date": "15 kwi 2012",
+        "team1": "Drawa Drawno",
+        "team2": "Polonia Giżyn",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 22,
+        "date": "22 kwi 2012",
+        "team1": "Ogniwo Babinek",
+        "team2": "Drawa Drawno",
+        "score": "11:0"
+      },
+      {
+        "kolejka": 23,
+        "date": "28 kwi 2012",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Bierzwnik",
+        "score": "2:5"
+      },
+      {
+        "kolejka": 24,
+        "date": "01 maj 2012",
+        "team1": "Orzeł Pęzino",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 25,
+        "date": "06 maj 2012",
+        "team1": "Drawa Drawno",
+        "team2": "Mieszko Mieszkowice",
+        "score": "5:1"
+      },
+      {
+        "kolejka": 26,
+        "date": "12 maj 2012",
+        "team1": "Osadnik Myślibórz",
+        "team2": "Drawa Drawno",
+        "score": "6:0"
+      },
+      {
+        "kolejka": 27,
+        "date": "16 maj 2012",
+        "team1": "Zootechnik Kołbacz",
+        "team2": "Drawa Drawno",
+        "score": "4:0"
+      },
+      {
+        "kolejka": 28,
+        "date": "20 maj 2012",
+        "team1": "Drawa Drawno",
+        "team2": "Klon Krzęcin",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 29,
+        "date": "27 maj 2012",
+        "team1": "Wicher Przelewice",
+        "team2": "Drawa Drawno",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 30,
+        "date": "03 cze 2012",
+        "team1": "Drawa Drawno",
+        "team2": "Mirand Szczecin",
+        "score": "2:2"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 1,
+        "nazwa": "Iskierka Szczecin",
+        "mecze": 30,
+        "pkt": 64,
+        "wygrane": 19,
+        "remisy": 7,
+        "przegrane": 4,
+        "bramki": "77/24"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Klon Krzęcin",
+        "mecze": 30,
+        "pkt": 63,
+        "wygrane": 20,
+        "remisy": 3,
+        "przegrane": 7,
+        "bramki": "85/43"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Osadnik Myślibórz",
+        "mecze": 30,
+        "pkt": 53,
+        "wygrane": 15,
+        "remisy": 8,
+        "przegrane": 7,
+        "bramki": "66/33"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Wicher Przelewice",
+        "mecze": 30,
+        "pkt": 50,
+        "wygrane": 12,
+        "remisy": 14,
+        "przegrane": 4,
+        "bramki": "65/44"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Myśla Dargomyśl",
+        "mecze": 30,
+        "pkt": 47,
+        "wygrane": 14,
+        "remisy": 5,
+        "przegrane": 11,
+        "bramki": "49/37"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Orzeł Pęzino",
+        "mecze": 30,
+        "pkt": 45,
+        "wygrane": 13,
+        "remisy": 6,
+        "przegrane": 11,
+        "bramki": "50/61"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Orkan Suchań",
+        "mecze": 30,
+        "pkt": 44,
+        "wygrane": 13,
+        "remisy": 5,
+        "przegrane": 12,
+        "bramki": "48/48"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Orzeł Trzcińsko-Zdrój",
+        "mecze": 30,
+        "pkt": 41,
+        "wygrane": 12,
+        "remisy": 5,
+        "przegrane": 13,
+        "bramki": "54/47"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Polonia Giżyn",
+        "mecze": 30,
+        "pkt": 38,
+        "wygrane": 10,
+        "remisy": 8,
+        "przegrane": 12,
+        "bramki": "51/46"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Mieszko Mieszkowice",
+        "mecze": 30,
+        "pkt": 37,
+        "wygrane": 10,
+        "remisy": 7,
+        "przegrane": 13,
+        "bramki": "44/69"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Orzeł Bierzwnik",
+        "mecze": 30,
+        "pkt": 37,
+        "wygrane": 12,
+        "remisy": 1,
+        "przegrane": 17,
+        "bramki": "63/85"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Ogniwo Babinek",
+        "mecze": 30,
+        "pkt": 35,
+        "wygrane": 10,
+        "remisy": 5,
+        "przegrane": 15,
+        "bramki": "57/67"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Remor Recz",
+        "mecze": 30,
+        "pkt": 34,
+        "wygrane": 10,
+        "remisy": 4,
+        "przegrane": 16,
+        "bramki": "57/73"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Czcibor Cedynia",
+        "mecze": 30,
+        "pkt": 34,
+        "wygrane": 10,
+        "remisy": 4,
+        "przegrane": 16,
+        "bramki": "55/75"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Drawa Drawno",
+        "mecze": 30,
+        "pkt": 28,
+        "wygrane": 7,
+        "remisy": 7,
+        "przegrane": 16,
+        "bramki": "39/81"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Zootechnik Kołbacz",
+        "mecze": 30,
+        "pkt": 23,
+        "wygrane": 6,
+        "remisy": 5,
+        "przegrane": 19,
+        "bramki": "29/56"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Iskierka Szczecin",
+        "mecze": 30,
+        "pkt": 64,
+        "wygrane": 19,
+        "remisy": 7,
+        "przegrane": 4,
+        "bramki": "77/24"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Klon Krzęcin",
+        "mecze": 30,
+        "pkt": 63,
+        "wygrane": 20,
+        "remisy": 3,
+        "przegrane": 7,
+        "bramki": "85/43"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Osadnik Myślibórz",
+        "mecze": 30,
+        "pkt": 53,
+        "wygrane": 15,
+        "remisy": 8,
+        "przegrane": 7,
+        "bramki": "66/33"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Wicher Przelewice",
+        "mecze": 30,
+        "pkt": 50,
+        "wygrane": 12,
+        "remisy": 14,
+        "przegrane": 4,
+        "bramki": "65/44"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Myśla Dargomyśl",
+        "mecze": 30,
+        "pkt": 47,
+        "wygrane": 14,
+        "remisy": 5,
+        "przegrane": 11,
+        "bramki": "49/37"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Orzeł Pęzino",
+        "mecze": 30,
+        "pkt": 45,
+        "wygrane": 13,
+        "remisy": 6,
+        "przegrane": 11,
+        "bramki": "50/61"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Orkan Suchań",
+        "mecze": 30,
+        "pkt": 44,
+        "wygrane": 13,
+        "remisy": 5,
+        "przegrane": 12,
+        "bramki": "48/48"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Orzeł Trzcińsko-Zdrój",
+        "mecze": 30,
+        "pkt": 41,
+        "wygrane": 12,
+        "remisy": 5,
+        "przegrane": 13,
+        "bramki": "54/47"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Polonia Giżyn",
+        "mecze": 30,
+        "pkt": 38,
+        "wygrane": 10,
+        "remisy": 8,
+        "przegrane": 12,
+        "bramki": "51/46"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Mieszko Mieszkowice",
+        "mecze": 30,
+        "pkt": 37,
+        "wygrane": 10,
+        "remisy": 7,
+        "przegrane": 13,
+        "bramki": "44/69"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Orzeł Bierzwnik",
+        "mecze": 30,
+        "pkt": 37,
+        "wygrane": 12,
+        "remisy": 1,
+        "przegrane": 17,
+        "bramki": "63/85"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Ogniwo Babinek",
+        "mecze": 30,
+        "pkt": 35,
+        "wygrane": 10,
+        "remisy": 5,
+        "przegrane": 15,
+        "bramki": "57/67"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Remor Recz",
+        "mecze": 30,
+        "pkt": 34,
+        "wygrane": 10,
+        "remisy": 4,
+        "przegrane": 16,
+        "bramki": "57/73"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Czcibor Cedynia",
+        "mecze": 30,
+        "pkt": 34,
+        "wygrane": 10,
+        "remisy": 4,
+        "przegrane": 16,
+        "bramki": "55/75"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Drawa Drawno",
+        "mecze": 30,
+        "pkt": 28,
+        "wygrane": 7,
+        "remisy": 7,
+        "przegrane": 16,
+        "bramki": "39/81"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Zootechnik Kołbacz",
+        "mecze": 30,
+        "pkt": 23,
+        "wygrane": 6,
+        "remisy": 5,
+        "przegrane": 19,
+        "bramki": "29/56"
+      }
+    ],
+    "sourceId": 397,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/397"
+  },
+  {
+    "liga": "Puchar Polski ZZPN",
+    "sezon": "2011/2012",
+    "mecze": [
+      {
+        "kolejka": null,
+        "date": "07 wrz 2011",
+        "team1": "Sokół Sokoliniec",
+        "team2": "Drawa Drawno",
+        "score": "2:1"
+      }
+    ],
+    "tabela": [],
+    "sourceId": 424,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/424"
+  },
+  {
+    "liga": "A klasa Szczecin gr. 5",
+    "sezon": "2012/2013",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "02 wrz 2012",
+        "team1": "Sokół Sokoliniec",
+        "team2": "Drawa Drawno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 2,
+        "date": "08 wrz 2012",
+        "team1": "Drawa Drawno",
+        "team2": "Sokół Granowo",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 3,
+        "date": "16 wrz 2012",
+        "team1": "Pomorzanin Zamęcin",
+        "team2": "Drawa Drawno",
+        "score": "4:6"
+      },
+      {
+        "kolejka": 4,
+        "date": "22 wrz 2012",
+        "team1": "Drawa Drawno",
+        "team2": "Mechanik Warnice",
+        "score": "2:6"
+      },
+      {
+        "kolejka": 5,
+        "date": "30 wrz 2012",
+        "team1": "Korona Raduń",
+        "team2": "Drawa Drawno",
+        "score": "4:4"
+      },
+      {
+        "kolejka": 6,
+        "date": "06 paź 2012",
+        "team1": "Drawa Drawno",
+        "team2": "Jedność Przewłoki",
+        "score": "5:2"
+      },
+      {
+        "kolejka": 7,
+        "date": "13 paź 2012",
+        "team1": "Ina Nadarzyn",
+        "team2": "Drawa Drawno",
+        "score": "5:2"
+      },
+      {
+        "kolejka": 8,
+        "date": "20 paź 2012",
+        "team1": "Drawa Drawno",
+        "team2": "Gwiazda Żalęcino",
+        "score": "6:2"
+      },
+      {
+        "kolejka": 9,
+        "date": "28 paź 2012",
+        "team1": "Gryf Objezierze",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 10,
+        "date": "04 lis 2012",
+        "team1": "Błyskawica Kluki",
+        "team2": "Drawa Drawno",
+        "score": "3:3"
+      },
+      {
+        "kolejka": 11,
+        "date": "10 lis 2012",
+        "team1": "Drawa Drawno",
+        "team2": "Świt Barnimie",
+        "score": "0:4"
+      },
+      {
+        "kolejka": 13,
+        "date": "14 kwi 2013",
+        "team1": "Sokół Granowo",
+        "team2": "Drawa Drawno",
+        "score": "6:0"
+      },
+      {
+        "kolejka": 14,
+        "date": "21 kwi 2013",
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanin Zamęcin",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 15,
+        "date": "28 kwi 2013",
+        "team1": "Mechanik Warnice",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 12,
+        "date": "01 maj 2013",
+        "team1": "Drawa Drawno",
+        "team2": "Sokół Sokoliniec",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 16,
+        "date": "04 maj 2013",
+        "team1": "Drawa Drawno",
+        "team2": "Korona Raduń",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 17,
+        "date": "11 maj 2013",
+        "team1": "Jedność Przewłoki",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 18,
+        "date": "18 maj 2013",
+        "team1": "Drawa Drawno",
+        "team2": "Ina Nadarzyn",
+        "score": "2:6"
+      },
+      {
+        "kolejka": 19,
+        "date": "26 maj 2013",
+        "team1": "Gwiazda Żalęcino",
+        "team2": "Drawa Drawno",
+        "score": "5:0"
+      },
+      {
+        "kolejka": 20,
+        "date": "01 cze 2013",
+        "team1": "Drawa Drawno",
+        "team2": "Gryf Objezierze",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 21,
+        "date": "08 cze 2013",
+        "team1": "Drawa Drawno",
+        "team2": "Błyskawica Kluki",
+        "score": "10:2"
+      },
+      {
+        "kolejka": 22,
+        "date": "16 cze 2013",
+        "team1": "Świt Barnimie",
+        "team2": "Drawa Drawno",
+        "score": "2:1"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 5.20122013122612e+168,
+        "nazwa": "A klasa Szczecin gr. 5 2012/2013",
+        "mecze": 0,
+        "pkt": 0,
+        "wygrane": 0,
+        "remisy": 0,
+        "przegrane": 0,
+        "bramki": "+/-"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Mechanik Warnice",
+        "mecze": 22,
+        "pkt": 61,
+        "wygrane": 20,
+        "remisy": 1,
+        "przegrane": 1,
+        "bramki": "90/22"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Świt Barnimie",
+        "mecze": 22,
+        "pkt": 46,
+        "wygrane": 15,
+        "remisy": 1,
+        "przegrane": 6,
+        "bramki": "59/29"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Ina Nadarzyn",
+        "mecze": 22,
+        "pkt": 43,
+        "wygrane": 14,
+        "remisy": 1,
+        "przegrane": 7,
+        "bramki": "80/51"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Korona Raduń",
+        "mecze": 22,
+        "pkt": 36,
+        "wygrane": 11,
+        "remisy": 3,
+        "przegrane": 8,
+        "bramki": "62/54"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Jedność Przewłoki",
+        "mecze": 22,
+        "pkt": 33,
+        "wygrane": 10,
+        "remisy": 3,
+        "przegrane": 9,
+        "bramki": "48/43"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Gwiazda Żalęcino",
+        "mecze": 22,
+        "pkt": 31,
+        "wygrane": 10,
+        "remisy": 1,
+        "przegrane": 11,
+        "bramki": "46/51"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Sokół Granowo",
+        "mecze": 22,
+        "pkt": 30,
+        "wygrane": 9,
+        "remisy": 3,
+        "przegrane": 10,
+        "bramki": "55/60"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Gryf Objezierze",
+        "mecze": 22,
+        "pkt": 24,
+        "wygrane": 7,
+        "remisy": 3,
+        "przegrane": 12,
+        "bramki": "35/62"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Sokół Sokoliniec",
+        "mecze": 22,
+        "pkt": 23,
+        "wygrane": 7,
+        "remisy": 2,
+        "przegrane": 13,
+        "bramki": "46/53"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Błyskawica Kluki",
+        "mecze": 22,
+        "pkt": 23,
+        "wygrane": 6,
+        "remisy": 5,
+        "przegrane": 11,
+        "bramki": "40/71"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Drawa Drawno",
+        "mecze": 22,
+        "pkt": 21,
+        "wygrane": 6,
+        "remisy": 3,
+        "przegrane": 13,
+        "bramki": "48/68"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Pomorzanin Zamęcin",
+        "mecze": 22,
+        "pkt": 12,
+        "wygrane": 4,
+        "remisy": 0,
+        "przegrane": 18,
+        "bramki": "45/90"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Mechanik Warnice",
+        "mecze": 22,
+        "pkt": 61,
+        "wygrane": 20,
+        "remisy": 1,
+        "przegrane": 1,
+        "bramki": "90/22"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Świt Barnimie",
+        "mecze": 22,
+        "pkt": 46,
+        "wygrane": 15,
+        "remisy": 1,
+        "przegrane": 6,
+        "bramki": "59/29"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Ina Nadarzyn",
+        "mecze": 22,
+        "pkt": 43,
+        "wygrane": 14,
+        "remisy": 1,
+        "przegrane": 7,
+        "bramki": "80/51"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Korona Raduń",
+        "mecze": 22,
+        "pkt": 36,
+        "wygrane": 11,
+        "remisy": 3,
+        "przegrane": 8,
+        "bramki": "62/54"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Jedność Przewłoki",
+        "mecze": 22,
+        "pkt": 33,
+        "wygrane": 10,
+        "remisy": 3,
+        "przegrane": 9,
+        "bramki": "48/43"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Gwiazda Żalęcino",
+        "mecze": 22,
+        "pkt": 31,
+        "wygrane": 10,
+        "remisy": 1,
+        "przegrane": 11,
+        "bramki": "46/51"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Sokół Granowo",
+        "mecze": 22,
+        "pkt": 30,
+        "wygrane": 9,
+        "remisy": 3,
+        "przegrane": 10,
+        "bramki": "55/60"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Gryf Objezierze",
+        "mecze": 22,
+        "pkt": 24,
+        "wygrane": 7,
+        "remisy": 3,
+        "przegrane": 12,
+        "bramki": "35/62"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Sokół Sokoliniec",
+        "mecze": 22,
+        "pkt": 23,
+        "wygrane": 7,
+        "remisy": 2,
+        "przegrane": 13,
+        "bramki": "46/53"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Błyskawica Kluki",
+        "mecze": 22,
+        "pkt": 23,
+        "wygrane": 6,
+        "remisy": 5,
+        "przegrane": 11,
+        "bramki": "40/71"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Drawa Drawno",
+        "mecze": 22,
+        "pkt": 21,
+        "wygrane": 6,
+        "remisy": 3,
+        "przegrane": 13,
+        "bramki": "48/68"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Pomorzanin Zamęcin",
+        "mecze": 22,
+        "pkt": 12,
+        "wygrane": 4,
+        "remisy": 0,
+        "przegrane": 18,
+        "bramki": "45/90"
+      }
+    ],
+    "sourceId": 509,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/509"
+  },
+  {
+    "liga": "B klasa Szczecin gr. 4",
+    "sezon": "2014/2015",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "31 sie 2014",
+        "team1": "Piast II Karsko",
+        "team2": "Drawa Drawno",
+        "score": "8:1"
+      },
+      {
+        "kolejka": 2,
+        "date": "07 wrz 2014",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Żeńsko",
+        "score": "5:4"
+      },
+      {
+        "kolejka": 3,
+        "date": "14 wrz 2014",
+        "team1": "Orzeł II Bierzwnik",
+        "team2": "Drawa Drawno",
+        "score": "3:2"
+      },
+      {
+        "kolejka": 4,
+        "date": "21 wrz 2014",
+        "team1": "Drawa Drawno",
+        "team2": "Klon II Krzęcin",
+        "score": "6:1"
+      },
+      {
+        "kolejka": 5,
+        "date": "28 wrz 2014",
+        "team1": "Iskra Warszyn",
+        "team2": "Drawa Drawno",
+        "score": "4:0"
+      },
+      {
+        "kolejka": 7,
+        "date": "12 paź 2014",
+        "team1": "Grom Płonno",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 8,
+        "date": "18 paź 2014",
+        "team1": "AP Gavia II Choszczno",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 9,
+        "date": "26 paź 2014",
+        "team1": "Drawa Drawno",
+        "team2": "Błękitni Sarnik",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 10,
+        "date": "09 lis 2014",
+        "team1": "Pomorzanka Jarosławsko",
+        "team2": "Drawa Drawno",
+        "score": "2:2"
+      },
+      {
+        "kolejka": 11,
+        "date": "16 lis 2014",
+        "team1": "Drawa Drawno",
+        "team2": "Pionier Zwierzyn",
+        "score": "6:4"
+      },
+      {
+        "kolejka": 12,
+        "date": "12 kwi 2015",
+        "team1": "Drawa Drawno",
+        "team2": "Piast II Karsko",
+        "score": "2:6"
+      },
+      {
+        "kolejka": 13,
+        "date": "19 kwi 2015",
+        "team1": "Orzeł Żeńsko",
+        "team2": "Drawa Drawno",
+        "score": "6:1"
+      },
+      {
+        "kolejka": 15,
+        "date": "25 kwi 2015",
+        "team1": "Klon II Krzęcin",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 14,
+        "date": "26 kwi 2015",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł II Bierzwnik",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 16,
+        "date": "10 maj 2015",
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Warszyn",
+        "score": "2:5"
+      },
+      {
+        "kolejka": 18,
+        "date": "24 maj 2015",
+        "team1": "Drawa Drawno",
+        "team2": "Grom Płonno",
+        "score": "3:1"
+      },
+      {
+        "kolejka": 19,
+        "date": "31 maj 2015",
+        "team1": "Drawa Drawno",
+        "team2": "AP Gavia II Choszczno",
+        "score": "1:5"
+      },
+      {
+        "kolejka": 20,
+        "date": "07 cze 2015",
+        "team1": "Błękitni Sarnik",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 21,
+        "date": "14 cze 2015",
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanka Jarosławsko",
+        "score": "11:3"
+      },
+      {
+        "kolejka": 22,
+        "date": "21 cze 2015",
+        "team1": "Pionier Zwierzyn",
+        "team2": "Drawa Drawno",
+        "score": "4:1"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 4.201420151205016e+152,
+        "nazwa": "B klasa Szczecin gr. 4 2014/2015",
+        "mecze": 0,
+        "pkt": 0,
+        "wygrane": 0,
+        "remisy": 0,
+        "przegrane": 0,
+        "bramki": "+/-"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Błękitni Sarnik",
+        "mecze": 20,
+        "pkt": 50,
+        "wygrane": 16,
+        "remisy": 2,
+        "przegrane": 2,
+        "bramki": "60/15"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Piast II Karsko",
+        "mecze": 20,
+        "pkt": 46,
+        "wygrane": 15,
+        "remisy": 1,
+        "przegrane": 4,
+        "bramki": "77/37"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Orzeł II Bierzwnik",
+        "mecze": 20,
+        "pkt": 42,
+        "wygrane": 14,
+        "remisy": 0,
+        "przegrane": 6,
+        "bramki": "70/43"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Iskra Warszyn",
+        "mecze": 20,
+        "pkt": 40,
+        "wygrane": 13,
+        "remisy": 1,
+        "przegrane": 6,
+        "bramki": "90/37"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Gavia II Choszczno",
+        "mecze": 20,
+        "pkt": 31,
+        "wygrane": 10,
+        "remisy": 1,
+        "przegrane": 9,
+        "bramki": "54/43"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Orzeł Żeńsko",
+        "mecze": 20,
+        "pkt": 28,
+        "wygrane": 9,
+        "remisy": 1,
+        "przegrane": 10,
+        "bramki": "49/52"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Grom Płonno",
+        "mecze": 20,
+        "pkt": 28,
+        "wygrane": 9,
+        "remisy": 1,
+        "przegrane": 10,
+        "bramki": "37/45"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Pionier Zwierzyn",
+        "mecze": 20,
+        "pkt": 25,
+        "wygrane": 8,
+        "remisy": 1,
+        "przegrane": 11,
+        "bramki": "40/60"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Drawa Drawno",
+        "mecze": 20,
+        "pkt": 19,
+        "wygrane": 6,
+        "remisy": 1,
+        "przegrane": 13,
+        "bramki": "47/72"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Klon II Krzęcin",
+        "mecze": 20,
+        "pkt": 10,
+        "wygrane": 3,
+        "remisy": 1,
+        "przegrane": 16,
+        "bramki": "27/73"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Pomorzanka Jarosławsko",
+        "mecze": 20,
+        "pkt": 5,
+        "wygrane": 1,
+        "remisy": 2,
+        "przegrane": 17,
+        "bramki": "25/99"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Błękitni Sarnik",
+        "mecze": 20,
+        "pkt": 50,
+        "wygrane": 16,
+        "remisy": 2,
+        "przegrane": 2,
+        "bramki": "60/15"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Piast II Karsko",
+        "mecze": 20,
+        "pkt": 46,
+        "wygrane": 15,
+        "remisy": 1,
+        "przegrane": 4,
+        "bramki": "77/37"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Orzeł II Bierzwnik",
+        "mecze": 20,
+        "pkt": 42,
+        "wygrane": 14,
+        "remisy": 0,
+        "przegrane": 6,
+        "bramki": "70/43"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Iskra Warszyn",
+        "mecze": 20,
+        "pkt": 40,
+        "wygrane": 13,
+        "remisy": 1,
+        "przegrane": 6,
+        "bramki": "90/37"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Gavia II Choszczno",
+        "mecze": 20,
+        "pkt": 31,
+        "wygrane": 10,
+        "remisy": 1,
+        "przegrane": 9,
+        "bramki": "54/43"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Orzeł Żeńsko",
+        "mecze": 20,
+        "pkt": 28,
+        "wygrane": 9,
+        "remisy": 1,
+        "przegrane": 10,
+        "bramki": "49/52"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Grom Płonno",
+        "mecze": 20,
+        "pkt": 28,
+        "wygrane": 9,
+        "remisy": 1,
+        "przegrane": 10,
+        "bramki": "37/45"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Pionier Zwierzyn",
+        "mecze": 20,
+        "pkt": 25,
+        "wygrane": 8,
+        "remisy": 1,
+        "przegrane": 11,
+        "bramki": "40/60"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Drawa Drawno",
+        "mecze": 20,
+        "pkt": 19,
+        "wygrane": 6,
+        "remisy": 1,
+        "przegrane": 13,
+        "bramki": "47/72"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Klon II Krzęcin",
+        "mecze": 20,
+        "pkt": 10,
+        "wygrane": 3,
+        "remisy": 1,
+        "przegrane": 16,
+        "bramki": "27/73"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Pomorzanka Jarosławsko",
+        "mecze": 20,
+        "pkt": 5,
+        "wygrane": 1,
+        "remisy": 2,
+        "przegrane": 17,
+        "bramki": "25/99"
+      }
+    ],
+    "sourceId": 777,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/777"
+  },
+  {
+    "liga": "B klasa Szczecin gr. 4",
+    "sezon": "2015/2016",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "30 sie 2015",
+        "team1": "Pomorzanka Jarosławsko",
+        "team2": "Drawa Drawno",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 2,
+        "date": "06 wrz 2015",
+        "team1": "Drawa Drawno",
+        "team2": "AP Gavia II Choszczno",
+        "score": "5:0"
+      },
+      {
+        "kolejka": 3,
+        "date": "13 wrz 2015",
+        "team1": "Pionier Zwierzyn",
+        "team2": "Drawa Drawno",
+        "score": "0:10"
+      },
+      {
+        "kolejka": 4,
+        "date": "20 wrz 2015",
+        "team1": "Drawa Drawno",
+        "team2": "Merkury Nowogródek Pom.",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 5,
+        "date": "27 wrz 2015",
+        "team1": "Orzeł Żeńsko",
+        "team2": "Drawa Drawno",
+        "score": "2:9"
+      },
+      {
+        "kolejka": 7,
+        "date": "11 paź 2015",
+        "team1": "Grom Płonno",
+        "team2": "Drawa Drawno",
+        "score": "2:9"
+      },
+      {
+        "kolejka": 8,
+        "date": "18 paź 2015",
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Warszyn",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 9,
+        "date": "25 paź 2015",
+        "team1": "Gryf Przekolno",
+        "team2": "Drawa Drawno",
+        "score": "1:12"
+      },
+      {
+        "kolejka": 10,
+        "date": "03 kwi 2016",
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanka Jarosławsko",
+        "score": "8:1"
+      },
+      {
+        "kolejka": 11,
+        "date": "10 kwi 2016",
+        "team1": "AP Gavia II Choszczno",
+        "team2": "Drawa Drawno",
+        "score": "3:7"
+      },
+      {
+        "kolejka": 12,
+        "date": "17 kwi 2016",
+        "team1": "Drawa Drawno",
+        "team2": "Pionier Zwierzyn",
+        "score": "8:1"
+      },
+      {
+        "kolejka": 13,
+        "date": "24 kwi 2016",
+        "team1": "Merkury Nowogródek Pom.",
+        "team2": "Drawa Drawno",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 14,
+        "date": "01 maj 2016",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Żeńsko",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 16,
+        "date": "15 maj 2016",
+        "team1": "Drawa Drawno",
+        "team2": "Grom Płonno",
+        "score": "6:1"
+      },
+      {
+        "kolejka": 17,
+        "date": "29 maj 2016",
+        "team1": "Iskra Warszyn",
+        "team2": "Drawa Drawno",
+        "score": "3:4"
+      },
+      {
+        "kolejka": 18,
+        "date": "05 cze 2016",
+        "team1": "Drawa Drawno",
+        "team2": "Gryf Przekolno",
+        "score": "10:0"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 4.201520161164214e+118,
+        "nazwa": "B klasa Szczecin gr. 4 2015/2016",
+        "mecze": 0,
+        "pkt": 0,
+        "wygrane": 0,
+        "remisy": 0,
+        "przegrane": 0,
+        "bramki": "+/-"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Drawa Drawno",
+        "mecze": 16,
+        "pkt": 42,
+        "wygrane": 14,
+        "remisy": 0,
+        "przegrane": 2,
+        "bramki": "99/20"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Iskra Warszyn",
+        "mecze": 16,
+        "pkt": 40,
+        "wygrane": 13,
+        "remisy": 1,
+        "przegrane": 2,
+        "bramki": "57/14"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Merkury Nowogródek Pom.",
+        "mecze": 16,
+        "pkt": 29,
+        "wygrane": 9,
+        "remisy": 2,
+        "przegrane": 5,
+        "bramki": "43/22"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Pomorzanka Jarosławsko",
+        "mecze": 16,
+        "pkt": 23,
+        "wygrane": 7,
+        "remisy": 2,
+        "przegrane": 7,
+        "bramki": "33/45"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Pionier Zwierzyn",
+        "mecze": 16,
+        "pkt": 19,
+        "wygrane": 6,
+        "remisy": 1,
+        "przegrane": 9,
+        "bramki": "30/51"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Orzeł Żeńsko",
+        "mecze": 16,
+        "pkt": 17,
+        "wygrane": 5,
+        "remisy": 2,
+        "przegrane": 9,
+        "bramki": "37/53"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Grom Płonno",
+        "mecze": 16,
+        "pkt": 15,
+        "wygrane": 4,
+        "remisy": 3,
+        "przegrane": 9,
+        "bramki": "25/50"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Gavia II Choszczno",
+        "mecze": 16,
+        "pkt": 13,
+        "wygrane": 3,
+        "remisy": 4,
+        "przegrane": 9,
+        "bramki": "27/48"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Gryf Przekolno",
+        "mecze": 16,
+        "pkt": 9,
+        "wygrane": 2,
+        "remisy": 3,
+        "przegrane": 11,
+        "bramki": "18/66"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Drawa Drawno",
+        "mecze": 16,
+        "pkt": 42,
+        "wygrane": 14,
+        "remisy": 0,
+        "przegrane": 2,
+        "bramki": "99/20"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Iskra Warszyn",
+        "mecze": 16,
+        "pkt": 40,
+        "wygrane": 13,
+        "remisy": 1,
+        "przegrane": 2,
+        "bramki": "57/14"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Merkury Nowogródek Pom.",
+        "mecze": 16,
+        "pkt": 29,
+        "wygrane": 9,
+        "remisy": 2,
+        "przegrane": 5,
+        "bramki": "43/22"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Pomorzanka Jarosławsko",
+        "mecze": 16,
+        "pkt": 23,
+        "wygrane": 7,
+        "remisy": 2,
+        "przegrane": 7,
+        "bramki": "33/45"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Pionier Zwierzyn",
+        "mecze": 16,
+        "pkt": 19,
+        "wygrane": 6,
+        "remisy": 1,
+        "przegrane": 9,
+        "bramki": "30/51"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Orzeł Żeńsko",
+        "mecze": 16,
+        "pkt": 17,
+        "wygrane": 5,
+        "remisy": 2,
+        "przegrane": 9,
+        "bramki": "37/53"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Grom Płonno",
+        "mecze": 16,
+        "pkt": 15,
+        "wygrane": 4,
+        "remisy": 3,
+        "przegrane": 9,
+        "bramki": "25/50"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Gavia II Choszczno",
+        "mecze": 16,
+        "pkt": 13,
+        "wygrane": 3,
+        "remisy": 4,
+        "przegrane": 9,
+        "bramki": "27/48"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Gryf Przekolno",
+        "mecze": 16,
+        "pkt": 9,
+        "wygrane": 2,
+        "remisy": 3,
+        "przegrane": 11,
+        "bramki": "18/66"
+      }
+    ],
+    "sourceId": 901,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/901"
+  },
+  {
+    "liga": "A klasa Szczecin gr. 5",
+    "sezon": "2016/2017",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "27 sie 2016",
+        "team1": "Drawa Drawno",
+        "team2": "Świt Barnimie",
+        "score": "6:1"
+      },
+      {
+        "kolejka": 2,
+        "date": "04 wrz 2016",
+        "team1": "Sokół Sokoliniec",
+        "team2": "Drawa Drawno",
+        "score": "1:6"
+      },
+      {
+        "kolejka": 3,
+        "date": "11 wrz 2016",
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Pomień",
+        "score": "5:1"
+      },
+      {
+        "kolejka": 4,
+        "date": "18 wrz 2016",
+        "team1": "Drawa Drawno",
+        "team2": "Saturn Szadzko",
+        "score": "5:3"
+      },
+      {
+        "kolejka": 5,
+        "date": "25 wrz 2016",
+        "team1": "Iskra Warszyn",
+        "team2": "Drawa Drawno",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 6,
+        "date": "01 paź 2016",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Bierzwnik",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 7,
+        "date": "09 paź 2016",
+        "team1": "Błękitni Sarnik",
+        "team2": "Drawa Drawno",
+        "score": "0:9"
+      },
+      {
+        "kolejka": 8,
+        "date": "16 paź 2016",
+        "team1": "Drawa Drawno",
+        "team2": "Korona Raduń",
+        "score": "3:1"
+      },
+      {
+        "kolejka": 9,
+        "date": "23 paź 2016",
+        "team1": "Pomorzanin Zamęcin",
+        "team2": "Drawa Drawno",
+        "score": "2:6"
+      },
+      {
+        "kolejka": 10,
+        "date": "30 paź 2016",
+        "team1": "Drawa Drawno",
+        "team2": "Ina Nadarzyn",
+        "score": "7:4"
+      },
+      {
+        "kolejka": 11,
+        "date": "05 lis 2016",
+        "team1": "Ina Recz",
+        "team2": "Drawa Drawno",
+        "score": "1:3"
+      },
+      {
+        "kolejka": 12,
+        "date": "13 lis 2016",
+        "team1": "Drawa Drawno",
+        "team2": "Sokół Granowo",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 13,
+        "date": "20 lis 2016",
+        "team1": "Gryf Objezierze",
+        "team2": "Drawa Drawno",
+        "score": "0:2"
+      },
+      {
+        "kolejka": 14,
+        "date": "19 mar 2017",
+        "team1": "Świt Barnimie",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 15,
+        "date": "26 mar 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Sokół Sokoliniec",
+        "score": "3:1"
+      },
+      {
+        "kolejka": 16,
+        "date": "02 kwi 2017",
+        "team1": "Iskra Pomień",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 17,
+        "date": "09 kwi 2017",
+        "team1": "Saturn Szadzko",
+        "team2": "Drawa Drawno",
+        "score": "2:4"
+      },
+      {
+        "kolejka": 18,
+        "date": "23 kwi 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Warszyn",
+        "score": "5:2"
+      },
+      {
+        "kolejka": 19,
+        "date": "29 kwi 2017",
+        "team1": "Orzeł Bierzwnik",
+        "team2": "Drawa Drawno",
+        "score": "2:4"
+      },
+      {
+        "kolejka": 20,
+        "date": "07 maj 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Błękitni Sarnik",
+        "score": "16:1"
+      },
+      {
+        "kolejka": 21,
+        "date": "13 maj 2017",
+        "team1": "Korona Raduń",
+        "team2": "Drawa Drawno",
+        "score": "1:8"
+      },
+      {
+        "kolejka": 22,
+        "date": "20 maj 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Pomorzanin Zamęcin",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 23,
+        "date": "28 maj 2017",
+        "team1": "Ina Nadarzyn",
+        "team2": "Drawa Drawno",
+        "score": "1:3"
+      },
+      {
+        "kolejka": 24,
+        "date": "04 cze 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Ina Recz",
+        "score": "8:1"
+      },
+      {
+        "kolejka": 25,
+        "date": "11 cze 2017",
+        "team1": "Sokół Granowo",
+        "team2": "Drawa Drawno",
+        "score": "0:13"
+      },
+      {
+        "kolejka": 26,
+        "date": "18 cze 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Gryf Objezierze",
+        "score": "6:0"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 5.201620171267224e+205,
+        "nazwa": "A klasa Szczecin gr. 5 2016/2017",
+        "mecze": 0,
+        "pkt": 0,
+        "wygrane": 0,
+        "remisy": 0,
+        "przegrane": 0,
+        "bramki": "+/-"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Drawa Drawno",
+        "mecze": 26,
+        "pkt": 72,
+        "wygrane": 24,
+        "remisy": 0,
+        "przegrane": 2,
+        "bramki": "134/31"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Orzeł Bierzwnik",
+        "mecze": 26,
+        "pkt": 67,
+        "wygrane": 22,
+        "remisy": 1,
+        "przegrane": 3,
+        "bramki": "130/39"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Iskra Pomień",
+        "mecze": 26,
+        "pkt": 55,
+        "wygrane": 18,
+        "remisy": 1,
+        "przegrane": 7,
+        "bramki": "118/50"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Pomorzanin Zamęcin",
+        "mecze": 26,
+        "pkt": 48,
+        "wygrane": 16,
+        "remisy": 0,
+        "przegrane": 10,
+        "bramki": "57/50"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Remor Recz",
+        "mecze": 26,
+        "pkt": 44,
+        "wygrane": 14,
+        "remisy": 2,
+        "przegrane": 10,
+        "bramki": "56/47"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Ina Nadarzyn",
+        "mecze": 26,
+        "pkt": 42,
+        "wygrane": 13,
+        "remisy": 3,
+        "przegrane": 10,
+        "bramki": "75/67"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Iskra Warszyn",
+        "mecze": 26,
+        "pkt": 41,
+        "wygrane": 13,
+        "remisy": 2,
+        "przegrane": 11,
+        "bramki": "54/68"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Gryf Objezierze",
+        "mecze": 26,
+        "pkt": 33,
+        "wygrane": 10,
+        "remisy": 3,
+        "przegrane": 13,
+        "bramki": "47/65"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Korona Raduń",
+        "mecze": 26,
+        "pkt": 31,
+        "wygrane": 9,
+        "remisy": 4,
+        "przegrane": 13,
+        "bramki": "84/76"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Świt Barnimie",
+        "mecze": 26,
+        "pkt": 23,
+        "wygrane": 6,
+        "remisy": 5,
+        "przegrane": 15,
+        "bramki": "56/79"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Saturn Szadzko",
+        "mecze": 26,
+        "pkt": 23,
+        "wygrane": 7,
+        "remisy": 2,
+        "przegrane": 17,
+        "bramki": "57/81"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Sokół Sokoliniec",
+        "mecze": 26,
+        "pkt": 20,
+        "wygrane": 5,
+        "remisy": 5,
+        "przegrane": 16,
+        "bramki": "29/78"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Błękitni Sarnik",
+        "mecze": 26,
+        "pkt": 19,
+        "wygrane": 5,
+        "remisy": 4,
+        "przegrane": 17,
+        "bramki": "34/110"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Sokół Granowo",
+        "mecze": 26,
+        "pkt": 10,
+        "wygrane": 2,
+        "remisy": 4,
+        "przegrane": 20,
+        "bramki": "41/131"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Drawa Drawno",
+        "mecze": 26,
+        "pkt": 72,
+        "wygrane": 24,
+        "remisy": 0,
+        "przegrane": 2,
+        "bramki": "134/31"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Orzeł Bierzwnik",
+        "mecze": 26,
+        "pkt": 67,
+        "wygrane": 22,
+        "remisy": 1,
+        "przegrane": 3,
+        "bramki": "130/39"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Iskra Pomień",
+        "mecze": 26,
+        "pkt": 55,
+        "wygrane": 18,
+        "remisy": 1,
+        "przegrane": 7,
+        "bramki": "118/50"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Pomorzanin Zamęcin",
+        "mecze": 26,
+        "pkt": 48,
+        "wygrane": 16,
+        "remisy": 0,
+        "przegrane": 10,
+        "bramki": "57/50"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Remor Recz",
+        "mecze": 26,
+        "pkt": 44,
+        "wygrane": 14,
+        "remisy": 2,
+        "przegrane": 10,
+        "bramki": "56/47"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Ina Nadarzyn",
+        "mecze": 26,
+        "pkt": 42,
+        "wygrane": 13,
+        "remisy": 3,
+        "przegrane": 10,
+        "bramki": "75/67"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Iskra Warszyn",
+        "mecze": 26,
+        "pkt": 41,
+        "wygrane": 13,
+        "remisy": 2,
+        "przegrane": 11,
+        "bramki": "54/68"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Gryf Objezierze",
+        "mecze": 26,
+        "pkt": 33,
+        "wygrane": 10,
+        "remisy": 3,
+        "przegrane": 13,
+        "bramki": "47/65"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Korona Raduń",
+        "mecze": 26,
+        "pkt": 31,
+        "wygrane": 9,
+        "remisy": 4,
+        "przegrane": 13,
+        "bramki": "84/76"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Świt Barnimie",
+        "mecze": 26,
+        "pkt": 23,
+        "wygrane": 6,
+        "remisy": 5,
+        "przegrane": 15,
+        "bramki": "56/79"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Saturn Szadzko",
+        "mecze": 26,
+        "pkt": 23,
+        "wygrane": 7,
+        "remisy": 2,
+        "przegrane": 17,
+        "bramki": "57/81"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Sokół Sokoliniec",
+        "mecze": 26,
+        "pkt": 20,
+        "wygrane": 5,
+        "remisy": 5,
+        "przegrane": 16,
+        "bramki": "29/78"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Błękitni Sarnik",
+        "mecze": 26,
+        "pkt": 19,
+        "wygrane": 5,
+        "remisy": 4,
+        "przegrane": 17,
+        "bramki": "34/110"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Sokół Granowo",
+        "mecze": 26,
+        "pkt": 10,
+        "wygrane": 2,
+        "remisy": 4,
+        "przegrane": 20,
+        "bramki": "41/131"
+      }
+    ],
+    "sourceId": 998,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/998"
+  },
+  {
+    "liga": "Klasa Okręgowa - gr. Szczecin Płd.",
+    "sezon": "2017/2018",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "20 sie 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Kłos Pełczyce",
+        "score": "3:3"
+      },
+      {
+        "kolejka": 2,
+        "date": "27 sie 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Czcibor Cedynia",
+        "score": "6:0"
+      },
+      {
+        "kolejka": 3,
+        "date": "03 wrz 2017",
+        "team1": "Myśla Dargomyśl",
+        "team2": "Drawa Drawno",
+        "score": "7:4"
+      },
+      {
+        "kolejka": 4,
+        "date": "10 wrz 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Polonia Giżyn",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 5,
+        "date": "17 wrz 2017",
+        "team1": "Sokół Pyrzyce",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 6,
+        "date": "24 wrz 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Pogoń Barlinek",
+        "score": "3:1"
+      },
+      {
+        "kolejka": 7,
+        "date": "30 wrz 2017",
+        "team1": "Orkan Suchań",
+        "team2": "Drawa Drawno",
+        "score": "5:1"
+      },
+      {
+        "kolejka": 8,
+        "date": "08 paź 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Trzcińsko-Zdrój",
+        "score": "9:3"
+      },
+      {
+        "kolejka": 9,
+        "date": "15 paź 2017",
+        "team1": "Klon Krzęcin",
+        "team2": "Drawa Drawno",
+        "score": "3:7"
+      },
+      {
+        "kolejka": 10,
+        "date": "22 paź 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Unia Dolice",
+        "score": "4:2"
+      },
+      {
+        "kolejka": 11,
+        "date": "28 paź 2017",
+        "team1": "Sęp Brzesko",
+        "team2": "Drawa Drawno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 12,
+        "date": "05 lis 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Zieloni Zielin",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 13,
+        "date": "11 lis 2017",
+        "team1": "AP Gavia Choszczno",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 14,
+        "date": "19 lis 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Piast Karsko",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 15,
+        "date": "26 lis 2017",
+        "team1": "Czarni Lubanowo",
+        "team2": "Drawa Drawno",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 17,
+        "date": "18 mar 2018",
+        "team1": "Czcibor Cedynia",
+        "team2": "Drawa Drawno",
+        "score": "5:2"
+      },
+      {
+        "kolejka": 18,
+        "date": "25 mar 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Myśla Dargomyśl",
+        "score": "5:0"
+      },
+      {
+        "kolejka": 19,
+        "date": "31 mar 2018",
+        "team1": "Polonia Giżyn",
+        "team2": "Drawa Drawno",
+        "score": "1:3"
+      },
+      {
+        "kolejka": 20,
+        "date": "08 kwi 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Sokół Pyrzyce",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 21,
+        "date": "14 kwi 2018",
+        "team1": "Pogoń Barlinek",
+        "team2": "Drawa Drawno",
+        "score": "3:1"
+      },
+      {
+        "kolejka": 22,
+        "date": "22 kwi 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Orkan Suchań",
+        "score": "3:2"
+      },
+      {
+        "kolejka": 23,
+        "date": "29 kwi 2018",
+        "team1": "Orzeł Trzcińsko-Zdrój",
+        "team2": "Drawa Drawno",
+        "score": "4:4"
+      },
+      {
+        "kolejka": 24,
+        "date": "06 maj 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Klon Krzęcin",
+        "score": "4:2"
+      },
+      {
+        "kolejka": 25,
+        "date": "12 maj 2018",
+        "team1": "Unia Dolice",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 26,
+        "date": "20 maj 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Sęp Brzesko",
+        "score": "4:0"
+      },
+      {
+        "kolejka": 16,
+        "date": "23 maj 2018",
+        "team1": "Kłos Pełczyce",
+        "team2": "Drawa Drawno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 27,
+        "date": "27 maj 2018",
+        "team1": "Zieloni Zielin",
+        "team2": "Drawa Drawno",
+        "score": "3:2"
+      },
+      {
+        "kolejka": 28,
+        "date": "03 cze 2018",
+        "team1": "Drawa Drawno",
+        "team2": "AP Gavia Choszczno",
+        "score": "0:2"
+      },
+      {
+        "kolejka": 29,
+        "date": "10 cze 2018",
+        "team1": "Piast Karsko",
+        "team2": "Drawa Drawno",
+        "score": "5:1"
+      },
+      {
+        "kolejka": 30,
+        "date": "16 cze 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Czarni Lubanowo",
+        "score": "10:0"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 1,
+        "nazwa": "Sokół Pyrzyce",
+        "mecze": 30,
+        "pkt": 68,
+        "wygrane": 21,
+        "remisy": 5,
+        "przegrane": 4,
+        "bramki": "75/42"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Gavia Choszczno",
+        "mecze": 30,
+        "pkt": 57,
+        "wygrane": 16,
+        "remisy": 9,
+        "przegrane": 5,
+        "bramki": "66/36"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Kłos Pełczyce",
+        "mecze": 30,
+        "pkt": 56,
+        "wygrane": 16,
+        "remisy": 8,
+        "przegrane": 6,
+        "bramki": "59/32"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Orkan Suchań",
+        "mecze": 30,
+        "pkt": 54,
+        "wygrane": 17,
+        "remisy": 3,
+        "przegrane": 10,
+        "bramki": "59/39"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Unia Dolice",
+        "mecze": 30,
+        "pkt": 50,
+        "wygrane": 15,
+        "remisy": 5,
+        "przegrane": 10,
+        "bramki": "78/46"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Drawa Drawno",
+        "mecze": 30,
+        "pkt": 49,
+        "wygrane": 15,
+        "remisy": 4,
+        "przegrane": 11,
+        "bramki": "94/63"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Czcibor Cedynia",
+        "mecze": 30,
+        "pkt": 48,
+        "wygrane": 15,
+        "remisy": 3,
+        "przegrane": 12,
+        "bramki": "73/64"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Sęp Brzesko",
+        "mecze": 30,
+        "pkt": 48,
+        "wygrane": 15,
+        "remisy": 3,
+        "przegrane": 12,
+        "bramki": "57/54"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Piast Karsko",
+        "mecze": 30,
+        "pkt": 39,
+        "wygrane": 10,
+        "remisy": 9,
+        "przegrane": 11,
+        "bramki": "53/55"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Zieloni Zielin",
+        "mecze": 30,
+        "pkt": 35,
+        "wygrane": 10,
+        "remisy": 5,
+        "przegrane": 15,
+        "bramki": "51/69"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Polonia Giżyn",
+        "mecze": 30,
+        "pkt": 34,
+        "wygrane": 10,
+        "remisy": 4,
+        "przegrane": 16,
+        "bramki": "53/67"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "SCRS Barlinek",
+        "mecze": 30,
+        "pkt": 33,
+        "wygrane": 10,
+        "remisy": 3,
+        "przegrane": 17,
+        "bramki": "52/59"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Klon Krzęcin",
+        "mecze": 30,
+        "pkt": 32,
+        "wygrane": 10,
+        "remisy": 2,
+        "przegrane": 18,
+        "bramki": "56/80"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Myśla Dargomyśl",
+        "mecze": 30,
+        "pkt": 31,
+        "wygrane": 10,
+        "remisy": 1,
+        "przegrane": 19,
+        "bramki": "57/87"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Orzeł Trzcińsko-Zdrój",
+        "mecze": 30,
+        "pkt": 29,
+        "wygrane": 8,
+        "remisy": 5,
+        "przegrane": 17,
+        "bramki": "56/92"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Czarni Lubanowo",
+        "mecze": 30,
+        "pkt": 21,
+        "wygrane": 6,
+        "remisy": 3,
+        "przegrane": 21,
+        "bramki": "32/86"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Sokół Pyrzyce",
+        "mecze": 30,
+        "pkt": 68,
+        "wygrane": 21,
+        "remisy": 5,
+        "przegrane": 4,
+        "bramki": "75/42"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Gavia Choszczno",
+        "mecze": 30,
+        "pkt": 57,
+        "wygrane": 16,
+        "remisy": 9,
+        "przegrane": 5,
+        "bramki": "66/36"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Kłos Pełczyce",
+        "mecze": 30,
+        "pkt": 56,
+        "wygrane": 16,
+        "remisy": 8,
+        "przegrane": 6,
+        "bramki": "59/32"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Orkan Suchań",
+        "mecze": 30,
+        "pkt": 54,
+        "wygrane": 17,
+        "remisy": 3,
+        "przegrane": 10,
+        "bramki": "59/39"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Unia Dolice",
+        "mecze": 30,
+        "pkt": 50,
+        "wygrane": 15,
+        "remisy": 5,
+        "przegrane": 10,
+        "bramki": "78/46"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Drawa Drawno",
+        "mecze": 30,
+        "pkt": 49,
+        "wygrane": 15,
+        "remisy": 4,
+        "przegrane": 11,
+        "bramki": "94/63"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Czcibor Cedynia",
+        "mecze": 30,
+        "pkt": 48,
+        "wygrane": 15,
+        "remisy": 3,
+        "przegrane": 12,
+        "bramki": "73/64"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Sęp Brzesko",
+        "mecze": 30,
+        "pkt": 48,
+        "wygrane": 15,
+        "remisy": 3,
+        "przegrane": 12,
+        "bramki": "57/54"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Piast Karsko",
+        "mecze": 30,
+        "pkt": 39,
+        "wygrane": 10,
+        "remisy": 9,
+        "przegrane": 11,
+        "bramki": "53/55"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Zieloni Zielin",
+        "mecze": 30,
+        "pkt": 35,
+        "wygrane": 10,
+        "remisy": 5,
+        "przegrane": 15,
+        "bramki": "51/69"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Polonia Giżyn",
+        "mecze": 30,
+        "pkt": 34,
+        "wygrane": 10,
+        "remisy": 4,
+        "przegrane": 16,
+        "bramki": "53/67"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "SCRS Barlinek",
+        "mecze": 30,
+        "pkt": 33,
+        "wygrane": 10,
+        "remisy": 3,
+        "przegrane": 17,
+        "bramki": "52/59"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Klon Krzęcin",
+        "mecze": 30,
+        "pkt": 32,
+        "wygrane": 10,
+        "remisy": 2,
+        "przegrane": 18,
+        "bramki": "56/80"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Myśla Dargomyśl",
+        "mecze": 30,
+        "pkt": 31,
+        "wygrane": 10,
+        "remisy": 1,
+        "przegrane": 19,
+        "bramki": "57/87"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Orzeł Trzcińsko-Zdrój",
+        "mecze": 30,
+        "pkt": 29,
+        "wygrane": 8,
+        "remisy": 5,
+        "przegrane": 17,
+        "bramki": "56/92"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Czarni Lubanowo",
+        "mecze": 30,
+        "pkt": 21,
+        "wygrane": 6,
+        "remisy": 3,
+        "przegrane": 21,
+        "bramki": "32/86"
+      }
+    ],
+    "sourceId": 1096,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/1096"
+  },
+  {
+    "liga": "Puchar Polski ZZPN",
+    "sezon": "2017/2018",
+    "mecze": [
+      {
+        "kolejka": null,
+        "date": "06 wrz 2017",
+        "team1": "Drawa Drawno",
+        "team2": "Pogoń Barlinek",
+        "score": "3:4"
+      }
+    ],
+    "tabela": [],
+    "sourceId": 1132,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/1132"
+  },
+  {
+    "liga": "A klasa Szczecin gr. płd",
+    "sezon": "2018/2019",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "18 sie 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Ina Elektrobim Ińsko",
+        "score": "8:2"
+      },
+      {
+        "kolejka": 2,
+        "date": "25 sie 2018",
+        "team1": "Orkan Suchań",
+        "team2": "Drawa Drawno",
+        "score": "5:0"
+      },
+      {
+        "kolejka": 3,
+        "date": "01 wrz 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Błękit Pniewo",
+        "score": "3:1"
+      },
+      {
+        "kolejka": 4,
+        "date": "08 wrz 2018",
+        "team1": "Stal Lipiany",
+        "team2": "Drawa Drawno",
+        "score": "1:3"
+      },
+      {
+        "kolejka": 5,
+        "date": "15 wrz 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Energetyk Gryfino",
+        "score": "3:1"
+      },
+      {
+        "kolejka": 6,
+        "date": "22 wrz 2018",
+        "team1": "Unia Dolice",
+        "team2": "Drawa Drawno",
+        "score": "4:0"
+      },
+      {
+        "kolejka": 7,
+        "date": "29 wrz 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Kłos Pełczyce",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 8,
+        "date": "06 paź 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Świt Barnimie",
+        "score": "8:2"
+      },
+      {
+        "kolejka": 9,
+        "date": "14 paź 2018",
+        "team1": "Czcibor Cedynia",
+        "team2": "Drawa Drawno",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 10,
+        "date": "20 paź 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Sęp Brzesko",
+        "score": "0:2"
+      },
+      {
+        "kolejka": 11,
+        "date": "28 paź 2018",
+        "team1": "Polonia Giżyn",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 12,
+        "date": "03 lis 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Pogoń Barlinek",
+        "score": "5:0"
+      },
+      {
+        "kolejka": 13,
+        "date": "10 lis 2018",
+        "team1": "Klon Krzęcin",
+        "team2": "Drawa Drawno",
+        "score": "2:4"
+      },
+      {
+        "kolejka": 14,
+        "date": "17 lis 2018",
+        "team1": "Drawa Drawno",
+        "team2": "Zieloni Zielin",
+        "score": "5:2"
+      },
+      {
+        "kolejka": 15,
+        "date": "25 lis 2018",
+        "team1": "Piast Karsko",
+        "team2": "Drawa Drawno",
+        "score": "6:1"
+      },
+      {
+        "kolejka": 18,
+        "date": "00  2019",
+        "team1": "Błękit Pniewo",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 16,
+        "date": "09 mar 2019",
+        "team1": "Ina Elektrobim Ińsko",
+        "team2": "Drawa Drawno",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 17,
+        "date": "16 mar 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Orkan Suchań",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 19,
+        "date": "30 mar 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Stal Lipiany",
+        "score": "0:4"
+      },
+      {
+        "kolejka": 20,
+        "date": "07 kwi 2019",
+        "team1": "Energetyk Gryfino",
+        "team2": "Drawa Drawno",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 21,
+        "date": "13 kwi 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Unia Dolice",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 22,
+        "date": "20 kwi 2019",
+        "team1": "Kłos Pełczyce",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 23,
+        "date": "27 kwi 2019",
+        "team1": "Świt Barnimie",
+        "team2": "Drawa Drawno",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 24,
+        "date": "04 maj 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Czcibor Cedynia",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 25,
+        "date": "11 maj 2019",
+        "team1": "Sęp Brzesko",
+        "team2": "Drawa Drawno",
+        "score": "2:4"
+      },
+      {
+        "kolejka": 26,
+        "date": "19 maj 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Polonia Giżyn",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 27,
+        "date": "25 maj 2019",
+        "team1": "Pogoń Barlinek",
+        "team2": "Drawa Drawno",
+        "score": "7:0"
+      },
+      {
+        "kolejka": 28,
+        "date": "01 cze 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Klon Krzęcin",
+        "score": "12:0"
+      },
+      {
+        "kolejka": 29,
+        "date": "09 cze 2019",
+        "team1": "Zieloni Zielin",
+        "team2": "Drawa Drawno",
+        "score": "6:3"
+      },
+      {
+        "kolejka": 30,
+        "date": "15 cze 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Piast Karsko",
+        "score": "0:4"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 2.0182019130692166e+230,
+        "nazwa": "A klasa Szczecin gr. płd 2018/2019",
+        "mecze": 0,
+        "pkt": 0,
+        "wygrane": 0,
+        "remisy": 0,
+        "przegrane": 0,
+        "bramki": "+/-"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Czcibor Cedynia",
+        "mecze": 30,
+        "pkt": 69,
+        "wygrane": 21,
+        "remisy": 6,
+        "przegrane": 3,
+        "bramki": "85/28"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Orkan Suchań",
+        "mecze": 30,
+        "pkt": 68,
+        "wygrane": 21,
+        "remisy": 5,
+        "przegrane": 4,
+        "bramki": "101/34"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Piast Karsko",
+        "mecze": 30,
+        "pkt": 64,
+        "wygrane": 21,
+        "remisy": 1,
+        "przegrane": 8,
+        "bramki": "101/43"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Kłos Pełczyce",
+        "mecze": 30,
+        "pkt": 59,
+        "wygrane": 19,
+        "remisy": 2,
+        "przegrane": 9,
+        "bramki": "60/35"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Unia Dolice",
+        "mecze": 30,
+        "pkt": 57,
+        "wygrane": 18,
+        "remisy": 3,
+        "przegrane": 9,
+        "bramki": "72/47"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Drawa Drawno",
+        "mecze": 30,
+        "pkt": 52,
+        "wygrane": 17,
+        "remisy": 1,
+        "przegrane": 12,
+        "bramki": "80/69"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Energetyk Gryfino",
+        "mecze": 30,
+        "pkt": 51,
+        "wygrane": 16,
+        "remisy": 3,
+        "przegrane": 11,
+        "bramki": "71/60"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Stal Lipiany",
+        "mecze": 30,
+        "pkt": 47,
+        "wygrane": 15,
+        "remisy": 2,
+        "przegrane": 13,
+        "bramki": "88/63"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Ina Ińsko",
+        "mecze": 30,
+        "pkt": 43,
+        "wygrane": 12,
+        "remisy": 7,
+        "przegrane": 11,
+        "bramki": "65/66"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "SCRS Barlinek",
+        "mecze": 30,
+        "pkt": 43,
+        "wygrane": 12,
+        "remisy": 7,
+        "przegrane": 11,
+        "bramki": "70/48"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Polonia Giżyn",
+        "mecze": 30,
+        "pkt": 36,
+        "wygrane": 11,
+        "remisy": 3,
+        "przegrane": 16,
+        "bramki": "61/69"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Zieloni Zielin",
+        "mecze": 30,
+        "pkt": 35,
+        "wygrane": 9,
+        "remisy": 8,
+        "przegrane": 13,
+        "bramki": "50/59"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Sęp Brzesko",
+        "mecze": 30,
+        "pkt": 21,
+        "wygrane": 5,
+        "remisy": 6,
+        "przegrane": 19,
+        "bramki": "32/72"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Świt Barnimie",
+        "mecze": 30,
+        "pkt": 18,
+        "wygrane": 5,
+        "remisy": 3,
+        "przegrane": 22,
+        "bramki": "44/130"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Klon Krzęcin",
+        "mecze": 30,
+        "pkt": 8,
+        "wygrane": 2,
+        "remisy": 2,
+        "przegrane": 26,
+        "bramki": "30/134"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Błękit Pniewo",
+        "mecze": 30,
+        "pkt": 0,
+        "wygrane": 6,
+        "remisy": 1,
+        "przegrane": 23,
+        "bramki": "24/77"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Czcibor Cedynia",
+        "mecze": 30,
+        "pkt": 69,
+        "wygrane": 21,
+        "remisy": 6,
+        "przegrane": 3,
+        "bramki": "85/28"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Orkan Suchań",
+        "mecze": 30,
+        "pkt": 68,
+        "wygrane": 21,
+        "remisy": 5,
+        "przegrane": 4,
+        "bramki": "101/34"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Piast Karsko",
+        "mecze": 30,
+        "pkt": 64,
+        "wygrane": 21,
+        "remisy": 1,
+        "przegrane": 8,
+        "bramki": "101/43"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Kłos Pełczyce",
+        "mecze": 30,
+        "pkt": 59,
+        "wygrane": 19,
+        "remisy": 2,
+        "przegrane": 9,
+        "bramki": "60/35"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Unia Dolice",
+        "mecze": 30,
+        "pkt": 57,
+        "wygrane": 18,
+        "remisy": 3,
+        "przegrane": 9,
+        "bramki": "72/47"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Drawa Drawno",
+        "mecze": 30,
+        "pkt": 52,
+        "wygrane": 17,
+        "remisy": 1,
+        "przegrane": 12,
+        "bramki": "80/69"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Energetyk Gryfino",
+        "mecze": 30,
+        "pkt": 51,
+        "wygrane": 16,
+        "remisy": 3,
+        "przegrane": 11,
+        "bramki": "71/60"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Stal Lipiany",
+        "mecze": 30,
+        "pkt": 47,
+        "wygrane": 15,
+        "remisy": 2,
+        "przegrane": 13,
+        "bramki": "88/63"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Ina Ińsko",
+        "mecze": 30,
+        "pkt": 43,
+        "wygrane": 12,
+        "remisy": 7,
+        "przegrane": 11,
+        "bramki": "65/66"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "SCRS Barlinek",
+        "mecze": 30,
+        "pkt": 43,
+        "wygrane": 12,
+        "remisy": 7,
+        "przegrane": 11,
+        "bramki": "70/48"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Polonia Giżyn",
+        "mecze": 30,
+        "pkt": 36,
+        "wygrane": 11,
+        "remisy": 3,
+        "przegrane": 16,
+        "bramki": "61/69"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Zieloni Zielin",
+        "mecze": 30,
+        "pkt": 35,
+        "wygrane": 9,
+        "remisy": 8,
+        "przegrane": 13,
+        "bramki": "50/59"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Sęp Brzesko",
+        "mecze": 30,
+        "pkt": 21,
+        "wygrane": 5,
+        "remisy": 6,
+        "przegrane": 19,
+        "bramki": "32/72"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Świt Barnimie",
+        "mecze": 30,
+        "pkt": 18,
+        "wygrane": 5,
+        "remisy": 3,
+        "przegrane": 22,
+        "bramki": "44/130"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Klon Krzęcin",
+        "mecze": 30,
+        "pkt": 8,
+        "wygrane": 2,
+        "remisy": 2,
+        "przegrane": 26,
+        "bramki": "30/134"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Błękit Pniewo",
+        "mecze": 30,
+        "pkt": 0,
+        "wygrane": 6,
+        "remisy": 1,
+        "przegrane": 23,
+        "bramki": "24/77"
+      }
+    ],
+    "sourceId": 1202,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/1202"
+  },
+  {
+    "liga": "Puchar Polski ZZPN",
+    "sezon": "2018/2019",
+    "mecze": [
+      {
+        "kolejka": null,
+        "date": "05 wrz 2018",
+        "team1": "Ina Nadarzyn",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      }
+    ],
+    "tabela": [],
+    "sourceId": 1226,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/1226"
+  },
+  {
+    "liga": "Klasa Okręgowa gr. 2  Szczecin południe",
+    "sezon": "2019/2020",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "17 sie 2019",
+        "team1": "Orkan Suchań",
+        "team2": "Drawa Drawno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 2,
+        "date": "25 sie 2019",
+        "team1": "Drawa Drawno",
+        "team2": "D±b Dębno",
+        "score": "0:0"
+      },
+      {
+        "kolejka": 3,
+        "date": "01 wrz 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Banie",
+        "score": "5:1"
+      },
+      {
+        "kolejka": 4,
+        "date": "08 wrz 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Osadnik Myślibórz",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 5,
+        "date": "14 wrz 2019",
+        "team1": "Stal Lipiany",
+        "team2": "Drawa Drawno",
+        "score": "5:2"
+      },
+      {
+        "kolejka": 6,
+        "date": "22 wrz 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Biali S±dów",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 7,
+        "date": "29 wrz 2019",
+        "team1": "Czcibor Cedynia",
+        "team2": "Drawa Drawno",
+        "score": "1:0"
+      },
+      {
+        "kolejka": 8,
+        "date": "06 paź 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Kłos Pełczyce",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 9,
+        "date": "13 paź 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Sokół Pyrzyce",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 10,
+        "date": "20 paź 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Odra Chojna",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 11,
+        "date": "27 paź 2019",
+        "team1": "Piast Karsko",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 12,
+        "date": "03 lis 2019",
+        "team1": "Drawa Drawno",
+        "team2": "A.P. Gavia Choszczno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 13,
+        "date": "09 lis 2019",
+        "team1": "Unia Dolice",
+        "team2": "Drawa Drawno",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 14,
+        "date": "17 lis 2019",
+        "team1": "Drawa Drawno",
+        "team2": "Energetyk Gryfino",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 15,
+        "date": "23 lis 2019",
+        "team1": "Morzycko Moryń",
+        "team2": "Drawa Drawno",
+        "score": "2:6"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 1,
+        "nazwa": "Biali S±dów",
+        "mecze": 15,
+        "pkt": 34,
+        "wygrane": 10,
+        "remisy": 4,
+        "przegrane": 1,
+        "bramki": "61/19"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Energetyk Gryfino",
+        "mecze": 15,
+        "pkt": 32,
+        "wygrane": 10,
+        "remisy": 2,
+        "przegrane": 3,
+        "bramki": "47/31"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Osadnik Myślibórz",
+        "mecze": 15,
+        "pkt": 30,
+        "wygrane": 9,
+        "remisy": 3,
+        "przegrane": 3,
+        "bramki": "35/23"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "D±b Dębno",
+        "mecze": 15,
+        "pkt": 29,
+        "wygrane": 9,
+        "remisy": 2,
+        "przegrane": 4,
+        "bramki": "25/25"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Sokół Pyrzyce",
+        "mecze": 15,
+        "pkt": 25,
+        "wygrane": 8,
+        "remisy": 1,
+        "przegrane": 6,
+        "bramki": "30/34"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Kłos Pełczyce",
+        "mecze": 15,
+        "pkt": 25,
+        "wygrane": 8,
+        "remisy": 1,
+        "przegrane": 6,
+        "bramki": "29/24"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Czcibor Cedynia",
+        "mecze": 15,
+        "pkt": 25,
+        "wygrane": 8,
+        "remisy": 1,
+        "przegrane": 6,
+        "bramki": "25/20"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Odra Chojna",
+        "mecze": 15,
+        "pkt": 21,
+        "wygrane": 6,
+        "remisy": 3,
+        "przegrane": 6,
+        "bramki": "35/25"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Morzycko Moryń",
+        "mecze": 15,
+        "pkt": 19,
+        "wygrane": 6,
+        "remisy": 1,
+        "przegrane": 8,
+        "bramki": "30/33"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "A.P. Gavia Choszczno",
+        "mecze": 15,
+        "pkt": 17,
+        "wygrane": 5,
+        "remisy": 2,
+        "przegrane": 8,
+        "bramki": "25/35"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Unia Dolice",
+        "mecze": 15,
+        "pkt": 16,
+        "wygrane": 4,
+        "remisy": 4,
+        "przegrane": 7,
+        "bramki": "25/26"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Iskra Banie",
+        "mecze": 15,
+        "pkt": 15,
+        "wygrane": 4,
+        "remisy": 3,
+        "przegrane": 8,
+        "bramki": "31/39"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Stal Lipiany",
+        "mecze": 15,
+        "pkt": 15,
+        "wygrane": 4,
+        "remisy": 3,
+        "przegrane": 8,
+        "bramki": "33/53"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Orkan Suchań",
+        "mecze": 15,
+        "pkt": 13,
+        "wygrane": 3,
+        "remisy": 4,
+        "przegrane": 8,
+        "bramki": "24/33"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Piast Karsko",
+        "mecze": 15,
+        "pkt": 13,
+        "wygrane": 4,
+        "remisy": 1,
+        "przegrane": 10,
+        "bramki": "22/49"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Drawa Drawno",
+        "mecze": 15,
+        "pkt": 13,
+        "wygrane": 4,
+        "remisy": 1,
+        "przegrane": 10,
+        "bramki": "20/28"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Biali S±dów",
+        "mecze": 15,
+        "pkt": 34,
+        "wygrane": 10,
+        "remisy": 4,
+        "przegrane": 1,
+        "bramki": "61/19"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Energetyk Gryfino",
+        "mecze": 15,
+        "pkt": 32,
+        "wygrane": 10,
+        "remisy": 2,
+        "przegrane": 3,
+        "bramki": "47/31"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Osadnik Myślibórz",
+        "mecze": 15,
+        "pkt": 30,
+        "wygrane": 9,
+        "remisy": 3,
+        "przegrane": 3,
+        "bramki": "35/23"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "D±b Dębno",
+        "mecze": 15,
+        "pkt": 29,
+        "wygrane": 9,
+        "remisy": 2,
+        "przegrane": 4,
+        "bramki": "25/25"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Sokół Pyrzyce",
+        "mecze": 15,
+        "pkt": 25,
+        "wygrane": 8,
+        "remisy": 1,
+        "przegrane": 6,
+        "bramki": "30/34"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Kłos Pełczyce",
+        "mecze": 15,
+        "pkt": 25,
+        "wygrane": 8,
+        "remisy": 1,
+        "przegrane": 6,
+        "bramki": "29/24"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Czcibor Cedynia",
+        "mecze": 15,
+        "pkt": 25,
+        "wygrane": 8,
+        "remisy": 1,
+        "przegrane": 6,
+        "bramki": "25/20"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Odra Chojna",
+        "mecze": 15,
+        "pkt": 21,
+        "wygrane": 6,
+        "remisy": 3,
+        "przegrane": 6,
+        "bramki": "35/25"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Morzycko Moryń",
+        "mecze": 15,
+        "pkt": 19,
+        "wygrane": 6,
+        "remisy": 1,
+        "przegrane": 8,
+        "bramki": "30/33"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "A.P. Gavia Choszczno",
+        "mecze": 15,
+        "pkt": 17,
+        "wygrane": 5,
+        "remisy": 2,
+        "przegrane": 8,
+        "bramki": "25/35"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Unia Dolice",
+        "mecze": 15,
+        "pkt": 16,
+        "wygrane": 4,
+        "remisy": 4,
+        "przegrane": 7,
+        "bramki": "25/26"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Iskra Banie",
+        "mecze": 15,
+        "pkt": 15,
+        "wygrane": 4,
+        "remisy": 3,
+        "przegrane": 8,
+        "bramki": "31/39"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Stal Lipiany",
+        "mecze": 15,
+        "pkt": 15,
+        "wygrane": 4,
+        "remisy": 3,
+        "przegrane": 8,
+        "bramki": "33/53"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Orkan Suchań",
+        "mecze": 15,
+        "pkt": 13,
+        "wygrane": 3,
+        "remisy": 4,
+        "przegrane": 8,
+        "bramki": "24/33"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Piast Karsko",
+        "mecze": 15,
+        "pkt": 13,
+        "wygrane": 4,
+        "remisy": 1,
+        "przegrane": 10,
+        "bramki": "22/49"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Drawa Drawno",
+        "mecze": 15,
+        "pkt": 13,
+        "wygrane": 4,
+        "remisy": 1,
+        "przegrane": 10,
+        "bramki": "20/28"
+      }
+    ],
+    "sourceId": 1289,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/1289"
+  },
+  {
+    "liga": "Puchar Polski ZZPN - Szczecin",
+    "sezon": "2019/2020",
+    "mecze": [
+      {
+        "kolejka": null,
+        "date": "04 wrz 2019",
+        "team1": "Ina Elektrobim Ińsko",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      }
+    ],
+    "tabela": [],
+    "sourceId": 1317,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/1317"
+  },
+  {
+    "liga": "Klasa Okręgowa gr. 4 Koszalin południe",
+    "sezon": "2020/2021",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "02 sie 2020",
+        "team1": "Calisia Kalisz Pomorski",
+        "team2": "Drawa Drawno",
+        "score": "2:2"
+      },
+      {
+        "kolejka": 3,
+        "date": "15 sie 2020",
+        "team1": "Drawa Drawno",
+        "team2": "Drawa Drawsko Pomorskie",
+        "score": "0:4"
+      },
+      {
+        "kolejka": 4,
+        "date": "22 sie 2020",
+        "team1": "Olimp Złocieniec",
+        "team2": "Drawa Drawno",
+        "score": "2:2"
+      },
+      {
+        "kolejka": 5,
+        "date": "29 sie 2020",
+        "team1": "Drawa Drawno",
+        "team2": "Błonie Barwice",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 6,
+        "date": "05 wrz 2020",
+        "team1": "Drawa Drawno",
+        "team2": "Wiarus Żółtnica",
+        "score": "4:2"
+      },
+      {
+        "kolejka": 7,
+        "date": "12 wrz 2020",
+        "team1": "Orzeł Bierzwnik",
+        "team2": "Drawa Drawno",
+        "score": "2:0"
+      },
+      {
+        "kolejka": 8,
+        "date": "19 wrz 2020",
+        "team1": "Drawa Drawno",
+        "team2": "Pogoń Połczyn Zdrój",
+        "score": "3:4"
+      },
+      {
+        "kolejka": 9,
+        "date": "26 wrz 2020",
+        "team1": "Spójnia Świdwin",
+        "team2": "Drawa Drawno",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 10,
+        "date": "03 paź 2020",
+        "team1": "Drawa Drawno",
+        "team2": "Mechanik Turowo",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 11,
+        "date": "11 paź 2020",
+        "team1": "Orzeł Łubowo",
+        "team2": "Drawa Drawno",
+        "score": "6:2"
+      },
+      {
+        "kolejka": 13,
+        "date": "24 paź 2020",
+        "team1": "Zawisza Grzmi±ca",
+        "team2": "Drawa Drawno",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 14,
+        "date": "31 paź 2020",
+        "team1": "Drawa Drawno",
+        "team2": "Światowid 63 Łobez",
+        "score": "6:1"
+      },
+      {
+        "kolejka": 15,
+        "date": "07 lis 2020",
+        "team1": "Drzewiarz Świerczyna",
+        "team2": "Drawa Drawno",
+        "score": "1:2"
+      },
+      {
+        "kolejka": 16,
+        "date": "14 lis 2020",
+        "team1": "Drawa Drawno",
+        "team2": "Korona Człopa",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 17,
+        "date": "21 lis 2020",
+        "team1": "Redłovia Redło",
+        "team2": "Drawa Drawno",
+        "score": "0:6"
+      },
+      {
+        "kolejka": 12,
+        "date": "28 lis 2020",
+        "team1": "Drawa Drawno",
+        "team2": "Ikar Krosino",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 18,
+        "date": "06 mar 2021",
+        "team1": "Calisia Kalisz Pomorski",
+        "team2": "Drawa Drawno",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 22,
+        "date": "03 kwi 2021",
+        "team1": "Błonie Barwice",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 21,
+        "date": "24 kwi 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Olimp Złocieniec",
+        "score": "2:7"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 1,
+        "nazwa": "Pogoń Połczyn Zdrój",
+        "mecze": 18,
+        "pkt": 49,
+        "wygrane": 16,
+        "remisy": 1,
+        "przegrane": 1,
+        "bramki": "73/20"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Calisia Kalisz Pomorski",
+        "mecze": 18,
+        "pkt": 41,
+        "wygrane": 12,
+        "remisy": 5,
+        "przegrane": 1,
+        "bramki": "47/17"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Olimp Złocieniec",
+        "mecze": 19,
+        "pkt": 38,
+        "wygrane": 12,
+        "remisy": 2,
+        "przegrane": 5,
+        "bramki": "54/30"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "KP Drawsko Pomorskie",
+        "mecze": 19,
+        "pkt": 38,
+        "wygrane": 11,
+        "remisy": 5,
+        "przegrane": 3,
+        "bramki": "61/28"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Orzeł Bierzwnik",
+        "mecze": 18,
+        "pkt": 35,
+        "wygrane": 11,
+        "remisy": 2,
+        "przegrane": 5,
+        "bramki": "45/40"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Zawisza Grzmi±ca",
+        "mecze": 19,
+        "pkt": 34,
+        "wygrane": 11,
+        "remisy": 1,
+        "przegrane": 7,
+        "bramki": "63/46"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Mechanik Turowo",
+        "mecze": 18,
+        "pkt": 32,
+        "wygrane": 9,
+        "remisy": 5,
+        "przegrane": 4,
+        "bramki": "33/24"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Korona Człopa",
+        "mecze": 18,
+        "pkt": 30,
+        "wygrane": 9,
+        "remisy": 3,
+        "przegrane": 6,
+        "bramki": "40/36"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Wiarus Żółtnica",
+        "mecze": 19,
+        "pkt": 24,
+        "wygrane": 7,
+        "remisy": 3,
+        "przegrane": 9,
+        "bramki": "39/45"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Drawa Drawno",
+        "mecze": 19,
+        "pkt": 23,
+        "wygrane": 7,
+        "remisy": 2,
+        "przegrane": 10,
+        "bramki": "45/47"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Ikar Krosino",
+        "mecze": 19,
+        "pkt": 23,
+        "wygrane": 7,
+        "remisy": 2,
+        "przegrane": 10,
+        "bramki": "41/42"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Światowid 63 Łobez",
+        "mecze": 19,
+        "pkt": 20,
+        "wygrane": 6,
+        "remisy": 2,
+        "przegrane": 11,
+        "bramki": "28/41"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Spójnia Świdwin",
+        "mecze": 18,
+        "pkt": 19,
+        "wygrane": 5,
+        "remisy": 4,
+        "przegrane": 9,
+        "bramki": "28/36"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Orzeł Łubowo",
+        "mecze": 18,
+        "pkt": 11,
+        "wygrane": 3,
+        "remisy": 2,
+        "przegrane": 13,
+        "bramki": "27/52"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Redłovia Redło",
+        "mecze": 18,
+        "pkt": 9,
+        "wygrane": 2,
+        "remisy": 3,
+        "przegrane": 13,
+        "bramki": "22/65"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Drzewiarz Świerczyna",
+        "mecze": 18,
+        "pkt": 2,
+        "wygrane": 0,
+        "remisy": 2,
+        "przegrane": 16,
+        "bramki": "19/82"
+      },
+      {
+        "pozycja": 17,
+        "nazwa": "Błonie Barwice",
+        "mecze": 23,
+        "pkt": 27,
+        "wygrane": 9,
+        "remisy": 0,
+        "przegrane": 14,
+        "bramki": "46/60"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Pogoń Połczyn Zdrój",
+        "mecze": 18,
+        "pkt": 49,
+        "wygrane": 16,
+        "remisy": 1,
+        "przegrane": 1,
+        "bramki": "73/20"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Calisia Kalisz Pomorski",
+        "mecze": 18,
+        "pkt": 41,
+        "wygrane": 12,
+        "remisy": 5,
+        "przegrane": 1,
+        "bramki": "47/17"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Olimp Złocieniec",
+        "mecze": 19,
+        "pkt": 38,
+        "wygrane": 12,
+        "remisy": 2,
+        "przegrane": 5,
+        "bramki": "54/30"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "KP Drawsko Pomorskie",
+        "mecze": 19,
+        "pkt": 38,
+        "wygrane": 11,
+        "remisy": 5,
+        "przegrane": 3,
+        "bramki": "61/28"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Orzeł Bierzwnik",
+        "mecze": 18,
+        "pkt": 35,
+        "wygrane": 11,
+        "remisy": 2,
+        "przegrane": 5,
+        "bramki": "45/40"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Zawisza Grzmi±ca",
+        "mecze": 19,
+        "pkt": 34,
+        "wygrane": 11,
+        "remisy": 1,
+        "przegrane": 7,
+        "bramki": "63/46"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Mechanik Turowo",
+        "mecze": 18,
+        "pkt": 32,
+        "wygrane": 9,
+        "remisy": 5,
+        "przegrane": 4,
+        "bramki": "33/24"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Korona Człopa",
+        "mecze": 18,
+        "pkt": 30,
+        "wygrane": 9,
+        "remisy": 3,
+        "przegrane": 6,
+        "bramki": "40/36"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Wiarus Żółtnica",
+        "mecze": 19,
+        "pkt": 24,
+        "wygrane": 7,
+        "remisy": 3,
+        "przegrane": 9,
+        "bramki": "39/45"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Drawa Drawno",
+        "mecze": 19,
+        "pkt": 23,
+        "wygrane": 7,
+        "remisy": 2,
+        "przegrane": 10,
+        "bramki": "45/47"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Ikar Krosino",
+        "mecze": 19,
+        "pkt": 23,
+        "wygrane": 7,
+        "remisy": 2,
+        "przegrane": 10,
+        "bramki": "41/42"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Światowid 63 Łobez",
+        "mecze": 19,
+        "pkt": 20,
+        "wygrane": 6,
+        "remisy": 2,
+        "przegrane": 11,
+        "bramki": "28/41"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Spójnia Świdwin",
+        "mecze": 18,
+        "pkt": 19,
+        "wygrane": 5,
+        "remisy": 4,
+        "przegrane": 9,
+        "bramki": "28/36"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Orzeł Łubowo",
+        "mecze": 18,
+        "pkt": 11,
+        "wygrane": 3,
+        "remisy": 2,
+        "przegrane": 13,
+        "bramki": "27/52"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Redłovia Redło",
+        "mecze": 18,
+        "pkt": 9,
+        "wygrane": 2,
+        "remisy": 3,
+        "przegrane": 13,
+        "bramki": "22/65"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Drzewiarz Świerczyna",
+        "mecze": 18,
+        "pkt": 2,
+        "wygrane": 0,
+        "remisy": 2,
+        "przegrane": 16,
+        "bramki": "19/82"
+      },
+      {
+        "pozycja": 17,
+        "nazwa": "Błonie Barwice",
+        "mecze": 23,
+        "pkt": 27,
+        "wygrane": 9,
+        "remisy": 0,
+        "przegrane": 14,
+        "bramki": "46/60"
+      }
+    ],
+    "sourceId": 1344,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/1344"
+  },
+  {
+    "liga": "Puchar Polski ZZPN",
+    "sezon": "2020/2021",
+    "mecze": [
+      {
+        "kolejka": null,
+        "date": "02 wrz 2020",
+        "team1": "Drawa Drawno",
+        "team2": "Piast Chociwel",
+        "score": "3:0"
+      },
+      {
+        "kolejka": null,
+        "date": "16 wrz 2020",
+        "team1": "Drawa Drawno",
+        "team2": "Orkan Suchań",
+        "score": "3:0"
+      },
+      {
+        "kolejka": null,
+        "date": "28 kwi 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Błękitni II Stargard",
+        "score": "2:4"
+      }
+    ],
+    "tabela": [],
+    "sourceId": 1362,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/1362"
+  },
+  {
+    "liga": "Klasa Okręgowa gr.4 gr. B RW",
+    "sezon": "2020/2021",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "01 maj 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Łubowo",
+        "score": "0:1"
+      },
+      {
+        "kolejka": 2,
+        "date": "08 maj 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Redłovia Redło",
+        "score": "4:3"
+      },
+      {
+        "kolejka": 3,
+        "date": "15 maj 2021",
+        "team1": "Wiarus Żółtnica",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 4,
+        "date": "22 maj 2021",
+        "team1": "Ikar Krosino",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 5,
+        "date": "29 maj 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Drzewiarz Świerczyna",
+        "score": "3:3"
+      },
+      {
+        "kolejka": 6,
+        "date": "05 cze 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Spójnia Świdwin",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 7,
+        "date": "12 cze 2021",
+        "team1": "Światowid 63 Łobez",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 1,
+        "nazwa": "Ikar Krosino",
+        "mecze": 7,
+        "pkt": 40,
+        "wygrane": 5,
+        "remisy": 2,
+        "przegrane": 0,
+        "bramki": "21/6"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Spójnia Świdwin",
+        "mecze": 7,
+        "pkt": 37,
+        "wygrane": 5,
+        "remisy": 0,
+        "przegrane": 2,
+        "bramki": "26/8"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Drawa Drawno",
+        "mecze": 7,
+        "pkt": 33,
+        "wygrane": 3,
+        "remisy": 1,
+        "przegrane": 3,
+        "bramki": "12/14"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Wiarus Żółtnica",
+        "mecze": 7,
+        "pkt": 32,
+        "wygrane": 2,
+        "remisy": 2,
+        "przegrane": 3,
+        "bramki": "7/16"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Światowid 63 Łobez",
+        "mecze": 7,
+        "pkt": 30,
+        "wygrane": 3,
+        "remisy": 1,
+        "przegrane": 3,
+        "bramki": "12/7"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Orzeł Łubowo",
+        "mecze": 7,
+        "pkt": 23,
+        "wygrane": 3,
+        "remisy": 0,
+        "przegrane": 4,
+        "bramki": "13/15"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Drzewiarz Świerczyna",
+        "mecze": 7,
+        "pkt": 16,
+        "wygrane": 3,
+        "remisy": 2,
+        "przegrane": 2,
+        "bramki": "13/14"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Redłovia Redło",
+        "mecze": 7,
+        "pkt": 12,
+        "wygrane": 0,
+        "remisy": 0,
+        "przegrane": 7,
+        "bramki": "6/30"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Błonie Barwice",
+        "mecze": 0,
+        "pkt": 0,
+        "wygrane": 0,
+        "remisy": 0,
+        "przegrane": 0,
+        "bramki": "0/0"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Ikar Krosino",
+        "mecze": 7,
+        "pkt": 40,
+        "wygrane": 5,
+        "remisy": 2,
+        "przegrane": 0,
+        "bramki": "21/6"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Spójnia Świdwin",
+        "mecze": 7,
+        "pkt": 37,
+        "wygrane": 5,
+        "remisy": 0,
+        "przegrane": 2,
+        "bramki": "26/8"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Drawa Drawno",
+        "mecze": 7,
+        "pkt": 33,
+        "wygrane": 3,
+        "remisy": 1,
+        "przegrane": 3,
+        "bramki": "12/14"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Wiarus Żółtnica",
+        "mecze": 7,
+        "pkt": 32,
+        "wygrane": 2,
+        "remisy": 2,
+        "przegrane": 3,
+        "bramki": "7/16"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Światowid 63 Łobez",
+        "mecze": 7,
+        "pkt": 30,
+        "wygrane": 3,
+        "remisy": 1,
+        "przegrane": 3,
+        "bramki": "12/7"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Orzeł Łubowo",
+        "mecze": 7,
+        "pkt": 23,
+        "wygrane": 3,
+        "remisy": 0,
+        "przegrane": 4,
+        "bramki": "13/15"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Drzewiarz Świerczyna",
+        "mecze": 7,
+        "pkt": 16,
+        "wygrane": 3,
+        "remisy": 2,
+        "przegrane": 2,
+        "bramki": "13/14"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Redłovia Redło",
+        "mecze": 7,
+        "pkt": 12,
+        "wygrane": 0,
+        "remisy": 0,
+        "przegrane": 7,
+        "bramki": "6/30"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Błonie Barwice",
+        "mecze": 0,
+        "pkt": 0,
+        "wygrane": 0,
+        "remisy": 0,
+        "przegrane": 0,
+        "bramki": "0/0"
+      }
+    ],
+    "sourceId": 1416,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/1416"
+  },
+  {
+    "liga": "Klasa Okręgowa gr. 4",
+    "sezon": "2021/2022",
+    "mecze": [
+      {
+        "kolejka": 1,
+        "date": "15 sie 2021",
+        "team1": "Błękitni Pomierzyn",
+        "team2": "Drawa Drawno",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 2,
+        "date": "21 sie 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Lech Czaplinek",
+        "score": "2:3"
+      },
+      {
+        "kolejka": 3,
+        "date": "29 sie 2021",
+        "team1": "Iskra Pomień",
+        "team2": "Drawa Drawno",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 4,
+        "date": "04 wrz 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Orzeł Bierzwnik",
+        "score": "0:4"
+      },
+      {
+        "kolejka": 5,
+        "date": "11 wrz 2021",
+        "team1": "Sarmata Dobra",
+        "team2": "Drawa Drawno",
+        "score": "4:2"
+      },
+      {
+        "kolejka": 6,
+        "date": "18 wrz 2021",
+        "team1": "Drawa Drawno",
+        "team2": "AP Gavia Choszczno",
+        "score": "1:4"
+      },
+      {
+        "kolejka": 7,
+        "date": "25 wrz 2021",
+        "team1": "Ina Elektrobim Ińsko",
+        "team2": "Drawa Drawno",
+        "score": "1:1"
+      },
+      {
+        "kolejka": 8,
+        "date": "02 paź 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Sparta Węgorzyno",
+        "score": "3:1"
+      },
+      {
+        "kolejka": 9,
+        "date": "09 paź 2021",
+        "team1": "Olimp Złocieniec",
+        "team2": "Drawa Drawno",
+        "score": "2:1"
+      },
+      {
+        "kolejka": 10,
+        "date": "16 paź 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Calisia Kalisz Pomorski",
+        "score": "0:7"
+      },
+      {
+        "kolejka": 11,
+        "date": "23 paź 2021",
+        "team1": "Światowid 63 Łobez",
+        "team2": "Drawa Drawno",
+        "score": "8:1"
+      },
+      {
+        "kolejka": 12,
+        "date": "31 paź 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Zorza Dobrzany",
+        "score": "1:3"
+      },
+      {
+        "kolejka": 13,
+        "date": "06 lis 2021",
+        "team1": "Piast Chociwel",
+        "team2": "Drawa Drawno",
+        "score": "4:1"
+      },
+      {
+        "kolejka": 14,
+        "date": "13 lis 2021",
+        "team1": "Korona Człopa",
+        "team2": "Drawa Drawno",
+        "score": "5:1"
+      },
+      {
+        "kolejka": 15,
+        "date": "20 lis 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Drawa Drawsko Pomorskie",
+        "score": "4:3"
+      },
+      {
+        "kolejka": 16,
+        "date": "12 mar 2022",
+        "team1": "Drawa Drawno",
+        "team2": "Błękitni Pomierzyn",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 17,
+        "date": "19 mar 2022",
+        "team1": "Lech Czaplinek",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 18,
+        "date": "26 mar 2022",
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Pomień",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 19,
+        "date": "02 kwi 2022",
+        "team1": "Orzeł Bierzwnik",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 20,
+        "date": "09 kwi 2022",
+        "team1": "Drawa Drawno",
+        "team2": "Sarmata Dobra",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 21,
+        "date": "16 kwi 2022",
+        "team1": "AP Gavia Choszczno",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 22,
+        "date": "23 kwi 2022",
+        "team1": "Drawa Drawno",
+        "team2": "Ina Elektrobim Ińsko",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 23,
+        "date": "30 kwi 2022",
+        "team1": "Sparta Węgorzyno",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 24,
+        "date": "07 maj 2022",
+        "team1": "Drawa Drawno",
+        "team2": "Olimp Złocieniec",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 25,
+        "date": "15 maj 2022",
+        "team1": "Calisia Kalisz Pomorski",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 26,
+        "date": "21 maj 2022",
+        "team1": "Drawa Drawno",
+        "team2": "Światowid 63 Łobez",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 27,
+        "date": "28 maj 2022",
+        "team1": "Zorza Dobrzany",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      },
+      {
+        "kolejka": 28,
+        "date": "01 cze 2022",
+        "team1": "Drawa Drawno",
+        "team2": "Piast Chociwel",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 29,
+        "date": "04 cze 2022",
+        "team1": "Drawa Drawno",
+        "team2": "Korona Człopa",
+        "score": "0:3"
+      },
+      {
+        "kolejka": 30,
+        "date": "11 cze 2022",
+        "team1": "Drawa Drawsko Pomorskie",
+        "team2": "Drawa Drawno",
+        "score": "3:0"
+      }
+    ],
+    "tabela": [
+      {
+        "pozycja": 4.2021202213073236e+232,
+        "nazwa": "1.",
+        "mecze": 0,
+        "pkt": 30,
+        "wygrane": 73,
+        "remisy": 23,
+        "przegrane": 4,
+        "bramki": "3"
+      },
+      {
+        "pozycja": 1,
+        "nazwa": "Gavia Choszczno",
+        "mecze": 30,
+        "pkt": 73,
+        "wygrane": 23,
+        "remisy": 4,
+        "przegrane": 3,
+        "bramki": "84/24"
+      },
+      {
+        "pozycja": 2,
+        "nazwa": "Zorza Dobrzany",
+        "mecze": 30,
+        "pkt": 59,
+        "wygrane": 18,
+        "remisy": 5,
+        "przegrane": 7,
+        "bramki": "73/40"
+      },
+      {
+        "pozycja": 3,
+        "nazwa": "Calisia Kalisz Pomorski",
+        "mecze": 30,
+        "pkt": 59,
+        "wygrane": 18,
+        "remisy": 5,
+        "przegrane": 7,
+        "bramki": "83/38"
+      },
+      {
+        "pozycja": 4,
+        "nazwa": "Olimp Złocieniec",
+        "mecze": 30,
+        "pkt": 55,
+        "wygrane": 17,
+        "remisy": 4,
+        "przegrane": 9,
+        "bramki": "77/39"
+      },
+      {
+        "pozycja": 5,
+        "nazwa": "Lech Czaplinek",
+        "mecze": 30,
+        "pkt": 54,
+        "wygrane": 15,
+        "remisy": 9,
+        "przegrane": 6,
+        "bramki": "61/39"
+      },
+      {
+        "pozycja": 6,
+        "nazwa": "Piast Chociwel",
+        "mecze": 30,
+        "pkt": 52,
+        "wygrane": 16,
+        "remisy": 4,
+        "przegrane": 10,
+        "bramki": "67/42"
+      },
+      {
+        "pozycja": 7,
+        "nazwa": "Sarmata Dobra",
+        "mecze": 30,
+        "pkt": 46,
+        "wygrane": 12,
+        "remisy": 10,
+        "przegrane": 8,
+        "bramki": "51/46"
+      },
+      {
+        "pozycja": 8,
+        "nazwa": "Ina Ińsko",
+        "mecze": 30,
+        "pkt": 46,
+        "wygrane": 12,
+        "remisy": 10,
+        "przegrane": 8,
+        "bramki": "56/42"
+      },
+      {
+        "pozycja": 9,
+        "nazwa": "Drawa Drawsko Pomorskie",
+        "mecze": 30,
+        "pkt": 44,
+        "wygrane": 13,
+        "remisy": 5,
+        "przegrane": 12,
+        "bramki": "58/56"
+      },
+      {
+        "pozycja": 10,
+        "nazwa": "Orzeł Bierzwnik",
+        "mecze": 30,
+        "pkt": 39,
+        "wygrane": 10,
+        "remisy": 9,
+        "przegrane": 11,
+        "bramki": "55/59"
+      },
+      {
+        "pozycja": 11,
+        "nazwa": "Światowid 63 Łobez",
+        "mecze": 30,
+        "pkt": 35,
+        "wygrane": 10,
+        "remisy": 5,
+        "przegrane": 15,
+        "bramki": "53/63"
+      },
+      {
+        "pozycja": 12,
+        "nazwa": "Korona Człopa",
+        "mecze": 30,
+        "pkt": 32,
+        "wygrane": 8,
+        "remisy": 8,
+        "przegrane": 14,
+        "bramki": "54/67"
+      },
+      {
+        "pozycja": 13,
+        "nazwa": "Błękitni Pomierzyn",
+        "mecze": 30,
+        "pkt": 28,
+        "wygrane": 7,
+        "remisy": 7,
+        "przegrane": 16,
+        "bramki": "47/88"
+      },
+      {
+        "pozycja": 14,
+        "nazwa": "Sparta Węgorzyno",
+        "mecze": 30,
+        "pkt": 27,
+        "wygrane": 8,
+        "remisy": 3,
+        "przegrane": 19,
+        "bramki": "49/80"
+      },
+      {
+        "pozycja": 15,
+        "nazwa": "Iskra Pomień",
+        "mecze": 30,
+        "pkt": 14,
+        "wygrane": 3,
+        "remisy": 5,
+        "przegrane": 22,
+        "bramki": "42/113"
+      },
+      {
+        "pozycja": 16,
+        "nazwa": "Drawa Drawno",
+        "mecze": 30,
+        "pkt": 10,
+        "wygrane": 3,
+        "remisy": 1,
+        "przegrane": 26,
+        "bramki": "22/96"
+      }
+    ],
+    "sourceId": 1425,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/1425"
+  },
+  {
+    "liga": "Puchar Polski ZZPN Szczecin",
+    "sezon": "2021/2022",
+    "mecze": [
+      {
+        "kolejka": null,
+        "date": "01 wrz 2021",
+        "team1": "Drawa Drawno",
+        "team2": "Iskra Pomień",
+        "score": "4:10"
+      }
+    ],
+    "tabela": [],
+    "sourceId": 1440,
+    "sourceUrl": "http://ligowiec.net/klub/drawadrawno/archiwum/1440"
+  }
+]

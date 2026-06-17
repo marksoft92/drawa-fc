@@ -167,6 +167,53 @@ model Mecz {
   @@unique([sezon, team1, team2, date])
 }
 
+// ─── Archiwum historyczne ─────────────────────────────────────────────────────
+
+model ArchiwumSezon {
+  id        String   @id @default(cuid())
+  sourceId  Int      @unique
+  sezon     String?
+  liga      String
+  sourceUrl String?
+  createdAt DateTime @default(now())
+
+  mecze     ArchiwumMecz[]
+  tabela    ArchiwumTabela[]
+}
+
+model ArchiwumMecz {
+  id          String         @id @default(cuid())
+  sezonId     String
+  sezon       ArchiwumSezon  @relation(fields: [sezonId], references: [id], onDelete: Cascade)
+  kolejka     Int?
+  date        String?
+  team1       String
+  team2       String
+  score       String?
+  strzelcy    Json           @default("[]")
+  kartki      Json           @default("[]")
+  zdarzenia   Json           @default("[]")
+  komentarz   String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model ArchiwumTabela {
+  id        String         @id @default(cuid())
+  sezonId   String
+  sezon     ArchiwumSezon  @relation(fields: [sezonId], references: [id], onDelete: Cascade)
+  pozycja   Int
+  nazwa     String
+  mecze     Int            @default(0)
+  pkt       Int            @default(0)
+  wygrane   Int            @default(0)
+  remisy    Int            @default(0)
+  przegrane Int            @default(0)
+  bramki    String?
+
+  @@unique([sezonId, pozycja])
+}
+
 // ─── Galeria ──────────────────────────────────────────────────────────────────
 
 model Album {
