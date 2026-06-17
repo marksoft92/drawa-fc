@@ -14,12 +14,14 @@ export const metadata = {
     template: "%s | MKS Drawa Drawno",
   },
   description:
-    "Oficjalna strona MKS Drawa Drawno. Wyniki, tabela, terminarz, kadra i aktualności. Sezon 2026/2027 — A klasa Zachodniopomorska.",
+    "Oficjalna strona MKS Drawa Drawno — klub piłkarski z Drawna, woj. zachodniopomorskie. Wyniki na żywo, tabela ligowa, terminarz meczów, kadra, galeria zdjęć i aktualności. Założony w 1947 roku.",
   keywords: [
     "MKS Drawa Drawno", "Drawa Drawno", "piłka nożna Drawno",
-    "A klasa Zachodniopomorska", "MKS Drawa", "wyniki mecze Drawno",
-    "tabela A klasa", "terminarz Drawno", "klub piłkarski Drawno",
-    "awans A klasa Drawno",
+    "klub piłkarski Drawno", "wyniki Drawa Drawno", "tabela Drawa",
+    "terminarz meczów Drawno", "B klasa zachodniopomorska",
+    "zachodniopomorskie piłka nożna", "amatorska piłka nożna Drawno",
+    "kadra Drawa Drawno", "mecze Drawno", "liga Drawno",
+    "historia klubu Drawno", "archiwum wyników Drawa",
   ],
   authors: [{ name: "MKS Drawa Drawno", url: BASE_URL }],
   creator: "MKS Drawa Drawno",
@@ -32,7 +34,7 @@ export const metadata = {
     url: BASE_URL,
     siteName: "MKS Drawa Drawno",
     title: "MKS Drawa Drawno — Oficjalna Strona Klubu",
-    description: "Wyniki, tabela, terminarz, kadra i aktualności MKS Drawa Drawno. Sezon 2026/2027 — A klasa Zachodniopomorska.",
+    description: "Oficjalna strona MKS Drawa Drawno. Wyniki, tabela, terminarz, kadra i aktualności. Klub założony w 1947 roku.",
     locale: "pl_PL",
     images: [
       {
@@ -46,7 +48,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "MKS Drawa Drawno",
-    description: "Wyniki, tabela, terminarz i aktualności MKS Drawa Drawno.",
+    description: "Oficjalna strona MKS Drawa Drawno — wyniki, tabela, kadra. Klub założony w 1947.",
     images: ["/logo.png"],
   },
   appleWebApp: {
@@ -79,6 +81,35 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
       </head>
       <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SportsOrganization",
+            name: "MKS Drawa Drawno",
+            alternateName: "Drawa Drawno",
+            url: "https://mksdrawadrawno.pl",
+            logo: "https://mksdrawadrawno.pl/logo.png",
+            foundingDate: "1947",
+            sport: "Piłka nożna",
+            location: {
+              "@type": "Place",
+              name: "Stadion MKS Drawa Drawno",
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "ul. Choszczeńska 85a",
+                addressLocality: "Drawno",
+                postalCode: "73-220",
+                addressRegion: "zachodniopomorskie",
+                addressCountry: "PL",
+              },
+            },
+            sameAs: [
+              "https://www.facebook.com/profile.php?id=100031740656452",
+              "https://www.instagram.com/mksdrawadrawno/",
+            ],
+          }) }}
+        />
         <AntiCopy />
         <ServiceWorker />
         <GlobalAudio />

@@ -24,7 +24,8 @@ export default async function sitemap() {
     { url: BASE,                  lastModified: newestArticle,        changeFrequency: 'daily',   priority: 1.0 },
     { url: `${BASE}/aktualnosci`, lastModified: newestArticle,        changeFrequency: 'daily',   priority: 0.9 },
     { url: `${BASE}/statystyki`,  lastModified: new Date('2025-08-01'), changeFrequency: 'weekly',  priority: 0.7 },
-    { url: `${BASE}/archiwum`,    lastModified: new Date('2025-08-01'), changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${BASE}/archiwum`,     lastModified: new Date('2025-08-01'), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE}/wspolpraca`,  lastModified: new Date('2025-08-01'), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE}/transmisja`,  lastModified: new Date('2025-08-01'), changeFrequency: 'weekly',  priority: 0.5 },
     ...newsUrls,
   ];

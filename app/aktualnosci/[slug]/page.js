@@ -45,13 +45,31 @@ export default async function ArticlePage({ params }) {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #030712; color: #fff; font-family: -apple-system, 'Segoe UI', sans-serif; }
         .article-p { font-size: 15px; color: #94a3b8; line-height: 1.8; }
         .article-h { font-size: 13px; font-weight: 700; color: #e2e8f0; letter-spacing: 0.08em; margin-top: 8px; }
         @media (max-width: 640px) { .article-p { font-size: 14px; } }
       `}</style>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: a.title,
+          description: a.excerpt,
+          datePublished: a.date,
+          dateModified: a.updatedAt?.toISOString?.() || a.date,
+          image: a.thumbnail ? `https://mksdrawadrawno.pl${a.thumbnail}` : "https://mksdrawadrawno.pl/logo.png",
+          publisher: {
+            "@type": "SportsOrganization",
+            name: "MKS Drawa Drawno",
+            logo: { "@type": "ImageObject", url: "https://mksdrawadrawno.pl/logo.png" },
+          },
+          mainEntityOfPage: `https://mksdrawadrawno.pl/aktualnosci/${a.slug}`,
+        }) }}
+      />
 
       <NavBar backLabel="← Aktualności" />
 
