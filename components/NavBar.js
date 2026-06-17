@@ -12,8 +12,7 @@ const NAV_LINKS = [
  { label: "Statystyki", id: "statystyki" },
  { label: "Galeria", id: "galeria" },
  { label: "Kadra", id: "kadra" },
- { label: "Struktura", id: "struktura" },
- { label: "Dojazd", id: "dojazd" },
+ { label: "Archiwum", href: "/archiwum" },
  { label: "Kontakt", id: "kontakt" },
 ];
 
@@ -153,8 +152,8 @@ export default function NavBar({ backLabel }) {
  <div className="nav-desktop-links" style={{ display: "flex", gap: 24, alignItems: "center" }}>
  {NAV_LINKS.map((l) => (
  <Link
- key={l.id}
- href={href(l.id)}
+ key={l.label}
+ href={l.href || href(l.id)}
  style={{ fontSize: 11, color: "#64748b", letterSpacing: "0.15em", textDecoration: "none", fontWeight: 600, transition: "color 0.2s" }}
  onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
  onMouseLeave={(e) => (e.currentTarget.style.color = "#64748b")}
@@ -296,8 +295,8 @@ export default function NavBar({ backLabel }) {
  )}
  {NAV_LINKS.map((l) => (
  <Link
- key={l.id}
- href={href(l.id)}
+ key={l.label}
+ href={l.href || href(l.id)}
  onClick={close}
  style={{ fontSize: 13, color: "#94a3b8", textDecoration: "none", padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", letterSpacing: "0.1em" }}
  >

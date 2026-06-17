@@ -8,7 +8,7 @@ export async function GET() {
     orderBy: { date: "desc" },
     select: {
       id: true, slug: true, title: true, excerpt: true,
-      thumbnail: true, kolor: true, tags: true, date: true,
+      thumbnail: true, kolor: true, tags: true, date: true, pinned: true,
     },
   });
   return Response.json(artykuly);

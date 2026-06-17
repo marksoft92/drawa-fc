@@ -6,7 +6,7 @@ const emptyForm = () => ({
   title: "", slug: "", excerpt: "", content: "",
   thumbnail: "", kolor: "#3b82f6",
   tags: "", date: new Date().toISOString().slice(0, 10),
-  photos: [], published: true,
+  photos: [], published: true, pinned: false,
 });
 
 function slugify(str) {
@@ -277,7 +277,7 @@ export default function AktualnosciAdmin() {
       thumbnail: d.thumbnail || "", kolor: d.kolor || "#3b82f6",
       tags: (d.tags || []).join(", "), date: d.date,
       photos: Array.isArray(d.photos) ? d.photos : [],
-      published: d.published,
+      published: d.published, pinned: d.pinned ?? false,
     });
     setView("form");
   }
@@ -456,10 +456,16 @@ export default function AktualnosciAdmin() {
           )}
         </div>
 
-        <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", fontSize: 13, color: "#94a3b8" }}>
-          <input type="checkbox" checked={form.published} onChange={e => setForm(p => ({ ...p, published: e.target.checked }))} style={{ width: 16, height: 16, accentColor: "#3b82f6" }} />
-          Opublikowany (widoczny na stronie)
-        </label>
+        <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
+          <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", fontSize: 13, color: "#94a3b8" }}>
+            <input type="checkbox" checked={form.published} onChange={e => setForm(p => ({ ...p, published: e.target.checked }))} style={{ width: 16, height: 16, accentColor: "#3b82f6" }} />
+            Opublikowany
+          </label>
+          <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", fontSize: 13, color: "#94a3b8" }}>
+            <input type="checkbox" checked={form.pinned} onChange={e => setForm(p => ({ ...p, pinned: e.target.checked }))} style={{ width: 16, height: 16, accentColor: "#f59e0b" }} />
+            Przypięty na górze
+          </label>
+        </div>
 
         {error && <div style={alertErr}>{error}</div>}
 
@@ -506,8 +512,9 @@ export default function AktualnosciAdmin() {
                 <div style={{ fontSize: 13, fontWeight: 600, color: a.published ? "#fff" : "#475569", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {a.title}
                 </div>
-                <div style={{ fontSize: 11, color: "#334155", marginTop: 2 }}>
+                <div style={{ fontSize: 11, color: "#334155", marginTop: 2, display: "flex", alignItems: "center", gap: 6 }}>
                   {a.date} · {(a.tags || []).join(", ") || "—"}
+                  {a.pinned && <span style={{ background: "rgba(245,158,11,0.15)", color: "#f59e0b", fontSize: 9, padding: "1px 6px", borderRadius: 4, fontWeight: 700 }}>PRZYPIĘTY</span>}
                 </div>
               </div>
               <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>

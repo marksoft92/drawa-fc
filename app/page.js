@@ -124,16 +124,14 @@ export default function Page() {
       .then(u => {
         if (cancelled) return;
         const enc = encodeURIComponent(u.aktywny_sezon || "2025/26");
-        return Promise.all([
+        Promise.all([
           fetch(`/api/liga/tabela?sezon=${enc}`).then(r => r.json()),
           fetch(`/api/liga/mecze?sezon=${enc}`).then(r => r.json()),
-        ]);
-      })
-      .then(res => {
-        if (!res || cancelled) return;
-        const [t, m] = res;
-        setTabela(Array.isArray(t) ? t : []);
-        setMecze(Array.isArray(m) ? m : []);
+        ]).then(([t, m]) => {
+          if (cancelled) return;
+          setTabela(Array.isArray(t) ? t : []);
+          setMecze(Array.isArray(m) ? m : []);
+        });
       })
       .catch(() => {});
     return () => { cancelled = true; };

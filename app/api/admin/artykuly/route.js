@@ -8,7 +8,7 @@ export async function GET() {
 
   const artykuly = await prisma.artykul.findMany({
     orderBy: { date: "desc" },
-    select: { id: true, slug: true, title: true, date: true, published: true, tags: true },
+    select: { id: true, slug: true, title: true, date: true, published: true, pinned: true, tags: true },
   });
   return Response.json(artykuly);
 }
@@ -17,7 +17,7 @@ export async function POST(request) {
   if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
 
   const body = await request.json();
-  const { slug, title, excerpt, content, thumbnail, kolor, tags, photos, published, date } = body;
+  const { slug, title, excerpt, content, thumbnail, kolor, tags, photos, published, pinned, date } = body;
 
   if (!slug?.trim() || !title?.trim()) {
     return Response.json({ error: "Slug i tytuł są wymagane" }, { status: 400 });
@@ -37,6 +37,7 @@ export async function POST(request) {
       tags: Array.isArray(tags) ? tags : [],
       photos: Array.isArray(photos) ? photos : [],
       published: published ?? true,
+      pinned: pinned ?? false,
       date: date || new Date().toISOString().slice(0, 10),
     },
   });

@@ -8,6 +8,7 @@ const kolumny = [
       { label: 'Aktualności', href: '#aktualnosci' },
       { label: 'Kadra', href: '#kadra' },
       { label: 'Galeria', href: '#galeria' },
+      { label: 'Archiwum', href: '/archiwum' },
       { label: 'Sponsorzy', href: '#sponsorzy' },
     ],
   },

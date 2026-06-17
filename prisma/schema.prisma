@@ -117,6 +117,7 @@ model Artykul {
   tags      String[]
   photos    Json     @default("[]")
   published Boolean  @default(true)
+  pinned    Boolean  @default(false)
   date      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
