@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
-import { getAllOpponents, computeStats, isDrawa } from "@/lib/rywale";
+import { getAllOpponents, computeStats, isDrawa, getHerb } from "@/lib/rywale";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +33,8 @@ export default async function DruzynaPage({ params }) {
   const data = await getData(slug);
   if (!data) notFound();
 
-  const { nazwa, mecze, sezony, stats } = data;
+  const { nazwa, mecze, sezony, stats, herb } = data;
+  const drawaHerb = "/herby/drawa-drawno.jpg";
 
   const resultColor = (m) => {
     if (!m.score) return "#334155";
@@ -66,11 +67,26 @@ export default async function DruzynaPage({ params }) {
 
       <main style={{ paddingTop: 64, background: "#030712", minHeight: "100vh" }}>
         <section style={{ padding: "60px 20px 40px", textAlign: "center" }}>
-          <div style={{ fontSize: 11, letterSpacing: "0.3em", color: "#475569", marginBottom: 12 }}>HISTORIA SPOTKAŃ</div>
-          <h1 style={{ fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: "clamp(28px, 6vw, 48px)", color: "#fff", letterSpacing: "0.06em", margin: 0 }}>
-            <span style={{ color: "#3b82f6" }}>DRAWA DRAWNO</span> vs {nazwa.toUpperCase()}
-          </h1>
-          <div style={{ fontSize: 13, color: "#64748b", marginTop: 8 }}>{sezony.length} wspólnych sezonów · {stats.mecze} meczów</div>
+          <div style={{ fontSize: 11, letterSpacing: "0.3em", color: "#475569", marginBottom: 16 }}>HISTORIA SPOTKAŃ</div>
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "clamp(16px, 4vw, 40px)", marginBottom: 16 }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={drawaHerb} alt="Drawa Drawno" style={{ width: 64, height: 64, objectFit: "contain", borderRadius: 6 }} />
+              <span style={{ fontSize: 12, fontWeight: 700, color: "#3b82f6", letterSpacing: "0.06em" }}>DRAWA</span>
+            </div>
+            <span style={{ fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: "clamp(24px, 5vw, 40px)", color: "#1e3a5f", letterSpacing: "0.1em" }}>VS</span>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+              {herb
+                // eslint-disable-next-line @next/next/no-img-element
+                ? <img src={herb} alt={nazwa} style={{ width: 64, height: 64, objectFit: "contain", borderRadius: 6 }} />
+                : <div style={{ width: 64, height: 64, borderRadius: 6, background: "rgba(148,163,184,0.1)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, fontWeight: 700, color: "#64748b" }}>{nazwa.charAt(0)}</div>
+              }
+              <span style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.06em", maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{nazwa.toUpperCase()}</span>
+            </div>
+          </div>
+
+          <div style={{ fontSize: 13, color: "#64748b" }}>{sezony.length} wspólnych sezonów · {stats.mecze} meczów</div>
         </section>
 
         <section style={{ padding: "0 20px 48px" }}>

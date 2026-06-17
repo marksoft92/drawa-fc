@@ -288,7 +288,14 @@ export default function ArchiwumPage() {
                         onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
                       >
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", flex: 1 }}>{r.nazwa}</div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, minWidth: 0 }}>
+                            {r.herb
+                              // eslint-disable-next-line @next/next/no-img-element
+                              ? <img src={r.herb} alt={r.nazwa} style={{ width: 24, height: 24, objectFit: "contain", borderRadius: 3, flexShrink: 0 }} />
+                              : <div style={{ width: 24, height: 24, borderRadius: 3, background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: "#3b82f6", flexShrink: 0 }}>{r.nazwa.charAt(0)}</div>
+                            }
+                            <span style={{ fontSize: 13, fontWeight: 600, color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{r.nazwa}</span>
+                          </div>
                           <div style={{ display: "flex", gap: 4, alignItems: "center", flexShrink: 0, marginLeft: 8 }}>
                             {r.hasLiga && <span style={{ fontSize: 8, color: "#3b82f6", background: "rgba(59,130,246,0.1)", padding: "1px 5px", borderRadius: 3, fontWeight: 700 }}>LIGA</span>}
                             {r.hasPuchar && <span style={{ fontSize: 8, color: "#f59e0b", background: "rgba(245,158,11,0.1)", padding: "1px 5px", borderRadius: 3, fontWeight: 700 }}>PP</span>}
