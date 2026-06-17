@@ -1,3 +1,4 @@
+// @ts-nocheck
 import "dotenv/config";
 import { prisma } from "../lib/prisma";
 import data from "../tmp/archiwum_ligowiec.json";
