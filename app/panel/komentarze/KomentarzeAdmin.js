@@ -26,6 +26,10 @@ export default function KomentarzeAdmin() {
   const [loading, setLoading] = useState(true);
   const [tick, setTick] = useState(0);
 
+  const [replyId, setReplyId] = useState(null);
+  const [replyText, setReplyText] = useState("");
+  const [replying, setReplying] = useState(false);
+
   const reload = useCallback(() => setTick((t) => t + 1), []);
 
   useEffect(() => {
@@ -48,6 +52,20 @@ export default function KomentarzeAdmin() {
 
   async function remove(id) {
     await fetch(`/api/admin/komentarze/${id}`, { method: "DELETE" });
+    reload();
+  }
+
+  async function sendReply(id) {
+    if (!replyText.trim()) return;
+    setReplying(true);
+    await fetch(`/api/admin/komentarze/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ odpowiedz: replyText.trim() }),
+    });
+    setReplyId(null);
+    setReplyText("");
+    setReplying(false);
     reload();
   }
 
@@ -111,35 +129,70 @@ export default function KomentarzeAdmin() {
             <div style={{ fontSize: 13, color: "#94a3b8", lineHeight: 1.5, marginBottom: 10, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
               {k.tresc}
             </div>
-            <div style={{ display: "flex", gap: 8 }}>
+            {k.odpowiedz && (
+              <div style={{ padding: "8px 10px", background: "rgba(59,130,246,0.06)", border: "1px solid rgba(59,130,246,0.12)", borderRadius: 8, borderLeft: "3px solid #3b82f6", marginBottom: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
+                  <img src="/logo.png" alt="" width={14} height={14} style={{ objectFit: "contain", borderRadius: 2 }} />
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#3b82f6" }}>MKS DRAWA DRAWNO</span>
+                </div>
+                <div style={{ fontSize: 12, color: "#cbd5e1", whiteSpace: "pre-wrap" }}>{k.odpowiedz}</div>
+              </div>
+            )}
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {tab === "pending" && (
                 <>
-                  <button onClick={() => approve(k.id)} style={{
-                    padding: "5px 14px", borderRadius: 6, border: "1px solid rgba(34,197,94,0.3)",
-                    background: "rgba(34,197,94,0.08)", color: "#22c55e", fontSize: 11, fontWeight: 700, cursor: "pointer",
-                  }}>
-                    Zatwierdź
-                  </button>
-                  <button onClick={() => remove(k.id)} style={{
-                    padding: "5px 14px", borderRadius: 6, border: "1px solid rgba(239,68,68,0.3)",
-                    background: "rgba(239,68,68,0.08)", color: "#ef4444", fontSize: 11, fontWeight: 700, cursor: "pointer",
-                  }}>
-                    Odrzuć
-                  </button>
+                  <button onClick={() => approve(k.id)} style={btnApprove}>Zatwierdź</button>
+                  <button onClick={() => remove(k.id)} style={btnReject}>Odrzuć</button>
                 </>
               )}
               {tab === "approved" && (
-                <button onClick={() => remove(k.id)} style={{
-                  padding: "5px 14px", borderRadius: 6, border: "1px solid rgba(239,68,68,0.3)",
-                  background: "rgba(239,68,68,0.08)", color: "#ef4444", fontSize: 11, fontWeight: 700, cursor: "pointer",
-                }}>
-                  Usuń
-                </button>
+                <button onClick={() => remove(k.id)} style={btnReject}>Usuń</button>
               )}
+              <button
+                onClick={() => { setReplyId(replyId === k.id ? null : k.id); setReplyText(k.odpowiedz || ""); }}
+                style={{
+                  padding: "5px 14px", borderRadius: 6, border: "1px solid rgba(59,130,246,0.3)",
+                  background: "rgba(59,130,246,0.08)", color: "#3b82f6", fontSize: 11, fontWeight: 700, cursor: "pointer",
+                  display: "flex", alignItems: "center", gap: 4,
+                }}
+              >
+                <img src="/logo.png" alt="" width={12} height={12} style={{ objectFit: "contain" }} />
+                {k.odpowiedz ? "Edytuj odpowiedź" : "Odpowiedz"}
+              </button>
             </div>
+            {replyId === k.id && (
+              <div style={{ marginTop: 8, display: "flex", gap: 8, alignItems: "flex-start" }}>
+                <textarea
+                  autoFocus
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  placeholder="Odpowiedź jako MKS Drawa Drawno..."
+                  style={{
+                    flex: 1, padding: "8px 10px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(59,130,246,0.2)",
+                    borderRadius: 7, color: "#fff", fontSize: 12, resize: "vertical", minHeight: 50, fontFamily: "inherit",
+                    boxSizing: "border-box",
+                  }}
+                />
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  <button onClick={() => sendReply(k.id)} disabled={replying} style={btnApprove}>
+                    {replying ? "..." : "Wyślij"}
+                  </button>
+                  <button onClick={() => setReplyId(null)} style={{ ...btnReject, padding: "4px 10px" }}>Anuluj</button>
+                </div>
+              </div>
+            )}
           </div>
         ))
       )}
     </div>
   );
 }
+
+const btnApprove = {
+  padding: "5px 14px", borderRadius: 6, border: "1px solid rgba(34,197,94,0.3)",
+  background: "rgba(34,197,94,0.08)", color: "#22c55e", fontSize: 11, fontWeight: 700, cursor: "pointer",
+};
+const btnReject = {
+  padding: "5px 14px", borderRadius: 6, border: "1px solid rgba(239,68,68,0.3)",
+  background: "rgba(239,68,68,0.08)", color: "#ef4444", fontSize: 11, fontWeight: 700, cursor: "pointer",
+};

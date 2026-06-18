@@ -444,6 +444,7 @@ model Komentarz {
   tresc        String
   emoji        String?
   zatwierdzony Boolean  @default(false)
+  odpowiedz    String?
   createdAt    DateTime @default(now())
 
   reakcje      KomentarzReakcja[]

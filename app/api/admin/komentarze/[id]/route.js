@@ -9,10 +9,11 @@ export async function PATCH(req, { params }) {
   const { id } = await params;
   const body = await req.json();
 
-  const updated = await prisma.komentarz.update({
-    where: { id },
-    data: { zatwierdzony: !!body.zatwierdzony },
-  });
+  const data = {};
+  if (body.zatwierdzony !== undefined) data.zatwierdzony = !!body.zatwierdzony;
+  if (body.odpowiedz !== undefined) data.odpowiedz = body.odpowiedz || null;
+
+  const updated = await prisma.komentarz.update({ where: { id }, data });
 
   return Response.json(updated);
 }

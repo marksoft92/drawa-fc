@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -211,6 +212,17 @@ export default function Komentarze({ typ, targetId }) {
               <div style={{ fontSize: 14, color: "#94a3b8", lineHeight: 1.5, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
                 {k.tresc}
               </div>
+              {k.odpowiedz && (
+                <div style={{ marginTop: 10, padding: "10px 12px", background: "rgba(59,130,246,0.06)", border: "1px solid rgba(59,130,246,0.12)", borderRadius: 8, borderLeft: "3px solid #3b82f6" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                    <img src="/logo.png" alt="" width={18} height={18} style={{ objectFit: "contain", borderRadius: 3 }} />
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "#3b82f6" }}>MKS DRAWA DRAWNO</span>
+                  </div>
+                  <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.5, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                    {k.odpowiedz}
+                  </div>
+                </div>
+              )}
               <div style={{ display: "flex", gap: 4, marginTop: 8, flexWrap: "wrap" }}>
                 {REACTION_EMOJI.map((emoji) => {
                   const count = k.reakcje?.[emoji] || 0;

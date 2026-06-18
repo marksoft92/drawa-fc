@@ -22,7 +22,7 @@ export async function GET(req) {
     for (const r of k.reakcje) {
       reakcje[r.emoji] = (reakcje[r.emoji] || 0) + 1;
     }
-    return { id: k.id, nick: k.nick, tresc: k.tresc, emoji: k.emoji, createdAt: k.createdAt, reakcje };
+    return { id: k.id, nick: k.nick, tresc: k.tresc, emoji: k.emoji, odpowiedz: k.odpowiedz, createdAt: k.createdAt, reakcje };
   });
 
   return Response.json({ komentarze });
