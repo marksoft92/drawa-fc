@@ -59,3 +59,4 @@ public/galeria/uploads/*
 !public/galeria/uploads/.gitkeep
 tmp/*
 !tmp/.gitkeep
+data/
