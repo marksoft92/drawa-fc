@@ -400,6 +400,12 @@ function MatchCard({ mecz, isDrawa, HerbImg, upcoming }) {
         </div>
       )}
 
+      {isDone && mecz.id && (
+        <div style={{ padding: '0 20px 12px' }}>
+          <Komentarze typ="mecz" targetId={mecz.id} />
+        </div>
+      )}
+
       {/* Expand button */}
       {hasDetails && (
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
@@ -420,14 +426,7 @@ function MatchCard({ mecz, isDrawa, HerbImg, upcoming }) {
           </button>
 
           {expanded && (
-            <>
-              <MatchDetails mecz={mecz} drawaSide={drawaSide} isDrawa={isDrawa} />
-              {isDone && mecz.id && (
-                <div style={{ padding: '0 20px 16px' }}>
-                  <Komentarze typ="mecz" targetId={mecz.id} />
-                </div>
-              )}
-            </>
+            <MatchDetails mecz={mecz} drawaSide={drawaSide} isDrawa={isDrawa} />
           )}
         </div>
       )}

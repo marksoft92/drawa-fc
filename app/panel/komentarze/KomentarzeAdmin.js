@@ -102,6 +102,12 @@ export default function KomentarzeAdmin() {
               {k.emoji && <span style={{ fontSize: 16 }}>{k.emoji}</span>}
               <span style={{ fontSize: 11, color: "#334155", marginLeft: "auto" }}>{timeAgo(k.createdAt)}</span>
             </div>
+            {k.targetLabel && (
+              <div style={{ fontSize: 11, color: "#475569", marginBottom: 6, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ color: "#334155" }}>→</span>
+                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{k.targetLabel}</span>
+              </div>
+            )}
             <div style={{ fontSize: 13, color: "#94a3b8", lineHeight: 1.5, marginBottom: 10, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
               {k.tresc}
             </div>
