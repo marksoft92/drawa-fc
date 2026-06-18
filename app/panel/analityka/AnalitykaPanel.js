@@ -27,23 +27,23 @@ function getRange(value) {
 }
 
 function fmt(n) {
-  if (n == null) return "—";
-  if (typeof n === "number" && n >= 1000) return n.toLocaleString("pl-PL");
+  if (n == null || isNaN(n)) return "0";
+  if (n >= 1000) return n.toLocaleString("pl-PL");
   return String(n);
 }
 
 function fmtTime(seconds) {
-  if (!seconds) return "0s";
-  const m = Math.floor(seconds / 60);
-  const s = Math.round(seconds % 60);
-  if (m === 0) return `${s}s`;
-  return `${m}m ${s}s`;
+  if (!seconds || isNaN(seconds) || !isFinite(seconds)) return "0s";
+  const s = Math.round(seconds);
+  if (s < 60) return `${s}s`;
+  const m = Math.floor(s / 60);
+  return `${m}m ${s % 60}s`;
 }
 
-function fmtPercent(n) {
-  if (n == null) return "—";
-  return `${Math.round(n * 100)}%`;
-}
+const COUNTRY_NAMES = {
+  PL: "Polska", DE: "Niemcy", US: "USA", GB: "Wlk. Brytania", UA: "Ukraina",
+  NL: "Holandia", FR: "Francja", CZ: "Czechy", SE: "Szwecja", NO: "Norwegia",
+};
 
 const cardStyle = {
   background: "#0f172a",
@@ -55,48 +55,54 @@ const cardStyle = {
 const labelStyle = { fontSize: 11, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 };
 const valueStyle = { fontSize: 28, fontWeight: 700, color: "#fff", fontFamily: "'Bebas Neue', Impact, sans-serif", letterSpacing: "0.02em" };
 
-function StatCard({ label, value }) {
+function StatCard({ label, value, sub }) {
   return (
     <div style={cardStyle}>
       <div style={labelStyle}>{label}</div>
       <div style={valueStyle}>{value}</div>
+      {sub && <div style={{ fontSize: 11, color: "#475569", marginTop: 2 }}>{sub}</div>}
     </div>
   );
 }
 
-function MiniChart({ data, color = "#3b82f6", height = 60 }) {
-  if (!data || data.length === 0) return null;
-  const max = Math.max(...data, 1);
-  const w = 100 / data.length;
+function MiniChart({ data, height = 80 }) {
+  if (!data || data.length === 0) return <div style={{ color: "#334155", fontSize: 13, padding: 20, textAlign: "center" }}>Brak danych</div>;
+  const max = Math.max(...data.map((d) => d.y), 1);
   return (
     <div style={{ display: "flex", alignItems: "flex-end", gap: 1, height, width: "100%" }}>
-      {data.map((v, i) => (
+      {data.map((d, i) => (
         <div
           key={i}
           style={{
             flex: 1,
-            height: `${Math.max((v / max) * 100, 2)}%`,
-            background: color,
-            borderRadius: "2px 2px 0 0",
-            opacity: 0.8,
+            height: `${Math.max((d.y / max) * 100, 2)}%`,
+            background: "linear-gradient(to top, #1e40af, #3b82f6)",
+            borderRadius: "3px 3px 0 0",
             minWidth: 2,
+            cursor: "default",
           }}
-          title={`${v}`}
+          title={`${d.x}: ${d.y} odsłon`}
         />
       ))}
     </div>
   );
 }
 
-function MetricTable({ data, labelKey = "x", valueKey = "y", title }) {
-  if (!data || data.length === 0) return null;
+function MetricTable({ data, title, formatLabel }) {
+  if (!data || data.length === 0) return (
+    <div style={cardStyle}>
+      <div style={{ ...labelStyle, marginBottom: 12 }}>{title}</div>
+      <div style={{ color: "#334155", fontSize: 13 }}>Brak danych</div>
+    </div>
+  );
+  const maxVal = data[0]?.y || 1;
   return (
     <div style={cardStyle}>
       <div style={{ ...labelStyle, marginBottom: 12 }}>{title}</div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         {data.map((row, i) => {
-          const maxVal = data[0]?.[valueKey] || 1;
-          const pct = (row[valueKey] / maxVal) * 100;
+          const pct = (row.y / maxVal) * 100;
+          const label = formatLabel ? formatLabel(row.x) : (row.x || "(brak)");
           return (
             <div key={i} style={{ position: "relative" }}>
               <div style={{
@@ -106,13 +112,13 @@ function MetricTable({ data, labelKey = "x", valueKey = "y", title }) {
               }} />
               <div style={{
                 display: "flex", justifyContent: "space-between", alignItems: "center",
-                padding: "6px 10px", position: "relative", zIndex: 1,
+                padding: "7px 10px", position: "relative", zIndex: 1,
               }}>
                 <span style={{ fontSize: 13, color: "#cbd5e1", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1, marginRight: 8 }}>
-                  {row[labelKey] || "(nieznane)"}
+                  {label}
                 </span>
                 <span style={{ fontSize: 13, fontWeight: 600, color: "#fff", flexShrink: 0 }}>
-                  {fmt(row[valueKey])}
+                  {row.y}
                 </span>
               </div>
             </div>
@@ -127,11 +133,12 @@ export default function AnalitykaPanel() {
   const [range, setRange] = useState("7d");
   const [stats, setStats] = useState(null);
   const [pageviews, setPageviews] = useState(null);
-  const [pages, setPages] = useState(null);
-  const [referrers, setReferrers] = useState(null);
-  const [browsers, setBrowsers] = useState(null);
-  const [devices, setDevices] = useState(null);
-  const [countries, setCountries] = useState(null);
+  const [pages, setPages] = useState([]);
+  const [referrers, setReferrers] = useState([]);
+  const [browsers, setBrowsers] = useState([]);
+  const [devices, setDevices] = useState([]);
+  const [os, setOs] = useState([]);
+  const [countries, setCountries] = useState([]);
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -141,13 +148,14 @@ export default function AnalitykaPanel() {
     const base = `startAt=${startAt}&endAt=${endAt}&timezone=Europe/Warsaw`;
 
     try {
-      const [statsRes, pvRes, pagesRes, refRes, brRes, devRes, countryRes, activeRes] = await Promise.all([
+      const [statsRes, pvRes, pagesRes, refRes, brRes, devRes, osRes, countryRes, activeRes] = await Promise.all([
         fetch(`/api/admin/analytics?type=stats&${base}`).then((r) => r.json()),
         fetch(`/api/admin/analytics?type=pageviews&${base}&unit=${unit}`).then((r) => r.json()),
-        fetch(`/api/admin/analytics?type=metrics&metric=url&${base}&limit=10`).then((r) => r.json()),
+        fetch(`/api/admin/analytics?type=metrics&metric=path&${base}&limit=10`).then((r) => r.json()),
         fetch(`/api/admin/analytics?type=metrics&metric=referrer&${base}&limit=10`).then((r) => r.json()),
         fetch(`/api/admin/analytics?type=metrics&metric=browser&${base}&limit=5`).then((r) => r.json()),
         fetch(`/api/admin/analytics?type=metrics&metric=device&${base}&limit=5`).then((r) => r.json()),
+        fetch(`/api/admin/analytics?type=metrics&metric=os&${base}&limit=5`).then((r) => r.json()),
         fetch(`/api/admin/analytics?type=metrics&metric=country&${base}&limit=10`).then((r) => r.json()),
         fetch(`/api/admin/analytics?type=active`).then((r) => r.json()),
       ]);
@@ -157,8 +165,9 @@ export default function AnalitykaPanel() {
       setReferrers(Array.isArray(refRes) ? refRes : []);
       setBrowsers(Array.isArray(brRes) ? brRes : []);
       setDevices(Array.isArray(devRes) ? devRes : []);
+      setOs(Array.isArray(osRes) ? osRes : []);
       setCountries(Array.isArray(countryRes) ? countryRes : []);
-      setActive(activeRes?.x || 0);
+      setActive(activeRes?.visitors || 0);
     } catch {
       // ignore
     }
@@ -172,11 +181,14 @@ export default function AnalitykaPanel() {
       try {
         const res = await fetch("/api/admin/analytics?type=active");
         const data = await res.json();
-        setActive(data?.x || 0);
+        setActive(data?.visitors || 0);
       } catch {}
     }, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  const avgTime = stats && stats.pageviews > 0 ? stats.totaltime / stats.pageviews : 0;
+  const bounceRate = stats && stats.visits > 0 ? Math.round((stats.bounces / stats.visits) * 100) : 0;
 
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto" }}>
@@ -218,38 +230,39 @@ export default function AnalitykaPanel() {
         <div style={{ textAlign: "center", padding: 60, color: "#64748b" }}>Ładowanie...</div>
       ) : (
         <>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12, marginBottom: 20 }}>
-            <StatCard label="Odsłony" value={fmt(stats?.pageviews?.value)} />
-            <StatCard label="Odwiedziny" value={fmt(stats?.visits?.value)} />
-            <StatCard label="Unikalni" value={fmt(stats?.visitors?.value)} />
-            <StatCard label="Śr. czas" value={fmtTime(stats?.totaltime?.value / Math.max(stats?.pageviews?.value, 1))} />
-            <StatCard label="Bounce rate" value={fmtPercent(stats?.bounces?.value / Math.max(stats?.visits?.value, 1))} />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 20 }}>
+            <StatCard label="Odsłony" value={fmt(stats?.pageviews)} />
+            <StatCard label="Odwiedziny" value={fmt(stats?.visits)} />
+            <StatCard label="Unikalni" value={fmt(stats?.visitors)} />
+            <StatCard label="Śr. czas" value={fmtTime(avgTime)} />
+            <StatCard label="Bounce rate" value={`${bounceRate}%`} />
           </div>
 
-          {pageviews?.pageviews && (
-            <div style={{ ...cardStyle, marginBottom: 20 }}>
-              <div style={{ ...labelStyle, marginBottom: 12 }}>Odsłony w czasie</div>
-              <MiniChart data={pageviews.pageviews.map((p) => p.y)} color="#3b82f6" height={80} />
+          <div style={{ ...cardStyle, marginBottom: 20 }}>
+            <div style={{ ...labelStyle, marginBottom: 12 }}>Odsłony w czasie</div>
+            <MiniChart data={pageviews?.pageviews} height={80} />
+            {pageviews?.pageviews?.length > 1 && (
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
                 <span style={{ fontSize: 10, color: "#475569" }}>
-                  {pageviews.pageviews[0]?.x ? new Date(pageviews.pageviews[0].x).toLocaleDateString("pl-PL") : ""}
+                  {new Date(pageviews.pageviews[0].x).toLocaleDateString("pl-PL", { day: "numeric", month: "short" })}
                 </span>
                 <span style={{ fontSize: 10, color: "#475569" }}>
-                  {pageviews.pageviews.at(-1)?.x ? new Date(pageviews.pageviews.at(-1).x).toLocaleDateString("pl-PL") : ""}
+                  {new Date(pageviews.pageviews.at(-1).x).toLocaleDateString("pl-PL", { day: "numeric", month: "short" })}
                 </span>
               </div>
-            </div>
-          )}
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, marginBottom: 20 }}>
-            <MetricTable data={pages} title="Najpopularniejsze strony" />
-            <MetricTable data={referrers} title="Źródła ruchu" />
+            )}
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, marginBottom: 16 }}>
+            <MetricTable data={pages} title="Najpopularniejsze strony" />
+            <MetricTable data={referrers} title="Źródła ruchu" formatLabel={(v) => v || "(wejście bezpośrednie)"} />
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
             <MetricTable data={browsers} title="Przeglądarki" />
-            <MetricTable data={devices} title="Urządzenia" />
-            <MetricTable data={countries} title="Kraje" />
+            <MetricTable data={devices} title="Urządzenia" formatLabel={(v) => v === "mobile" ? "Telefon" : v === "laptop" ? "Komputer" : v === "tablet" ? "Tablet" : v} />
+            <MetricTable data={os} title="System operacyjny" />
+            <MetricTable data={countries} title="Kraje" formatLabel={(v) => COUNTRY_NAMES[v] || v} />
           </div>
         </>
       )}

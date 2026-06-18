@@ -60,7 +60,7 @@ export async function GET(request) {
       return Response.json(data || { pageviews: [], sessions: [] });
     }
     case "metrics": {
-      const metricType = searchParams.get("metric") || "url";
+      const metricType = searchParams.get("metric") || "path";
       const limit = searchParams.get("limit") || "10";
       const data = await umamiFetch("metrics", { ...base, type: metricType, limit });
       return Response.json(data || []);
