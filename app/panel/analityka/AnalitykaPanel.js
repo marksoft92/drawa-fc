@@ -241,7 +241,7 @@ function SessionsTable({ sessions, range }) {
   );
 }
 
-function LiveVisitorRow({ visitor, events }) {
+function LiveVisitorRow({ visitor, events, isActive }) {
   const [open, setOpen] = useState(false);
   const deviceIcon = visitor.device === "mobile" ? "📱" : visitor.device === "tablet" ? "📟" : "💻";
   const deviceLabel = visitor.device === "mobile" ? "Telefon" : visitor.device === "laptop" ? "Komputer" : visitor.device === "tablet" ? "Tablet" : visitor.device || "—";
@@ -251,6 +251,8 @@ function LiveVisitorRow({ visitor, events }) {
   const lastPage = events[0]?.urlPath || "—";
   const firstRef = events.find((e) => e.referrerDomain && e.referrerDomain !== "mksdrawadrawno.pl");
   const source = firstRef ? (REFERRER_LABELS[firstRef.referrerDomain] || firstRef.referrerDomain) : "bezpośrednio";
+  const lastActivity = events[0]?.createdAt ? new Date(events[0].createdAt) : null;
+  const ago = lastActivity ? Math.round((Date.now() - lastActivity.getTime()) / 60000) : null;
 
   return (
     <>
@@ -260,11 +262,12 @@ function LiveVisitorRow({ visitor, events }) {
           display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
           borderBottom: "1px solid rgba(255,255,255,0.04)", cursor: "pointer",
           transition: "background 0.15s",
+          opacity: isActive ? 1 : 0.5,
         }}
         onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.02)"}
         onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
       >
-        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }} />
+        <span style={{ width: 8, height: 8, borderRadius: "50%", background: isActive ? "#22c55e" : "#475569", flexShrink: 0, animation: isActive ? "pulse 2s infinite" : "none" }} />
         <span style={{ fontSize: 16, flexShrink: 0 }}>{deviceIcon}</span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 13, color: "#cbd5e1", fontWeight: 500 }}>
@@ -277,6 +280,7 @@ function LiveVisitorRow({ visitor, events }) {
         </div>
         <div style={{ textAlign: "right", flexShrink: 0 }}>
           <div style={{ fontSize: 12, color: "#fff", fontWeight: 600 }}>{events.length} {events.length === 1 ? "strona" : "stron"}</div>
+          {!isActive && ago != null && <div style={{ fontSize: 10, color: "#475569" }}>{ago < 1 ? "przed chwilą" : `${ago} min temu`}</div>}
         </div>
         <span style={{ fontSize: 10, color: "#475569", flexShrink: 0 }}>{open ? "▼" : "▶"}</span>
       </div>
@@ -338,8 +342,22 @@ function LivePanel({ realtime, active, liveSessions }) {
     }
   }
 
-  const visitorIds = Object.keys(sessionInfo);
-  if (active === 0 && visitorIds.length === 0) return null;
+  const now = Date.now();
+  const ACTIVE_THRESHOLD = 5 * 60 * 1000;
+
+  const visitors = Object.keys(sessionInfo).map((sid) => {
+    const evts = (sessionEvents[sid] || []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const lastEvent = evts[0]?.createdAt ? new Date(evts[0].createdAt).getTime() : 0;
+    const isActive = (now - lastEvent) < ACTIVE_THRESHOLD;
+    return { sid, info: sessionInfo[sid], events: evts, isActive, lastEvent };
+  });
+
+  visitors.sort((a, b) => {
+    if (a.isActive !== b.isActive) return a.isActive ? -1 : 1;
+    return b.lastEvent - a.lastEvent;
+  });
+
+  if (active === 0 && visitors.length === 0) return null;
 
   return (
     <div style={{ ...cardStyle, marginBottom: 20, borderColor: "rgba(34,197,94,0.15)", padding: 0, overflow: "hidden" }}>
@@ -348,14 +366,18 @@ function LivePanel({ realtime, active, liveSessions }) {
         <span style={{ fontSize: 12, color: "#22c55e", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>
           Na żywo — {active} {active === 1 ? "osoba" : active < 5 ? "osoby" : "osób"}
         </span>
+        {visitors.length > active && (
+          <span style={{ fontSize: 10, color: "#475569" }}>+ {visitors.length - active} niedawno</span>
+        )}
         <span style={{ fontSize: 10, color: "#334155", marginLeft: "auto" }}>co 10s · kliknij aby rozwinąć</span>
       </div>
-      {visitorIds.length > 0 ? (
-        visitorIds.map((sid) => (
+      {visitors.length > 0 ? (
+        visitors.map((v) => (
           <LiveVisitorRow
-            key={sid}
-            visitor={sessionInfo[sid]}
-            events={(sessionEvents[sid] || []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))}
+            key={v.sid}
+            visitor={v.info}
+            events={v.events}
+            isActive={v.isActive}
           />
         ))
       ) : (
