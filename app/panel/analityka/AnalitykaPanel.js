@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
+
+const VisitorsMap = dynamic(() => import("./VisitorsMap"), { ssr: false });
 
 const RANGES = [
   { label: "Dziś", value: "today" },
@@ -669,6 +672,12 @@ export default function AnalitykaPanel() {
 
           {sessions.length > 0 && (
             <SessionsTable sessions={sessions} range={range} />
+          )}
+
+          {cities.length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              <VisitorsMap cities={cities} />
+            </div>
           )}
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
