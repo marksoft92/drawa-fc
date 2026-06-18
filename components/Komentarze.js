@@ -170,9 +170,10 @@ export default function Komentarze({ typ, targetId }) {
         >
           <div
             onClick={(e) => e.stopPropagation()}
+            className="komentarze-modal"
             style={{
               background: "#0a0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16,
-              width: "100%", maxWidth: 520, maxHeight: "85vh", display: "flex", flexDirection: "column",
+              width: "100%", maxWidth: 640, height: "90vh", display: "flex", flexDirection: "column",
               boxShadow: "0 16px 64px rgba(0,0,0,0.7)",
             }}
           >
@@ -333,6 +334,16 @@ export default function Komentarze({ typ, targetId }) {
           </div>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 640px) {
+          .komentarze-modal {
+            height: 100vh !important;
+            max-width: 100% !important;
+            border-radius: 0 !important;
+          }
+        }
+      `}</style>
     </>
   );
 }
