@@ -139,6 +139,8 @@ export default function AnalitykaPanel() {
   const [devices, setDevices] = useState([]);
   const [os, setOs] = useState([]);
   const [countries, setCountries] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [sessions, setSessions] = useState([]);
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -148,7 +150,7 @@ export default function AnalitykaPanel() {
     const base = `startAt=${startAt}&endAt=${endAt}&timezone=Europe/Warsaw`;
 
     try {
-      const [statsRes, pvRes, pagesRes, refRes, brRes, devRes, osRes, countryRes, activeRes] = await Promise.all([
+      const [statsRes, pvRes, pagesRes, refRes, brRes, devRes, osRes, countryRes, cityRes, sessionsRes, activeRes] = await Promise.all([
         fetch(`/api/admin/analytics?type=stats&${base}`).then((r) => r.json()),
         fetch(`/api/admin/analytics?type=pageviews&${base}&unit=${unit}`).then((r) => r.json()),
         fetch(`/api/admin/analytics?type=metrics&metric=path&${base}&limit=10`).then((r) => r.json()),
@@ -157,6 +159,8 @@ export default function AnalitykaPanel() {
         fetch(`/api/admin/analytics?type=metrics&metric=device&${base}&limit=5`).then((r) => r.json()),
         fetch(`/api/admin/analytics?type=metrics&metric=os&${base}&limit=5`).then((r) => r.json()),
         fetch(`/api/admin/analytics?type=metrics&metric=country&${base}&limit=10`).then((r) => r.json()),
+        fetch(`/api/admin/analytics?type=metrics&metric=city&${base}&limit=10`).then((r) => r.json()),
+        fetch(`/api/admin/analytics?type=sessions&${base}`).then((r) => r.json()),
         fetch(`/api/admin/analytics?type=active`).then((r) => r.json()),
       ]);
       setStats(statsRes);
@@ -167,6 +171,8 @@ export default function AnalitykaPanel() {
       setDevices(Array.isArray(devRes) ? devRes : []);
       setOs(Array.isArray(osRes) ? osRes : []);
       setCountries(Array.isArray(countryRes) ? countryRes : []);
+      setCities(Array.isArray(cityRes) ? cityRes : []);
+      setSessions(Array.isArray(sessionsRes?.data) ? sessionsRes.data : []);
       setActive(activeRes?.visitors || 0);
     } catch {
       // ignore
@@ -258,7 +264,43 @@ export default function AnalitykaPanel() {
             <MetricTable data={referrers} title="Źródła ruchu" formatLabel={(v) => v || "(wejście bezpośrednie)"} />
           </div>
 
+          {sessions.length > 0 && (
+            <div style={{ ...cardStyle, marginBottom: 16, overflowX: "auto" }}>
+              <div style={{ ...labelStyle, marginBottom: 12 }}>Ostatni odwiedzający</div>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                <thead>
+                  <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                    {["Miasto", "Przeglądarka", "Urządzenie", "System", "Ekran", "Odsłony", "Czas wizyty"].map((h) => (
+                      <th key={h} style={{ padding: "8px 10px", textAlign: "left", color: "#64748b", fontWeight: 500, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", whiteSpace: "nowrap" }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {sessions.slice(0, 20).map((s) => {
+                    const deviceLabel = s.device === "mobile" ? "Telefon" : s.device === "laptop" ? "Komputer" : s.device === "tablet" ? "Tablet" : s.device || "—";
+                    const city = s.city || "—";
+                    const country = COUNTRY_NAMES[s.country] || s.country || "";
+                    const location = city !== "—" && country ? `${city}, ${country}` : city !== "—" ? city : country || "—";
+                    const time = new Date(s.firstAt).toLocaleString("pl-PL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+                    return (
+                      <tr key={s.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                        <td style={{ padding: "8px 10px", color: "#cbd5e1", whiteSpace: "nowrap" }}>{location}</td>
+                        <td style={{ padding: "8px 10px", color: "#94a3b8", whiteSpace: "nowrap" }}>{s.browser || "—"}</td>
+                        <td style={{ padding: "8px 10px", color: "#94a3b8", whiteSpace: "nowrap" }}>{deviceLabel}</td>
+                        <td style={{ padding: "8px 10px", color: "#94a3b8", whiteSpace: "nowrap" }}>{s.os || "—"}</td>
+                        <td style={{ padding: "8px 10px", color: "#64748b", whiteSpace: "nowrap" }}>{s.screen || "—"}</td>
+                        <td style={{ padding: "8px 10px", color: "#fff", fontWeight: 600, textAlign: "center" }}>{s.views}</td>
+                        <td style={{ padding: "8px 10px", color: "#64748b", whiteSpace: "nowrap" }}>{time}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+            <MetricTable data={cities} title="Miasta" />
             <MetricTable data={browsers} title="Przeglądarki" />
             <MetricTable data={devices} title="Urządzenia" formatLabel={(v) => v === "mobile" ? "Telefon" : v === "laptop" ? "Komputer" : v === "tablet" ? "Tablet" : v} />
             <MetricTable data={os} title="System operacyjny" />

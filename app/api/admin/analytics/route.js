@@ -65,6 +65,10 @@ export async function GET(request) {
       const data = await umamiFetch("metrics", { ...base, type: metricType, limit });
       return Response.json(data || []);
     }
+    case "sessions": {
+      const data = await umamiFetch("sessions", base);
+      return Response.json(data || { data: [] });
+    }
     case "active": {
       const token = await getToken();
       if (!token) return Response.json({ x: 0 });
