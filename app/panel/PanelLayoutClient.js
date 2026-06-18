@@ -49,6 +49,15 @@ const ANKIETY_NAV_ITEM = {
 
 const ADMIN_NAV = [
   {
+    label: "Analityka",
+    href: "/panel/analityka",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M3 3v18h18" /><path d="M7 16l4-8 4 4 6-6" />
+      </svg>
+    ),
+  },
+  {
     label: "Gracze",
     href: "/panel/gracze",
     icon: (
