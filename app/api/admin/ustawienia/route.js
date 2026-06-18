@@ -8,6 +8,7 @@ const ALLOWED_KEYS = new Set([
   "emailKlub", "emailPrezes", "facebook", "instagram",
   "liga", "ligaLink", "ligaSezon",
   "aktywny_sezon", "aktywny_klasa",
+  "backup_email", "backup_password",
 ]);
 
 export async function GET() {

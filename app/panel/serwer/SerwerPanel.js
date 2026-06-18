@@ -22,6 +22,15 @@ const cardStyle = {
   padding: "16px 20px",
 };
 const labelStyle = { fontSize: 11, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 };
+const inputStyle = {
+  width: "100%", padding: "9px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)",
+  background: "#0a0f1a", color: "#fff", fontSize: 13, outline: "none",
+};
+const btnStyle = (active, color = "#2563eb") => ({
+  padding: "9px 18px", borderRadius: 8, border: "none", cursor: active ? "pointer" : "wait",
+  background: active ? color : "#1e293b", color: "#fff", fontSize: 13, fontWeight: 600,
+  display: "inline-flex", alignItems: "center", gap: 8, transition: "background 0.15s",
+});
 
 function ProgressBar({ value, max, color = "#3b82f6", label }) {
   const p = pct(value, max);
@@ -43,13 +52,22 @@ export default function SerwerPanel() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [dumping, setDumping] = useState(false);
+  const [backupEmail, setBackupEmail] = useState("");
+  const [backupPassword, setBackupPassword] = useState("");
+  const [savingEmail, setSavingEmail] = useState(false);
+  const [emailSaved, setEmailSaved] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendResult, setSendResult] = useState(null);
 
   useEffect(() => {
-    fetch("/api/admin/server")
-      .then((r) => r.json())
-      .then(setData)
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    Promise.all([
+      fetch("/api/admin/server").then((r) => r.json()),
+      fetch("/api/admin/ustawienia").then((r) => r.json()),
+    ]).then(([serverData, settings]) => {
+      setData(serverData);
+      setBackupEmail(settings.backup_email || "");
+      setBackupPassword(settings.backup_password || "");
+    }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   async function downloadDump() {
@@ -68,6 +86,38 @@ export default function SerwerPanel() {
       alert("Błąd podczas tworzenia kopii zapasowej");
     }
     setDumping(false);
+  }
+
+  async function saveEmailSettings() {
+    setSavingEmail(true);
+    setEmailSaved(false);
+    try {
+      await fetch("/api/admin/ustawienia", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ backup_email: backupEmail, backup_password: backupPassword }),
+      });
+      setEmailSaved(true);
+      setTimeout(() => setEmailSaved(false), 3000);
+    } catch {}
+    setSavingEmail(false);
+  }
+
+  async function sendTestBackup() {
+    setSending(true);
+    setSendResult(null);
+    try {
+      const res = await fetch("/api/admin/server/backup-send", { method: "POST" });
+      const data = await res.json();
+      if (res.ok) {
+        setSendResult({ ok: true, msg: "Backup wysłany na " + backupEmail });
+      } else {
+        setSendResult({ ok: false, msg: data.error || "Błąd wysyłki" });
+      }
+    } catch {
+      setSendResult({ ok: false, msg: "Błąd połączenia" });
+    }
+    setSending(false);
   }
 
   if (loading) return <div style={{ textAlign: "center", padding: 60, color: "#64748b" }}>Ładowanie...</div>;
@@ -130,9 +180,7 @@ export default function SerwerPanel() {
 
       {data.dbTables?.length > 0 && (
         <div style={{ ...cardStyle, marginBottom: 16 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <div style={labelStyle}>Tabele bazy danych</div>
-          </div>
+          <div style={labelStyle}>Tabele bazy danych</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {data.dbTables.map((t) => {
               const maxSize = data.dbTables[0]?.size || 1;
@@ -151,20 +199,12 @@ export default function SerwerPanel() {
         </div>
       )}
 
-      <div style={{ ...cardStyle }}>
-        <div style={labelStyle}>Kopia zapasowa</div>
+      <div style={{ ...cardStyle, marginBottom: 16 }}>
+        <div style={labelStyle}>Kopia zapasowa — pobieranie</div>
         <p style={{ fontSize: 13, color: "#94a3b8", marginBottom: 12 }}>
-          Pobierz pełny dump bazy danych PostgreSQL (.dump). Przywracanie: <code style={{ background: "rgba(255,255,255,0.06)", padding: "2px 6px", borderRadius: 4, fontSize: 12 }}>pg_restore -U drawa -d drawa_fc plik.dump</code>
+          Przywracanie: <code style={{ background: "rgba(255,255,255,0.06)", padding: "2px 6px", borderRadius: 4, fontSize: 12 }}>pg_restore -U drawa -d drawa_fc plik.dump</code>
         </p>
-        <button
-          onClick={downloadDump}
-          disabled={dumping}
-          style={{
-            padding: "10px 20px", borderRadius: 8, border: "none", cursor: dumping ? "wait" : "pointer",
-            background: dumping ? "#1e293b" : "#2563eb", color: "#fff", fontSize: 13, fontWeight: 600,
-            display: "inline-flex", alignItems: "center", gap: 8, transition: "background 0.15s",
-          }}
-        >
+        <button onClick={downloadDump} disabled={dumping} style={btnStyle(!dumping)}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="7,10 12,15 17,10" />
@@ -172,6 +212,53 @@ export default function SerwerPanel() {
           </svg>
           {dumping ? "Generowanie..." : "Pobierz backup bazy"}
         </button>
+      </div>
+
+      <div style={{ ...cardStyle }}>
+        <div style={labelStyle}>Automatyczny backup na email</div>
+        <p style={{ fontSize: 13, color: "#94a3b8", marginBottom: 14 }}>
+          Codziennie o 3:00 w nocy backup bazy zostanie wysłany na podany adres Gmail.
+          Potrzebujesz <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener" style={{ color: "#3b82f6" }}>hasła aplikacji Google</a>.
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 14 }}>
+          <div>
+            <label style={{ fontSize: 12, color: "#64748b", display: "block", marginBottom: 4 }}>Adres Gmail</label>
+            <input
+              type="email"
+              value={backupEmail}
+              onChange={(e) => setBackupEmail(e.target.value)}
+              placeholder="twoj@gmail.com"
+              style={inputStyle}
+            />
+          </div>
+          <div>
+            <label style={{ fontSize: 12, color: "#64748b", display: "block", marginBottom: 4 }}>Hasło aplikacji</label>
+            <input
+              type="password"
+              value={backupPassword}
+              onChange={(e) => setBackupPassword(e.target.value)}
+              placeholder="xxxx xxxx xxxx xxxx"
+              style={inputStyle}
+            />
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <button onClick={saveEmailSettings} disabled={savingEmail || !backupEmail} style={btnStyle(!savingEmail && !!backupEmail, "#16a34a")}>
+            {savingEmail ? "Zapisywanie..." : "Zapisz ustawienia"}
+          </button>
+          <button onClick={sendTestBackup} disabled={sending || !backupEmail || !backupPassword} style={btnStyle(!sending && !!backupEmail && !!backupPassword)}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M22 2L11 13" /><path d="M22 2L15 22L11 13L2 9L22 2Z" />
+            </svg>
+            {sending ? "Wysyłanie..." : "Wyślij testowy backup"}
+          </button>
+          {emailSaved && <span style={{ fontSize: 12, color: "#22c55e" }}>Zapisano</span>}
+          {sendResult && (
+            <span style={{ fontSize: 12, color: sendResult.ok ? "#22c55e" : "#ef4444" }}>{sendResult.msg}</span>
+          )}
+        </div>
       </div>
     </div>
   );
