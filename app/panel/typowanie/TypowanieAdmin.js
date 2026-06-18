@@ -34,6 +34,84 @@ function toLocalDatetime(iso) {
   return local.toISOString().slice(0, 16);
 }
 
+function HerbPicker({ value, onChange, herby }) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const filtered = herby.filter((h) => h.name.toLowerCase().includes(search.toLowerCase()));
+  const selected = herby.find((h) => h.url === value);
+
+  return (
+    <div style={{ position: "relative" }}>
+      <div
+        onClick={() => setOpen(!open)}
+        style={{
+          ...inp, display: "flex", alignItems: "center", gap: 8, cursor: "pointer",
+          padding: "6px 10px", minHeight: 40,
+        }}
+      >
+        {selected ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={selected.url} alt="" width={24} height={24} style={{ objectFit: "contain", borderRadius: 3 }} />
+            <span style={{ fontSize: 12, color: "#cbd5e1", flex: 1 }}>{selected.name}</span>
+          </>
+        ) : (
+          <span style={{ fontSize: 12, color: "#475569", flex: 1 }}>Wybierz herb...</span>
+        )}
+        <span style={{ fontSize: 10, color: "#475569" }}>{open ? "▲" : "▼"}</span>
+      </div>
+
+      {open && (
+        <div style={{
+          position: "absolute", top: "100%", left: 0, right: 0, zIndex: 50,
+          background: "#0f172a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8,
+          boxShadow: "0 8px 32px rgba(0,0,0,0.6)", maxHeight: 260, display: "flex", flexDirection: "column",
+        }}>
+          <input
+            autoFocus
+            style={{ ...inp, borderRadius: "8px 8px 0 0", borderBottom: "1px solid rgba(255,255,255,0.06)", fontSize: 12 }}
+            placeholder="Szukaj drużyny..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <div style={{ overflowY: "auto", flex: 1 }}>
+            <div
+              onClick={() => { onChange(""); setOpen(false); setSearch(""); }}
+              style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 10px", cursor: "pointer", borderBottom: "1px solid rgba(255,255,255,0.03)" }}
+              onMouseEnter={(e) => e.currentTarget.style.background = "rgba(59,130,246,0.08)"}
+              onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+            >
+              <span style={{ fontSize: 12, color: "#475569" }}>— brak herbu —</span>
+            </div>
+            {filtered.map((h) => (
+              <div
+                key={h.file}
+                onClick={() => { onChange(h.url); setOpen(false); setSearch(""); }}
+                style={{
+                  display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", cursor: "pointer",
+                  background: value === h.url ? "rgba(59,130,246,0.1)" : "transparent",
+                  borderBottom: "1px solid rgba(255,255,255,0.03)",
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = "rgba(59,130,246,0.08)"}
+                onMouseLeave={(e) => e.currentTarget.style.background = value === h.url ? "rgba(59,130,246,0.1)" : "transparent"}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={h.url} alt="" width={22} height={22} style={{ objectFit: "contain", borderRadius: 3, flexShrink: 0 }} />
+                <span style={{ fontSize: 12, color: "#cbd5e1" }}>{h.name}</span>
+              </div>
+            ))}
+            {filtered.length === 0 && (
+              <div style={{ padding: "12px 10px", fontSize: 12, color: "#475569", textAlign: "center" }}>Nie znaleziono</div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function punktyColor(p) {
   if (p === 3) return "#22c55e";
   if (p === 2) return "#3b82f6";
@@ -60,6 +138,8 @@ export default function TypowanieAdmin() {
   const [wpisy, setWpisy] = useState([]);
   const [wpisyLoading, setWpisyLoading] = useState(false);
 
+  const [herby, setHerby] = useState([]);
+
   const reload = useCallback(() => setTick((t) => t + 1), []);
 
   useEffect(() => {
@@ -69,6 +149,10 @@ export default function TypowanieAdmin() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [tick]);
+
+  useEffect(() => {
+    fetch("/api/admin/typowanie/herby").then((r) => r.json()).then(setHerby).catch(() => {});
+  }, []);
 
   async function handleCreate(e) {
     e.preventDefault();
@@ -161,12 +245,12 @@ export default function TypowanieAdmin() {
                 <input style={inp} value={form.team2} onChange={f("team2")} required placeholder="Sokół Karlino" />
               </div>
               <div>
-                <label style={lbl}>Herb 1 (URL)</label>
-                <input style={inp} value={form.herb1} onChange={f("herb1")} placeholder="https://..." />
+                <label style={lbl}>Herb 1</label>
+                <HerbPicker herby={herby} value={form.herb1} onChange={(v) => setForm((p) => ({ ...p, herb1: v }))} />
               </div>
               <div>
-                <label style={lbl}>Herb 2 (URL)</label>
-                <input style={inp} value={form.herb2} onChange={f("herb2")} placeholder="https://..." />
+                <label style={lbl}>Herb 2</label>
+                <HerbPicker herby={herby} value={form.herb2} onChange={(v) => setForm((p) => ({ ...p, herb2: v }))} />
               </div>
               <div style={{ gridColumn: "1 / -1" }}>
                 <label style={lbl}>Data i godzina meczu *</label>
