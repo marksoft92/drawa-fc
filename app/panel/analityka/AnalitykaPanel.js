@@ -129,6 +129,118 @@ function MetricTable({ data, title, formatLabel }) {
   );
 }
 
+const REFERRER_LABELS = {
+  "facebook.com": "Facebook",
+  "lm.facebook.com": "Facebook (mobile)",
+  "l.facebook.com": "Facebook (link)",
+  "m.facebook.com": "Facebook (mobile)",
+  "google.com": "Google",
+  "google.pl": "Google.pl",
+  "instagram.com": "Instagram",
+  "t.co": "Twitter/X",
+};
+
+function SessionRow({ session }) {
+  const [open, setOpen] = useState(false);
+  const [activity, setActivity] = useState(null);
+  const [loadingAct, setLoadingAct] = useState(false);
+
+  const deviceLabel = session.device === "mobile" ? "Telefon" : session.device === "laptop" ? "Komputer" : session.device === "tablet" ? "Tablet" : session.device || "—";
+  const city = session.city || "—";
+  const country = COUNTRY_NAMES[session.country] || session.country || "";
+  const location = city !== "—" && country ? `${city}, ${country}` : city !== "—" ? city : country || "—";
+  const time = new Date(session.firstAt).toLocaleString("pl-PL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  const duration = session.lastAt && session.firstAt
+    ? Math.round((new Date(session.lastAt) - new Date(session.firstAt)) / 1000)
+    : 0;
+
+  async function toggle() {
+    if (open) { setOpen(false); return; }
+    setOpen(true);
+    if (activity) return;
+    setLoadingAct(true);
+    try {
+      const { startAt, endAt } = getRange("90d");
+      const res = await fetch(`/api/admin/analytics?type=session-activity&sessionId=${session.id}&startAt=${startAt}&endAt=${endAt}`);
+      const data = await res.json();
+      setActivity(Array.isArray(data) ? data : []);
+    } catch { setActivity([]); }
+    setLoadingAct(false);
+  }
+
+  return (
+    <>
+      <tr onClick={toggle} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)", cursor: "pointer", transition: "background 0.15s" }}
+        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.02)"}
+        onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+      >
+        <td style={{ padding: "8px 10px", color: "#cbd5e1", whiteSpace: "nowrap" }}>
+          <span style={{ marginRight: 6, fontSize: 10, color: "#475569" }}>{open ? "▼" : "▶"}</span>
+          {location}
+        </td>
+        <td style={{ padding: "8px 10px", color: "#94a3b8", whiteSpace: "nowrap" }}>{session.browser || "—"}</td>
+        <td style={{ padding: "8px 10px", color: "#94a3b8", whiteSpace: "nowrap" }}>{deviceLabel}</td>
+        <td style={{ padding: "8px 10px", color: "#94a3b8", whiteSpace: "nowrap" }}>{session.os || "—"}</td>
+        <td style={{ padding: "8px 10px", color: "#fff", fontWeight: 600, textAlign: "center" }}>{session.views}</td>
+        <td style={{ padding: "8px 10px", color: "#64748b", whiteSpace: "nowrap" }}>{fmtTime(duration)}</td>
+        <td style={{ padding: "8px 10px", color: "#64748b", whiteSpace: "nowrap" }}>{time}</td>
+      </tr>
+      {open && (
+        <tr>
+          <td colSpan={7} style={{ padding: 0 }}>
+            <div style={{ background: "rgba(15,23,42,0.6)", padding: "10px 16px 10px 32px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+              {loadingAct ? (
+                <div style={{ color: "#475569", fontSize: 12 }}>Ładowanie...</div>
+              ) : activity && activity.length > 0 ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                  <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Ścieżka na stronie</div>
+                  {activity.filter((a) => a.eventType === 1).reverse().map((a, i) => {
+                    const t = new Date(a.createdAt).toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+                    const ref = a.referrerDomain && a.referrerDomain !== "mksdrawadrawno.pl"
+                      ? REFERRER_LABELS[a.referrerDomain] || a.referrerDomain
+                      : null;
+                    return (
+                      <div key={a.eventId || i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12 }}>
+                        <span style={{ color: "#334155", flexShrink: 0 }}>{t}</span>
+                        <span style={{ color: "#3b82f6" }}>{a.urlPath}</span>
+                        {ref && <span style={{ color: "#f59e0b", fontSize: 11 }}>z {ref}</span>}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div style={{ color: "#475569", fontSize: 12 }}>Brak szczegółów</div>
+              )}
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
+  );
+}
+
+function SessionsTable({ sessions, range }) {
+  return (
+    <div style={{ ...cardStyle, marginBottom: 16, overflowX: "auto" }}>
+      <div style={{ ...labelStyle, marginBottom: 12 }}>Ostatni odwiedzający <span style={{ color: "#334155", fontWeight: 400 }}>— kliknij aby rozwinąć</span></div>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+        <thead>
+          <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+            {["Lokalizacja", "Przeglądarka", "Urządzenie", "System", "Odsłony", "Czas na stronie", "Data"].map((h) => (
+              <th key={h} style={{ padding: "8px 10px", textAlign: "left", color: "#64748b", fontWeight: 500, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", whiteSpace: "nowrap" }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {sessions.slice(0, 25).map((s) => (
+            <SessionRow key={s.id} session={s} />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function AnalitykaPanel() {
   const [range, setRange] = useState("7d");
   const [stats, setStats] = useState(null);
@@ -265,38 +377,7 @@ export default function AnalitykaPanel() {
           </div>
 
           {sessions.length > 0 && (
-            <div style={{ ...cardStyle, marginBottom: 16, overflowX: "auto" }}>
-              <div style={{ ...labelStyle, marginBottom: 12 }}>Ostatni odwiedzający</div>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-                <thead>
-                  <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                    {["Miasto", "Przeglądarka", "Urządzenie", "System", "Ekran", "Odsłony", "Czas wizyty"].map((h) => (
-                      <th key={h} style={{ padding: "8px 10px", textAlign: "left", color: "#64748b", fontWeight: 500, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", whiteSpace: "nowrap" }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {sessions.slice(0, 20).map((s) => {
-                    const deviceLabel = s.device === "mobile" ? "Telefon" : s.device === "laptop" ? "Komputer" : s.device === "tablet" ? "Tablet" : s.device || "—";
-                    const city = s.city || "—";
-                    const country = COUNTRY_NAMES[s.country] || s.country || "";
-                    const location = city !== "—" && country ? `${city}, ${country}` : city !== "—" ? city : country || "—";
-                    const time = new Date(s.firstAt).toLocaleString("pl-PL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
-                    return (
-                      <tr key={s.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
-                        <td style={{ padding: "8px 10px", color: "#cbd5e1", whiteSpace: "nowrap" }}>{location}</td>
-                        <td style={{ padding: "8px 10px", color: "#94a3b8", whiteSpace: "nowrap" }}>{s.browser || "—"}</td>
-                        <td style={{ padding: "8px 10px", color: "#94a3b8", whiteSpace: "nowrap" }}>{deviceLabel}</td>
-                        <td style={{ padding: "8px 10px", color: "#94a3b8", whiteSpace: "nowrap" }}>{s.os || "—"}</td>
-                        <td style={{ padding: "8px 10px", color: "#64748b", whiteSpace: "nowrap" }}>{s.screen || "—"}</td>
-                        <td style={{ padding: "8px 10px", color: "#fff", fontWeight: 600, textAlign: "center" }}>{s.views}</td>
-                        <td style={{ padding: "8px 10px", color: "#64748b", whiteSpace: "nowrap" }}>{time}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <SessionsTable sessions={sessions} range={range} />
           )}
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>

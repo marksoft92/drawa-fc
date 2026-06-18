@@ -69,6 +69,12 @@ export async function GET(request) {
       const data = await umamiFetch("sessions", base);
       return Response.json(data || { data: [] });
     }
+    case "session-activity": {
+      const sessionId = searchParams.get("sessionId");
+      if (!sessionId) return Response.json([]);
+      const data = await umamiFetch(`sessions/${sessionId}/activity`, base);
+      return Response.json(Array.isArray(data) ? data : []);
+    }
     case "active": {
       const token = await getToken();
       if (!token) return Response.json({ x: 0 });
