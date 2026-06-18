@@ -1,5 +1,6 @@
 import { isAdmin } from "@/lib/auth";
 import { validateImageBytes } from "@/lib/validateImage";
+import { saveImage } from "@/lib/saveImage";
 import { writeFile } from "fs/promises";
 import { join } from "path";
 
@@ -21,8 +22,12 @@ export async function POST(request) {
     return Response.json({ error: "Plik nie jest prawidłowym obrazem" }, { status: 400 });
   }
 
-  const ext = file.type === "image/png" ? ".png" : file.type === "image/webp" ? ".webp" : file.type === "image/gif" ? ".gif" : ".jpg";
-  const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}${ext}`;
-  await writeFile(join(process.cwd(), "public", "uploads", filename), Buffer.from(bytes));
-  return Response.json({ url: `/uploads/${filename}` });
+  if (file.type === "image/gif") {
+    const filename = `galeria-${Date.now()}-${Math.random().toString(36).slice(2, 7)}.gif`;
+    await writeFile(join(process.cwd(), "public", "uploads", filename), Buffer.from(bytes));
+    return Response.json({ url: `/uploads/${filename}` });
+  }
+
+  const url = await saveImage(bytes, "galeria");
+  return Response.json({ url });
 }

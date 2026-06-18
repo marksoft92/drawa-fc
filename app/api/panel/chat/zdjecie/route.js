@@ -1,5 +1,6 @@
 import { getPlayerSession } from "@/lib/auth";
 import { validateImageBytes } from "@/lib/validateImage";
+import { saveImage } from "@/lib/saveImage";
 import { prisma } from "@/lib/prisma";
 import { chatEmitter } from "@/lib/chatEmitter";
 import { writeFile } from "fs/promises";
@@ -26,10 +27,14 @@ export async function POST(request) {
     return Response.json({ error: "Plik nie jest prawidłowym obrazem" }, { status: 400 });
   }
 
-  const ext = file.type === "image/png" ? ".png" : file.type === "image/webp" ? ".webp" : file.type === "image/gif" ? ".gif" : ".jpg";
-  const filename = `chat-${Date.now()}-${randomBytes(4).toString("hex")}${ext}`;
-  await writeFile(join(process.cwd(), "public", "uploads", filename), Buffer.from(bytes));
-  const plik = `/uploads/${filename}`;
+  let plik;
+  if (file.type === "image/gif") {
+    const filename = `chat-${Date.now()}-${randomBytes(4).toString("hex")}.gif`;
+    await writeFile(join(process.cwd(), "public", "uploads", filename), Buffer.from(bytes));
+    plik = `/uploads/${filename}`;
+  } else {
+    plik = await saveImage(bytes, "chat");
+  }
 
   const msg = await prisma.chatWiadomosc.create({
     data: {

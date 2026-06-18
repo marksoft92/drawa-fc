@@ -1,5 +1,6 @@
 import { getPlayerSession } from "@/lib/auth";
 import { validateImageBytes } from "@/lib/validateImage";
+import { saveImage } from "@/lib/saveImage";
 import { prisma } from "@/lib/prisma";
 import { chatEmitter } from "@/lib/chatEmitter";
 import { randomBytes } from "crypto";
@@ -60,10 +61,15 @@ export async function POST(request, { params }) {
     return Response.json({ error: "Plik nie jest prawidłowym obrazem" }, { status: 400 });
   }
 
-  const ext = file.type.split("/")[1].replace("jpeg", "jpg");
-  const name = `dm-${randomBytes(8).toString("hex")}.${ext}`;
-  const dest = path.join(process.cwd(), "public", "uploads", name);
-  await writeFile(dest, Buffer.from(bytes));
+  let name;
+  if (file.type === "image/gif") {
+    name = `dm-${randomBytes(8).toString("hex")}.gif`;
+    const dest = path.join(process.cwd(), "public", "uploads", name);
+    await writeFile(dest, Buffer.from(bytes));
+    name = `/uploads/${name}`;
+  } else {
+    name = await saveImage(bytes, "dm");
+  }
 
   const conv = await getOrCreateConv(myId, userId);
 
@@ -72,7 +78,7 @@ export async function POST(request, { params }) {
       id: randomBytes(8).toString("hex"),
       convId: conv.id,
       typ: "image",
-      plik: `/uploads/${name}`,
+      plik: name,
       authorId: myId,
     },
     include: INCLUDE_FULL,

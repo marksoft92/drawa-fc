@@ -1,7 +1,7 @@
 import { getPlayerSession } from "@/lib/auth";
 import { validateImageBytes } from "@/lib/validateImage";
+import { saveImageTo } from "@/lib/saveImage";
 import { prisma } from "@/lib/prisma";
-import { writeFile } from "fs/promises";
 import { join } from "path";
 
 export const dynamic = "force-dynamic";
@@ -36,13 +36,7 @@ export async function POST(request) {
     return Response.json({ error: "Plik nie jest prawidłowym obrazem" }, { status: 400 });
   }
 
-  const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
-  const filename = `${playerId}.${ext}`;
-  const path = join(process.cwd(), "public", "kadra", "uploads", filename);
-
-  await writeFile(path, Buffer.from(bytes));
-
-  const fotoUrl = `/kadra/uploads/${filename}`;
+  const fotoUrl = await saveImageTo(bytes, "kadra/uploads", `${playerId}.webp`);
   await prisma.player.update({ where: { id: playerId }, data: { foto: fotoUrl } });
 
   return Response.json({ ok: true, foto: fotoUrl });

@@ -1,12 +1,13 @@
 import { isAdmin } from "@/lib/auth";
 import { validateImageBytes } from "@/lib/validateImage";
+import { saveImage } from "@/lib/saveImage";
 import { writeFile } from "fs/promises";
 import { join } from "path";
 
 export const dynamic = "force-dynamic";
 
 const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
+const MAX_SIZE = 10 * 1024 * 1024;
 
 export async function POST(request) {
   if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
@@ -30,11 +31,12 @@ export async function POST(request) {
     return Response.json({ error: "Plik nie jest prawidłowym obrazem" }, { status: 400 });
   }
 
-  const ext = file.type === "image/png" ? ".png" : file.type === "image/webp" ? ".webp" : file.type === "image/gif" ? ".gif" : ".jpg";
-  const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}${ext}`;
-  const path = join(process.cwd(), "public", "uploads", filename);
+  if (file.type === "image/gif") {
+    const filename = `art-${Date.now()}-${Math.random().toString(36).slice(2, 7)}.gif`;
+    await writeFile(join(process.cwd(), "public", "uploads", filename), Buffer.from(bytes));
+    return Response.json({ url: `/uploads/${filename}` });
+  }
 
-  await writeFile(path, Buffer.from(bytes));
-
-  return Response.json({ url: `/uploads/${filename}` });
+  const url = await saveImage(bytes, "art");
+  return Response.json({ url });
 }
