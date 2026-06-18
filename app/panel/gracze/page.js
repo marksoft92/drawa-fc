@@ -350,70 +350,97 @@ export default function PanelGracze() {
             return (
               <div key={u.id}>
                 {/* Player row */}
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 12, padding: "10px 14px",
+                <div className="player-row" style={{
+                  padding: "10px 14px",
                   background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)",
                   borderRadius: 10,
                 }}>
-                  {/* Avatar + status dot */}
-                  <div style={{ position: "relative", flexShrink: 0 }}>
-                    <Avatar foto={u.player?.foto} name={name} size={40} />
-                    <span style={{
-                      position: "absolute", bottom: 1, right: 1,
-                      width: 10, height: 10, borderRadius: "50%",
-                      background: online ? "#22c55e" : "#374151",
-                      border: "2px solid #030712",
-                    }} />
-                  </div>
-
-                  {/* Info */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <span style={{ color: "#fff", fontWeight: 600, fontSize: 14 }}>{name}</span>
-                      {u.player?.numer && (
-                        <span style={{ color: "#475569", fontSize: 11, fontFamily: "monospace" }}>#{u.player.numer}</span>
-                      )}
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    {/* Avatar + status dot */}
+                    <div style={{ position: "relative", flexShrink: 0 }}>
+                      <Avatar foto={u.player?.foto} name={name} size={40} />
                       <span style={{
-                        fontSize: 10, fontWeight: 600, padding: "1px 7px", borderRadius: 20,
-                        background: u.role === "ADMIN" ? "rgba(239,68,68,0.1)" : u.role === "STAFF" ? "rgba(251,191,36,0.1)" : "rgba(59,130,246,0.1)",
-                        color: u.role === "ADMIN" ? "#ef4444" : u.role === "STAFF" ? "#fbbf24" : "#3b82f6",
-                        border: `1px solid ${u.role === "ADMIN" ? "rgba(239,68,68,0.2)" : u.role === "STAFF" ? "rgba(251,191,36,0.2)" : "rgba(59,130,246,0.2)"}`,
-                      }}>
-                        {roleInfo?.label}
-                      </span>
+                        position: "absolute", bottom: 1, right: 1,
+                        width: 10, height: 10, borderRadius: "50%",
+                        background: online ? "#22c55e" : "#374151",
+                        border: "2px solid #030712",
+                      }} />
                     </div>
-                    <div style={{ fontSize: 11, color: "#475569", marginTop: 2, display: "flex", gap: 8, flexWrap: "wrap" }}>
-                      {u.player?.pozycja && <span>{u.player.pozycja}</span>}
-                      <span style={{ color: online ? "#22c55e" : "#374151" }}>
-                        {online ? "● Online" : ago ? `● ${ago}` : "● Nigdy"}
-                      </span>
+
+                    {/* Info */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                        <span style={{ color: "#fff", fontWeight: 600, fontSize: 14 }}>{name}</span>
+                        {u.player?.numer && (
+                          <span style={{ color: "#475569", fontSize: 11, fontFamily: "monospace" }}>#{u.player.numer}</span>
+                        )}
+                        <span style={{
+                          fontSize: 10, fontWeight: 600, padding: "1px 7px", borderRadius: 20,
+                          background: u.role === "ADMIN" ? "rgba(239,68,68,0.1)" : u.role === "STAFF" ? "rgba(251,191,36,0.1)" : "rgba(59,130,246,0.1)",
+                          color: u.role === "ADMIN" ? "#ef4444" : u.role === "STAFF" ? "#fbbf24" : "#3b82f6",
+                          border: `1px solid ${u.role === "ADMIN" ? "rgba(239,68,68,0.2)" : u.role === "STAFF" ? "rgba(251,191,36,0.2)" : "rgba(59,130,246,0.2)"}`,
+                        }}>
+                          {roleInfo?.label}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: 11, color: "#475569", marginTop: 2, display: "flex", gap: 8, flexWrap: "wrap" }}>
+                        {u.player?.pozycja && <span>{u.player.pozycja}</span>}
+                        <span style={{ color: online ? "#22c55e" : "#374151" }}>
+                          {online ? "● Online" : ago ? `● ${ago}` : "● Nigdy"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* DM + admin actions — desktop only inline */}
+                    <div className="player-actions-desktop" style={{ display: "flex", gap: 6, alignItems: "center", flexShrink: 0 }}>
+                      {u.id !== data.currentUserId && (
+                        <Link href={`/panel/dm/${u.id}`} style={{ padding: "4px 10px", background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: 6, color: "#3b82f6", fontSize: 11, fontWeight: 600, cursor: "pointer", textDecoration: "none", display: "flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}>
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                          Napisz
+                        </Link>
+                      )}
+                      {isAdmin && (
+                        <>
+                          <button onClick={() => openEdit(u)} style={btnRowAction}>Edytuj</button>
+                          <button
+                            onClick={() => { setResetPwId(resetPwId === u.id ? null : u.id); setResetPw(""); setError(""); setStatsUserId(null); }}
+                            style={btnRowAction}
+                          >Hasło</button>
+                          {u.player && (
+                            <button
+                              onClick={() => { setResetPwId(null); openStats(u); }}
+                              style={{ ...btnRowAction, color: statsUserId === u.id ? "#3b82f6" : "#64748b", borderColor: statsUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
+                            >Staty</button>
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
 
-                  {/* DM link (nie dla siebie) */}
-                  {u.id !== data.currentUserId && (
-                    <Link href={`/panel/dm/${u.id}`} style={{ padding: "4px 10px", background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: 6, color: "#3b82f6", fontSize: 11, fontWeight: 600, cursor: "pointer", textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                      Napisz
-                    </Link>
-                  )}
-
-                  {/* Admin actions */}
-                  {isAdmin && (
-                    <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                      <button onClick={() => openEdit(u)} style={btnRowAction}>Edytuj</button>
-                      <button
-                        onClick={() => { setResetPwId(resetPwId === u.id ? null : u.id); setResetPw(""); setError(""); setStatsUserId(null); }}
-                        style={btnRowAction}
-                      >Hasło</button>
-                      {u.player && (
+                  {/* DM + admin actions — mobile row below */}
+                  <div className="player-actions-mobile" style={{ display: "none", gap: 6, marginTop: 8, paddingLeft: 52, flexWrap: "wrap" }}>
+                    {u.id !== data.currentUserId && (
+                      <Link href={`/panel/dm/${u.id}`} style={{ padding: "5px 12px", background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: 6, color: "#3b82f6", fontSize: 11, fontWeight: 600, cursor: "pointer", textDecoration: "none", display: "flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        Napisz
+                      </Link>
+                    )}
+                    {isAdmin && (
+                      <>
+                        <button onClick={() => openEdit(u)} style={btnRowAction}>Edytuj</button>
                         <button
-                          onClick={() => { setResetPwId(null); openStats(u); }}
-                          style={{ ...btnRowAction, color: statsUserId === u.id ? "#3b82f6" : "#64748b", borderColor: statsUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
-                        >Staty</button>
-                      )}
-                    </div>
-                  )}
+                          onClick={() => { setResetPwId(resetPwId === u.id ? null : u.id); setResetPw(""); setError(""); setStatsUserId(null); }}
+                          style={btnRowAction}
+                        >Hasło</button>
+                        {u.player && (
+                          <button
+                            onClick={() => { setResetPwId(null); openStats(u); }}
+                            style={{ ...btnRowAction, color: statsUserId === u.id ? "#3b82f6" : "#64748b", borderColor: statsUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
+                          >Staty</button>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
 
                 {/* Reset password row */}
@@ -480,6 +507,10 @@ export default function PanelGracze() {
         input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
         input::placeholder { color: #334155; }
         input:focus, select:focus { outline: none; border-color: rgba(59,130,246,0.5) !important; }
+        @media (max-width: 640px) {
+          .player-actions-desktop { display: none !important; }
+          .player-actions-mobile { display: flex !important; }
+        }
       `}</style>
     </div>
   );

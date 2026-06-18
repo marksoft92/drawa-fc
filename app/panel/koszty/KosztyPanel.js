@@ -31,7 +31,7 @@ function fmtHours(h) {
 export default function KosztyPanel() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [expandedDay, setExpandedDay] = useState(null);
+  const [expandedDay] = useState(null);
 
   useEffect(() => {
     fetch("/api/admin/koszty")
@@ -103,44 +103,20 @@ export default function KosztyPanel() {
             const daySessions = data.sessions.filter((s) => s.date === day.date);
 
             return (
-              <div key={day.date}>
-                <div
-                  onClick={() => setExpandedDay(isExpanded ? null : day.date)}
-                  style={{ position: "relative", cursor: "pointer", borderRadius: 6, overflow: "hidden" }}
-                >
-                  <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: `${w}%`, background: "rgba(59,130,246,0.08)", borderRadius: 4 }} />
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px", position: "relative", zIndex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <span style={{ fontSize: 10, color: "#475569", transition: "transform 0.15s", transform: isExpanded ? "rotate(90deg)" : "none" }}>▶</span>
-                      <span style={{ fontSize: 13, color: "#cbd5e1", fontWeight: 500 }}>
-                        {new Date(day.date).toLocaleDateString("pl-PL", { weekday: "short", day: "numeric", month: "short" })}
-                      </span>
-                      <span style={{ fontSize: 11, color: "#475569" }}>{day.commits} commitów</span>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                      <span style={{ fontSize: 12, color: "#94a3b8" }}>{fmtHours(day.hours)}</span>
-                      <span style={{ fontSize: 13, color: "#3b82f6", fontWeight: 700, minWidth: 60, textAlign: "right" }}>{day.cost} zł</span>
-                    </div>
+              <div key={day.date} style={{ position: "relative", borderRadius: 6, overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: `${w}%`, background: "rgba(59,130,246,0.08)", borderRadius: 4 }} />
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px", position: "relative", zIndex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{ fontSize: 13, color: "#cbd5e1", fontWeight: 500 }}>
+                      {new Date(day.date).toLocaleDateString("pl-PL", { weekday: "short", day: "numeric", month: "short" })}
+                    </span>
+                    <span style={{ fontSize: 11, color: "#475569" }}>{day.commits} zmian</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                    <span style={{ fontSize: 12, color: "#94a3b8" }}>{fmtHours(day.hours)}</span>
+                    <span style={{ fontSize: 13, color: "#3b82f6", fontWeight: 700, minWidth: 60, textAlign: "right" }}>{day.cost} zł</span>
                   </div>
                 </div>
-
-                {isExpanded && (
-                  <div style={{ padding: "6px 12px 12px 32px", fontSize: 12 }}>
-                    {daySessions.map((session, i) => (
-                      <div key={i} style={{ marginBottom: 8 }}>
-                        <div style={{ color: "#64748b", marginBottom: 4, fontWeight: 600 }}>
-                          Sesja {fmtTime(session.start)} – {fmtTime(session.end)} ({fmtHours(session.hours)})
-                        </div>
-                        {session.commits.map((c, j) => (
-                          <div key={j} style={{ display: "flex", gap: 8, padding: "2px 0", color: "#475569" }}>
-                            <span style={{ flexShrink: 0, color: "#334155" }}>{fmtTime(c.date)}</span>
-                            <span style={{ color: "#94a3b8" }}>{c.message}</span>
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             );
           })}
