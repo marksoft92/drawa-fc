@@ -241,6 +241,66 @@ function SessionsTable({ sessions, range }) {
   );
 }
 
+function LivePanel({ realtime, active }) {
+  if (!realtime) return null;
+
+  const events = (realtime.events || [])
+    .filter((e) => e.__type === "pageview")
+    .slice(0, 15);
+
+  const sessionMap = {};
+  for (const e of (realtime.events || [])) {
+    if (e.__type === "session") {
+      sessionMap[e.sessionId] = e;
+    }
+  }
+
+  if (active === 0 && events.length === 0) return null;
+
+  return (
+    <div style={{ ...cardStyle, marginBottom: 20, borderColor: "rgba(34,197,94,0.15)" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", animation: "pulse 2s infinite", flexShrink: 0 }} />
+        <span style={{ ...labelStyle, marginBottom: 0 }}>Na żywo — {active} {active === 1 ? "osoba" : active < 5 ? "osoby" : "osób"} na stronie</span>
+        <span style={{ fontSize: 10, color: "#334155", marginLeft: "auto" }}>odświeżanie co 10s</span>
+      </div>
+      {events.length > 0 ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          {events.map((e, i) => {
+            const sess = sessionMap[e.sessionId];
+            const time = new Date(e.createdAt).toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+            const ref = e.referrerDomain && e.referrerDomain !== "mksdrawadrawno.pl"
+              ? (REFERRER_LABELS[e.referrerDomain] || e.referrerDomain)
+              : null;
+            const deviceIcon = e.device === "mobile" ? "📱" : e.device === "tablet" ? "📟" : "💻";
+            const city = sess?.city || null;
+            const country = sess?.country ? (COUNTRY_NAMES[sess.country] || sess.country) : null;
+            const loc = city && country ? `${city}, ${country}` : city || country || null;
+
+            return (
+              <div key={e.createdAt + i} style={{
+                display: "flex", alignItems: "center", gap: 8, fontSize: 12,
+                padding: "5px 8px", borderRadius: 6,
+                background: i === 0 ? "rgba(34,197,94,0.05)" : "transparent",
+              }}>
+                <span style={{ color: "#334155", flexShrink: 0, fontVariantNumeric: "tabular-nums" }}>{time}</span>
+                <span style={{ flexShrink: 0 }}>{deviceIcon}</span>
+                <span style={{ color: "#3b82f6", fontWeight: 500 }}>{e.urlPath}</span>
+                {ref && <span style={{ color: "#f59e0b", fontSize: 11 }}>z {ref}</span>}
+                <span style={{ marginLeft: "auto", color: "#64748b", fontSize: 11, whiteSpace: "nowrap" }}>
+                  {e.browser || ""}{loc ? ` · ${loc}` : ""}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div style={{ color: "#334155", fontSize: 13 }}>Brak aktywności w ostatnich minutach</div>
+      )}
+    </div>
+  );
+}
+
 export default function AnalitykaPanel() {
   const [range, setRange] = useState("7d");
   const [stats, setStats] = useState(null);
@@ -254,6 +314,7 @@ export default function AnalitykaPanel() {
   const [cities, setCities] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [active, setActive] = useState(0);
+  const [realtime, setRealtime] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
@@ -294,16 +355,22 @@ export default function AnalitykaPanel() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        const res = await fetch("/api/admin/analytics?type=active");
-        const data = await res.json();
-        setActive(data?.visitors || 0);
-      } catch {}
-    }, 30000);
-    return () => clearInterval(interval);
+  const fetchRealtime = useCallback(async () => {
+    try {
+      const [activeRes, rtRes] = await Promise.all([
+        fetch("/api/admin/analytics?type=active").then((r) => r.json()),
+        fetch("/api/admin/analytics?type=realtime").then((r) => r.json()),
+      ]);
+      setActive(activeRes?.visitors || 0);
+      setRealtime(rtRes);
+    } catch {}
   }, []);
+
+  useEffect(() => {
+    fetchRealtime();
+    const interval = setInterval(fetchRealtime, 10000);
+    return () => clearInterval(interval);
+  }, [fetchRealtime]);
 
   const avgTime = stats && stats.pageviews > 0 ? stats.totaltime / stats.pageviews : 0;
   const bounceRate = stats && stats.visits > 0 ? Math.round((stats.bounces / stats.visits) * 100) : 0;
@@ -343,6 +410,8 @@ export default function AnalitykaPanel() {
           ))}
         </div>
       </div>
+
+      <LivePanel realtime={realtime} active={active} />
 
       {loading ? (
         <div style={{ textAlign: "center", padding: 60, color: "#64748b" }}>Ładowanie...</div>

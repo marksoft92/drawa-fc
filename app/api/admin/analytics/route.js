@@ -75,6 +75,15 @@ export async function GET(request) {
       const data = await umamiFetch(`sessions/${sessionId}/activity`, base);
       return Response.json(Array.isArray(data) ? data : []);
     }
+    case "realtime": {
+      const token = await getToken();
+      if (!token) return Response.json({ events: [] });
+      const res = await fetch(`${UMAMI_URL}/api/realtime/${UMAMI_WEBSITE_ID}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return Response.json({ events: [] });
+      return Response.json(await res.json());
+    }
     case "active": {
       const token = await getToken();
       if (!token) return Response.json({ x: 0 });
