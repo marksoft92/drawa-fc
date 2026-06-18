@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Komentarze from '@/components/Komentarze';
 
 const MONTHS = {
   'sty': 1, 'styczeń': 1, 'lut': 2, 'luty': 2,
@@ -468,6 +469,12 @@ export default function OstatniMecz({
                   );
                 })}
               </div>
+            </div>
+          )}
+
+          {last.id && (
+            <div style={{ padding: '0 20px 16px' }}>
+              <Komentarze typ="mecz" targetId={last.id} />
             </div>
           )}
         </div>

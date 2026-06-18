@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Komentarze from '@/components/Komentarze';
 
 const SHOW_INITIALLY = 5;
 
@@ -419,7 +420,14 @@ function MatchCard({ mecz, isDrawa, HerbImg, upcoming }) {
           </button>
 
           {expanded && (
-            <MatchDetails mecz={mecz} drawaSide={drawaSide} isDrawa={isDrawa} />
+            <>
+              <MatchDetails mecz={mecz} drawaSide={drawaSide} isDrawa={isDrawa} />
+              {isDone && mecz.id && (
+                <div style={{ padding: '0 20px 16px' }}>
+                  <Komentarze typ="mecz" targetId={mecz.id} />
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

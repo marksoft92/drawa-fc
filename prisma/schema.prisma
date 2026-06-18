@@ -434,6 +434,36 @@ model PrivateReakcja {
   @@unique([wiadId, userId, emoji])
 }
 
+// ─── Komentarze publiczne ────────────────────────────────────────────────
+
+model Komentarz {
+  id           String   @id @default(cuid())
+  typ          String   // "artykul" | "mecz"
+  targetId     String
+  nick         String
+  tresc        String
+  emoji        String?
+  zatwierdzony Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  reakcje      KomentarzReakcja[]
+
+  @@index([typ, targetId])
+  @@index([zatwierdzony])
+}
+
+model KomentarzReakcja {
+  id            String    @id @default(cuid())
+  komentarzId   String
+  komentarz     Komentarz @relation(fields: [komentarzId], references: [id], onDelete: Cascade)
+  emoji         String
+  fingerprintId String
+  createdAt     DateTime  @default(now())
+
+  @@unique([komentarzId, fingerprintId, emoji])
+  @@index([komentarzId])
+}
+
 model PrivateOdczytanie {
   convId     String
   userId     String

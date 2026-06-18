@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import NavBar from '@/components/NavBar';
 import ArticleGallery from '@/components/ArticleGallery';
+import Komentarze from '@/components/Komentarze';
 import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
@@ -127,6 +128,8 @@ export default async function ArticlePage({ params }) {
           </div>
 
           {photos.length > 1 && <ArticleGallery photos={photos} />}
+
+          <Komentarze typ="artykul" targetId={a.id} />
 
           <div style={{ marginTop: 48, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
             <Link href="/aktualnosci" style={{
