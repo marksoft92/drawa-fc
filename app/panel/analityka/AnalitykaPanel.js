@@ -241,61 +241,125 @@ function SessionsTable({ sessions, range }) {
   );
 }
 
-function LivePanel({ realtime, active }) {
-  if (!realtime) return null;
+function LiveVisitorRow({ visitor, events }) {
+  const [open, setOpen] = useState(false);
+  const deviceIcon = visitor.device === "mobile" ? "📱" : visitor.device === "tablet" ? "📟" : "💻";
+  const deviceLabel = visitor.device === "mobile" ? "Telefon" : visitor.device === "laptop" ? "Komputer" : visitor.device === "tablet" ? "Tablet" : visitor.device || "—";
+  const city = visitor.city || null;
+  const country = visitor.country ? (COUNTRY_NAMES[visitor.country] || visitor.country) : null;
+  const loc = city && country ? `${city}, ${country}` : city || country || "—";
+  const lastPage = events[0]?.urlPath || "—";
+  const firstRef = events.find((e) => e.referrerDomain && e.referrerDomain !== "mksdrawadrawno.pl");
+  const source = firstRef ? (REFERRER_LABELS[firstRef.referrerDomain] || firstRef.referrerDomain) : "bezpośrednio";
 
-  const events = (realtime.events || [])
-    .filter((e) => e.__type === "pageview")
-    .slice(0, 15);
+  return (
+    <>
+      <div
+        onClick={() => setOpen((o) => !o)}
+        style={{
+          display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
+          borderBottom: "1px solid rgba(255,255,255,0.04)", cursor: "pointer",
+          transition: "background 0.15s",
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.02)"}
+        onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+      >
+        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }} />
+        <span style={{ fontSize: 16, flexShrink: 0 }}>{deviceIcon}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13, color: "#cbd5e1", fontWeight: 500 }}>
+            {loc} <span style={{ color: "#64748b", fontWeight: 400 }}>· {visitor.browser || "?"} · {visitor.os || "?"}</span>
+          </div>
+          <div style={{ fontSize: 12, color: "#64748b", marginTop: 1 }}>
+            Ogląda: <span style={{ color: "#3b82f6" }}>{lastPage}</span>
+            {source !== "bezpośrednio" && <span style={{ color: "#f59e0b" }}> · z {source}</span>}
+          </div>
+        </div>
+        <div style={{ textAlign: "right", flexShrink: 0 }}>
+          <div style={{ fontSize: 12, color: "#fff", fontWeight: 600 }}>{events.length} {events.length === 1 ? "strona" : "stron"}</div>
+        </div>
+        <span style={{ fontSize: 10, color: "#475569", flexShrink: 0 }}>{open ? "▼" : "▶"}</span>
+      </div>
+      {open && (
+        <div style={{ background: "rgba(15,23,42,0.5)", padding: "10px 16px 10px 44px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 20px", fontSize: 12, marginBottom: 10 }}>
+            <div><span style={{ color: "#475569" }}>Przeglądarka:</span> <span style={{ color: "#cbd5e1" }}>{visitor.browser || "—"}</span></div>
+            <div><span style={{ color: "#475569" }}>System:</span> <span style={{ color: "#cbd5e1" }}>{visitor.os || "—"}</span></div>
+            <div><span style={{ color: "#475569" }}>Urządzenie:</span> <span style={{ color: "#cbd5e1" }}>{deviceLabel}</span></div>
+            <div><span style={{ color: "#475569" }}>Ekran:</span> <span style={{ color: "#cbd5e1" }}>{visitor.screen || "—"}</span></div>
+            <div><span style={{ color: "#475569" }}>Lokalizacja:</span> <span style={{ color: "#cbd5e1" }}>{loc}</span></div>
+            <div><span style={{ color: "#475569" }}>Język:</span> <span style={{ color: "#cbd5e1" }}>{visitor.language || "—"}</span></div>
+            <div><span style={{ color: "#475569" }}>Źródło:</span> <span style={{ color: "#cbd5e1" }}>{source}</span></div>
+            <div><span style={{ color: "#475569" }}>Kraj:</span> <span style={{ color: "#cbd5e1" }}>{country || "—"}</span></div>
+          </div>
+          <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Ścieżka na stronie</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {events.map((e, i) => {
+              const t = new Date(e.createdAt).toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+              const ref = e.referrerDomain && e.referrerDomain !== "mksdrawadrawno.pl"
+                ? (REFERRER_LABELS[e.referrerDomain] || e.referrerDomain) : null;
+              return (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12 }}>
+                  <span style={{ color: "#334155", flexShrink: 0, fontVariantNumeric: "tabular-nums" }}>{t}</span>
+                  <span style={{ color: i === 0 ? "#22c55e" : "#3b82f6" }}>{e.urlPath}</span>
+                  {ref && <span style={{ color: "#f59e0b", fontSize: 11 }}>z {ref}</span>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
 
-  const sessionMap = {};
-  for (const e of (realtime.events || [])) {
+function LivePanel({ realtime, active, liveSessions }) {
+  if (!realtime && active === 0) return null;
+
+  const rtEvents = realtime?.events || [];
+  const sessionEvents = {};
+  const sessionInfo = {};
+
+  for (const e of rtEvents) {
+    const sid = e.sessionId;
     if (e.__type === "session") {
-      sessionMap[e.sessionId] = e;
+      sessionInfo[sid] = { ...sessionInfo[sid], ...e };
+    } else if (e.__type === "pageview") {
+      if (!sessionEvents[sid]) sessionEvents[sid] = [];
+      sessionEvents[sid].push(e);
     }
   }
 
-  if (active === 0 && events.length === 0) return null;
+  for (const s of (liveSessions || [])) {
+    if (sessionInfo[s.id]) {
+      sessionInfo[s.id] = { ...sessionInfo[s.id], city: s.city, screen: s.screen, language: s.language, region: s.region };
+    } else {
+      sessionInfo[s.id] = { ...s, sessionId: s.id };
+    }
+  }
+
+  const visitorIds = Object.keys(sessionInfo);
+  if (active === 0 && visitorIds.length === 0) return null;
 
   return (
-    <div style={{ ...cardStyle, marginBottom: 20, borderColor: "rgba(34,197,94,0.15)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+    <div style={{ ...cardStyle, marginBottom: 20, borderColor: "rgba(34,197,94,0.15)", padding: 0, overflow: "hidden" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "14px 16px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
         <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", animation: "pulse 2s infinite", flexShrink: 0 }} />
-        <span style={{ ...labelStyle, marginBottom: 0 }}>Na żywo — {active} {active === 1 ? "osoba" : active < 5 ? "osoby" : "osób"} na stronie</span>
-        <span style={{ fontSize: 10, color: "#334155", marginLeft: "auto" }}>odświeżanie co 10s</span>
+        <span style={{ fontSize: 12, color: "#22c55e", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          Na żywo — {active} {active === 1 ? "osoba" : active < 5 ? "osoby" : "osób"}
+        </span>
+        <span style={{ fontSize: 10, color: "#334155", marginLeft: "auto" }}>co 10s · kliknij aby rozwinąć</span>
       </div>
-      {events.length > 0 ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          {events.map((e, i) => {
-            const sess = sessionMap[e.sessionId];
-            const time = new Date(e.createdAt).toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-            const ref = e.referrerDomain && e.referrerDomain !== "mksdrawadrawno.pl"
-              ? (REFERRER_LABELS[e.referrerDomain] || e.referrerDomain)
-              : null;
-            const deviceIcon = e.device === "mobile" ? "📱" : e.device === "tablet" ? "📟" : "💻";
-            const city = sess?.city || null;
-            const country = sess?.country ? (COUNTRY_NAMES[sess.country] || sess.country) : null;
-            const loc = city && country ? `${city}, ${country}` : city || country || null;
-
-            return (
-              <div key={e.createdAt + i} style={{
-                display: "flex", alignItems: "center", gap: 8, fontSize: 12,
-                padding: "5px 8px", borderRadius: 6,
-                background: i === 0 ? "rgba(34,197,94,0.05)" : "transparent",
-              }}>
-                <span style={{ color: "#334155", flexShrink: 0, fontVariantNumeric: "tabular-nums" }}>{time}</span>
-                <span style={{ flexShrink: 0 }}>{deviceIcon}</span>
-                <span style={{ color: "#3b82f6", fontWeight: 500 }}>{e.urlPath}</span>
-                {ref && <span style={{ color: "#f59e0b", fontSize: 11 }}>z {ref}</span>}
-                <span style={{ marginLeft: "auto", color: "#64748b", fontSize: 11, whiteSpace: "nowrap" }}>
-                  {e.browser || ""}{loc ? ` · ${loc}` : ""}
-                </span>
-              </div>
-            );
-          })}
-        </div>
+      {visitorIds.length > 0 ? (
+        visitorIds.map((sid) => (
+          <LiveVisitorRow
+            key={sid}
+            visitor={sessionInfo[sid]}
+            events={(sessionEvents[sid] || []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))}
+          />
+        ))
       ) : (
-        <div style={{ color: "#334155", fontSize: 13 }}>Brak aktywności w ostatnich minutach</div>
+        <div style={{ padding: "16px", color: "#334155", fontSize: 13 }}>Brak aktywnych sesji</div>
       )}
     </div>
   );
@@ -315,6 +379,7 @@ export default function AnalitykaPanel() {
   const [sessions, setSessions] = useState([]);
   const [active, setActive] = useState(0);
   const [realtime, setRealtime] = useState(null);
+  const [liveSessions, setLiveSessions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
@@ -357,12 +422,16 @@ export default function AnalitykaPanel() {
 
   const fetchRealtime = useCallback(async () => {
     try {
-      const [activeRes, rtRes] = await Promise.all([
+      const now = Date.now();
+      const fiveMinAgo = now - 5 * 60 * 1000;
+      const [activeRes, rtRes, liveRes] = await Promise.all([
         fetch("/api/admin/analytics?type=active").then((r) => r.json()),
         fetch("/api/admin/analytics?type=realtime").then((r) => r.json()),
+        fetch(`/api/admin/analytics?type=sessions&startAt=${fiveMinAgo}&endAt=${now}`).then((r) => r.json()),
       ]);
       setActive(activeRes?.visitors || 0);
       setRealtime(rtRes);
+      setLiveSessions(Array.isArray(liveRes?.data) ? liveRes.data : []);
     } catch {}
   }, []);
 
@@ -411,7 +480,7 @@ export default function AnalitykaPanel() {
         </div>
       </div>
 
-      <LivePanel realtime={realtime} active={active} />
+      <LivePanel realtime={realtime} active={active} liveSessions={liveSessions} />
 
       {loading ? (
         <div style={{ textAlign: "center", padding: 60, color: "#64748b" }}>Ładowanie...</div>
