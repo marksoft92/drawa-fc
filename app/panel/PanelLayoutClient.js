@@ -153,6 +153,15 @@ const ADMIN_NAV = [
       </svg>
     ),
   },
+  {
+    label: "Serwer",
+    href: "/panel/serwer",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="2" y="2" width="20" height="8" rx="2" /><rect x="2" y="14" width="20" height="8" rx="2" /><circle cx="6" cy="6" r="1" fill="currentColor" /><circle cx="6" cy="18" r="1" fill="currentColor" />
+      </svg>
+    ),
+  },
   DM_NAV_ITEM,
   CHAT_NAV_ITEM,
   ANKIETY_NAV_ITEM,
