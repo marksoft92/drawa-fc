@@ -357,6 +357,38 @@ model PushSubscription {
   createdAt DateTime @default(now())
 }
 
+// ─── Typowanie wyników ───────────────────────────────────────────────────
+
+model Typowanie {
+  id              String   @id @default(cuid())
+  team1           String
+  team2           String
+  herb1           String?
+  herb2           String?
+  dataRozpoczecia DateTime
+  wynikTeam1      Int?
+  wynikTeam2      Int?
+  aktywne         Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  wpisy           TypowanieWpis[]
+}
+
+model TypowanieWpis {
+  id          String    @id @default(cuid())
+  typowanieId String
+  typowanie   Typowanie @relation(fields: [typowanieId], references: [id], onDelete: Cascade)
+  imie        String
+  nazwisko    String
+  golTeam1    Int
+  golTeam2    Int
+  punkty      Int?
+  createdAt   DateTime  @default(now())
+
+  @@unique([typowanieId, imie, nazwisko])
+}
+
 // ─── Prywatne wiadomości (1-do-1) ────────────────────────────────────────────
 
 model PrivateConversation {

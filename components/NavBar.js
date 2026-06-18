@@ -13,6 +13,7 @@ const NAV_LINKS = [
  { label: "Galeria", id: "galeria" },
  { label: "Kadra", id: "kadra" },
  { label: "Archiwum", href: "/archiwum" },
+ { label: "Typowanie", href: "/typowanie" },
  { label: "Kontakt", id: "kontakt" },
 ];
 
