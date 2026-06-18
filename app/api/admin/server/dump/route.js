@@ -18,15 +18,15 @@ export async function GET() {
 
   try {
     const dump = execSync(
-      `PGPASSWORD=${pass} pg_dump -U ${user} -h ${host} -p ${port || 5432} ${dbName}`,
+      `PGPASSWORD=${pass} pg_dump -Fc -U ${user} -h ${host} -p ${port || 5432} ${dbName}`,
       { timeout: 30000, maxBuffer: 50 * 1024 * 1024 },
     );
 
     const date = new Date().toISOString().slice(0, 10);
     return new Response(dump, {
       headers: {
-        "Content-Type": "application/sql",
-        "Content-Disposition": `attachment; filename="drawa_fc_${date}.sql"`,
+        "Content-Type": "application/octet-stream",
+        "Content-Disposition": `attachment; filename="drawa_fc_${date}.dump"`,
       },
     });
   } catch {

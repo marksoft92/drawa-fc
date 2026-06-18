@@ -61,7 +61,7 @@ export default function SerwerPanel() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `drawa_fc_${new Date().toISOString().slice(0, 10)}.sql`;
+      a.download = `drawa_fc_${new Date().toISOString().slice(0, 10)}.dump`;
       a.click();
       URL.revokeObjectURL(url);
     } catch {
@@ -154,7 +154,7 @@ export default function SerwerPanel() {
       <div style={{ ...cardStyle }}>
         <div style={labelStyle}>Kopia zapasowa</div>
         <p style={{ fontSize: 13, color: "#94a3b8", marginBottom: 12 }}>
-          Pobierz pełny dump bazy danych PostgreSQL (.sql). Zawiera wszystkie tabele, dane i strukturę.
+          Pobierz pełny dump bazy danych PostgreSQL (.dump). Przywracanie: <code style={{ background: "rgba(255,255,255,0.06)", padding: "2px 6px", borderRadius: 4, fontSize: 12 }}>pg_restore -U drawa -d drawa_fc plik.dump</code>
         </p>
         <button
           onClick={downloadDump}
