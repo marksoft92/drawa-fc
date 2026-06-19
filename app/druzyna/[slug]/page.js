@@ -3,7 +3,7 @@ import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import { getAllOpponents, computeStats, isDrawa, getHerb } from "@/lib/rywale";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 async function getData(slug) {
   const opponents = await getAllOpponents();
@@ -20,6 +20,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `Drawa Drawno vs ${nazwa} — historia meczów i statystyki`,
     description: `Historia spotkań MKS Drawa Drawno z ${nazwa}. ${stats.mecze} meczów, ${stats.wygrane} zwycięstw Drawy, ${stats.bramkiZdobyte} strzelonych goli. Sprawdź wyniki, bilans i szczegóły wszystkich spotkań.`,
+    alternates: { canonical: `https://mksdrawadrawno.pl/druzyna/${slug}` },
     openGraph: {
       title: `Drawa Drawno vs ${nazwa}`,
       description: `${stats.mecze} meczów, bilans: ${stats.wygrane}W-${stats.remisy}R-${stats.przegrane}P. Historia spotkań z archiwum MKS Drawa Drawno.`,
@@ -58,12 +59,23 @@ export default async function DruzynaPage({ params }) {
     <>
       <NavBar backLabel="← Archiwum" />
 
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        "@context": "https://schema.org", "@type": "WebPage",
-        name: `Drawa Drawno vs ${nazwa} — historia meczów`,
-        description: `${stats.mecze} meczów między MKS Drawa Drawno a ${nazwa}. Bilans: ${stats.wygrane}-${stats.remisy}-${stats.przegrane}.`,
-        isPartOf: { "@type": "WebSite", name: "MKS Drawa Drawno", url: "https://mksdrawadrawno.pl" },
-      }) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([
+        {
+          "@context": "https://schema.org", "@type": "WebPage",
+          name: `Drawa Drawno vs ${nazwa} — historia meczów`,
+          description: `${stats.mecze} meczów między MKS Drawa Drawno a ${nazwa}. Bilans: ${stats.wygrane}-${stats.remisy}-${stats.przegrane}.`,
+          isPartOf: { "@type": "WebSite", name: "MKS Drawa Drawno", url: "https://mksdrawadrawno.pl" },
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Strona główna", item: "https://mksdrawadrawno.pl" },
+            { "@type": "ListItem", position: 2, name: "Archiwum", item: "https://mksdrawadrawno.pl/archiwum" },
+            { "@type": "ListItem", position: 3, name: `Drawa vs ${nazwa}` },
+          ],
+        },
+      ]) }} />
 
       <main style={{ paddingTop: 64, background: "#030712", minHeight: "100vh" }}>
         <section style={{ padding: "60px 20px 40px", textAlign: "center" }}>

@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Współpraca i Sponsoring — MKS Drawa Drawno",
   description: "Zostań partnerem MKS Drawa Drawno — jednego z najstarszych klubów piłkarskich na Pomorzu Zachodnim. Promuj swoją firmę wśród lokalnej społeczności Drawna i okolic. Oferta współpracy, pakiety reklamowe.",
+  alternates: { canonical: "https://mksdrawadrawno.pl/wspolpraca" },
   openGraph: {
     title: "Współpraca — MKS Drawa Drawno",
     description: "Wspieraj lokalny sport i buduj rozpoznawalność swojej marki z klubem z 78-letnią tradycją.",

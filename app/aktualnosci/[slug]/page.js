@@ -5,7 +5,7 @@ import ArticleGallery from '@/components/ArticleGallery';
 import Komentarze from '@/components/Komentarze';
 import { prisma } from '@/lib/prisma';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -14,6 +14,7 @@ export async function generateMetadata({ params }) {
   return {
     title: a.title,
     description: a.excerpt,
+    alternates: { canonical: `https://mksdrawadrawno.pl/aktualnosci/${a.slug}` },
     openGraph: {
       title: `${a.title} | MKS Drawa Drawno`,
       description: a.excerpt,
@@ -55,21 +56,33 @@ export default async function ArticlePage({ params }) {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Article",
-          headline: a.title,
-          description: a.excerpt,
-          datePublished: a.date,
-          dateModified: a.updatedAt?.toISOString?.() || a.date,
-          image: a.thumbnail ? `https://mksdrawadrawno.pl${a.thumbnail}` : "https://mksdrawadrawno.pl/logo.png",
-          publisher: {
-            "@type": "SportsOrganization",
-            name: "MKS Drawa Drawno",
-            logo: { "@type": "ImageObject", url: "https://mksdrawadrawno.pl/logo.png" },
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([
+          {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: a.title,
+            description: a.excerpt,
+            datePublished: a.date,
+            dateModified: a.updatedAt?.toISOString?.() || a.date,
+            image: a.thumbnail ? `https://mksdrawadrawno.pl${a.thumbnail}` : "https://mksdrawadrawno.pl/logo.png",
+            author: { "@type": "SportsOrganization", name: "MKS Drawa Drawno", url: "https://mksdrawadrawno.pl" },
+            publisher: {
+              "@type": "SportsOrganization",
+              name: "MKS Drawa Drawno",
+              logo: { "@type": "ImageObject", url: "https://mksdrawadrawno.pl/logo.png" },
+            },
+            mainEntityOfPage: `https://mksdrawadrawno.pl/aktualnosci/${a.slug}`,
           },
-          mainEntityOfPage: `https://mksdrawadrawno.pl/aktualnosci/${a.slug}`,
-        }) }}
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Strona główna", item: "https://mksdrawadrawno.pl" },
+              { "@type": "ListItem", position: 2, name: "Aktualności", item: "https://mksdrawadrawno.pl/aktualnosci" },
+              { "@type": "ListItem", position: 3, name: a.title },
+            ],
+          },
+        ]) }}
       />
 
       <NavBar backLabel="← Aktualności" />

@@ -26,6 +26,9 @@ export const metadata = {
   authors: [{ name: "MKS Drawa Drawno", url: BASE_URL }],
   creator: "MKS Drawa Drawno",
   robots: { index: true, follow: true },
+  alternates: {
+    canonical: BASE_URL,
+  },
   other: {
     copyright: `© ${new Date().getFullYear()} MKS Drawa Drawno. Wszelkie prawa zastrzeżone. Projekt i kod strony są chronione prawem autorskim.`,
   },

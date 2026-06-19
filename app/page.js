@@ -1,278 +1,122 @@
-"use client";
-import {computeTeamStats} from "@/lib/computeStats";
-import {useState, useEffect} from "react";
-import NavBar from "@/components/NavBar";
-import Hero from "@/components/hero";
-import NastepnyMecz from "@/components/nastepnyMecz";
-import OstatniMecz from "@/components/ostatniMecz";
-import Tabela from "@/components/tabela";
-import Terminarz from "@/components/terminarz";
-import Statystyki from "@/components/statystyki";
-import Kadra from "@/components/kadra";
-import Aktualnosci from "@/components/aktualnosci";
-import Galeria from "@/components/galeria";
-import Kontakt from "@/components/kontakt";
-import Struktura from "@/components/struktura";
-import Sponsorzy from "@/components/sponsorzy";
-import Footer from "@/components/footer";
-import NotificationPrompt from "@/components/NotificationPrompt";
-import JakDojechac from "@/components/jakDojechac";
+import { prisma } from "@/lib/prisma";
+import HomePageClient from "./HomePageClient";
 
-// ─── Helpers ─────────────────────────────────────────────────
+export const revalidate = 60;
 
-const DRAWA_HERB = "/logo.png";
+async function getHomeData() {
+  try {
+    const [ustawienia, aktualnosci, galeria, sponsorzy, struktura, kadraData, archiwumStats] = await Promise.all([
+      prisma.ustawienie.findMany(),
+      prisma.artykul.findMany({
+        where: { published: true },
+        orderBy: { date: "desc" },
+        select: { id: true, slug: true, title: true, excerpt: true, thumbnail: true, kolor: true, tags: true, date: true, pinned: true },
+      }),
+      prisma.album.findMany({
+        where: { published: true },
+        orderBy: [{ kolejnosc: "asc" }, { date: "desc" }],
+      }),
+      prisma.sponsor.findMany({
+        where: { aktywny: true },
+        orderBy: [{ kolejnosc: "asc" }, { createdAt: "asc" }],
+        select: { id: true, nazwa: true, logo: true, href: true },
+      }),
+      prisma.zarzadOsoba.findMany({
+        where: { aktywny: true },
+        orderBy: [{ kolejnosc: "asc" }, { createdAt: "asc" }],
+        select: { id: true, rola: true, imie: true, telefon: true, email: true },
+      }),
+      (async () => {
+        const sezon = await prisma.sezon.findFirst({ where: { aktywny: true } });
+        const players = await prisma.player.findMany({
+          where: { user: { active: true } },
+          include: { stats: sezon ? { where: { sezonId: sezon.id } } : false },
+          orderBy: { imieNazwisko: "asc" },
+        });
+        const mapped = players.map((p) => {
+          const s = p.stats?.[0];
+          return {
+            id: p.id, imieNazwisko: p.imieNazwisko, pozycja: p.pozycja, numer: p.numer,
+            foto: p.foto, pseudonim: p.pseudonim,
+            mecze: s?.mecze ?? 0, gole: s?.gole ?? 0, asysty: s?.asysty ?? 0,
+            zolte: s?.zolte ?? 0, czerwone: s?.czerwone ?? 0,
+            meczePuchar: s?.meczePuchar ?? 0, golePuchar: s?.golePuchar ?? 0,
+          };
+        });
+        mapped.sort((a, b) => b.gole - a.gole || b.asysty - a.asysty || b.mecze - a.mecze || a.imieNazwisko.localeCompare(b.imieNazwisko, "pl"));
+        return { sezon: sezon?.nazwa ?? null, players: mapped };
+      })(),
+      (async () => {
+        const sezony = await prisma.archiwumSezon.findMany({
+          where: { NOT: { liga: { contains: "Puchar" } } },
+          select: { sezon: true, mecze: { select: { score: true, team1: true, team2: true } } },
+        });
+        const uniqueSezony = new Set(sezony.map((s) => s.sezon).filter(Boolean));
+        let mecze = 0, gole = 0, wygrane = 0;
+        for (const s of sezony) {
+          for (const m of s.mecze) {
+            if (!m.score) continue;
+            mecze++;
+            const [g1, g2] = m.score.split(":").map(Number);
+            if (isNaN(g1) || isNaN(g2)) continue;
+            const dHome = m.team1?.toLowerCase().includes("drawa drawno");
+            gole += dHome ? g1 : g2;
+            if ((dHome ? g1 : g2) > (dHome ? g2 : g1)) wygrane++;
+          }
+        }
+        return { sezony: uniqueSezony.size, mecze, gole, wygrane };
+      })(),
+    ]);
 
-const isDrawa = (name) => name.toLowerCase().includes("drawa");
+    const ust = Object.fromEntries(ustawienia.map((r) => [r.klucz, r.wartosc]));
+    const sezonNazwa = ust.aktywny_sezon || "2025/26";
 
-const getFormaColor = (f) => {
-  if (f === "W") return "#22c55e";
-  if (f === "P") return "#ef4444";
-  if (f === "R") return "#94a3b8";
-  return "#334155";
-};
+    const [tabela, mecze] = await Promise.all([
+      prisma.tabelaDruzyna.findMany({ where: { sezon: sezonNazwa }, orderBy: { pozycja: "asc" } }),
+      prisma.mecz.findMany({ where: { sezon: sezonNazwa }, orderBy: { date: "asc" } }),
+    ]);
 
-const HerbImg = ({src, alt, size = 40}) => {
-  const drawa = isDrawa(alt);
-  const imgSize = drawa ? Math.max(size, 64) : size;
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img
-    src={
-      drawa
-        ? DRAWA_HERB
-        : src?.includes("/flags/0.jpg")
-          ? `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' fill='%231e293b' rx='20'/><text x='20' y='26' text-anchor='middle' font-size='18' fill='%2364748b'>?</text></svg>`
-          : src
-    }
-    alt={alt}
-    width={imgSize}
-    height={imgSize}
-    style={{objectFit: "contain", borderRadius: 4}}
-  />;
-};
+    const hp = { ustawienia: ust, aktualnosci, galeria, sponsorzy, struktura, kadra: kadraData, allTimeStats: archiwumStats };
 
-
-const SectionLabel = ({children}) => (
-  <div style={{display: "flex", alignItems: "center", gap: 12}}>
-    <div style={{width: 4, height: 24, background: "#3b82f6", borderRadius: 2, boxShadow: "0 0 12px rgba(59,130,246,0.65)"}}/>
-    <div
-      style={{
-        fontSize: "clamp(20px, 4vw, 28px)",
-        fontFamily: "'Bebas Neue', Impact, sans-serif",
-        letterSpacing: "0.1em",
-        color: "#fff",
-      }}
-    >
-      {children}
-    </div>
-  </div>
-);
-
-// ─── Scroll to top ────────────────────────────────────────────
-
-const ScrollToTop = () => {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 600);
-    window.addEventListener("scroll", onScroll, {passive: true});
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  if (!visible) return null;
-
-  return (
-    <button
-      onClick={() => window.scrollTo({top: 0, behavior: "smooth"})}
-      aria-label="Powrót na górę"
-      style={{
-        position: "fixed",
-        bottom: 28,
-        right: 24,
-        zIndex: 99,
-        width: 44,
-        height: 44,
-        borderRadius: "50%",
-        background: "#1e3a5f",
-        border: "1px solid rgba(59,130,246,0.4)",
-        color: "#3b82f6",
-        fontSize: 18,
-        cursor: "pointer",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
-        transition: "background 0.2s",
-      }}
-      onMouseEnter={(e) => (e.currentTarget.style.background = "#1d4ed8")}
-      onMouseLeave={(e) => (e.currentTarget.style.background = "#1e3a5f")}
-    >
-      ↑
-    </button>
-  );
-};
-
-// ─── Page ─────────────────────────────────────────────────────
-
-export default function Page() {
-  const [tabela, setTabela] = useState([]);
-  const [mecze, setMecze] = useState([]);
-  const [hp, setHp] = useState(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/homepage")
-      .then(r => r.json())
-      .then(d => {
-        if (cancelled) return;
-        setTabela(Array.isArray(d.tabela) ? d.tabela : []);
-        setMecze(Array.isArray(d.mecze) ? d.mecze : []);
-        setHp(d);
-      })
-      .catch(() => {});
-    return () => { cancelled = true; };
-  }, []);
-
-  const drawaRow = tabela.find((r) => r.nazwa?.toLowerCase().includes("drawa"));
-
-  const heroData = {
-    punkty: drawaRow?.pkt ?? 0,
-    mecze: drawaRow?.mecze ?? 0,
-    gole: drawaRow?.bramkiZd ?? 0,
-    pozycja: drawaRow?.pozycja ?? 0,
-  };
-
-  const teamStats = computeTeamStats(mecze);
-
-  // Matchday detection
-  function parseSimpleDate(str) {
-    if (!str) return null;
-    const MONTHS = { sty:0,lut:1,mar:2,kwi:3,maj:4,cze:5,lip:6,sie:7,wrz:8,'paź':9,lis:10,gru:11 };
-    const tokens = str.replace(',','').toLowerCase().split(/\s+/);
-    let day=null,month=null,year=null,h=0,m=0;
-    for (const t of tokens) {
-      if (/^\d{1,2}:\d{2}$/.test(t)){[h,m]=t.split(':').map(Number);continue;}
-      if (/^\d{4}$/.test(t)){year=+t;continue;}
-      if (/^\d{1,2}$/.test(t)){day=+t;continue;}
-      const k=Object.keys(MONTHS).find(k=>t.startsWith(k));
-      if(k!==undefined)month=MONTHS[k];
-    }
-    if(day===null||month===null)return null;
-    if(year===null)year=month>=6?2025:2026;
-    return new Date(year,month,day,h,m,0);
+    return { tabela: JSON.parse(JSON.stringify(tabela)), mecze: JSON.parse(JSON.stringify(mecze)), hp: JSON.parse(JSON.stringify(hp)) };
+  } catch {
+    return { tabela: [], mecze: [], hp: { ustawienia: {}, aktualnosci: [], galeria: [], sponsorzy: [], struktura: [], kadra: { sezon: null, players: [] }, allTimeStats: null } };
   }
+}
 
-  const today = new Date();
-  const isMatchday = mecze.some(m => {
-    if (!m.date || m.score || m.walkower) return false;
-    const d = parseSimpleDate(m.date);
-    return d && d.toDateString() === today.toDateString();
-  });
+export default async function Page() {
+  const data = await getHomeData();
 
-  const MatchdayBanner = isMatchday ? () => {
-    const next = mecze.find(m => !m.score && !m.walkower);
-    const opp = next ? (isDrawa(next.team1) ? next.team2 : next.team1) : '';
-    const time = next?.date?.split(' ').find(p => p.includes(':')) ?? '';
-    return (
-      <div style={{
-        background: 'linear-gradient(135deg, rgba(34,197,94,0.15), rgba(34,197,94,0.05))',
-        borderBottom: '1px solid rgba(34,197,94,0.3)',
-        padding: '10px 20px',
-        textAlign: 'center',
-        position: 'sticky',
-        top: 64,
-        zIndex: 90,
-      }}>
-        <span style={{ fontSize: 11, color: '#22c55e', fontWeight: 700, letterSpacing: '0.15em' }}>
-          ⚽ DZIŚ MECZ! &nbsp;·&nbsp; DRAWA VS {opp.toUpperCase()} &nbsp;·&nbsp; {time}
-        </span>
-      </div>
-    );
-  } : () => null;
+  const drawaRow = data.tabela.find((r) => r.nazwa?.toLowerCase().includes("drawa"));
+  const upcomingMatches = data.mecze.filter(m => !m.score && !m.walkower);
 
   return (
     <>
-      <style>{`
- * { box-sizing: border-box; margin: 0; padding: 0; }
- html { scroll-behavior: smooth; }
- body { background: #030712; color: #fff; font-family: -apple-system, 'Segoe UI', sans-serif; }
- ::-webkit-scrollbar { width: 6px; }
- ::-webkit-scrollbar-track { background: #0f172a; }
- ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 3px; }
- `}</style>
-
-      <NavBar/>
-      <MatchdayBanner />
-
-      <main style={{paddingTop: 64}}>
-        <Hero tabela={heroData} allTimeStats={hp?.allTimeStats}/>
-
-        <div id="aktualnosci">
-          <Aktualnosci SectionLabel={SectionLabel} data={hp?.aktualnosci}/>
-        </div>
-
-        <div id="mecze">
-          <NastepnyMecz
-            mecze={mecze}
-            SectionLabel={SectionLabel}
-            HerbImg={HerbImg}
-            isDrawa={isDrawa}
-          />
-          <OstatniMecz
-            mecze={mecze}
-            SectionLabel={SectionLabel}
-            HerbImg={HerbImg}
-            isDrawa={isDrawa}
-          />
-          <Terminarz
-            mecze={mecze}
-            SectionLabel={SectionLabel}
-            HerbImg={HerbImg}
-            isDrawa={isDrawa}
-          />
-        </div>
-
-        <div id="tabela">
-          <Tabela
-            tabela={tabela}
-            SectionLabel={SectionLabel}
-            HerbImg={HerbImg}
-            getFormaColor={getFormaColor}
-          />
-        </div>
-
-
-        <div id="statystyki">
-          <Statystyki teamStats={teamStats} SectionLabel={SectionLabel}/>
-        </div>
-
-        <div id="galeria">
-          <Galeria SectionLabel={SectionLabel} data={hp?.galeria}/>
-        </div>
-
-        <div id="sponsorzy">
-          <Sponsorzy SectionLabel={SectionLabel} data={hp?.sponsorzy}/>
-        </div>
-
-        <div id="kadra">
-          <Kadra SectionLabel={SectionLabel} kadraData={hp?.kadra}/>
-        </div>
-
-        <div id="struktura">
-          <Struktura SectionLabel={SectionLabel} data={hp?.struktura} ustawienia={hp?.ustawienia}/>
-        </div>
-
-        <div id="dojazd">
-          <JakDojechac SectionLabel={SectionLabel} />
-        </div>
-
-        <div id="kontakt">
-          <Kontakt SectionLabel={SectionLabel} ustawienia={hp?.ustawienia}/>
-        </div>
-      </main>
-
-      <NotificationPrompt />
-      <Footer HerbImg={HerbImg} herb={DRAWA_HERB}/>
-      <ScrollToTop/>
+      {upcomingMatches.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(
+            upcomingMatches.slice(0, 5).map(m => {
+              const isHome = m.team1?.toLowerCase().includes("drawa drawno");
+              return {
+                "@context": "https://schema.org",
+                "@type": "SportsEvent",
+                name: `${m.team1} vs ${m.team2}`,
+                startDate: m.date || undefined,
+                homeTeam: { "@type": "SportsTeam", name: m.team1 },
+                awayTeam: { "@type": "SportsTeam", name: m.team2 },
+                location: isHome ? {
+                  "@type": "Place",
+                  name: "Stadion MKS Drawa Drawno",
+                  address: { "@type": "PostalAddress", addressLocality: "Drawno", addressRegion: "zachodniopomorskie", addressCountry: "PL" },
+                } : undefined,
+                organizer: { "@type": "SportsOrganization", name: "MKS Drawa Drawno", url: "https://mksdrawadrawno.pl" },
+              };
+            })
+          ) }}
+        />
+      )}
+      <HomePageClient data={data} />
     </>
   );
 }

@@ -1,6 +1,7 @@
 export const metadata = {
   title: 'Archiwum',
   description: 'Archiwum sezonów MKS Drawa Drawno — historia wyników, tabel i statystyk z poprzednich rozgrywek.',
+  alternates: { canonical: 'https://mksdrawadrawno.pl/archiwum' },
   openGraph: {
     title: 'Archiwum — MKS Drawa Drawno',
     description: 'Historia wyników, tabel i statystyk MKS Drawa Drawno z poprzednich sezonów.',
