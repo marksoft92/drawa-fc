@@ -2,6 +2,80 @@
 
 import { useState, useEffect } from "react";
 
+// ─── Edytowalna komórka ──────────────────────────────────────
+function EditableCell({ value, field, rowId, onSaved, type = "number" }) {
+  const [editing, setEditing] = useState(false);
+  const [val, setVal] = useState(String(value ?? ""));
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    if (val === String(value)) { setEditing(false); return; }
+    setSaving(true);
+    const payload = { [field]: type === "number" ? Number(val) : val };
+    await fetch(`/api/admin/liga/tabela/${rowId}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    setSaving(false); setEditing(false);
+    onSaved();
+  }
+
+  if (editing) {
+    return (
+      <input
+        autoFocus
+        style={{ width: type === "text" ? 120 : 40, padding: "2px 4px", background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.4)", borderRadius: 4, color: "#fff", fontSize: 12, textAlign: type === "number" ? "center" : "left" }}
+        value={val}
+        onChange={e => setVal(e.target.value)}
+        onBlur={save}
+        onKeyDown={e => { if (e.key === "Enter") save(); if (e.key === "Escape") setEditing(false); }}
+        type={type === "number" ? "number" : "text"}
+      />
+    );
+  }
+
+  return (
+    <span onClick={() => setEditing(true)} style={{ cursor: "pointer", borderBottom: "1px dashed rgba(255,255,255,0.15)", paddingBottom: 1 }} title="Kliknij aby edytować">
+      {saving ? "…" : value}
+    </span>
+  );
+}
+
+function EditableTable({ tabela, onSaved }) {
+  const isDrawa = n => n?.toLowerCase().includes("drawa");
+  return (
+    <div style={card}>
+      <div style={{ fontSize: 12, color: "#475569", marginBottom: 4 }}>
+        Tabela · {tabela.length} drużyn · <span style={{ color: "#3b82f6" }}>kliknij w wartość aby edytować</span>
+      </div>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+          <thead>
+            <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              {["#", "Drużyna", "M", "W", "R", "P", "BZ", "BS", "Pkt", "Forma"].map(h => (
+                <th key={h} style={{ padding: "6px 8px", color: "#475569", textAlign: h === "Drużyna" ? "left" : "center", fontWeight: 600, whiteSpace: "nowrap" }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {tabela.map(r => (
+              <tr key={r.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)", background: isDrawa(r.nazwa) ? "rgba(59,130,246,0.08)" : "transparent" }}>
+                <td style={{ padding: "6px 8px", color: "#64748b", textAlign: "center" }}><EditableCell value={r.pozycja} field="pozycja" rowId={r.id} onSaved={onSaved} /></td>
+                <td style={{ padding: "6px 8px", color: isDrawa(r.nazwa) ? "#60a5fa" : "#e2e8f0", fontWeight: isDrawa(r.nazwa) ? 700 : 400 }}><EditableCell value={r.nazwa} field="nazwa" rowId={r.id} onSaved={onSaved} type="text" /></td>
+                <td style={{ padding: "6px 8px", color: "#94a3b8", textAlign: "center" }}><EditableCell value={r.mecze} field="mecze" rowId={r.id} onSaved={onSaved} /></td>
+                <td style={{ padding: "6px 8px", color: "#22c55e", textAlign: "center" }}><EditableCell value={r.wygrane} field="wygrane" rowId={r.id} onSaved={onSaved} /></td>
+                <td style={{ padding: "6px 8px", color: "#94a3b8", textAlign: "center" }}><EditableCell value={r.remisy} field="remisy" rowId={r.id} onSaved={onSaved} /></td>
+                <td style={{ padding: "6px 8px", color: "#ef4444", textAlign: "center" }}><EditableCell value={r.przegrane} field="przegrane" rowId={r.id} onSaved={onSaved} /></td>
+                <td style={{ padding: "6px 8px", color: "#94a3b8", textAlign: "center" }}><EditableCell value={r.bramkiZd} field="bramkiZd" rowId={r.id} onSaved={onSaved} /></td>
+                <td style={{ padding: "6px 8px", color: "#94a3b8", textAlign: "center" }}><EditableCell value={r.bramkiStr} field="bramkiStr" rowId={r.id} onSaved={onSaved} /></td>
+                <td style={{ padding: "6px 8px", color: "#fff", fontWeight: 700, textAlign: "center" }}><EditableCell value={r.pkt} field="pkt" rowId={r.id} onSaved={onSaved} /></td>
+                <td style={{ padding: "6px 8px", color: "#94a3b8", textAlign: "center" }}><EditableCell value={r.forma || ""} field="forma" rowId={r.id} onSaved={onSaved} type="text" /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 // ─── Tab: Tabela ──────────────────────────────────────────────
 
 function TabelaTab({ sezon }) {
@@ -60,41 +134,7 @@ function TabelaTab({ sezon }) {
       </div>
 
       {tabela.length > 0 && (
-        <div style={card}>
-          <div style={{ fontSize: 12, color: "#475569", marginBottom: 12 }}>
-            Aktualna tabela · {sezon} · {tabela.length} drużyn
-          </div>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
-              <thead>
-                <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                  {["#", "Drużyna", "M", "W", "R", "P", "Bramki", "Pkt", "Forma"].map(h => (
-                    <th key={h} style={{ padding: "6px 8px", color: "#475569", textAlign: h === "Drużyna" ? "left" : "center", fontWeight: 600, whiteSpace: "nowrap" }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {tabela.map(r => (
-                  <tr key={r.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)", background: isDrawa(r.nazwa) ? "rgba(59,130,246,0.08)" : "transparent" }}>
-                    <td style={{ padding: "6px 8px", color: "#64748b", textAlign: "center" }}>{r.pozycja}</td>
-                    <td style={{ padding: "6px 8px", color: isDrawa(r.nazwa) ? "#60a5fa" : "#e2e8f0", fontWeight: isDrawa(r.nazwa) ? 700 : 400 }}>{r.nazwa}</td>
-                    <td style={{ padding: "6px 8px", color: "#94a3b8", textAlign: "center" }}>{r.mecze}</td>
-                    <td style={{ padding: "6px 8px", color: "#22c55e", textAlign: "center" }}>{r.wygrane}</td>
-                    <td style={{ padding: "6px 8px", color: "#94a3b8", textAlign: "center" }}>{r.remisy}</td>
-                    <td style={{ padding: "6px 8px", color: "#ef4444", textAlign: "center" }}>{r.przegrane}</td>
-                    <td style={{ padding: "6px 8px", color: "#94a3b8", textAlign: "center" }}>{r.bramkiZd}:{r.bramkiStr}</td>
-                    <td style={{ padding: "6px 8px", color: "#fff", fontWeight: 700, textAlign: "center" }}>{r.pkt}</td>
-                    <td style={{ padding: "6px 8px", textAlign: "center" }}>
-                      {(r.forma || "").split("").map((f, i) => (
-                        <span key={i} style={{ display: "inline-block", width: 14, height: 14, borderRadius: "50%", background: f === "W" ? "#22c55e" : f === "P" ? "#ef4444" : "#94a3b8", marginRight: 2 }} />
-                      ))}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <EditableTable tabela={tabela} onSaved={() => setTick(t => t + 1)} />
       )}
     </div>
   );
