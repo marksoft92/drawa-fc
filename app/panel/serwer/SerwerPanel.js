@@ -52,10 +52,12 @@ export default function SerwerPanel() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [dumping, setDumping] = useState(false);
-  const [backupEmail, setBackupEmail] = useState("");
-  const [backupPassword, setBackupPassword] = useState("");
-  const [savingEmail, setSavingEmail] = useState(false);
-  const [emailSaved, setEmailSaved] = useState(false);
+  const [smtpHost, setSmtpHost] = useState("smtp.gmail.com");
+  const [smtpPort, setSmtpPort] = useState("465");
+  const [smtpEmail, setSmtpEmail] = useState("");
+  const [smtpPassword, setSmtpPassword] = useState("");
+  const [savingSmtp, setSavingSmtp] = useState(false);
+  const [smtpSaved, setSmtpSaved] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendResult, setSendResult] = useState(null);
 
@@ -65,8 +67,10 @@ export default function SerwerPanel() {
       fetch("/api/admin/ustawienia").then((r) => r.json()),
     ]).then(([serverData, settings]) => {
       setData(serverData);
-      setBackupEmail(settings.backup_email || "");
-      setBackupPassword(settings.backup_password || "");
+      setSmtpHost(settings.smtp_host || "smtp.gmail.com");
+      setSmtpPort(settings.smtp_port || "465");
+      setSmtpEmail(settings.smtp_email || "");
+      setSmtpPassword(settings.smtp_password || "");
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
@@ -88,19 +92,24 @@ export default function SerwerPanel() {
     setDumping(false);
   }
 
-  async function saveEmailSettings() {
-    setSavingEmail(true);
-    setEmailSaved(false);
+  async function saveSmtpSettings() {
+    setSavingSmtp(true);
+    setSmtpSaved(false);
     try {
       await fetch("/api/admin/ustawienia", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ backup_email: backupEmail, backup_password: backupPassword }),
+        body: JSON.stringify({
+          smtp_host: smtpHost,
+          smtp_port: smtpPort,
+          smtp_email: smtpEmail,
+          smtp_password: smtpPassword,
+        }),
       });
-      setEmailSaved(true);
-      setTimeout(() => setEmailSaved(false), 3000);
+      setSmtpSaved(true);
+      setTimeout(() => setSmtpSaved(false), 3000);
     } catch {}
-    setSavingEmail(false);
+    setSavingSmtp(false);
   }
 
   async function sendTestBackup() {
@@ -110,7 +119,7 @@ export default function SerwerPanel() {
       const res = await fetch("/api/admin/server/backup-send", { method: "POST" });
       const data = await res.json();
       if (res.ok) {
-        setSendResult({ ok: true, msg: "Backup wysłany na " + backupEmail });
+        setSendResult({ ok: true, msg: "Backup wysłany na " + smtpEmail });
       } else {
         setSendResult({ ok: false, msg: data.error || "Błąd wysyłki" });
       }
@@ -214,21 +223,43 @@ export default function SerwerPanel() {
         </button>
       </div>
 
-      <div style={{ ...cardStyle }}>
-        <div style={labelStyle}>Automatyczny backup na email</div>
+      <div style={{ ...cardStyle, marginBottom: 16 }}>
+        <div style={labelStyle}>Konfiguracja SMTP</div>
         <p style={{ fontSize: 13, color: "#94a3b8", marginBottom: 14 }}>
-          Codziennie o 3:00 w nocy backup bazy zostanie wysłany na podany adres Gmail.
-          Potrzebujesz <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener" style={{ color: "#3b82f6" }}>hasła aplikacji Google</a>.
+          Ustawienia poczty używane przez backup bazy i newsletter.
+          Dla Gmaila potrzebujesz <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener" style={{ color: "#3b82f6" }}>hasła aplikacji Google</a>.
         </p>
 
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 100px", gap: 10, marginBottom: 10 }}>
+          <div>
+            <label style={{ fontSize: 12, color: "#64748b", display: "block", marginBottom: 4 }}>Host SMTP</label>
+            <input
+              type="text"
+              value={smtpHost}
+              onChange={(e) => setSmtpHost(e.target.value)}
+              placeholder="smtp.gmail.com"
+              style={inputStyle}
+            />
+          </div>
+          <div>
+            <label style={{ fontSize: 12, color: "#64748b", display: "block", marginBottom: 4 }}>Port</label>
+            <input
+              type="text"
+              value={smtpPort}
+              onChange={(e) => setSmtpPort(e.target.value)}
+              placeholder="465"
+              style={inputStyle}
+            />
+          </div>
+        </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 14 }}>
           <div>
-            <label style={{ fontSize: 12, color: "#64748b", display: "block", marginBottom: 4 }}>Adres Gmail</label>
+            <label style={{ fontSize: 12, color: "#64748b", display: "block", marginBottom: 4 }}>Adres email</label>
             <input
               type="email"
-              value={backupEmail}
-              onChange={(e) => setBackupEmail(e.target.value)}
-              placeholder="twoj@gmail.com"
+              value={smtpEmail}
+              onChange={(e) => setSmtpEmail(e.target.value)}
+              placeholder="drawadrawnomks@gmail.com"
               style={inputStyle}
             />
           </div>
@@ -236,8 +267,8 @@ export default function SerwerPanel() {
             <label style={{ fontSize: 12, color: "#64748b", display: "block", marginBottom: 4 }}>Hasło aplikacji</label>
             <input
               type="password"
-              value={backupPassword}
-              onChange={(e) => setBackupPassword(e.target.value)}
+              value={smtpPassword}
+              onChange={(e) => setSmtpPassword(e.target.value)}
               placeholder="xxxx xxxx xxxx xxxx"
               style={inputStyle}
             />
@@ -245,16 +276,25 @@ export default function SerwerPanel() {
         </div>
 
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-          <button onClick={saveEmailSettings} disabled={savingEmail || !backupEmail} style={btnStyle(!savingEmail && !!backupEmail, "#16a34a")}>
-            {savingEmail ? "Zapisywanie..." : "Zapisz ustawienia"}
+          <button onClick={saveSmtpSettings} disabled={savingSmtp || !smtpEmail} style={btnStyle(!savingSmtp && !!smtpEmail, "#16a34a")}>
+            {savingSmtp ? "Zapisywanie..." : "Zapisz SMTP"}
           </button>
-          <button onClick={sendTestBackup} disabled={sending || !backupEmail || !backupPassword} style={btnStyle(!sending && !!backupEmail && !!backupPassword)}>
+          {smtpSaved && <span style={{ fontSize: 12, color: "#22c55e" }}>Zapisano</span>}
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle }}>
+        <div style={labelStyle}>Backup bazy na email</div>
+        <p style={{ fontSize: 13, color: "#94a3b8", marginBottom: 14 }}>
+          Backup zostanie wysłany na adres z konfiguracji SMTP powyżej.
+        </p>
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <button onClick={sendTestBackup} disabled={sending || !smtpEmail || !smtpPassword} style={btnStyle(!sending && !!smtpEmail && !!smtpPassword)}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M22 2L11 13" /><path d="M22 2L15 22L11 13L2 9L22 2Z" />
             </svg>
-            {sending ? "Wysyłanie..." : "Wyślij testowy backup"}
+            {sending ? "Wysyłanie..." : "Wyślij backup teraz"}
           </button>
-          {emailSaved && <span style={{ fontSize: 12, color: "#22c55e" }}>Zapisano</span>}
           {sendResult && (
             <span style={{ fontSize: 12, color: sendResult.ok ? "#22c55e" : "#ef4444" }}>{sendResult.msg}</span>
           )}

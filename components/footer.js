@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const kolumny = [
   {
@@ -35,6 +35,91 @@ const kolumny = [
     ],
   },
 ];
+
+function NewsletterForm() {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  const handleSubmit = useCallback(async (e) => {
+    e.preventDefault();
+    if (!email.trim() || busy) return;
+    setBusy(true);
+    setStatus(null);
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStatus({ ok: true, msg: data.msg });
+        setEmail('');
+      } else {
+        setStatus({ ok: false, msg: data.error });
+      }
+    } catch {
+      setStatus({ ok: false, msg: 'Błąd połączenia' });
+    }
+    setBusy(false);
+  }, [email, busy]);
+
+  return (
+    <div style={{
+      padding: '32px 0',
+      borderBottom: '1px solid rgba(255,255,255,0.06)',
+      textAlign: 'center',
+    }}>
+      <div style={{
+        fontSize: 10,
+        color: '#3b82f6',
+        letterSpacing: '0.25em',
+        fontWeight: 700,
+        marginBottom: 10,
+        textTransform: 'uppercase',
+      }}>
+        Newsletter
+      </div>
+      <p style={{ fontSize: 13, color: '#475569', marginBottom: 16, lineHeight: 1.6 }}>
+        Bądź na bieżąco — wyniki, relacje i zapowiedzi meczów prosto na Twój email.
+      </p>
+      <form onSubmit={handleSubmit} style={{
+        display: 'flex', gap: 8, maxWidth: 380, margin: '0 auto', flexWrap: 'wrap', justifyContent: 'center',
+      }}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Twój adres email"
+          required
+          style={{
+            flex: 1, minWidth: 200, padding: '10px 14px', borderRadius: 8,
+            border: '1px solid rgba(255,255,255,0.1)', background: '#0a0f1a',
+            color: '#fff', fontSize: 13, outline: 'none',
+          }}
+        />
+        <button
+          type="submit"
+          disabled={busy}
+          style={{
+            padding: '10px 20px', borderRadius: 8, border: 'none',
+            background: busy ? '#1e293b' : '#2563eb', color: '#fff',
+            fontSize: 12, fontWeight: 700, letterSpacing: '0.08em',
+            cursor: busy ? 'wait' : 'pointer', transition: 'background 0.15s',
+          }}
+        >
+          {busy ? 'ZAPISUJĘ...' : 'ZAPISZ SIĘ'}
+        </button>
+      </form>
+      {status && (
+        <p style={{ fontSize: 12, marginTop: 10, color: status.ok ? '#22c55e' : '#ef4444' }}>
+          {status.msg}
+        </p>
+      )}
+    </div>
+  );
+}
 
 export default function Footer({ HerbImg, herb }) {
   const [sezon, setSezon] = useState('2025/26');
@@ -199,6 +284,9 @@ export default function Footer({ HerbImg, herb }) {
             </div>
           ))}
         </div>
+
+        {/* ── Newsletter ── */}
+        <NewsletterForm />
 
         {/* ── Bottom bar ── */}
         <div
