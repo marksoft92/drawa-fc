@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { groupByKolejka } from '@/lib/ligaUtils';
 
 export const revalidate = 3600;
 
@@ -14,7 +15,7 @@ function slugify(name) {
 function isDrawa(n) { return n?.toLowerCase().includes("drawa drawno"); }
 
 export default async function sitemap() {
-  const [artykuly, archiwum, players] = await Promise.all([
+  const [artykuly, archiwum, players, ustawieniaRows, meczeAll] = await Promise.all([
     prisma.artykul.findMany({
       where: { published: true },
       select: { slug: true, updatedAt: true },
@@ -27,6 +28,8 @@ export default async function sitemap() {
       where: { user: { active: true } },
       select: { imieNazwisko: true, updatedAt: true },
     }),
+    prisma.ustawienie.findMany(),
+    prisma.mecz.findMany({ orderBy: { date: 'asc' } }),
   ]);
 
   const newsUrls = artykuly.map(a => ({
@@ -75,5 +78,19 @@ export default async function sitemap() {
       priority: 0.7,
     })),
     ...opponentUrls,
+    { url: `${BASE}/liga`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
+    { url: `${BASE}/liga/tabela`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
+    ...(() => {
+      const ust = Object.fromEntries(ustawieniaRows.map(r => [r.klucz, r.wartosc]));
+      const sezon = ust.aktywny_sezon || '2025/26';
+      const sezonMecze = meczeAll.filter(m => m.sezon === sezon);
+      const kolejki = groupByKolejka(sezonMecze);
+      return kolejki.map(k => ({
+        url: `${BASE}/liga/kolejka/${k.nr}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.7,
+      }));
+    })(),
   ];
 }

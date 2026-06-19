@@ -19,6 +19,7 @@ const kolumny = [
     linki: [
       { label: 'Mecze', href: '#mecze' },
       { label: 'Tabela', href: '#tabela' },
+      { label: 'Liga', href: '/liga' },
       { label: 'Statystyki', href: '/statystyki' },
       { label: 'Typowanie', href: '/typowanie' },
     ],
