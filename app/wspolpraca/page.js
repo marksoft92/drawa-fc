@@ -221,7 +221,7 @@ export default async function WspolpracaPage() {
                       {s.opis && <div style={{ padding: "0 20px 16px", fontSize: 12, color: "#64748b", lineHeight: 1.6 }}>{s.opis}</div>}
                       <div style={{ padding: "0 20px 16px" }}>
                         {s.href && (
-                          <a href={s.href} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 10, color: "#3b82f6", textDecoration: "none", letterSpacing: "0.08em", fontWeight: 600 }}>
+                          <a href={s.href} target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: "#3b82f6", textDecoration: "none", letterSpacing: "0.08em", fontWeight: 600 }}>
                             STRONA WWW →
                           </a>
                         )}
