@@ -49,6 +49,7 @@ export default async function sitemap() {
 
   const opponentUrls = [...opponents].map(slug => ({
     url: `${BASE}/druzyna/${slug}`,
+    lastModified: new Date(),
     changeFrequency: 'monthly',
     priority: 0.6,
   }));
