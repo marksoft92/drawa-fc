@@ -20,8 +20,8 @@ export default function PlayerProfileClient({ player, sezon, seasonHistory, allP
 
   const z = player;
   const parts = z.imieNazwisko.split(' ');
-  const nazwisko = parts[0];
-  const imie = parts.slice(1).join(' ') || parts[0];
+  const imie = parts[0];
+  const nazwisko = parts.slice(1).join(' ') || parts[0];
   const pozColor = POZ_COLORS[z.pozycja] || '#3b82f6';
 
   const maxes = computeMaxes(allPlayers);
@@ -98,12 +98,6 @@ export default function PlayerProfileClient({ player, sezon, seasonHistory, allP
             {imie}
             <span style={{ display: 'block', color: '#3b82f6', fontSize: 'clamp(20px, 4vw, 32px)', letterSpacing: '0.15em' }}>{nazwisko}</span>
           </h1>
-
-          {z.pseudonim && (
-            <div style={{ fontSize: 13, color: '#475569', marginTop: 8, fontStyle: 'italic' }}>
-              &ldquo;{z.pseudonim}&rdquo;
-            </div>
-          )}
 
           {sezon && (
             <div style={{ fontSize: 11, color: '#334155', marginTop: 12, letterSpacing: '0.1em' }}>

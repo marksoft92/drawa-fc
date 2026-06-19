@@ -63,11 +63,8 @@ export async function generateMetadata({ params }) {
   const data = await getPlayer(slug);
   if (!data) return {};
   const { player, sezon } = data;
-  const parts = player.imieNazwisko.split(' ');
-  const imie = parts.slice(1).join(' ') || parts[0];
-  const nazwisko = parts[0];
   return {
-    title: `${imie} ${nazwisko} — ${player.pozycja || 'Zawodnik'} MKS Drawa Drawno`,
+    title: `${player.imieNazwisko} — ${player.pozycja || 'Zawodnik'} MKS Drawa Drawno`,
     description: `Profil zawodnika ${player.imieNazwisko}. ${player.pozycja || 'Zawodnik'} MKS Drawa Drawno. ${sezon ? `Sezon ${sezon}: ` : ''}${player.gole} goli, ${player.asysty} asyst w ${player.mecze} meczach.`,
     alternates: { canonical: `https://mksdrawadrawno.pl/kadra/${slug}` },
     openGraph: {

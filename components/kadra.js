@@ -75,8 +75,8 @@ function initials(imieNazwisko) {
 function PlayerCard({ z }) {
   const [sharing, setSharing] = useState(false);
   const parts = z.imieNazwisko.split(' ');
-  const nazwisko = parts[0];
-  const imie = parts.slice(1).join(' ');
+  const imie = parts[0];
+  const nazwisko = parts.slice(1).join(' ');
   const slug = slugify(z.imieNazwisko);
   const pozColor = POZ_COLORS[z.pozycja] || '#3b82f6';
 
@@ -164,9 +164,9 @@ function PlayerCard({ z }) {
 }
 
 export default function Kadra({ SectionLabel, kadraData, showLink }) {
-  const [zawodnicy, setZawodnicy] = useState([]);
-  const [sezon, setSezon] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [zawodnicy, setZawodnicy] = useState(kadraData?.players ?? []);
+  const [sezon, setSezon] = useState(kadraData?.sezon ?? null);
+  const [loading, setLoading] = useState(!kadraData);
 
   useEffect(() => {
     if (kadraData) {
