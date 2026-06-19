@@ -6,7 +6,7 @@ export const revalidate = 300;
 
 export default async function ArchiwumPage() {
   const [sezonyDb, ustawienia, archiwumDb, opponentsMap] = await Promise.all([
-    prisma.sezon.findMany({ orderBy: { nazwa: "desc" } }),
+    prisma.sezon.findMany({ orderBy: { nazwa: "desc" }, select: { id: true, nazwa: true, aktywny: true } }),
     prisma.ustawienie.findMany(),
     prisma.archiwumSezon.findMany({
       orderBy: { sezon: "desc" },
