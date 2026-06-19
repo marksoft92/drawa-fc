@@ -19,15 +19,6 @@ export async function generateMetadata({ params }) {
       title: `${a.title} | MKS Drawa Drawno`,
       description: a.excerpt,
       url: `https://mksdrawadrawno.pl/aktualnosci/${a.slug}`,
-      images: a.thumbnail
-        ? [{ url: a.thumbnail, alt: a.title }]
-        : [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'MKS Drawa Drawno' }],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: a.title,
-      description: a.excerpt,
-      images: a.thumbnail ? [a.thumbnail] : ['/opengraph-image'],
     },
   };
 }

@@ -215,6 +215,7 @@ export default function HomePageClient({ data }) {
             SectionLabel={SectionLabel}
             HerbImg={HerbImg}
             getFormaColor={getFormaColor}
+            ustawienia={hp?.ustawienia}
           />
         </div>
 

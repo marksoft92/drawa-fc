@@ -2,16 +2,18 @@ import NavBar from "@/components/NavBar";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata = {
-  title: "Współpraca i Sponsoring — MKS Drawa Drawno",
-  description: "Zostań partnerem MKS Drawa Drawno — jednego z najstarszych klubów piłkarskich na Pomorzu Zachodnim. Promuj swoją firmę wśród lokalnej społeczności Drawna i okolic. Oferta współpracy, pakiety reklamowe.",
+  title: "Sponsoring i Współpraca — MKS Drawa Drawno | Reklama lokalna Drawno",
+  description: "Zostań sponsorem MKS Drawa Drawno — klubu piłkarskiego z 78-letnią tradycją z Drawna, woj. zachodniopomorskie. Reklama na boisku, stronie internetowej i social media. Oferta sponsoringu, pakiety reklamowe, współpraca barterowa.",
   alternates: { canonical: "https://mksdrawadrawno.pl/wspolpraca" },
+  keywords: ["sponsoring klubu piłkarskiego", "reklama Drawno", "sponsor piłka nożna zachodniopomorskie", "współpraca sportowa", "reklama lokalna zachodniopomorskie", "MKS Drawa Drawno sponsor"],
   openGraph: {
-    title: "Współpraca — MKS Drawa Drawno",
-    description: "Wspieraj lokalny sport i buduj rozpoznawalność swojej marki z klubem z 78-letnią tradycją.",
-    images: [{ url: "/logo.png" }],
+    title: "Zostań sponsorem MKS Drawa Drawno",
+    description: "Promuj swoją firmę wśród lokalnej społeczności. Reklama na boisku, stronie i social media. Klub z 78-letnią tradycją.",
+    url: "https://mksdrawadrawno.pl/wspolpraca",
+    images: [{ url: "/opengraph-image" }],
   },
 };
 
@@ -37,8 +39,36 @@ export default async function WspolpracaPage() {
     </div>
   );
 
+  const faqItems = [
+    { q: "Ile kosztuje współpraca?", a: "Nie mamy sztywnego cennika. Koszty zależą od formy współpracy, czasu trwania i zakresu. Rozmawiamy indywidualnie i szukamy rozwiązania, które pasuje obu stronom. Dla lokalnych firm z Drawna i okolic mamy specjalne warunki." },
+    { q: "Czy mogę współpracować barterowo?", a: "Jak najbardziej. Sprzęt sportowy, usługi transportowe, materiały budowlane, catering na mecze — wszystko, co pomaga klubowi funkcjonować, jest dla nas wartościowe." },
+    { q: "Na jak długo zobowiązuje współpraca?", a: "Minimum to zazwyczaj jeden sezon (runda jesienna + wiosenna), ale możemy umówić się na krótsze okresy — np. patronat jednego meczu lub turnieju." },
+    { q: "Jak sprawdzę efekty?", a: "Dostaniesz dostęp do statystyk odwiedzin strony. Dla social media przygotujemy raport zasięgów. Przy banerach — zdjęcia z meczów. Chcemy, żebyś widział wartość współpracy." },
+    { q: "Czy wystawiacie faktury?", a: "Tak, klub jest zarejestrowanym stowarzyszeniem. Wystawiamy faktury i umowy sponsorskie." },
+  ];
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqItems.map(({ q, a }) => ({
+            "@type": "Question",
+            name: q,
+            acceptedAnswer: { "@type": "Answer", text: a },
+          })),
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Strona główna", item: "https://mksdrawadrawno.pl" },
+            { "@type": "ListItem", position: 2, name: "Współpraca i Sponsoring" },
+          ],
+        },
+      ]) }} />
+
       <NavBar backLabel="← Strona główna" />
 
       <main style={{ paddingTop: 64, background: "#030712", minHeight: "100vh", color: "#fff" }}>
@@ -186,13 +216,7 @@ export default async function WspolpracaPage() {
           <div style={{ maxWidth: 900, margin: "0 auto" }}>
             <SL>Najczęstsze pytania</SL>
             <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 16 }}>
-              {[
-                { q: "Ile kosztuje współpraca?", a: "Nie mamy sztywnego cennika. Koszty zależą od formy współpracy, czasu trwania i zakresu. Rozmawiamy indywidualnie i szukamy rozwiązania, które pasuje obu stronom. Dla lokalnych firm z Drawna i okolic mamy specjalne warunki." },
-                { q: "Czy mogę współpracować barterowo?", a: "Jak najbardziej. Sprzęt sportowy, usługi transportowe, materiały budowlane, catering na mecze — wszystko, co pomaga klubowi funkcjonować, jest dla nas wartościowe." },
-                { q: "Na jak długo zobowiązuje współpraca?", a: "Minimum to zazwyczaj jeden sezon (runda jesienna + wiosenna), ale możemy umówić się na krótsze okresy — np. patronat jednego meczu lub turnieju." },
-                { q: "Jak sprawdzę efekty?", a: "Dostaniesz dostęp do statystyk odwiedzin strony. Dla social media przygotujemy raport zasięgów. Przy banerach — zdjęcia z meczów. Chcemy, żebyś widział wartość współpracy." },
-                { q: "Czy wystawiacie faktury?", a: "Tak, klub jest zarejestrowanym stowarzyszeniem. Wystawiamy faktury i umowy sponsorskie." },
-              ].map(({ q, a }) => (
+              {faqItems.map(({ q, a }) => (
                 <div key={q} style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "20px 24px" }}>
                   <div style={{ fontSize: 14, fontWeight: 700, color: "#e2e8f0", marginBottom: 6 }}>{q}</div>
                   <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.7 }}>{a}</div>

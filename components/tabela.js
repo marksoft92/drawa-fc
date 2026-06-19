@@ -5,6 +5,7 @@ export default function Tabela({
                                  SectionLabel,
                                  HerbImg,
                                  getFormaColor,
+                                 ustawienia,
                                }) {
   return (
     <section
@@ -30,7 +31,7 @@ export default function Tabela({
             letterSpacing: '0.1em',
           }}
         >
-          Klasa B · Zachodniopomorska IV · Sezon 2025/26
+          {ustawienia?.aktywny_klasa || 'B Klasa'} · Zachodniopomorskie · Sezon {ustawienia?.aktywny_sezon || '2025/26'}
         </div>
 
         <div
