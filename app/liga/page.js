@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
+import LigaClient from "./LigaClient";
 import { isDrawa } from "@/lib/ligaUtils";
 
 export const revalidate = 60;
@@ -11,7 +12,7 @@ export async function generateMetadata() {
   const sezon = ust.aktywny_sezon || "2025/26";
   return {
     title: `${klasa} Zachodniopomorskie — Tabela, Wyniki, Terminarz | Sezon ${sezon}`,
-    description: `${klasa} Zachodniopomorska — aktualna tabela ligowa, wyniki meczów, terminarz kolejek i statystyki sezonu ${sezon}. Śledź rozgrywki na żywo.`,
+    description: `${klasa} Zachodniopomorska — aktualna tabela ligowa, wyniki meczów, terminarz i statystyki sezonu ${sezon}. Składy drużyn, strzelcy, przebieg spotkań.`,
     alternates: { canonical: "https://mksdrawadrawno.pl/liga" },
     openGraph: {
       title: `${klasa} Zachodniopomorskie — Tabela i Wyniki`,
@@ -22,12 +23,6 @@ export async function generateMetadata() {
 }
 
 export default async function LigaPage() {
-  const [ustawienia, tabela, mecze] = await Promise.all([
-    prisma.ustawienie.findMany(),
-    null,
-    null,
-  ].map((p, i) => i === 0 ? p : null));
-
   const ust = Object.fromEntries((await prisma.ustawienie.findMany()).map(r => [r.klucz, r.wartosc]));
   const sezon = ust.aktywny_sezon || "2025/26";
   const klasa = ust.aktywny_klasa || "B Klasa";
@@ -39,20 +34,9 @@ export default async function LigaPage() {
 
   const ligowe = meczeData.filter(m => !m.liga?.toLowerCase().includes('puchar'));
 
-  const resultColor = (score, team1) => {
-    if (!score) return "#334155";
-    const [g1, g2] = score.split(":").map(Number);
-    const dH = isDrawa(team1);
-    const dG = dH ? g1 : g2, oG = dH ? g2 : g1;
-    if (dG > oG) return "#22c55e";
-    if (dG < oG) return "#ef4444";
-    return "#f59e0b";
-  };
-
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Strona główna", item: "https://mksdrawadrawno.pl" }, { "@type": "ListItem", position: 2, name: "Liga" }] }) }} />
-
       <NavBar backLabel="← Strona główna" />
 
       <main style={{ paddingTop: 64, background: "#030712", minHeight: "100vh", color: "#fff", fontFamily: "-apple-system, 'Segoe UI', sans-serif" }}>
@@ -61,13 +45,13 @@ export default async function LigaPage() {
           <h1 style={{ fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: "clamp(32px, 7vw, 56px)", letterSpacing: "0.06em", margin: 0 }}>
             {klasa} <span style={{ color: "#3b82f6" }}>Zachodniopomorskie</span>
           </h1>
-          <p style={{ fontSize: 13, color: "#475569", marginTop: 8 }}>
+          <p style={{ fontSize: 13, color: "#475569", marginTop: 8, marginBottom: 32 }}>
             {tabelaData.length} drużyn · {ligowe.filter(m => m.score).length} rozegranych meczów
           </p>
         </div>
 
         {/* Tabela */}
-        <section style={{ padding: "40px 20px", maxWidth: 900, margin: "0 auto" }}>
+        <section style={{ padding: "0 20px 40px", maxWidth: 900, margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
             <h2 style={{ display: "flex", alignItems: "center", gap: 12, margin: 0 }}>
               <div style={{ width: 4, height: 24, background: "#3b82f6", borderRadius: 2 }} />
@@ -112,42 +96,9 @@ export default async function LigaPage() {
           </div>
         </section>
 
-        {/* Wyniki meczów */}
+        {/* Mecze — client component z rozwijaniem */}
         <section style={{ padding: "0 20px 60px", maxWidth: 900, margin: "0 auto" }}>
-          <h2 style={{ display: "flex", alignItems: "center", gap: 12, margin: "0 0 20px" }}>
-            <div style={{ width: 4, height: 24, background: "#f59e0b", borderRadius: 2 }} />
-            <span style={{ fontSize: "clamp(20px, 4vw, 28px)", fontFamily: "'Bebas Neue', Impact, sans-serif", letterSpacing: "0.1em", fontWeight: "normal" }}>Wyniki meczów</span>
-          </h2>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {ligowe.map(m => {
-              const drawa1 = isDrawa(m.team1);
-              const opp = drawa1 ? m.team2 : m.team1;
-              return (
-                <Link key={m.id} href={`/liga/mecz/${m.id}`} style={{ textDecoration: "none" }}>
-                  <div style={{
-                    background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "14px 18px",
-                    display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
-                    transition: "border-color 0.2s, transform 0.2s",
-                  }} className="liga-card">
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, color: "#e2e8f0", fontWeight: 600 }}>
-                        {drawa1 ? "Drawa" : opp} <span style={{ color: "#334155" }}>vs</span> {drawa1 ? opp : "Drawa"}
-                      </div>
-                      <div style={{ fontSize: 10, color: "#334155", marginTop: 2 }}>{m.date} · {drawa1 ? "DOM" : "WYJAZD"}</div>
-                    </div>
-                    <div style={{
-                      fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: 20,
-                      color: m.score ? resultColor(m.score, m.team1) : "#334155",
-                      minWidth: 50, textAlign: "center",
-                    }}>
-                      {m.score || "—"}
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          <LigaClient mecze={JSON.parse(JSON.stringify(ligowe))} />
         </section>
       </main>
 
