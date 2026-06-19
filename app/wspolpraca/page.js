@@ -196,43 +196,26 @@ export default async function WspolpracaPage() {
               <p style={{ fontSize: 14, color: "#64748b", marginBottom: 24, lineHeight: 1.7 }}>
                 Dziękujemy firmom, które już nas wspierają. Dołącz do tego grona.
               </p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
                 {sponsorzy.map((s) => {
-                  const inner = (
-                    <div style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14, overflow: "hidden", transition: "border-color 0.2s, transform 0.2s", height: "100%" }} className="sponsor-card">
-                      <div style={{ padding: "24px 20px 16px", display: "flex", alignItems: "center", gap: 14 }}>
-                        {s.logo ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={s.logo} alt={s.nazwa} style={{ height: 48, width: 48, objectFit: "contain", flexShrink: 0, borderRadius: 6, background: "rgba(255,255,255,0.04)", padding: 6 }} />
-                        ) : (
-                          <div style={{ height: 48, width: 48, borderRadius: 6, background: "rgba(34,197,94,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, color: "#22c55e", flexShrink: 0 }}>
-                            {s.nazwa.charAt(0)}
-                          </div>
-                        )}
-                        <div style={{ minWidth: 0 }}>
-                          <div style={{ fontSize: 14, fontWeight: 700, color: "#e2e8f0", lineHeight: 1.3 }}>{s.nazwa}</div>
-                          {s.href && (
-                            <div style={{ fontSize: 10, color: "#475569", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                              {s.href.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]}
-                            </div>
-                          )}
+                  const card = (
+                    <div style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14, padding: "24px 16px", textAlign: "center", transition: "border-color 0.2s, transform 0.2s", height: "100%" }} className="sponsor-card">
+                      {s.logo ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={s.logo} alt={s.nazwa} style={{ height: 52, objectFit: "contain", margin: "0 auto 12px", display: "block" }} />
+                      ) : (
+                        <div style={{ height: 52, width: 52, margin: "0 auto 12px", borderRadius: 8, background: "rgba(34,197,94,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, color: "#22c55e" }}>
+                          {s.nazwa.charAt(0)}
                         </div>
-                      </div>
-                      {s.opis && <div style={{ padding: "0 20px 16px", fontSize: 12, color: "#64748b", lineHeight: 1.6 }}>{s.opis}</div>}
-                      <div style={{ padding: "0 20px 16px" }}>
-                        {s.href && (
-                          <a href={s.href} target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: "#3b82f6", textDecoration: "none", letterSpacing: "0.08em", fontWeight: 600 }}>
-                            STRONA WWW →
-                          </a>
-                        )}
-                      </div>
+                      )}
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "#e2e8f0", lineHeight: 1.3, marginBottom: 4 }}>{s.nazwa}</div>
+                      {s.slug && <div style={{ fontSize: 10, color: "#22c55e", letterSpacing: "0.1em" }}>POZNAJ PARTNERA →</div>}
+                      {!s.slug && s.href && <div style={{ fontSize: 10, color: "#475569" }}>{s.href.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]}</div>}
                     </div>
                   );
-                  return s.slug ? (
-                    <Link key={s.nazwa} href={`/sponsor/${s.slug}`} style={{ textDecoration: "none" }}>{inner}</Link>
-                  ) : (
-                    <div key={s.nazwa}>{inner}</div>
-                  );
+                  if (s.slug) return <Link key={s.nazwa} href={`/sponsor/${s.slug}`} style={{ textDecoration: "none" }}>{card}</Link>;
+                  if (s.href) return <a key={s.nazwa} href={s.href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>{card}</a>;
+                  return <div key={s.nazwa}>{card}</div>;
                 })}
               </div>
               <style>{`.sponsor-card:hover { transform: translateY(-3px); border-color: rgba(34,197,94,0.3) !important; }`}</style>
