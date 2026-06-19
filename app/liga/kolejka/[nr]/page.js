@@ -61,7 +61,7 @@ export default async function KolejkaPage({ params }) {
               const [g1, g2] = hasScore ? m.score.split(":").map(Number) : [0, 0];
               const drawa1 = isDrawa(m.team1);
               const drawa2 = isDrawa(m.team2);
-              const isDrawa = drawa1 || drawa2;
+              const isDraMatch = drawa1 || drawa2;
 
               const strzelcy = Array.isArray(m.strzelcy) ? m.strzelcy : [];
               const gospodarze = strzelcy.filter(s => s.strona === "gospodarze");
