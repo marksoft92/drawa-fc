@@ -2,7 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 
-const emptyForm = () => ({ nazwa: "", logo: "", href: "", opis: "", kolejnosc: 0, aktywny: true });
+function slugify(str) {
+  return str.toLowerCase()
+    .replace(/ą/g,"a").replace(/ć/g,"c").replace(/ę/g,"e").replace(/ł/g,"l")
+    .replace(/ń/g,"n").replace(/ó/g,"o").replace(/ś/g,"s").replace(/ź/g,"z").replace(/ż/g,"z")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+const emptyForm = () => ({ nazwa: "", slug: "", logo: "", href: "", facebook: "", instagram: "", opis: "", opisDlugi: "", kolejnosc: 0, aktywny: true });
 
 async function uploadLogo(file, onError) {
   const fd = new FormData();
@@ -84,7 +91,7 @@ export default function SponsorsAdmin() {
 
   function openEdit(s) {
     setEditId(s.id);
-    setForm({ nazwa: s.nazwa, logo: s.logo || "", href: s.href || "", opis: s.opis || "", kolejnosc: s.kolejnosc, aktywny: s.aktywny });
+    setForm({ nazwa: s.nazwa, slug: s.slug || "", logo: s.logo || "", href: s.href || "", facebook: s.facebook || "", instagram: s.instagram || "", opis: s.opis || "", opisDlugi: s.opisDlugi || "", kolejnosc: s.kolejnosc, aktywny: s.aktywny });
     setError(""); setSuccess(""); setView("form");
   }
 
@@ -133,21 +140,44 @@ export default function SponsorsAdmin() {
       <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         <div style={card}>
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <div>
-              <label style={lbl}>NAZWA *</label>
-              <input style={inp} value={form.nazwa} onChange={f("nazwa")} required placeholder="Nazwa firmy / osoby" />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div>
+                <label style={lbl}>NAZWA *</label>
+                <input style={inp} value={form.nazwa} onChange={e => { const n = e.target.value; setForm(p => ({ ...p, nazwa: n, slug: editId ? p.slug : slugify(n) })); }} required placeholder="Nazwa firmy / osoby" />
+              </div>
+              <div>
+                <label style={lbl}>SLUG (URL podstrony)</label>
+                <input style={inp} value={form.slug} onChange={f("slug")} placeholder="nazwa-firmy" />
+                <div style={{ fontSize: 10, color: "#334155", marginTop: 4 }}>mksdrawadrawno.pl/sponsor/{form.slug || "..."}</div>
+              </div>
             </div>
 
             <LogoField value={form.logo} onChange={v => setForm(p => ({ ...p, logo: v }))} onError={setError} />
 
             <div>
-              <label style={lbl}>LINK (fanpage, strona www)</label>
-              <input style={inp} value={form.href} onChange={f("href")} placeholder="https://www.facebook.com/..." />
+              <label style={lbl}>STRONA WWW</label>
+              <input style={inp} value={form.href} onChange={f("href")} placeholder="https://www.firma.pl" />
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div>
+                <label style={lbl}>FACEBOOK</label>
+                <input style={inp} value={form.facebook} onChange={f("facebook")} placeholder="https://www.facebook.com/..." />
+              </div>
+              <div>
+                <label style={lbl}>INSTAGRAM</label>
+                <input style={inp} value={form.instagram} onChange={f("instagram")} placeholder="https://www.instagram.com/..." />
+              </div>
             </div>
 
             <div>
-              <label style={lbl}>OPIS (widoczny na stronie współpracy)</label>
-              <textarea style={{ ...inp, height: 60, resize: "vertical" }} value={form.opis} onChange={f("opis")} placeholder="Czym zajmuje się firma, jaki jest jej wkład w klub..." />
+              <label style={lbl}>KRÓTKI OPIS (widoczny na karcie na /wspolpraca)</label>
+              <textarea style={{ ...inp, height: 50, resize: "vertical" }} value={form.opis} onChange={f("opis")} placeholder="Jednozdaniowy opis firmy..." />
+            </div>
+
+            <div>
+              <label style={lbl}>DŁUGI OPIS (na osobnej podstronie sponsora)</label>
+              <textarea style={{ ...inp, height: 140, resize: "vertical", fontFamily: "monospace", fontSize: 12 }} value={form.opisDlugi} onChange={f("opisDlugi")} placeholder="Pełny opis firmy, historia współpracy, czym się zajmują... Akapity oddziel pustą linią." />
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>

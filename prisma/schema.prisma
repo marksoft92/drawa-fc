@@ -287,9 +287,13 @@ model ZarzadOsoba {
 model Sponsor {
   id         String   @id @default(cuid())
   nazwa      String
+  slug       String?  @unique
   logo       String?
   href       String?
+  facebook   String?
+  instagram  String?
   opis       String?
+  opisDlugi  String?
   kolejnosc  Int      @default(0)
   aktywny    Boolean  @default(true)
   createdAt  DateTime @default(now())

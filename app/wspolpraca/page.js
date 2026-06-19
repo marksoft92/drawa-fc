@@ -19,7 +19,7 @@ export const metadata = {
 
 export default async function WspolpracaPage() {
   const [sponsorzy, archStats] = await Promise.all([
-    prisma.sponsor.findMany({ where: { aktywny: true }, orderBy: { kolejnosc: "asc" }, select: { nazwa: true, logo: true, href: true, opis: true } }),
+    prisma.sponsor.findMany({ where: { aktywny: true }, orderBy: { kolejnosc: "asc" }, select: { nazwa: true, slug: true, logo: true, href: true, opis: true } }),
     (async () => {
       const sezony = await prisma.archiwumSezon.findMany({
         where: { NOT: { liga: { contains: "Puchar" } } },
@@ -196,27 +196,46 @@ export default async function WspolpracaPage() {
               <p style={{ fontSize: 14, color: "#64748b", marginBottom: 24, lineHeight: 1.7 }}>
                 Dziękujemy firmom, które już nas wspierają. Dołącz do tego grona.
               </p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
-                {sponsorzy.map((s) => (
-                  <div key={s.nazwa} style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "20px 24px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: s.opis ? 10 : 0 }}>
-                      {s.logo && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={s.logo} alt={s.nazwa} style={{ height: 40, objectFit: "contain", opacity: 0.85, flexShrink: 0 }} />
-                      )}
-                      <div>
-                        <div style={{ fontSize: 13, color: "#e2e8f0", fontWeight: 600 }}>{s.nazwa}</div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+                {sponsorzy.map((s) => {
+                  const inner = (
+                    <div style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14, overflow: "hidden", transition: "border-color 0.2s, transform 0.2s", height: "100%" }} className="sponsor-card">
+                      <div style={{ padding: "24px 20px 16px", display: "flex", alignItems: "center", gap: 14 }}>
+                        {s.logo ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={s.logo} alt={s.nazwa} style={{ height: 48, width: 48, objectFit: "contain", flexShrink: 0, borderRadius: 6, background: "rgba(255,255,255,0.04)", padding: 6 }} />
+                        ) : (
+                          <div style={{ height: 48, width: 48, borderRadius: 6, background: "rgba(34,197,94,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, color: "#22c55e", flexShrink: 0 }}>
+                            {s.nazwa.charAt(0)}
+                          </div>
+                        )}
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: "#e2e8f0", lineHeight: 1.3 }}>{s.nazwa}</div>
+                          {s.href && (
+                            <div style={{ fontSize: 10, color: "#475569", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                              {s.href.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      {s.opis && <div style={{ padding: "0 20px 16px", fontSize: 12, color: "#64748b", lineHeight: 1.6 }}>{s.opis}</div>}
+                      <div style={{ padding: "0 20px 16px" }}>
                         {s.href && (
-                          <a href={s.href} target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: "#3b82f6", textDecoration: "none" }}>
-                            {s.href.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]}
+                          <a href={s.href} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 10, color: "#3b82f6", textDecoration: "none", letterSpacing: "0.08em", fontWeight: 600 }}>
+                            STRONA WWW →
                           </a>
                         )}
                       </div>
                     </div>
-                    {s.opis && <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.6 }}>{s.opis}</div>}
-                  </div>
-                ))}
+                  );
+                  return s.slug ? (
+                    <Link key={s.nazwa} href={`/sponsor/${s.slug}`} style={{ textDecoration: "none" }}>{inner}</Link>
+                  ) : (
+                    <div key={s.nazwa}>{inner}</div>
+                  );
+                })}
               </div>
+              <style>{`.sponsor-card:hover { transform: translateY(-3px); border-color: rgba(34,197,94,0.3) !important; }`}</style>
             </div>
           </section>
         )}
