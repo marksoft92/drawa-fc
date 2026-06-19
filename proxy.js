@@ -12,9 +12,15 @@ export function proxy(request) {
     return Response.json({ error: "Brak dostępu" }, { status: 401 });
   }
 
+  if (pathname.startsWith("/panel") && !hasSession) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("next", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/api/admin/:path*", "/api/panel/:path*"],
+  matcher: ["/api/admin/:path*", "/api/panel/:path*", "/panel/:path*"],
 };
