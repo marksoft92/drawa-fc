@@ -11,6 +11,7 @@ const kolumny = [
       { label: 'Wideo', href: '/wideo' },
       { label: 'Archiwum', href: '/archiwum' },
       { label: 'Współpraca', href: '/wspolpraca' },
+      { label: 'Newsletter', href: '/newsletter' },
       { label: 'Sponsorzy', href: '#sponsorzy' },
     ],
   },
