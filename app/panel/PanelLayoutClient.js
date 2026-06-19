@@ -406,7 +406,7 @@ export default function PanelLayoutClient({ role, login, name, foto, children })
         display: "flex", flexDirection: "column", zIndex: 50, transition: "transform 0.25s",
         overflowY: "auto",
       }}>
-        <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", gap: 10 }}>
+        <Link href="/" style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="MKS Drawa" width={36} height={36} style={{ objectFit: "contain", borderRadius: 4, flexShrink: 0 }} />
           <div style={{ minWidth: 0 }}>
@@ -417,7 +417,7 @@ export default function PanelLayoutClient({ role, login, name, foto, children })
               {role === "ADMIN" ? "ADMIN" : role === "STAFF" ? "SZTAB" : "PIŁKARZ"}
             </div>
           </div>
-        </div>
+        </Link>
 
         <nav style={{ flex: 1, padding: "12px 10px", display: "flex", flexDirection: "column", gap: 2 }}>
           {navItems.map((item) => {
