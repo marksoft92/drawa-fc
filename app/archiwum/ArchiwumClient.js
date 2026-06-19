@@ -229,7 +229,10 @@ export default function ArchiwumClient({ initialData }) {
               ) : sezony.length === 0 ? (
                 <div style={{ color: "#334155", padding: 24, fontSize: 13 }}>Brak danych</div>
               ) : (
-                sezony.map((s) => <SezonCard key={s} sezon={s} aktywny={s === aktywnySezon} />)
+                sezony.map((s) => {
+                  const nazwa = typeof s === 'string' ? s : s.nazwa;
+                  return <SezonCard key={nazwa} sezon={nazwa} aktywny={nazwa === aktywnySezon} />;
+                })
               )}
             </div>
           </div>
