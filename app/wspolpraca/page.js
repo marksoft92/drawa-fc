@@ -1,6 +1,5 @@
 import NavBar from "@/components/NavBar";
 import Link from "next/link";
-import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 
 export const revalidate = 3600;
@@ -203,7 +202,7 @@ export default async function WspolpracaPage() {
                     <div style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14, padding: "24px 16px", textAlign: "center", transition: "border-color 0.2s, transform 0.2s", height: "100%" }} className="sponsor-card">
                       {s.logo ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <Image src={s.logo} alt={s.nazwa} width={120} height={52} style={{ objectFit: "contain", margin: "0 auto 12px", display: "block" }} />
+                        <img src={s.logo} alt={s.nazwa} style={{ height: 52, objectFit: "contain", margin: "0 auto 12px", display: "block" }} />
                       ) : (
                         <div style={{ height: 52, width: 52, margin: "0 auto 12px", borderRadius: 8, background: "rgba(34,197,94,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, color: "#22c55e" }}>
                           {s.nazwa.charAt(0)}

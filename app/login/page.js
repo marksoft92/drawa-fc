@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { Suspense } from "react";
 
 function LoginForm() {
@@ -48,7 +47,8 @@ function LoginForm() {
     <div style={pageStyle}>
       <div style={cardStyle}>
         <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <Image src="/logo.png" alt="MKS Drawa" width={56} height={56}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="MKS Drawa" width={56} height={56}
             style={{ objectFit: "contain", borderRadius: 4, marginBottom: 12 }} />
           <div style={{ fontSize: 22, fontFamily: "'Bebas Neue',Impact,sans-serif", letterSpacing: "0.1em", color: "#fff" }}>
             Logowanie

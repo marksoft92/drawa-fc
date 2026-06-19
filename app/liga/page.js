@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import Image from "next/image";
 import NavBar from "@/components/NavBar";
 import LigaClient from "./LigaClient";
 import { isDrawa } from "@/lib/ligaUtils";
@@ -79,7 +78,7 @@ export default async function LigaPage() {
                       <td style={{ padding: "10px 6px", display: "flex", alignItems: "center", gap: 8 }}>
                         {t.herb && (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <Image src={drawa ? "/logo.png" : (t.herb || "/logo.png")} alt={t.nazwa} width={drawa ? 28 : 20} height={drawa ? 28 : 20} style={{ objectFit: "contain", borderRadius: 3 }} />
+                          <img src={drawa ? "/logo.png" : t.herb} alt={t.nazwa} width={drawa ? 28 : 20} height={drawa ? 28 : 20} style={{ objectFit: "contain", borderRadius: 3 }} />
                         )}
                         <span style={{ color: drawa ? "#3b82f6" : "#e2e8f0", fontWeight: drawa ? 700 : 400 }}>{t.nazwa}</span>
                       </td>

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 
 export default function ArticleGallery({ photos }) {
   const [active, setActive] = useState(0);
@@ -35,7 +34,8 @@ export default function ArticleGallery({ photos }) {
                 transition: 'opacity 0.15s, border-color 0.15s',
               }}
             >
-              <Image src={p.src} alt={p.caption || ''} fill style={{ objectFit: 'cover' }} sizes="80px" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={p.src} alt={p.caption || ''} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
           ))}
         </div>

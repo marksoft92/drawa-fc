@@ -60,4 +60,3 @@ public/galeria/uploads/*
 tmp/*
 !tmp/.gitkeep
 data/
-public/*-original.png

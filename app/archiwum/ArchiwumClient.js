@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import NavBar from "@/components/NavBar";
 import Link from "next/link";
 import { computeTeamStats } from "@/lib/computeStats";
@@ -283,7 +282,7 @@ export default function ArchiwumClient({ initialData }) {
                   const dominacja = r.wygrane > r.przegrane ? "#22c55e" : r.wygrane < r.przegrane ? "#ef4444" : "#f59e0b";
                   const HerbImg = ({ src, name, size = 36 }) => src
                     // eslint-disable-next-line @next/next/no-img-element
-                    ? <Image src={src} alt={name} width={size} height={size} style={{ objectFit: "contain", borderRadius: 4 }} />
+                    ? <img src={src} alt={name} style={{ width: size, height: size, objectFit: "contain", borderRadius: 4 }} />
                     : <div style={{ width: size, height: size, borderRadius: 4, background: "rgba(148,163,184,0.1)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: size * 0.35, fontWeight: 700, color: "#64748b" }}>{name.charAt(0)}</div>;
                   return (
                     <Link key={r.slug} href={`/druzyna/${r.slug}`} style={{ textDecoration: "none" }}>

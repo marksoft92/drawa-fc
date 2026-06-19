@@ -1,13 +1,13 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/footer";
 
 const DRAWA_HERB = "/logo.png";
 const FooterHerbImg = ({ src, alt, size = 40 }) => (
-  <Image src={src} alt={alt || ""} width={size} height={size} style={{ objectFit: "contain", borderRadius: 4 }} />
+  <img src={src} alt={alt || ""} width={size} height={size} style={{ objectFit: "contain", borderRadius: 4 }} />
 );
 
 const MEDAL = ["#fbbf24", "#94a3b8", "#b45309"];
@@ -35,7 +35,7 @@ function Countdown({ target }) {
 
 function CrestImg({ src, size = 48 }) {
   if (!src) return <div style={{ width: size, height: size, borderRadius: "50%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: size * 0.4, color: "#334155", flexShrink: 0 }}>?</div>;
-  return <Image src={src} alt="" width={size} height={size} style={{ objectFit: "contain", borderRadius: 4, flexShrink: 0 }} />;
+  return <img src={src} alt="" width={size} height={size} style={{ objectFit: "contain", borderRadius: 4, flexShrink: 0 }} />;
 }
 
 function punktyLabel(p) {

@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 
 const BADGE_EMOJI = [
   { e: "⚽", label: "Gol" },
@@ -298,7 +297,7 @@ export default function Komentarze({ typ, targetId }) {
                         {k.odpowiedz && (
                           <div style={{ marginTop: 8, padding: "8px 10px", background: "rgba(59,130,246,0.06)", border: "1px solid rgba(59,130,246,0.12)", borderRadius: 8, borderLeft: "3px solid #3b82f6" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
-                              <Image src="/logo.png" alt="" width={16} height={16} style={{ objectFit: "contain", borderRadius: 2 }} />
+                              <img src="/logo.png" alt="" width={16} height={16} style={{ objectFit: "contain", borderRadius: 2 }} />
                               <span style={{ fontSize: 11, fontWeight: 700, color: "#3b82f6" }}>MKS DRAWA DRAWNO</span>
                             </div>
                             <div style={{ fontSize: 12, color: "#cbd5e1", lineHeight: 1.5, whiteSpace: "pre-wrap" }}>{k.odpowiedz}</div>

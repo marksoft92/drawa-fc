@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 const Placeholder = ({ style = {} }) => (
   <div style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', ...style }}>
@@ -31,7 +30,8 @@ const NewsCard = ({ artykul }) => (
     >
       <div style={{ position: 'relative', aspectRatio: '16/9' }}>
         {artykul.thumbnail ? (
-          <Image src={artykul.thumbnail} alt={artykul.title} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 100vw, 400px" />
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={artykul.thumbnail} alt={artykul.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         ) : (
           <Placeholder style={{ height: '100%' }} />
         )}
@@ -74,7 +74,8 @@ const PinnedCard = ({ artykul }) => (
         <div style={{ position: 'relative', width: '45%', minHeight: 200, flexShrink: 0 }} className="pinned-img">
           <style>{`@media (max-width: 640px) { .pinned-img { width: 100% !important; height: 200px !important; } }`}</style>
           {artykul.thumbnail ? (
-            <Image src={artykul.thumbnail} alt={artykul.title} fill style={{ objectFit: 'cover' }} sizes="(max-width: 640px) 100vw, 45vw" />
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={artykul.thumbnail} alt={artykul.title} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }} />
           ) : (
             <Placeholder style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }} />
           )}

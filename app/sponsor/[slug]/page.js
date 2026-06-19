@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import NavBar from "@/components/NavBar";
 import { prisma } from "@/lib/prisma";
 
@@ -57,7 +56,7 @@ export default async function SponsorPage({ params }) {
           <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 32, flexWrap: "wrap" }}>
             {s.logo && (
               // eslint-disable-next-line @next/next/no-img-element
-              <Image src={s.logo} alt={s.nazwa} width={160} height={72} style={{ objectFit: "contain", borderRadius: 8, background: "rgba(255,255,255,0.04)", padding: 12 }} />
+              <img src={s.logo} alt={s.nazwa} style={{ height: 72, objectFit: "contain", borderRadius: 8, background: "rgba(255,255,255,0.04)", padding: 12 }} />
             )}
             <div>
               <div style={{ fontSize: 10, letterSpacing: "0.2em", color: "#22c55e", marginBottom: 6 }}>SPONSOR MKS DRAWA DRAWNO</div>

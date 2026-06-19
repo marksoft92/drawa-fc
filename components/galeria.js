@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import Image from 'next/image';
 
 const Placeholder = ({ caption, style = {} }) => (
   <div style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, ...style }}>
@@ -21,7 +20,8 @@ const AlbumCard = ({ album, onClick }) => {
     >
       <div style={{ position: 'relative', height: 180, overflow: 'hidden' }}>
         {album.thumbnail
-          ? <Image src={album.thumbnail} alt={album.tytul} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 50vw, 300px" />
+          // eslint-disable-next-line @next/next/no-img-element
+          ? <img src={album.thumbnail} alt={album.tytul} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           : <Placeholder caption={album.tytul} style={{ height: '100%' }} />
         }
         <div style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.7)', color: '#94a3b8', fontSize: 10, padding: '3px 8px', borderRadius: 20, backdropFilter: 'blur(4px)' }}>
@@ -83,7 +83,8 @@ const Lightbox = ({ album, startIndex, onClose }) => {
         style={{ maxWidth: '90vw', maxHeight: '70vh', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
         {photo?.src
-          ? <Image src={photo.src} alt={photo.caption || ''} width={900} height={600} style={{ maxWidth: '100%', maxHeight: '70vh', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: 8 }} sizes="90vw" />
+          // eslint-disable-next-line @next/next/no-img-element
+          ? <img src={photo.src} alt={photo.caption || ''} style={{ maxWidth: '100%', maxHeight: '70vh', objectFit: 'contain', borderRadius: 8 }} />
           : <Placeholder caption={photo?.caption} style={{ width: '100%', height: '60vh', borderRadius: 8 }} />
         }
       </div>
@@ -106,7 +107,8 @@ const Lightbox = ({ album, startIndex, onClose }) => {
           <div ref={stripRef} onClick={(e) => e.stopPropagation()} style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 8, padding: '8px 12px', background: 'rgba(0,0,0,0.6)', borderRadius: 12, backdropFilter: 'blur(8px)', maxWidth: '90vw', overflowX: 'auto', scrollbarWidth: 'none' }}>
             {photos.map((p, i) => (
               <div key={i} onClick={() => setCurrent(i)} style={{ width: 48, height: 48, borderRadius: 6, overflow: 'hidden', cursor: 'pointer', flexShrink: 0, border: i === current ? '2px solid #3b82f6' : '2px solid rgba(255,255,255,0.1)', opacity: i === current ? 1 : 0.6 }}>
-                {p.src ? <Image src={p.src} alt={p.caption || 'Zdjęcie z galerii MKS Drawa Drawno'} fill style={{ objectFit: 'cover' }} sizes="48px" /> : <div style={{ width: '100%', height: '100%', background: '#1e293b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>⚽</div>}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                {p.src ? <img src={p.src} alt={p.caption || 'Zdjęcie z galerii MKS Drawa Drawno'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', background: '#1e293b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>⚽</div>}
               </div>
             ))}
           </div>

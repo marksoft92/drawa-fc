@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 
 const MODELS = [
   { id: 'google/gemma-4-31b-it:free', label: 'Gemma 4 31B' },
@@ -213,7 +212,7 @@ export default function DrawaChat() {
         <div className="drawa-chat-panel">
           {/* Header */}
           <div style={{ padding: '12px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-            <Image src="/logo.png" alt="Drawa" width={28} height={28} style={{ objectFit: 'contain' }} />
+            <img src="/logo.png" alt="Drawa" width={28} height={28} style={{ objectFit: 'contain' }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: '#fff', fontFamily: "'Bebas Neue', Impact, sans-serif", letterSpacing: '0.08em' }}>ASYSTENT DRAWY</div>
               <div style={{ fontSize: 9, color: '#475569', letterSpacing: '0.1em' }}>AI · Sezon 2025/26</div>
