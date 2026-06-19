@@ -8,6 +8,7 @@ const kolumny = [
       { label: 'Aktualności', href: '/aktualnosci' },
       { label: 'Kadra', href: '/kadra' },
       { label: 'Galeria', href: '/galeria' },
+      { label: 'Wideo', href: '/wideo' },
       { label: 'Archiwum', href: '/archiwum' },
       { label: 'Współpraca', href: '/wspolpraca' },
       { label: 'Sponsorzy', href: '#sponsorzy' },
@@ -29,6 +30,7 @@ const kolumny = [
       { label: 'kontakt@mksdrawadrawno.pl', href: 'mailto:kontakt@mksdrawadrawno.pl' },
       { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=100031740656452' },
       { label: 'Instagram', href: 'https://www.instagram.com/mksdrawadrawno/' },
+      { label: 'YouTube', href: 'https://www.youtube.com/@MKS_DRAWA_DRAWNO' },
     ],
   },
 ];

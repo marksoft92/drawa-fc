@@ -11,6 +11,7 @@ const FIELDS = [
   { key: "emailPrezes",  label: "EMAIL PREZESA",         placeholder: "jakub.zygala05@o2.pl" },
   { key: "facebook",     label: "FACEBOOK URL",          placeholder: "https://www.facebook.com/..." },
   { key: "instagram",    label: "INSTAGRAM URL",         placeholder: "https://www.instagram.com/..." },
+  { key: "youtube",      label: "YOUTUBE URL",           placeholder: "https://www.youtube.com/@MKS_DRAWA_DRAWNO" },
   { key: "liga",         label: "NAZWA LIGI",            placeholder: "A klasa" },
   { key: "ligaLink",     label: "LINK DO ROZGRYWEK",    placeholder: "https://rozgrywki.zzpn.pl/..." },
   { key: "ligaSezon",    label: "SEZON LIGI",            placeholder: "2025/26" },

@@ -71,16 +71,17 @@ async function getHomeData() {
     const ust = Object.fromEntries(ustawienia.map((r) => [r.klucz, r.wartosc]));
     const sezonNazwa = ust.aktywny_sezon || "2025/26";
 
-    const [tabela, mecze] = await Promise.all([
+    const [tabela, mecze, wideo] = await Promise.all([
       prisma.tabelaDruzyna.findMany({ where: { sezon: sezonNazwa }, orderBy: { pozycja: "asc" } }),
       prisma.mecz.findMany({ where: { sezon: sezonNazwa }, orderBy: { date: "asc" } }),
+      prisma.wideo.findMany({ where: { published: true }, orderBy: [{ kolejnosc: "asc" }, { createdAt: "desc" }] }),
     ]);
 
-    const hp = { ustawienia: ust, aktualnosci, galeria, sponsorzy, struktura, kadra: kadraData, allTimeStats: archiwumStats };
+    const hp = { ustawienia: ust, aktualnosci, galeria, sponsorzy, struktura, kadra: kadraData, allTimeStats: archiwumStats, wideo };
 
     return { tabela: JSON.parse(JSON.stringify(tabela)), mecze: JSON.parse(JSON.stringify(mecze)), hp: JSON.parse(JSON.stringify(hp)) };
   } catch {
-    return { tabela: [], mecze: [], hp: { ustawienia: {}, aktualnosci: [], galeria: [], sponsorzy: [], struktura: [], kadra: { sezon: null, players: [] }, allTimeStats: null } };
+    return { tabela: [], mecze: [], hp: { ustawienia: {}, aktualnosci: [], galeria: [], sponsorzy: [], struktura: [], kadra: { sezon: null, players: [] }, allTimeStats: null, wideo: [] } };
   }
 }
 

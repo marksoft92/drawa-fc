@@ -17,6 +17,7 @@ import Sponsorzy from "@/components/sponsorzy";
 import Footer from "@/components/footer";
 import NotificationPrompt from "@/components/NotificationPrompt";
 import JakDojechac from "@/components/jakDojechac";
+import Wideo from "@/components/wideo";
 
 const DRAWA_HERB = "/logo.png";
 
@@ -226,6 +227,10 @@ export default function HomePageClient({ data }) {
 
         <div id="galeria">
           <Galeria SectionLabel={SectionLabel} data={hp?.galeria} limit={3}/>
+        </div>
+
+        <div id="wideo">
+          <Wideo SectionLabel={SectionLabel} data={hp?.wideo} limit={3} youtubeUrl={hp?.ustawienia?.youtube || "https://www.youtube.com/@MKS_DRAWA_DRAWNO"}/>
         </div>
 
         <div id="sponsorzy">

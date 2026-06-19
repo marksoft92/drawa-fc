@@ -7,7 +7,7 @@ const ALLOWED_KEYS = new Set([
   "adres", "adresLink", "telefon", "telefonOpis",
   "emailKlub", "emailPrezes", "facebook", "instagram",
   "liga", "ligaLink", "ligaSezon",
-  "aktywny_sezon", "aktywny_klasa",
+  "aktywny_sezon", "aktywny_klasa", "youtube",
   "backup_email", "backup_password",
 ]);
 

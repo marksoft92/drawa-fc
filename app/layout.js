@@ -115,6 +115,7 @@ export default function RootLayout({ children }) {
             sameAs: [
               "https://www.facebook.com/profile.php?id=100031740656452",
               "https://www.instagram.com/mksdrawadrawno/",
+              "https://www.youtube.com/@MKS_DRAWA_DRAWNO",
             ],
           }) }}
         />

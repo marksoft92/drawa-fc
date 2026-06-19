@@ -234,6 +234,19 @@ model Album {
   updatedAt  DateTime @updatedAt
 }
 
+// ─── Wideo (YouTube) ──────────────────────────────────────────────────────────
+
+model Wideo {
+  id        String   @id @default(cuid())
+  url       String
+  tytul     String
+  typ       String   @default("video")
+  kolejnosc Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // ─── Ustawienia (klucz-wartość) ───────────────────────────────────────────────
 
 model Ustawienie {
