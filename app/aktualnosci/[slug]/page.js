@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import NavBar from '@/components/NavBar';
 import ArticleGallery from '@/components/ArticleGallery';
 import Komentarze from '@/components/Komentarze';
@@ -115,9 +116,11 @@ export default async function ArticlePage({ params }) {
 
           {photos[0]?.src && (
             <div style={{ borderRadius: 12, overflow: 'hidden', marginBottom: 32, background: '#000', border: '1px solid rgba(255,255,255,0.06)' }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={photos[0].src} alt={photos[0].caption || a.title}
-                style={{ display: 'block', width: '100%', maxHeight: hasRealPhotos ? 520 : 220, objectFit: 'contain', background: hasRealPhotos ? '#000' : '#0f172a' }}
+              <Image src={photos[0].src} alt={photos[0].caption || a.title}
+                width={800} height={hasRealPhotos ? 520 : 220}
+                style={{ display: 'block', width: '100%', height: 'auto', maxHeight: hasRealPhotos ? 520 : 220, objectFit: 'contain', background: hasRealPhotos ? '#000' : '#0f172a' }}
+                sizes="(max-width: 768px) 100vw, 700px"
+                priority
               />
             </div>
           )}
@@ -128,8 +131,7 @@ export default async function ArticlePage({ params }) {
               if (imgMatch) {
                 return (
                   <div key={i} style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)', lineHeight: 0 }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={imgMatch[1]} alt={a.title} style={{ display: 'block', width: '100%', height: 'auto' }} />
+                    <Image src={imgMatch[1]} alt={a.title} width={700} height={400} style={{ display: 'block', width: '100%', height: 'auto' }} sizes="(max-width: 768px) 100vw, 700px" />
                   </div>
                 );
               }
@@ -154,8 +156,9 @@ export default async function ArticlePage({ params }) {
                   <Link key={p.slug} href={`/aktualnosci/${p.slug}`} style={{ textDecoration: 'none' }}>
                     <div style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.06)', borderTop: `3px solid ${p.kolor || '#3b82f6'}`, borderRadius: 10, overflow: 'hidden' }}>
                       {p.thumbnail && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={p.thumbnail} alt={p.title} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
+                        <div style={{ position: 'relative', height: 120 }}>
+                          <Image src={p.thumbnail} alt={p.title} fill style={{ objectFit: 'cover' }} sizes="250px" />
+                        </div>
                       )}
                       <div style={{ padding: '12px 14px' }}>
                         <div style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0', lineHeight: 1.35, marginBottom: 6 }}>{p.title}</div>

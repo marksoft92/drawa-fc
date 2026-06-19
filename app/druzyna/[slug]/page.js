@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import NavBar from "@/components/NavBar";
 import { getAllOpponents, computeStats, isDrawa, getHerb } from "@/lib/rywale";
 
@@ -84,14 +85,13 @@ export default async function DruzynaPage({ params }) {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "clamp(16px, 4vw, 40px)", marginBottom: 16 }}>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={drawaHerb} alt="Drawa Drawno" style={{ width: 64, height: 64, objectFit: "contain", borderRadius: 6 }} />
+              <Image src={drawaHerb} alt="Drawa Drawno" width={64} height={64} style={{ objectFit: "contain", borderRadius: 6 }} />
               <span style={{ fontSize: 12, fontWeight: 700, color: "#3b82f6", letterSpacing: "0.06em" }}>DRAWA</span>
             </div>
             <span style={{ fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: "clamp(24px, 5vw, 40px)", color: "#1e3a5f", letterSpacing: "0.1em" }}>VS</span>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
               {herb
-                // eslint-disable-next-line @next/next/no-img-element
-                ? <img src={herb} alt={nazwa} style={{ width: 64, height: 64, objectFit: "contain", borderRadius: 6 }} />
+                ? <Image src={herb} alt={nazwa} width={64} height={64} style={{ objectFit: "contain", borderRadius: 6 }} />
                 : <div style={{ width: 64, height: 64, borderRadius: 6, background: "rgba(148,163,184,0.1)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, fontWeight: 700, color: "#64748b" }}>{nazwa.charAt(0)}</div>
               }
               <span style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.06em", maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{nazwa.toUpperCase()}</span>

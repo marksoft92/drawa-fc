@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const isDrawa = (name) => name?.toLowerCase().includes("drawa");
 
@@ -139,8 +140,7 @@ export default function NavBar({ backLabel }) {
  >
  {/* Logo */}
  <Link href={backLabel ? "/" : "#"} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
- {/* eslint-disable-next-line @next/next/no-img-element */}
- <img src="/logo.png" alt="MKS Drawa" width={60} height={60} style={{ objectFit: "contain", borderRadius: 4 }} />
+ <Image src="/logo.png" alt="MKS Drawa" width={60} height={60} style={{ objectFit: "contain", borderRadius: 4 }} />
  <div>
  <div style={{ fontSize: 14, fontFamily: "'Bebas Neue', Impact, sans-serif", letterSpacing: "0.1em", color: "#fff", lineHeight: 1 }}>
  MKS Drawa

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import NavBar from "@/components/NavBar";
 import { prisma } from "@/lib/prisma";
 import { isDrawa } from "@/lib/ligaUtils";
@@ -98,7 +99,7 @@ export default async function MeczPage({ params }) {
               <div style={{ textAlign: "center" }}>
                 {m.herb1 && !m.herb1.includes("flags/0") && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={drawa1 ? "/logo.png" : m.herb1} alt={m.team1} width={drawa1 ? 56 : 44} height={drawa1 ? 56 : 44} style={{ objectFit: "contain", borderRadius: 4, marginBottom: 8 }} />
+                  <Image src={drawa1 ? "/logo.png" : (m.herb1 || "/logo.png")} alt={m.team1} width={drawa1 ? 56 : 44} height={drawa1 ? 56 : 44} style={{ objectFit: "contain", borderRadius: 4, marginBottom: 8 }} />
                 )}
                 <div style={{ fontSize: 13, fontWeight: drawa1 ? 700 : 400, color: drawa1 ? "#3b82f6" : "#e2e8f0" }}>{m.team1}</div>
               </div>
@@ -110,7 +111,7 @@ export default async function MeczPage({ params }) {
               <div style={{ textAlign: "center" }}>
                 {m.herb2 && !m.herb2.includes("flags/0") && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={drawa2 ? "/logo.png" : m.herb2} alt={m.team2} width={drawa2 ? 56 : 44} height={drawa2 ? 56 : 44} style={{ objectFit: "contain", borderRadius: 4, marginBottom: 8 }} />
+                  <Image src={drawa2 ? "/logo.png" : (m.herb2 || "/logo.png")} alt={m.team2} width={drawa2 ? 56 : 44} height={drawa2 ? 56 : 44} style={{ objectFit: "contain", borderRadius: 4, marginBottom: 8 }} />
                 )}
                 <div style={{ fontSize: 13, fontWeight: drawa2 ? 700 : 400, color: drawa2 ? "#3b82f6" : "#e2e8f0" }}>{m.team2}</div>
               </div>
