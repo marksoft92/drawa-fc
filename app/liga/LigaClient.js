@@ -196,7 +196,6 @@ export default function LigaClient({ mecze }) {
   const [showAll, setShowAll] = useState(false);
 
   const sorted = [...mecze].sort((a, b) => parseDate(a.date) - parseDate(b.date));
-  const visible = showAll ? sorted : sorted.slice(0, 8);
 
   return (
     <>
@@ -210,7 +209,11 @@ export default function LigaClient({ mecze }) {
         <span style={{ fontSize: "clamp(20px, 4vw, 28px)", fontFamily: "'Bebas Neue', Impact, sans-serif", letterSpacing: "0.1em", fontWeight: "normal" }}>Mecze sezonu</span>
       </h2>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {visible.map(m => <MatchCard key={m.id} mecz={m} />)}
+        {sorted.map((m, i) => (
+          <div key={m.id} style={{ display: !showAll && i >= 8 ? "none" : "block" }}>
+            <MatchCard mecz={m} />
+          </div>
+        ))}
       </div>
 
       {sorted.length > 8 && (
