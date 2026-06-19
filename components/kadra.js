@@ -315,7 +315,7 @@ function PositionSection({ pozycja, zawodnicy, maxes }) {
 }
 
 /* ─── Główny komponent ─── */
-export default function Kadra({ SectionLabel, kadraData }) {
+export default function Kadra({ SectionLabel, kadraData, showLink }) {
   const [zawodnicy, setZawodnicy] = useState([]);
   const [sezon, setSezon] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -409,6 +409,16 @@ export default function Kadra({ SectionLabel, kadraData }) {
                 cardRef={(el) => { cardRefs.current[z.id] = el; }}
               />
             ))}
+          </div>
+        )}
+        {showLink && (
+          <div style={{ marginTop: 24, textAlign: 'center' }}>
+            <a
+              href="/kadra"
+              style={{ display: 'inline-block', padding: '12px 32px', borderRadius: 8, border: '1px solid rgba(59,130,246,0.3)', color: '#3b82f6', fontSize: 12, letterSpacing: '0.14em', textDecoration: 'none', fontWeight: 600 }}
+            >
+              ZOBACZ PEŁNĄ KADRĘ →
+            </a>
           </div>
         )}
       </div>

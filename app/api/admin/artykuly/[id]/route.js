@@ -27,6 +27,7 @@ export async function PATCH(request, { params }) {
   if (body.photos !== undefined)    data.photos    = Array.isArray(body.photos) ? body.photos : [];
   if (body.published !== undefined) data.published = body.published;
   if (body.pinned !== undefined)    data.pinned    = body.pinned;
+  if (body.podobne !== undefined)   data.podobne   = Array.isArray(body.podobne) ? body.podobne : [];
   if (body.date !== undefined)      data.date      = body.date;
 
   const artykul = await prisma.artykul.update({ where: { id }, data });

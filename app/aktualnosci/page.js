@@ -1,7 +1,8 @@
-"use client";
-
 import NavBar from "@/components/NavBar";
 import Aktualnosci from "@/components/aktualnosci";
+import { prisma } from "@/lib/prisma";
+
+export const revalidate = 60;
 
 const SectionLabel = ({ children }) => (
  <h2 style={{ display: "flex", alignItems: "center", gap: 12, margin: 0 }}>
@@ -20,19 +21,25 @@ const SectionLabel = ({ children }) => (
  </h2>
 );
 
-export default function AktualnosciPage() {
+export default async function AktualnosciPage() {
+ const artykuly = await prisma.artykul.findMany({
+   where: { published: true },
+   orderBy: { date: "desc" },
+   select: {
+     id: true, slug: true, title: true, excerpt: true,
+     thumbnail: true, kolor: true, tags: true, date: true, pinned: true,
+   },
+ });
+
  return (
  <>
- <style>{`
- @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
- * { box-sizing: border-box; margin: 0; padding: 0; }
- body { background: #030712; color: #fff; font-family: -apple-system, 'Segoe UI', sans-serif; }
- `}</style>
-
  <NavBar backLabel="Strona główna" />
 
  <div style={{ paddingTop: 64 }}>
- <Aktualnosci SectionLabel={SectionLabel} showAll={true} />
+ <h1 style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", borderWidth: 0 }}>
+   Aktualności MKS Drawa Drawno
+ </h1>
+ <Aktualnosci SectionLabel={SectionLabel} showAll={true} data={JSON.parse(JSON.stringify(artykuly))} />
  </div>
  </>
  );

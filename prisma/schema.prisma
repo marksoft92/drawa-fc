@@ -118,6 +118,7 @@ model Artykul {
   photos    Json     @default("[]")
   published Boolean  @default(true)
   pinned    Boolean  @default(false)
+  podobne   String[] @default([])
   date      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -6,7 +6,7 @@ const emptyForm = () => ({
   title: "", slug: "", excerpt: "", content: "",
   thumbnail: "", kolor: "#3b82f6",
   tags: "", date: new Date().toISOString().slice(0, 10),
-  photos: [], published: true, pinned: false,
+  photos: [], published: true, pinned: false, podobne: [],
 });
 
 function slugify(str) {
@@ -278,6 +278,7 @@ export default function AktualnosciAdmin() {
       tags: (d.tags || []).join(", "), date: d.date,
       photos: Array.isArray(d.photos) ? d.photos : [],
       published: d.published, pinned: d.pinned ?? false,
+      podobne: Array.isArray(d.podobne) ? d.podobne : [],
     });
     setView("form");
   }
@@ -452,6 +453,38 @@ export default function AktualnosciAdmin() {
                   isLast={i === form.photos.length - 1}
                 />
               ))}
+            </div>
+          )}
+        </div>
+
+        {/* Podobne artykuły */}
+        <div style={card}>
+          <label style={lbl}>Podobne artykuły (max 4)</label>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 240, overflowY: "auto" }}>
+            {artykuly.filter(a => a.id !== editId).map(a => (
+              <label key={a.id} style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", fontSize: 12, color: form.podobne.includes(a.id) ? "#3b82f6" : "#94a3b8", padding: "6px 10px", borderRadius: 6, background: form.podobne.includes(a.id) ? "rgba(59,130,246,0.08)" : "transparent", border: form.podobne.includes(a.id) ? "1px solid rgba(59,130,246,0.3)" : "1px solid transparent" }}>
+                <input
+                  type="checkbox"
+                  checked={form.podobne.includes(a.id)}
+                  onChange={e => {
+                    setForm(p => {
+                      if (e.target.checked) {
+                        if (p.podobne.length >= 4) return p;
+                        return { ...p, podobne: [...p.podobne, a.id] };
+                      }
+                      return { ...p, podobne: p.podobne.filter(id => id !== a.id) };
+                    });
+                  }}
+                  style={{ width: 14, height: 14, accentColor: "#3b82f6", flexShrink: 0 }}
+                />
+                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.title}</span>
+                <span style={{ fontSize: 10, color: "#334155", flexShrink: 0, marginLeft: "auto" }}>{a.date}</span>
+              </label>
+            ))}
+          </div>
+          {form.podobne.length > 0 && (
+            <div style={{ marginTop: 8, fontSize: 11, color: "#475569" }}>
+              Wybrano: {form.podobne.length}/4
             </div>
           )}
         </div>

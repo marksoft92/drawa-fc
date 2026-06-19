@@ -182,7 +182,7 @@ export default function HomePageClient({ data }) {
       <MatchdayBanner />
 
       <main style={{paddingTop: 64}}>
-        <Hero tabela={heroData} allTimeStats={hp?.allTimeStats}/>
+        <Hero tabela={heroData} allTimeStats={hp?.allTimeStats} ustawienia={hp?.ustawienia}/>
 
         <div id="aktualnosci">
           <Aktualnosci SectionLabel={SectionLabel} data={hp?.aktualnosci}/>
@@ -224,7 +224,7 @@ export default function HomePageClient({ data }) {
         </div>
 
         <div id="galeria">
-          <Galeria SectionLabel={SectionLabel} data={hp?.galeria}/>
+          <Galeria SectionLabel={SectionLabel} data={hp?.galeria} limit={3}/>
         </div>
 
         <div id="sponsorzy">
@@ -232,7 +232,7 @@ export default function HomePageClient({ data }) {
         </div>
 
         <div id="kadra">
-          <Kadra SectionLabel={SectionLabel} kadraData={hp?.kadra}/>
+          <Kadra SectionLabel={SectionLabel} kadraData={hp?.kadra} showLink/>
         </div>
 
         <div id="struktura">

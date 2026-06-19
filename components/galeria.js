@@ -108,7 +108,7 @@ const Lightbox = ({ album, startIndex, onClose }) => {
             {photos.map((p, i) => (
               <div key={i} onClick={() => setCurrent(i)} style={{ width: 48, height: 48, borderRadius: 6, overflow: 'hidden', cursor: 'pointer', flexShrink: 0, border: i === current ? '2px solid #3b82f6' : '2px solid rgba(255,255,255,0.1)', opacity: i === current ? 1 : 0.6 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                {p.src ? <img src={p.src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', background: '#1e293b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>⚽</div>}
+                {p.src ? <img src={p.src} alt={p.caption || 'Zdjęcie z galerii MKS Drawa Drawno'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', background: '#1e293b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>⚽</div>}
               </div>
             ))}
           </div>
@@ -118,7 +118,7 @@ const Lightbox = ({ album, startIndex, onClose }) => {
   );
 };
 
-export default function Galeria({ SectionLabel, data }) {
+export default function Galeria({ SectionLabel, data, limit }) {
   const [albumy, setAlumy] = useState(data || []);
   const [lightbox, setLightbox] = useState(null);
 
@@ -130,6 +130,8 @@ export default function Galeria({ SectionLabel, data }) {
       .catch(() => {});
   }, [data]);
 
+  const visible = limit ? albumy.slice(0, limit) : albumy;
+  const hasMore = limit && albumy.length > limit;
   const activeAlbum = lightbox ? albumy.find((a) => a.id === lightbox.albumId) : null;
 
   return (
@@ -140,10 +142,20 @@ export default function Galeria({ SectionLabel, data }) {
           {albumy.length > 0 ? `${albumy.length} albumów` : ''}
         </div>
         <div style={{ marginTop: 24, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
-          {albumy.map((album) => (
+          {visible.map((album) => (
             <AlbumCard key={album.id} album={album} onClick={() => setLightbox({ albumId: album.id, photoIndex: 0 })} />
           ))}
         </div>
+        {hasMore && (
+          <div style={{ marginTop: 24, textAlign: 'center' }}>
+            <a
+              href="/galeria"
+              style={{ display: 'inline-block', padding: '12px 32px', borderRadius: 8, border: '1px solid rgba(59,130,246,0.3)', color: '#3b82f6', fontSize: 12, letterSpacing: '0.14em', textDecoration: 'none', fontWeight: 600, transition: 'background 0.2s, border-color 0.2s' }}
+            >
+              ZOBACZ WSZYSTKIE ALBUMY ({albumy.length}) →
+            </a>
+          </div>
+        )}
       </div>
       {activeAlbum && <Lightbox album={activeAlbum} startIndex={lightbox.photoIndex} onClose={() => setLightbox(null)} />}
     </section>

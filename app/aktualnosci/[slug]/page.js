@@ -44,6 +44,14 @@ export default async function ArticlePage({ params }) {
 
   const paragraphs = a.content.split('\n\n').filter(Boolean);
 
+  const podobneIds = Array.isArray(a.podobne) ? a.podobne : [];
+  const podobne = podobneIds.length > 0
+    ? await prisma.artykul.findMany({
+        where: { id: { in: podobneIds }, published: true },
+        select: { slug: true, title: true, thumbnail: true, date: true, kolor: true },
+      })
+    : [];
+
   return (
     <>
       <style>{`
@@ -129,7 +137,7 @@ export default async function ArticlePage({ params }) {
                 return (
                   <div key={i} style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)', lineHeight: 0 }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={imgMatch[1]} alt="" style={{ display: 'block', width: '100%', height: 'auto' }} />
+                    <img src={imgMatch[1]} alt={a.title} style={{ display: 'block', width: '100%', height: 'auto' }} />
                   </div>
                 );
               }
@@ -141,6 +149,28 @@ export default async function ArticlePage({ params }) {
           </div>
 
           {photos.length > 1 && <ArticleGallery photos={photos} />}
+
+          {podobne.length > 0 && (
+            <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', color: '#475569', marginBottom: 16 }}>PODOBNE ARTYKUŁY</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
+                {podobne.map(p => (
+                  <Link key={p.slug} href={`/aktualnosci/${p.slug}`} style={{ textDecoration: 'none' }}>
+                    <div style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.06)', borderTop: `3px solid ${p.kolor || '#3b82f6'}`, borderRadius: 10, overflow: 'hidden' }}>
+                      {p.thumbnail && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={p.thumbnail} alt={p.title} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
+                      )}
+                      <div style={{ padding: '12px 14px' }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0', lineHeight: 1.35, marginBottom: 6 }}>{p.title}</div>
+                        <div style={{ fontSize: 11, color: '#334155' }}>{p.date}</div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           <Komentarze typ="artykul" targetId={a.id} />
 

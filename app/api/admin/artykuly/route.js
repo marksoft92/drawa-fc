@@ -17,7 +17,7 @@ export async function POST(request) {
   if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
 
   const body = await request.json();
-  const { slug, title, excerpt, content, thumbnail, kolor, tags, photos, published, pinned, date } = body;
+  const { slug, title, excerpt, content, thumbnail, kolor, tags, photos, published, pinned, date, podobne } = body;
 
   if (!slug?.trim() || !title?.trim()) {
     return Response.json({ error: "Slug i tytuł są wymagane" }, { status: 400 });
@@ -38,6 +38,7 @@ export async function POST(request) {
       photos: Array.isArray(photos) ? photos : [],
       published: published ?? true,
       pinned: pinned ?? false,
+      podobne: Array.isArray(podobne) ? podobne : [],
       date: date || new Date().toISOString().slice(0, 10),
     },
   });

@@ -5,9 +5,9 @@ const kolumny = [
   {
     tytul: 'Klub',
     linki: [
-      { label: 'Aktualności', href: '#aktualnosci' },
-      { label: 'Kadra', href: '#kadra' },
-      { label: 'Galeria', href: '#galeria' },
+      { label: 'Aktualności', href: '/aktualnosci' },
+      { label: 'Kadra', href: '/kadra' },
+      { label: 'Galeria', href: '/galeria' },
       { label: 'Archiwum', href: '/archiwum' },
       { label: 'Współpraca', href: '/wspolpraca' },
       { label: 'Sponsorzy', href: '#sponsorzy' },
@@ -18,7 +18,7 @@ const kolumny = [
     linki: [
       { label: 'Mecze', href: '#mecze' },
       { label: 'Tabela', href: '#tabela' },
-      { label: 'Statystyki', href: '#statystyki' },
+      { label: 'Statystyki', href: '/statystyki' },
       { label: 'Typowanie', href: '/typowanie' },
     ],
   },
