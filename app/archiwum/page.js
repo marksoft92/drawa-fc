@@ -33,9 +33,7 @@ export default async function ArchiwumPage() {
 
   return (
     <>
-      <h1 style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", borderWidth: 0 }}>
-        Archiwum wyników MKS Drawa Drawno
-      </h1>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Strona główna", item: "https://mksdrawadrawno.pl" }, { "@type": "ListItem", position: 2, name: "Archiwum" }] }) }} />
       <ArchiwumClient initialData={initialData} />
     </>
   );

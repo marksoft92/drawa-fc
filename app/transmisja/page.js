@@ -96,7 +96,7 @@ export default function TransmisjaPage() {
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
       `}</style>
 
-      {/* Pełny ekran */}
+      <h1 style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", borderWidth: 0 }}>Transmisja na żywo — MKS Drawa Drawno</h1>
       <div style={{ position: "fixed", inset: 0, background: "#000" }}>
 
         {/* ── Stream ── */}
