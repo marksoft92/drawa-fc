@@ -13,13 +13,14 @@ export async function GET() {
 
 export async function POST(request) {
   if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
-  const { nazwa, logo, href, kolejnosc, aktywny } = await request.json();
+  const { nazwa, logo, href, opis, kolejnosc, aktywny } = await request.json();
   if (!nazwa?.trim()) return Response.json({ error: "Nazwa jest wymagana" }, { status: 400 });
   const sponsor = await prisma.sponsor.create({
     data: {
       nazwa: nazwa.trim(),
       logo: logo?.trim() || null,
       href: href?.trim() || null,
+      opis: opis?.trim() || null,
       kolejnosc: Number(kolejnosc) || 0,
       aktywny: aktywny !== false,
     },

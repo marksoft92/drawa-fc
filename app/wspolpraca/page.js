@@ -19,7 +19,7 @@ export const metadata = {
 
 export default async function WspolpracaPage() {
   const [sponsorzy, archStats] = await Promise.all([
-    prisma.sponsor.findMany({ where: { aktywny: true }, orderBy: { kolejnosc: "asc" }, select: { nazwa: true, logo: true, href: true } }),
+    prisma.sponsor.findMany({ where: { aktywny: true }, orderBy: { kolejnosc: "asc" }, select: { nazwa: true, logo: true, href: true, opis: true } }),
     (async () => {
       const sezony = await prisma.archiwumSezon.findMany({
         where: { NOT: { liga: { contains: "Puchar" } } },
@@ -196,14 +196,24 @@ export default async function WspolpracaPage() {
               <p style={{ fontSize: 14, color: "#64748b", marginBottom: 24, lineHeight: 1.7 }}>
                 Dziękujemy firmom, które już nas wspierają. Dołącz do tego grona.
               </p>
-              <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
                 {sponsorzy.map((s) => (
-                  <div key={s.nazwa} style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "16px 24px", display: "flex", alignItems: "center", gap: 12 }}>
-                    {s.logo && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={s.logo} alt={s.nazwa} style={{ height: 40, objectFit: "contain", opacity: 0.8 }} />
-                    )}
-                    <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>{s.nazwa}</span>
+                  <div key={s.nazwa} style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "20px 24px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: s.opis ? 10 : 0 }}>
+                      {s.logo && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={s.logo} alt={s.nazwa} style={{ height: 40, objectFit: "contain", opacity: 0.85, flexShrink: 0 }} />
+                      )}
+                      <div>
+                        <div style={{ fontSize: 13, color: "#e2e8f0", fontWeight: 600 }}>{s.nazwa}</div>
+                        {s.href && (
+                          <a href={s.href} target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: "#3b82f6", textDecoration: "none" }}>
+                            {s.href.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                    {s.opis && <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.6 }}>{s.opis}</div>}
                   </div>
                 ))}
               </div>

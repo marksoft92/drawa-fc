@@ -410,9 +410,30 @@ export default function AktualnosciAdmin() {
 
         {/* Zajawka */}
         <div style={card}>
-          <label style={lbl}>ZAJAWKA</label>
-          <textarea style={{ ...inp, height: 72, resize: "vertical" }} value={form.excerpt} onChange={f("excerpt")} placeholder="Krótki opis widoczny na liście..." />
+          <label style={lbl}>ZAJAWKA (= meta description w Google)</label>
+          <textarea style={{ ...inp, height: 72, resize: "vertical" }} value={form.excerpt} onChange={f("excerpt")} placeholder="Krótki opis widoczny na liście i w wynikach Google..." />
+          <div style={{ fontSize: 10, color: form.excerpt.length > 160 ? "#ef4444" : "#334155", marginTop: 4 }}>
+            {form.excerpt.length}/160 znaków {form.excerpt.length > 160 ? "— za długo dla Google" : ""}
+          </div>
         </div>
+
+        {/* Podgląd Google */}
+        {form.title && (
+          <div style={{ ...card, background: "rgba(255,255,255,0.03)" }}>
+            <label style={lbl}>PODGLĄD W GOOGLE</label>
+            <div style={{ fontFamily: "Arial, sans-serif", maxWidth: 600 }}>
+              <div style={{ fontSize: 18, color: "#8ab4f8", lineHeight: 1.3, marginBottom: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {form.title} | MKS Drawa Drawno
+              </div>
+              <div style={{ fontSize: 12, color: "#bdc1c6", marginBottom: 4 }}>
+                mksdrawadrawno.pl › aktualnosci › {form.slug || "..."}
+              </div>
+              <div style={{ fontSize: 13, color: "#9aa0a6", lineHeight: 1.5 }}>
+                {form.excerpt ? (form.excerpt.length > 160 ? form.excerpt.slice(0, 157) + "..." : form.excerpt) : "Brak opisu — Google wyświetli fragment treści artykułu."}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Treść */}
         <div style={card}>

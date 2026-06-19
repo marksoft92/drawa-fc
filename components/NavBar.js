@@ -6,12 +6,12 @@ import Link from "next/link";
 const isDrawa = (name) => name?.toLowerCase().includes("drawa");
 
 const NAV_LINKS = [
- { label: "Aktualności", id: "aktualnosci" },
- { label: "Mecze", id: "mecze" },
- { label: "Tabela", id: "tabela" },
- { label: "Statystyki", id: "statystyki" },
- { label: "Galeria", id: "galeria" },
- { label: "Kadra", id: "kadra" },
+ { label: "Aktualności", href: "/aktualnosci" },
+ { label: "Liga", href: "/liga" },
+ { label: "Kadra", href: "/kadra" },
+ { label: "Galeria", href: "/galeria" },
+ { label: "Wideo", href: "/wideo" },
+ { label: "Statystyki", href: "/statystyki" },
  { label: "Archiwum", href: "/archiwum" },
  { label: "Typowanie", href: "/typowanie" },
  { label: "Kontakt", id: "kontakt" },

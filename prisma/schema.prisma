@@ -234,6 +234,19 @@ model Album {
   updatedAt  DateTime @updatedAt
 }
 
+// ─── Strony statyczne ─────────────────────────────────────────────────────────
+
+model Strona {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  tytul       String
+  tresc       String
+  metaOpis    String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 // ─── Wideo (YouTube) ──────────────────────────────────────────────────────────
 
 model Wideo {
@@ -276,6 +289,7 @@ model Sponsor {
   nazwa      String
   logo       String?
   href       String?
+  opis       String?
   kolejnosc  Int      @default(0)
   aktywny    Boolean  @default(true)
   createdAt  DateTime @default(now())

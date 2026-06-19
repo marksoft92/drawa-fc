@@ -3,6 +3,7 @@ import Link from 'next/link';
 import NavBar from '@/components/NavBar';
 import ArticleGallery from '@/components/ArticleGallery';
 import Komentarze from '@/components/Komentarze';
+import ShareButtons from '@/components/ShareButtons';
 import { prisma } from '@/lib/prisma';
 
 export const revalidate = 60;
@@ -140,6 +141,10 @@ export default async function ArticlePage({ params }) {
           </div>
 
           {photos.length > 1 && <ArticleGallery photos={photos} />}
+
+          <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <ShareButtons url={`https://mksdrawadrawno.pl/aktualnosci/${a.slug}`} title={a.title} />
+          </div>
 
           {podobne.length > 0 && (
             <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid rgba(255,255,255,0.06)' }}>

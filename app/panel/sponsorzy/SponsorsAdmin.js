@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 
-const emptyForm = () => ({ nazwa: "", logo: "", href: "", kolejnosc: 0, aktywny: true });
+const emptyForm = () => ({ nazwa: "", logo: "", href: "", opis: "", kolejnosc: 0, aktywny: true });
 
 async function uploadLogo(file, onError) {
   const fd = new FormData();
@@ -84,7 +84,7 @@ export default function SponsorsAdmin() {
 
   function openEdit(s) {
     setEditId(s.id);
-    setForm({ nazwa: s.nazwa, logo: s.logo || "", href: s.href || "", kolejnosc: s.kolejnosc, aktywny: s.aktywny });
+    setForm({ nazwa: s.nazwa, logo: s.logo || "", href: s.href || "", opis: s.opis || "", kolejnosc: s.kolejnosc, aktywny: s.aktywny });
     setError(""); setSuccess(""); setView("form");
   }
 
@@ -143,6 +143,11 @@ export default function SponsorsAdmin() {
             <div>
               <label style={lbl}>LINK (fanpage, strona www)</label>
               <input style={inp} value={form.href} onChange={f("href")} placeholder="https://www.facebook.com/..." />
+            </div>
+
+            <div>
+              <label style={lbl}>OPIS (widoczny na stronie współpracy)</label>
+              <textarea style={{ ...inp, height: 60, resize: "vertical" }} value={form.opis} onChange={f("opis")} placeholder="Czym zajmuje się firma, jaki jest jej wkład w klub..." />
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>

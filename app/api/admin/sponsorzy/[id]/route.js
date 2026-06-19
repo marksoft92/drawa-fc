@@ -11,6 +11,7 @@ export async function PATCH(request, { params }) {
   if (body.nazwa !== undefined) data.nazwa = body.nazwa.trim();
   if (body.logo !== undefined) data.logo = body.logo?.trim() || null;
   if (body.href !== undefined) data.href = body.href?.trim() || null;
+  if (body.opis !== undefined) data.opis = body.opis?.trim() || null;
   if (body.kolejnosc !== undefined) data.kolejnosc = Number(body.kolejnosc) || 0;
   if (body.aktywny !== undefined) data.aktywny = body.aktywny;
   const sponsor = await prisma.sponsor.update({ where: { id }, data });

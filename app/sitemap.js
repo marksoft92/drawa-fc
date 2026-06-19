@@ -14,7 +14,7 @@ function slugify(name) {
 function isDrawa(n) { return n?.toLowerCase().includes("drawa drawno"); }
 
 export default async function sitemap() {
-  const [artykuly, archiwum, players, ustawieniaRows, meczeAll] = await Promise.all([
+  const [artykuly, archiwum, players, ustawieniaRows, meczeAll, strony] = await Promise.all([
     prisma.artykul.findMany({
       where: { published: true },
       select: { slug: true, updatedAt: true },
@@ -29,6 +29,7 @@ export default async function sitemap() {
     }),
     prisma.ustawienie.findMany(),
     prisma.mecz.findMany({ orderBy: { date: 'asc' } }),
+    prisma.strona.findMany({ where: { published: true }, select: { slug: true, updatedAt: true } }),
   ]);
 
   const newsUrls = artykuly.map(a => ({
@@ -87,5 +88,11 @@ export default async function sitemap() {
         changeFrequency: 'monthly',
         priority: 0.6,
       })),
+    ...strony.map(s => ({
+      url: `${BASE}/s/${s.slug}`,
+      lastModified: s.updatedAt,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    })),
   ];
 }
