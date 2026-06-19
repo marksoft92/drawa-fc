@@ -21,10 +21,132 @@ export async function generateMetadata({ params }) {
   const { kolejka, klasa, sezon } = await getData(nr);
   if (!kolejka) return {};
   return {
-    title: `Kolejka ${nr} — ${klasa} Zachodniopomorskie ${sezon} | Wyniki meczów`,
-    description: `Wyniki ${kolejka.mecze.length} meczów z ${nr}. kolejki ${klasa} Zachodniopomorska sezon ${sezon}. Strzelcy, składy, szczegóły spotkań.`,
+    title: `Kolejka ${nr} — ${klasa} Zachodniopomorskie ${sezon} | Wyniki, składy, strzelcy`,
+    description: `Wyniki ${kolejka.mecze.length} meczów z ${nr}. kolejki ${klasa} Zachodniopomorska sezon ${sezon}. Składy drużyn, strzelcy bramek, kartki i przebieg spotkań.`,
     alternates: { canonical: `https://mksdrawadrawno.pl/liga/kolejka/${nr}` },
   };
+}
+
+function MatchCard({ m }) {
+  const hasScore = !!m.score;
+  const drawa1 = isDrawa(m.team1);
+  const drawa2 = isDrawa(m.team2);
+  const isDraMatch = drawa1 || drawa2;
+
+  const zdarzenia = Array.isArray(m.wszystkieZdarzenia) ? m.wszystkieZdarzenia : [];
+  const goleGosp = zdarzenia.filter(z => z.typ === "gol" && z.strona === "gospodarze");
+  const goleGosc = zdarzenia.filter(z => z.typ === "gol" && z.strona === "goscie");
+  const kartkiAll = zdarzenia.filter(z => z.typ?.includes("kartka"));
+
+  const sklady = m.sklady || {};
+  const skladGosp = sklady.gospodarze || {};
+  const skladGosc = sklady.goscie || {};
+  const hasSquad = (skladGosp.pierwsza11?.length > 0) || (skladGosc.pierwsza11?.length > 0);
+
+  return (
+    <div style={{
+      background: isDraMatch ? "rgba(59,130,246,0.04)" : "#0f172a",
+      border: `1px solid ${isDraMatch ? "rgba(59,130,246,0.2)" : "rgba(255,255,255,0.06)"}`,
+      borderRadius: 14, overflow: "hidden",
+    }}>
+      {/* Wynik */}
+      <div style={{ padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+        <div style={{ flex: 1, textAlign: "right" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
+            {m.herb1 && !m.herb1.includes("flags/0") && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={drawa1 ? "/logo.png" : m.herb1} alt={m.team1} width={drawa1 ? 28 : 22} height={drawa1 ? 28 : 22} style={{ objectFit: "contain", borderRadius: 3 }} />
+            )}
+            <span style={{ fontSize: 14, fontWeight: drawa1 ? 700 : 400, color: drawa1 ? "#3b82f6" : "#e2e8f0" }}>{m.team1}</span>
+          </div>
+        </div>
+        <div style={{ fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: 32, minWidth: 80, textAlign: "center", color: hasScore ? "#fff" : "#334155" }}>
+          {hasScore ? m.score : "— : —"}
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontSize: 14, fontWeight: drawa2 ? 700 : 400, color: drawa2 ? "#3b82f6" : "#e2e8f0" }}>{m.team2}</span>
+            {m.herb2 && !m.herb2.includes("flags/0") && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={drawa2 ? "/logo.png" : m.herb2} alt={m.team2} width={drawa2 ? 28 : 22} height={drawa2 ? 28 : 22} style={{ objectFit: "contain", borderRadius: 3 }} />
+            )}
+          </div>
+        </div>
+      </div>
+
+      {m.walkower && <div style={{ padding: "0 24px 12px", fontSize: 10, color: "#f59e0b", letterSpacing: "0.12em", fontWeight: 700 }}>WALKOWER</div>}
+
+      {/* Timeline zdarzeń */}
+      {zdarzenia.length > 0 && (
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", padding: "14px 24px" }}>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: "#334155", marginBottom: 10 }}>PRZEBIEG MECZU</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            {zdarzenia.map((z, i) => {
+              const isGosp = z.strona === "gospodarze";
+              const isGol = z.typ === "gol" || z.typ === "samobój";
+              const isYellow = z.typ === "żółta kartka";
+              const isRed = z.typ?.includes("czerwona");
+              const icon = isGol ? "⚽" : isYellow ? "🟨" : isRed ? "🟥" : "🔄";
+              return (
+                <div key={i} style={{ display: "flex", alignItems: "center", fontSize: 12, gap: 6, flexDirection: isGosp ? "row" : "row-reverse" }}>
+                  <div style={{ flex: 1, textAlign: isGosp ? "right" : "left", color: isGol ? "#fff" : "#64748b", fontWeight: isGol ? 600 : 400 }}>
+                    {isGosp && <>{z.zawodnik}{isGol && z.wynik_po ? <span style={{ color: "#334155", fontSize: 10 }}> ({z.wynik_po})</span> : null}</>}
+                  </div>
+                  <div style={{ width: 50, textAlign: "center", flexShrink: 0 }}>
+                    <span style={{ fontSize: 11 }}>{icon}</span>
+                    <span style={{ fontSize: 10, color: "#475569", marginLeft: 3 }}>{z.minuta}&apos;</span>
+                  </div>
+                  <div style={{ flex: 1, textAlign: isGosp ? "left" : "right", color: isGol ? "#fff" : "#64748b", fontWeight: isGol ? 600 : 400 }}>
+                    {!isGosp && <>{z.zawodnik}{isGol && z.wynik_po ? <span style={{ color: "#334155", fontSize: 10 }}> ({z.wynik_po})</span> : null}</>}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Składy */}
+      {hasSquad && (
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", padding: "14px 24px" }}>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: "#334155", marginBottom: 10 }}>SKŁADY</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            {[{ sklad: skladGosp, label: m.team1, isDrawa: drawa1 }, { sklad: skladGosc, label: m.team2, isDrawa: drawa2 }].map(({ sklad, label, isDrawa: isDr }) => (
+              <div key={label}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: isDr ? "#3b82f6" : "#475569", letterSpacing: "0.08em", marginBottom: 6 }}>{label.toUpperCase()}</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  {(sklad.pierwsza11 || []).map((p, j) => (
+                    <div key={j} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
+                      <span style={{ color: "#334155", width: 16, textAlign: "right", flexShrink: 0, fontSize: 10 }}>{p.numer || ""}</span>
+                      <span style={{ color: p.gole_w_meczu > 0 ? "#3b82f6" : "#94a3b8" }}>
+                        {p.nazwisko}
+                        {p.gole_w_meczu > 0 && <span style={{ color: "#3b82f6", marginLeft: 4 }}>⚽{p.gole_w_meczu > 1 ? `×${p.gole_w_meczu}` : ""}</span>}
+                        {p.kartka_w_meczu && <span style={{ marginLeft: 4 }}>{p.kartka_w_meczu === "żółta" ? "🟨" : "🟥"}</span>}
+                      </span>
+                    </div>
+                  ))}
+                  {(sklad.rezerwa || []).length > 0 && (
+                    <>
+                      <div style={{ fontSize: 9, color: "#1e293b", marginTop: 4, letterSpacing: "0.1em" }}>REZERWA</div>
+                      {(sklad.rezerwa || []).map((p, j) => (
+                        <div key={j} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
+                          <span style={{ color: "#334155", width: 16, textAlign: "right", flexShrink: 0, fontSize: 10 }}>{p.numer || ""}</span>
+                          <span style={{ color: p.gole_w_meczu > 0 ? "#3b82f6" : "#475569" }}>
+                            {p.nazwisko}
+                            {p.gole_w_meczu > 0 && <span style={{ color: "#3b82f6", marginLeft: 4 }}>⚽{p.gole_w_meczu > 1 ? `×${p.gole_w_meczu}` : ""}</span>}
+                          </span>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default async function KolejkaPage({ params }) {
@@ -55,57 +177,8 @@ export default async function KolejkaPage({ params }) {
           </h1>
           <p style={{ fontSize: 13, color: "#475569", marginBottom: 32 }}>{kolejka.date} · {kolejka.mecze.length} meczów</p>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {kolejka.mecze.map((m, i) => {
-              const hasScore = !!m.score;
-              const [g1, g2] = hasScore ? m.score.split(":").map(Number) : [0, 0];
-              const drawa1 = isDrawa(m.team1);
-              const drawa2 = isDrawa(m.team2);
-              const isDraMatch = drawa1 || drawa2;
-
-              const strzelcy = Array.isArray(m.strzelcy) ? m.strzelcy : [];
-              const gospodarze = strzelcy.filter(s => s.strona === "gospodarze");
-              const goscie = strzelcy.filter(s => s.strona === "goscie");
-
-              return (
-                <div key={i} style={{
-                  background: isDrawa ? "rgba(59,130,246,0.04)" : "#0f172a",
-                  border: `1px solid ${isDrawa ? "rgba(59,130,246,0.2)" : "rgba(255,255,255,0.06)"}`,
-                  borderRadius: 12, padding: "20px 24px",
-                }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-                    <div style={{ flex: 1, textAlign: "right" }}>
-                      <div style={{ fontSize: 14, fontWeight: drawa1 ? 700 : 400, color: drawa1 ? "#3b82f6" : "#e2e8f0" }}>{m.team1}</div>
-                    </div>
-
-                    <div style={{
-                      fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: 28, minWidth: 70, textAlign: "center",
-                      color: hasScore ? "#fff" : "#334155",
-                    }}>
-                      {hasScore ? m.score : "— : —"}
-                    </div>
-
-                    <div style={{ flex: 1, textAlign: "left" }}>
-                      <div style={{ fontSize: 14, fontWeight: drawa2 ? 700 : 400, color: drawa2 ? "#3b82f6" : "#e2e8f0" }}>{m.team2}</div>
-                    </div>
-                  </div>
-
-                  {(gospodarze.length > 0 || goscie.length > 0) && (
-                    <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.05)", fontSize: 11, color: "#475569" }}>
-                      <div style={{ textAlign: "right", flex: 1 }}>
-                        {gospodarze.map((s, j) => <div key={j}>{s.zawodnik} {s.minuta && `${s.minuta}'`}</div>)}
-                      </div>
-                      <div style={{ width: 70 }} />
-                      <div style={{ textAlign: "left", flex: 1 }}>
-                        {goscie.map((s, j) => <div key={j}>{s.zawodnik} {s.minuta && `${s.minuta}'`}</div>)}
-                      </div>
-                    </div>
-                  )}
-
-                  {m.walkower && <div style={{ marginTop: 8, fontSize: 10, color: "#f59e0b", letterSpacing: "0.1em" }}>WALKOWER</div>}
-                </div>
-              );
-            })}
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {kolejka.mecze.map((m, i) => <MatchCard key={i} m={m} />)}
           </div>
 
           <div style={{ marginTop: 32, display: "flex", gap: 12, flexWrap: "wrap" }}>
