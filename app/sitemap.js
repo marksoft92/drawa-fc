@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import { groupByKolejka } from '@/lib/ligaUtils';
 
 export const revalidate = 3600;
 
@@ -80,17 +79,13 @@ export default async function sitemap() {
     ...opponentUrls,
     { url: `${BASE}/liga`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
     { url: `${BASE}/liga/tabela`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
-    ...(() => {
-      const ust = Object.fromEntries(ustawieniaRows.map(r => [r.klucz, r.wartosc]));
-      const sezon = ust.aktywny_sezon || '2025/26';
-      const sezonMecze = meczeAll.filter(m => m.sezon === sezon);
-      const kolejki = groupByKolejka(sezonMecze);
-      return kolejki.map(k => ({
-        url: `${BASE}/liga/kolejka/${k.nr}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.7,
-      }));
-    })(),
+    ...meczeAll
+      .filter(m => !m.liga?.toLowerCase().includes('puchar'))
+      .map(m => ({
+        url: `${BASE}/liga/mecz/${m.id}`,
+        lastModified: m.updatedAt,
+        changeFrequency: 'monthly',
+        priority: 0.6,
+      })),
   ];
 }

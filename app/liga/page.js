@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
-import { groupByKolejka, isDrawa } from "@/lib/ligaUtils";
+import { isDrawa } from "@/lib/ligaUtils";
 
 export const revalidate = 60;
 
@@ -37,9 +37,7 @@ export default async function LigaPage() {
     prisma.mecz.findMany({ where: { sezon }, orderBy: { date: "asc" } }),
   ]);
 
-  const kolejki = groupByKolejka(meczeData);
-  const lastPlayed = kolejki.filter(k => k.mecze.every(m => m.score)).pop();
-  const nextRound = kolejki.find(k => k.mecze.some(m => !m.score));
+  const ligowe = meczeData.filter(m => !m.liga?.toLowerCase().includes('puchar'));
 
   const resultColor = (score, team1) => {
     if (!score) return "#334155";
@@ -64,7 +62,7 @@ export default async function LigaPage() {
             {klasa} <span style={{ color: "#3b82f6" }}>Zachodniopomorskie</span>
           </h1>
           <p style={{ fontSize: 13, color: "#475569", marginTop: 8 }}>
-            {tabelaData.length} drużyn · {meczeData.filter(m => m.score).length} rozegranych meczów · {kolejki.length} kolejek
+            {tabelaData.length} drużyn · {ligowe.filter(m => m.score).length} rozegranych meczów
           </p>
         </div>
 
@@ -114,39 +112,36 @@ export default async function LigaPage() {
           </div>
         </section>
 
-        {/* Kolejki */}
+        {/* Wyniki meczów */}
         <section style={{ padding: "0 20px 60px", maxWidth: 900, margin: "0 auto" }}>
           <h2 style={{ display: "flex", alignItems: "center", gap: 12, margin: "0 0 20px" }}>
             <div style={{ width: 4, height: 24, background: "#f59e0b", borderRadius: 2 }} />
-            <span style={{ fontSize: "clamp(20px, 4vw, 28px)", fontFamily: "'Bebas Neue', Impact, sans-serif", letterSpacing: "0.1em", fontWeight: "normal" }}>Kolejki</span>
+            <span style={{ fontSize: "clamp(20px, 4vw, 28px)", fontFamily: "'Bebas Neue', Impact, sans-serif", letterSpacing: "0.1em", fontWeight: "normal" }}>Wyniki meczów</span>
           </h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 12 }}>
-            {kolejki.map(k => {
-              const allPlayed = k.mecze.every(m => m.score);
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {ligowe.map(m => {
+              const drawa1 = isDrawa(m.team1);
+              const opp = drawa1 ? m.team2 : m.team1;
               return (
-                <Link key={k.nr} href={`/liga/kolejka/${k.nr}`} style={{ textDecoration: "none" }}>
+                <Link key={m.id} href={`/liga/mecz/${m.id}`} style={{ textDecoration: "none" }}>
                   <div style={{
-                    background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "16px 18px",
-                    borderLeft: `3px solid ${allPlayed ? "#22c55e" : "#f59e0b"}`,
+                    background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "14px 18px",
+                    display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
                     transition: "border-color 0.2s, transform 0.2s",
                   }} className="liga-card">
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>Kolejka {k.nr}</span>
-                      <span style={{ fontSize: 10, color: "#334155" }}>{k.date}</span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13, color: "#e2e8f0", fontWeight: 600 }}>
+                        {drawa1 ? "Drawa" : opp} <span style={{ color: "#334155" }}>vs</span> {drawa1 ? opp : "Drawa"}
+                      </div>
+                      <div style={{ fontSize: 10, color: "#334155", marginTop: 2 }}>{m.date} · {drawa1 ? "DOM" : "WYJAZD"}</div>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                      {k.mecze.slice(0, 4).map((m, i) => (
-                        <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
-                          <span style={{ color: isDrawa(m.team1) || isDrawa(m.team2) ? "#3b82f6" : "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "60%" }}>
-                            {m.team1} — {m.team2}
-                          </span>
-                          <span style={{ color: m.score ? resultColor(m.score, m.team1) : "#334155", fontWeight: 700, flexShrink: 0 }}>
-                            {m.score || "—"}
-                          </span>
-                        </div>
-                      ))}
-                      {k.mecze.length > 4 && <div style={{ fontSize: 10, color: "#334155" }}>+{k.mecze.length - 4} więcej</div>}
+                    <div style={{
+                      fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: 20,
+                      color: m.score ? resultColor(m.score, m.team1) : "#334155",
+                      minWidth: 50, textAlign: "center",
+                    }}>
+                      {m.score || "—"}
                     </div>
                   </div>
                 </Link>
