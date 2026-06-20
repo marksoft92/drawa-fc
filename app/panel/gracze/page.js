@@ -99,6 +99,11 @@ export default function PanelGracze() {
   const [statsError, setStatsError] = useState("");
   const [statsLoading, setStatsLoading] = useState(false);
 
+  // Kadra per sezon
+  const [aktywnySezon, setAktywnySezon] = useState(null);
+  const [kadraPlayerIds, setKadraPlayerIds] = useState(new Set());
+  const [kadraToggling, setKadraToggling] = useState(null);
+
   const load = useCallback(() => setTick((t) => t + 1), []);
 
   useEffect(() => {
@@ -107,6 +112,20 @@ export default function PanelGracze() {
       .then((r) => r.json())
       .then((d) => { if (!cancelled) { setData(d); setLoading(false); } })
       .catch(() => { if (!cancelled) setLoading(false); });
+    fetch("/api/admin/sezony")
+      .then(r => r.json())
+      .then(sezony => {
+        if (cancelled || !Array.isArray(sezony)) return;
+        const aktywny = sezony.find(s => s.aktywny);
+        if (aktywny) {
+          setAktywnySezon(aktywny);
+          fetch(`/api/admin/kadra?sezonId=${aktywny.id}`)
+            .then(r => r.json())
+            .then(ids => { if (!cancelled && Array.isArray(ids)) setKadraPlayerIds(new Set(ids)); })
+            .catch(() => {});
+        }
+      })
+      .catch(() => {});
     return () => { cancelled = true; };
   }, [tick]);
 
@@ -231,6 +250,23 @@ export default function PanelGracze() {
       body: JSON.stringify({ active: !u.active }),
     });
     load();
+  }
+
+  async function toggleKadra(playerId) {
+    if (!aktywnySezon || kadraToggling) return;
+    setKadraToggling(playerId);
+    const inKadra = kadraPlayerIds.has(playerId);
+    await fetch("/api/admin/kadra", {
+      method: inKadra ? "DELETE" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ playerId, sezonId: aktywnySezon.id }),
+    });
+    setKadraPlayerIds(prev => {
+      const next = new Set(prev);
+      if (inKadra) next.delete(playerId); else next.add(playerId);
+      return next;
+    });
+    setKadraToggling(null);
   }
 
   async function handleResetPw(id) {
@@ -411,6 +447,14 @@ export default function PanelGracze() {
                               onClick={() => { setResetPwId(null); openStats(u); }}
                               style={{ ...btnRowAction, color: statsUserId === u.id ? "#3b82f6" : "#64748b", borderColor: statsUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
                             >Staty</button>
+                          )}
+                          {u.player && aktywnySezon && (
+                            <button
+                              onClick={() => toggleKadra(u.player.id)}
+                              disabled={kadraToggling === u.player.id}
+                              style={{ ...btnRowAction, color: kadraPlayerIds.has(u.player.id) ? "#22c55e" : "#64748b", borderColor: kadraPlayerIds.has(u.player.id) ? "rgba(34,197,94,0.4)" : "rgba(255,255,255,0.08)" }}
+                              title={kadraPlayerIds.has(u.player.id) ? `W kadrze ${aktywnySezon.nazwa}` : `Dodaj do kadry ${aktywnySezon.nazwa}`}
+                            >{kadraPlayerIds.has(u.player.id) ? "★ Kadra" : "Kadra"}</button>
                           )}
                         </>
                       )}

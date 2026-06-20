@@ -10,7 +10,7 @@ export async function GET() {
   const users = await prisma.user.findMany({
     where: { active: true },
     include: {
-      player: { select: { imieNazwisko: true, pozycja: true, numer: true, foto: true } },
+      player: { select: { id: true, imieNazwisko: true, pozycja: true, numer: true, foto: true } },
     },
     orderBy: [{ player: { numer: "asc" } }, { createdAt: "asc" }],
   });
@@ -28,6 +28,7 @@ export async function GET() {
       createdAt: u.createdAt,
       player: u.player
         ? {
+            id: u.player.id,
             imieNazwisko: u.player.imieNazwisko,
             pozycja: u.player.pozycja,
             numer: u.player.numer,

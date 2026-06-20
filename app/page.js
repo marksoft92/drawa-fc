@@ -28,11 +28,19 @@ async function getHomeData() {
       }),
       (async () => {
         const sezon = await prisma.sezon.findFirst({ where: { aktywny: true } });
-        const players = await prisma.player.findMany({
-          where: { user: { active: true } },
-          include: { stats: sezon ? { where: { sezonId: sezon.id } } : false },
-          orderBy: { imieNazwisko: "asc" },
-        });
+        let players;
+        if (sezon) {
+          const kadraEntries = await prisma.kadraSezon.findMany({
+            where: { sezonId: sezon.id },
+            include: { player: { include: { stats: { where: { sezonId: sezon.id } } } } },
+          });
+          players = kadraEntries.map(k => k.player);
+        } else {
+          players = await prisma.player.findMany({
+            where: { user: { active: true } },
+            orderBy: { imieNazwisko: "asc" },
+          });
+        }
         const mapped = players.map((p) => {
           const s = p.stats?.[0];
           return {

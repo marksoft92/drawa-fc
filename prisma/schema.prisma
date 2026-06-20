@@ -73,6 +73,7 @@ model Player {
   updatedAt     DateTime @updatedAt
 
   stats         SezonStats[]
+  kadra         KadraSezon[]
 }
 
 // ─── Sezony i statystyki ──────────────────────────────────────────────────────
@@ -84,6 +85,18 @@ model Sezon {
   createdAt DateTime @default(now())
 
   stats     SezonStats[]
+  kadra     KadraSezon[]
+}
+
+model KadraSezon {
+  id        String   @id @default(cuid())
+  playerId  String
+  sezonId   String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  sezon     Sezon    @relation(fields: [sezonId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([playerId, sezonId])
 }
 
 model SezonStats {

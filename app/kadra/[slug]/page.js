@@ -16,11 +16,20 @@ function slugify(name) {
 
 async function getPlayer(slug) {
   const sezon = await prisma.sezon.findFirst({ where: { aktywny: true } });
-  const allPlayers = await prisma.player.findMany({
-    where: { user: { active: true } },
-    include: { stats: true },
-    orderBy: { imieNazwisko: "asc" },
-  });
+  let allPlayers;
+  if (sezon) {
+    const kadraEntries = await prisma.kadraSezon.findMany({
+      where: { sezonId: sezon.id },
+      include: { player: { include: { stats: true } } },
+    });
+    allPlayers = kadraEntries.map(k => k.player);
+  } else {
+    allPlayers = await prisma.player.findMany({
+      where: { user: { active: true } },
+      include: { stats: true },
+      orderBy: { imieNazwisko: "asc" },
+    });
+  }
 
   const player = allPlayers.find(p => slugify(p.imieNazwisko) === slug);
   if (!player) return null;
