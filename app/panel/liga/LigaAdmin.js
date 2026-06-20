@@ -378,12 +378,18 @@ export default function LigaAdmin() {
   async function handleSetAktywny() {
     if (!aktualnySezon) return;
     setSettingMsg({ text: "", err: false }); setSettingSaving(true);
-    const r = await fetch("/api/admin/ustawienia", {
-      method: "PATCH", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ aktywny_sezon: aktualnySezon }),
-    });
+    const [r1, r2] = await Promise.all([
+      fetch("/api/admin/ustawienia", {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ aktywny_sezon: aktualnySezon }),
+      }),
+      fetch("/api/admin/liga/sezony", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sezon: aktualnySezon }),
+      }),
+    ]);
     setSettingSaving(false);
-    if (r.ok) {
+    if (r1.ok) {
       setAktywnySezon(aktualnySezon);
       setSettingMsg({ text: `Aktywny sezon ustawiony na: ${aktualnySezon}`, err: false });
       if (!sezonyList.includes(aktualnySezon)) setSezonyList(prev => [aktualnySezon, ...prev]);

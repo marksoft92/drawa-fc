@@ -18,6 +18,15 @@ export async function PATCH(request, { params }) {
   if (aktywny !== undefined) data.aktywny = aktywny;
 
   const sezon = await prisma.sezon.update({ where: { id }, data });
+
+  if (aktywny === true) {
+    await prisma.ustawienie.upsert({
+      where: { klucz: "aktywny_sezon" },
+      update: { wartosc: sezon.nazwa },
+      create: { klucz: "aktywny_sezon", wartosc: sezon.nazwa },
+    });
+  }
+
   return Response.json(sezon);
 }
 

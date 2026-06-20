@@ -18,3 +18,19 @@ export async function GET() {
   const sezony = [...set].sort().reverse();
   return Response.json(sezony);
 }
+
+export async function POST(request) {
+  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  const { sezon } = await request.json();
+  if (!sezon?.trim()) return Response.json({ error: "Brak nazwy" }, { status: 400 });
+
+  const nazwa = sezon.trim();
+  await prisma.sezon.updateMany({ data: { aktywny: false } });
+  await prisma.sezon.upsert({
+    where: { nazwa },
+    update: { aktywny: true },
+    create: { nazwa, aktywny: true },
+  });
+
+  return Response.json({ ok: true });
+}

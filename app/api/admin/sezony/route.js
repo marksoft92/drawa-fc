@@ -28,5 +28,14 @@ export async function POST(request) {
   }
 
   const sezon = await prisma.sezon.create({ data: { nazwa: nazwa.trim(), aktywny: !!aktywny } });
+
+  if (aktywny) {
+    await prisma.ustawienie.upsert({
+      where: { klucz: "aktywny_sezon" },
+      update: { wartosc: sezon.nazwa },
+      create: { klucz: "aktywny_sezon", wartosc: sezon.nazwa },
+    });
+  }
+
   return Response.json(sezon, { status: 201 });
 }
