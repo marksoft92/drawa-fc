@@ -351,7 +351,8 @@ export default function AktualnosciAdmin() {
     if (nlArtId === a.id) { setNlArtId(null); return; }
     setNlArtId(a.id);
     setNlSubject(a.title);
-    setNlBody(a.excerpt || "");
+    const body = a.excerpt || (a.content || "").replace(/\[img:[^\]]*\]/g, "").trim();
+    setNlBody(body);
     setNlResult(null);
     try {
       const r = await fetch("/api/admin/newsletter");

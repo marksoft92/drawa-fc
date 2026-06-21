@@ -8,7 +8,7 @@ export async function GET() {
 
   const artykuly = await prisma.artykul.findMany({
     orderBy: { date: "desc" },
-    select: { id: true, slug: true, title: true, date: true, published: true, pinned: true, tags: true },
+    select: { id: true, slug: true, title: true, excerpt: true, content: true, thumbnail: true, date: true, published: true, pinned: true, tags: true },
   });
   return Response.json(artykuly);
 }
