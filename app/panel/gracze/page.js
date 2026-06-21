@@ -27,6 +27,7 @@ const UPRAWNIENIA_OPTIONS = [
   { slug: "transmisja", label: "Transmisja" },
   { slug: "sezony", label: "Sezony" },
   { slug: "koszty", label: "Koszty" },
+  { slug: "sklep", label: "Sklep" },
 ];
 
 const STAT_FIELDS = [

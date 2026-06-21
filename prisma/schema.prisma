@@ -532,3 +532,69 @@ model PrivateOdczytanie {
 
   @@id([convId, userId])
 }
+
+// ─── Sklep ───────────────────────────────────────────────────────────────────
+
+model KategoriaProduktu {
+  id        String   @id @default(cuid())
+  nazwa     String
+  slug      String   @unique
+  kolejnosc Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  produkty  Produkt[]
+}
+
+model Produkt {
+  id          String              @id @default(cuid())
+  nazwa       String
+  slug        String              @unique
+  opis        String              @default("")
+  cena        Int
+  zdjecia     Json                @default("[]")
+  kategoriaId String?
+  kategoria   KategoriaProduktu?  @relation(fields: [kategoriaId], references: [id], onDelete: SetNull)
+  warianty    Json                @default("[]")
+  stan        Int                 @default(0)
+  published   Boolean             @default(false)
+  kolejnosc   Int                 @default(0)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  pozycje     ZamowieniePozycja[]
+}
+
+model Zamowienie {
+  id          String              @id @default(cuid())
+  numer       String              @unique
+  imie        String
+  email       String
+  telefon     String
+  ulica       String
+  kodPocztowy String
+  miasto      String
+  uwagi       String?
+  status      String              @default("nowe")
+  kwota       Int
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  pozycje     ZamowieniePozycja[]
+
+  @@index([status])
+  @@index([email])
+}
+
+model ZamowieniePozycja {
+  id           String     @id @default(cuid())
+  zamowienieId String
+  zamowienie   Zamowienie @relation(fields: [zamowienieId], references: [id], onDelete: Cascade)
+  produktId    String
+  produkt      Produkt    @relation(fields: [produktId], references: [id], onDelete: Restrict)
+  nazwaSnapshot String
+  wariant      String?
+  ilosc        Int
+  cena         Int
+  createdAt    DateTime   @default(now())
+}
