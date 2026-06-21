@@ -258,7 +258,8 @@ export default function AktualnosciAdmin() {
   const [nlBody, setNlBody] = useState("");
   const [nlSending, setNlSending] = useState(false);
   const [nlResult, setNlResult] = useState(null);
-  const [nlSubCount, setNlSubCount] = useState(null);
+  const [nlSubs, setNlSubs] = useState([]);
+  const [nlSelected, setNlSelected] = useState([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -352,10 +353,14 @@ export default function AktualnosciAdmin() {
     setNlSubject(a.title);
     setNlBody(a.excerpt || "");
     setNlResult(null);
-    setNlSubCount(null);
     try {
       const r = await fetch("/api/admin/newsletter");
-      if (r.ok) { const d = await r.json(); setNlSubCount(d.active); }
+      if (r.ok) {
+        const d = await r.json();
+        const active = (d.subs || []).filter(s => s.active);
+        setNlSubs(active);
+        setNlSelected(active.map(s => s.email));
+      }
     } catch {}
   }
 
@@ -388,7 +393,7 @@ export default function AktualnosciAdmin() {
     try {
       const r = await fetch("/api/admin/newsletter", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject: nlSubject, html }),
+        body: JSON.stringify({ subject: nlSubject, html, to: nlSelected.length < nlSubs.length ? nlSelected : undefined }),
       });
       const d = await r.json();
       if (r.ok) {
@@ -662,17 +667,39 @@ export default function AktualnosciAdmin() {
                     <label style={{ ...lbl, fontSize: 10 }}>TREŚĆ (zajawka artykułu — możesz edytować)</label>
                     <textarea style={{ ...inp, fontSize: 12, padding: "7px 10px", minHeight: 70, resize: "vertical" }} value={nlBody} onChange={e => setNlBody(e.target.value)} placeholder="Treść wiadomości..." />
                   </div>
-                  <div style={{ fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
-                    Email zawiera: {a.thumbnail ? "miniaturkę, " : ""}tytuł, powyższą treść i przycisk &quot;Czytaj więcej&quot; linkujący do artykułu.
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                      <label style={{ ...lbl, fontSize: 10, marginBottom: 0 }}>ODBIORCY ({nlSelected.length}/{nlSubs.length})</label>
+                      <button
+                        type="button"
+                        onClick={() => setNlSelected(nlSelected.length === nlSubs.length ? [] : nlSubs.map(s => s.email))}
+                        style={{ fontSize: 10, color: "#3b82f6", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                      >
+                        {nlSelected.length === nlSubs.length ? "Odznacz wszystkich" : "Zaznacz wszystkich"}
+                      </button>
+                    </div>
+                    <div style={{ maxHeight: 140, overflowY: "auto", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "4px 0" }}>
+                      {nlSubs.map(s => (
+                        <label key={s.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "4px 10px", cursor: "pointer", fontSize: 12, color: nlSelected.includes(s.email) ? "#cbd5e1" : "#475569" }}>
+                          <input
+                            type="checkbox"
+                            checked={nlSelected.includes(s.email)}
+                            onChange={e => setNlSelected(prev => e.target.checked ? [...prev, s.email] : prev.filter(x => x !== s.email))}
+                            style={{ width: 14, height: 14, accentColor: "#3b82f6", flexShrink: 0 }}
+                          />
+                          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.email}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
                   <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
                     <button
                       onClick={() => sendNewsletter(a)}
-                      disabled={nlSending || !nlSubject.trim() || nlSubCount === 0}
-                      style={{ padding: "7px 16px", background: nlSending ? "#1e293b" : "#2563eb", border: "none", borderRadius: 7, color: "#fff", fontSize: 12, fontWeight: 600, cursor: nlSending ? "wait" : "pointer", display: "flex", alignItems: "center", gap: 6 }}
+                      disabled={nlSending || !nlSubject.trim() || nlSelected.length === 0}
+                      style={{ padding: "7px 16px", background: nlSending || nlSelected.length === 0 ? "#1e293b" : "#2563eb", border: "none", borderRadius: 7, color: "#fff", fontSize: 12, fontWeight: 600, cursor: nlSending ? "wait" : "pointer", display: "flex", alignItems: "center", gap: 6 }}
                     >
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
-                      {nlSending ? "Wysyłanie..." : `Wyślij${nlSubCount !== null ? ` do ${nlSubCount} osób` : ""}`}
+                      {nlSending ? "Wysyłanie..." : `Wyślij do ${nlSelected.length} ${nlSelected.length === 1 ? "osoby" : "osób"}`}
                     </button>
                     <button onClick={() => setNlArtId(null)} style={{ ...btnGhost, fontSize: 11, padding: "6px 12px" }}>Anuluj</button>
                     {nlResult && <span style={{ fontSize: 12, color: nlResult.ok ? "#22c55e" : "#ef4444" }}>{nlResult.msg}</span>}

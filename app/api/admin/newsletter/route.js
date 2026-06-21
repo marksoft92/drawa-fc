@@ -21,7 +21,7 @@ export async function POST(request) {
     return Response.json({ error: "Brak dostępu" }, { status: 403 });
   }
 
-  const { subject, html } = await request.json();
+  const { subject, html, to } = await request.json();
   if (!subject || !html) {
     return Response.json({ error: "Podaj temat i treść" }, { status: 400 });
   }
@@ -33,9 +33,14 @@ export async function POST(request) {
     return Response.json({ error: err.message }, { status: 400 });
   }
 
-  const subs = await prisma.newsletterSub.findMany({
+  let subs = await prisma.newsletterSub.findMany({
     where: { active: true },
   });
+
+  if (Array.isArray(to) && to.length > 0) {
+    const allowed = new Set(to);
+    subs = subs.filter(s => allowed.has(s.email));
+  }
 
   if (subs.length === 0) {
     return Response.json({ error: "Brak aktywnych subskrybentów" }, { status: 400 });
