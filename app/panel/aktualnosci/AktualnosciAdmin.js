@@ -252,6 +252,14 @@ export default function AktualnosciAdmin() {
   const [tick, setTick] = useState(0);
   const contentRef = useRef();
 
+  // Newsletter z artykułu
+  const [nlArtId, setNlArtId] = useState(null);
+  const [nlSubject, setNlSubject] = useState("");
+  const [nlBody, setNlBody] = useState("");
+  const [nlSending, setNlSending] = useState(false);
+  const [nlResult, setNlResult] = useState(null);
+  const [nlSubCount, setNlSubCount] = useState(null);
+
   useEffect(() => {
     let cancelled = false;
     fetch("/api/admin/artykuly")
@@ -336,6 +344,62 @@ export default function AktualnosciAdmin() {
     if (!confirm(`Usunąć "${a.title}"?`)) return;
     await fetch(`/api/admin/artykuly/${a.id}`, { method: "DELETE" });
     setTick(t => t + 1);
+  }
+
+  async function openNewsletter(a) {
+    if (nlArtId === a.id) { setNlArtId(null); return; }
+    setNlArtId(a.id);
+    setNlSubject(a.title);
+    setNlBody(a.excerpt || "");
+    setNlResult(null);
+    setNlSubCount(null);
+    try {
+      const r = await fetch("/api/admin/newsletter");
+      if (r.ok) { const d = await r.json(); setNlSubCount(d.active); }
+    } catch {}
+  }
+
+  async function sendNewsletter(a) {
+    if (!nlSubject.trim()) return;
+    setNlSending(true); setNlResult(null);
+    const articleUrl = `https://mksdrawadrawno.pl/aktualnosci/${a.slug}`;
+    const imgHtml = a.thumbnail
+      ? `<img src="https://mksdrawadrawno.pl${a.thumbnail}" alt="" style="width:100%;max-width:520px;border-radius:8px;margin-bottom:16px" />`
+      : "";
+    const bodyHtml = nlBody.split("\n").map(l => l.trim() ? `<p style="margin:0 0 12px;color:#1e293b;font-size:15px;line-height:1.7">${l}</p>` : "").join("");
+    const html = `
+      <div style="max-width:560px;margin:0 auto;font-family:-apple-system,'Segoe UI',sans-serif">
+        <div style="text-align:center;padding:24px 0;border-bottom:2px solid #3b82f6">
+          <img src="https://mksdrawadrawno.pl/logo.png" width="48" height="48" alt="MKS Drawa" style="margin-bottom:8px">
+          <div style="font-size:18px;font-weight:700;color:#0f172a">MKS Drawa Drawno</div>
+        </div>
+        <div style="padding:28px 0">
+          ${imgHtml}
+          <h2 style="margin:0 0 16px;font-size:22px;color:#0f172a;line-height:1.3">${a.title}</h2>
+          ${bodyHtml}
+          <div style="margin-top:24px;text-align:center">
+            <a href="${articleUrl}" style="display:inline-block;padding:12px 28px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:14px">Czytaj więcej na stronie</a>
+          </div>
+        </div>
+        <div style="text-align:center;padding:16px 0;border-top:1px solid #e2e8f0">
+          <a href="https://mksdrawadrawno.pl" style="color:#3b82f6;font-size:12px;text-decoration:none">mksdrawadrawno.pl</a>
+        </div>
+      </div>`;
+    try {
+      const r = await fetch("/api/admin/newsletter", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject: nlSubject, html }),
+      });
+      const d = await r.json();
+      if (r.ok) {
+        setNlResult({ ok: true, msg: `Wysłano do ${d.sent} subskrybentów${d.failed ? ` (${d.failed} błędów)` : ""}` });
+      } else {
+        setNlResult({ ok: false, msg: d.error || "Błąd" });
+      }
+    } catch {
+      setNlResult({ ok: false, msg: "Błąd połączenia" });
+    }
+    setNlSending(false);
   }
 
   const f = k => e => setForm(p => ({ ...p, [k]: e.target.value }));
@@ -556,7 +620,8 @@ export default function AktualnosciAdmin() {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {artykuly.map(a => (
-            <div key={a.id} style={{ ...card, display: "flex", alignItems: "center", gap: 12, padding: "12px 16px" }}>
+            <div key={a.id}>
+            <div style={{ ...card, display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: nlArtId === a.id ? "12px 12px 0 0" : undefined, marginBottom: nlArtId === a.id ? 0 : undefined }}>
               {a.thumbnail
                 // eslint-disable-next-line @next/next/no-img-element
                 ? <img src={a.thumbnail} alt="" style={{ width: 48, height: 36, objectFit: "cover", borderRadius: 4, flexShrink: 0 }} />
@@ -575,9 +640,46 @@ export default function AktualnosciAdmin() {
                 <button onClick={() => togglePublished(a)} style={{ ...btnRowAction, color: a.published ? "#22c55e" : "#475569", borderColor: a.published ? "rgba(34,197,94,0.3)" : "rgba(255,255,255,0.08)" }}>
                   {a.published ? "Opub." : "Ukryty"}
                 </button>
+                <button onClick={() => openNewsletter(a)} style={{ ...btnRowAction, color: nlArtId === a.id ? "#3b82f6" : "#64748b", borderColor: nlArtId === a.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+                    NL
+                  </span>
+                </button>
                 <button onClick={() => openEdit(a.id)} style={btnRowAction}>Edytuj</button>
                 <button onClick={() => handleDelete(a)} style={{ ...btnRowAction, color: "#ef4444", borderColor: "rgba(239,68,68,0.2)" }}>Usuń</button>
               </div>
+            </div>
+            {nlArtId === a.id && (
+              <div style={{ background: "rgba(59,130,246,0.03)", border: "1px solid rgba(59,130,246,0.15)", borderTop: "none", borderRadius: "0 0 10px 10px", padding: "14px 16px", marginTop: -6 }}>
+                <div style={{ fontSize: 10, color: "#3b82f6", fontWeight: 700, letterSpacing: "0.08em", marginBottom: 10 }}>WYŚLIJ JAKO NEWSLETTER</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div>
+                    <label style={{ ...lbl, fontSize: 10 }}>TEMAT EMAILA</label>
+                    <input style={{ ...inp, fontSize: 12, padding: "7px 10px" }} value={nlSubject} onChange={e => setNlSubject(e.target.value)} placeholder="Temat wiadomości" />
+                  </div>
+                  <div>
+                    <label style={{ ...lbl, fontSize: 10 }}>TREŚĆ (zajawka artykułu — możesz edytować)</label>
+                    <textarea style={{ ...inp, fontSize: 12, padding: "7px 10px", minHeight: 70, resize: "vertical" }} value={nlBody} onChange={e => setNlBody(e.target.value)} placeholder="Treść wiadomości..." />
+                  </div>
+                  <div style={{ fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
+                    Email zawiera: {a.thumbnail ? "miniaturkę, " : ""}tytuł, powyższą treść i przycisk &quot;Czytaj więcej&quot; linkujący do artykułu.
+                  </div>
+                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                    <button
+                      onClick={() => sendNewsletter(a)}
+                      disabled={nlSending || !nlSubject.trim() || nlSubCount === 0}
+                      style={{ padding: "7px 16px", background: nlSending ? "#1e293b" : "#2563eb", border: "none", borderRadius: 7, color: "#fff", fontSize: 12, fontWeight: 600, cursor: nlSending ? "wait" : "pointer", display: "flex", alignItems: "center", gap: 6 }}
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+                      {nlSending ? "Wysyłanie..." : `Wyślij${nlSubCount !== null ? ` do ${nlSubCount} osób` : ""}`}
+                    </button>
+                    <button onClick={() => setNlArtId(null)} style={{ ...btnGhost, fontSize: 11, padding: "6px 12px" }}>Anuluj</button>
+                    {nlResult && <span style={{ fontSize: 12, color: nlResult.ok ? "#22c55e" : "#ef4444" }}>{nlResult.msg}</span>}
+                  </div>
+                </div>
+              </div>
+            )}
             </div>
           ))}
         </div>
