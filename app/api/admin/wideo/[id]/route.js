@@ -11,6 +11,7 @@ export async function PATCH(request, { params }) {
   const data = {};
   if (body.url !== undefined) data.url = body.url.trim();
   if (body.tytul !== undefined) data.tytul = body.tytul.trim();
+  if (body.opis !== undefined) data.opis = body.opis.trim();
   if (body.typ !== undefined) data.typ = body.typ;
   if (body.kolejnosc !== undefined) data.kolejnosc = Number(body.kolejnosc) || 0;
   if (body.published !== undefined) data.published = body.published;

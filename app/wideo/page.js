@@ -17,7 +17,7 @@ export default async function WideoPage() {
       "@context": "https://schema.org",
       "@type": "VideoObject",
       name: f.tytul,
-      description: `${f.tytul} — MKS Drawa Drawno. Wideo z kanału klubowego.`,
+      description: f.opis || `${f.tytul} — MKS Drawa Drawno. Wideo z kanału klubowego.`,
       thumbnailUrl: `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`,
       embedUrl: `https://www.youtube.com/embed/${ytId}`,
       uploadDate: f.createdAt,

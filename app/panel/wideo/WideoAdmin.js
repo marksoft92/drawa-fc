@@ -24,7 +24,7 @@ export default function WideoAdmin() {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("list");
   const [editId, setEditId] = useState(null);
-  const [form, setForm] = useState({ url: "", tytul: "", typ: "video", kolejnosc: 0, published: true });
+  const [form, setForm] = useState({ url: "", tytul: "", opis: "", typ: "video", kolejnosc: 0, published: true });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -36,13 +36,13 @@ export default function WideoAdmin() {
 
   function openCreate() {
     setEditId(null);
-    setForm({ url: "", tytul: "", typ: "video", kolejnosc: 0, published: true });
+    setForm({ url: "", tytul: "", opis: "", typ: "video", kolejnosc: 0, published: true });
     setError(""); setSuccess(""); setView("form");
   }
 
   function openEdit(f) {
     setEditId(f.id);
-    setForm({ url: f.url, tytul: f.tytul, typ: f.typ, kolejnosc: f.kolejnosc, published: f.published });
+    setForm({ url: f.url, tytul: f.tytul, opis: f.opis || "", typ: f.typ, kolejnosc: f.kolejnosc, published: f.published });
     setError(""); setSuccess(""); setView("form");
   }
 
@@ -95,6 +95,10 @@ export default function WideoAdmin() {
             <div>
               <label style={lbl}>TYTUŁ</label>
               <input style={inp} value={form.tytul} onChange={e => setForm(p => ({ ...p, tytul: e.target.value }))} placeholder="Tytuł filmu" />
+            </div>
+            <div>
+              <label style={lbl}>OPIS (DLA GOOGLE)</label>
+              <textarea style={{ ...inp, minHeight: 60, resize: "vertical" }} value={form.opis} onChange={e => setForm(p => ({ ...p, opis: e.target.value }))} placeholder="Krótki opis filmu — wyświetlany w wynikach wyszukiwania Google" />
             </div>
             <div style={{ display: "flex", gap: 12 }}>
               <div style={{ flex: 1 }}>

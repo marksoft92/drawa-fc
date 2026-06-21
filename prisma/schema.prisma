@@ -266,6 +266,7 @@ model Wideo {
   id        String   @id @default(cuid())
   url       String
   tytul     String
+  opis      String   @default("")
   typ       String   @default("video")
   kolejnosc Int      @default(0)
   published Boolean  @default(true)
