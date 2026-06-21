@@ -1,16 +1,16 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("strony"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const strony = await prisma.strona.findMany({ orderBy: { createdAt: "desc" } });
   return Response.json(strony);
 }
 
 export async function POST(request) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("strony"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const { slug, tytul, tresc, metaOpis, published } = await request.json();
   if (!slug?.trim() || !tytul?.trim()) return Response.json({ error: "Slug i tytuł wymagane" }, { status: 400 });
 

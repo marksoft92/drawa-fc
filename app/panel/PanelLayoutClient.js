@@ -301,14 +301,21 @@ function urlBase64ToUint8Array(b) {
   return Uint8Array.from([...raw].map((c) => c.charCodeAt(0)));
 }
 
-export default function PanelLayoutClient({ role, login, name, foto, children }) {
+export default function PanelLayoutClient({ role, uprawnienia = [], login, name, foto, children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [badges, setBadges] = useState({ chat: 0, ankiety: 0 });
   const [pushBanner, setPushBanner] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  const navItems = role === "ADMIN" ? ADMIN_NAV : role === "STAFF" ? STAFF_NAV : PLAYER_NAV;
+  const baseNav = role === "ADMIN" ? ADMIN_NAV : role === "STAFF" ? STAFF_NAV : PLAYER_NAV;
+  const extraNav = role !== "ADMIN" && uprawnienia.length > 0
+    ? ADMIN_NAV.filter(item => uprawnienia.includes(item.href.replace("/panel/", "")))
+        .filter(item => !baseNav.some(b => b.href === item.href))
+    : [];
+  const navItems = extraNav.length > 0
+    ? [...extraNav, ...baseNav]
+    : baseNav;
   const displayName = name || login;
   const initials = displayName.charAt(0).toUpperCase();
 

@@ -1,5 +1,5 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 
 export async function GET() {
-  return Response.json({ authed: await isAdmin() });
+  return Response.json({ authed: await hasAccess("transmisja") });
 }

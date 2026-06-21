@@ -1,10 +1,10 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("sezony"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
 
   const sezony = await prisma.sezon.findMany({
     orderBy: { createdAt: "desc" },
@@ -15,7 +15,7 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("sezony"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
 
   const { nazwa, aktywny } = await request.json();
   if (!nazwa?.trim()) return Response.json({ error: "Podaj nazwę sezonu" }, { status: 400 });

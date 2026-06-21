@@ -1,10 +1,10 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("galeria"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const albumy = await prisma.album.findMany({
     orderBy: [{ kolejnosc: "asc" }, { date: "desc" }],
     select: { id: true, slug: true, tytul: true, date: true, tags: true, thumbnail: true, published: true, kolejnosc: true, photos: true },
@@ -13,7 +13,7 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("galeria"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const body = await request.json();
   if (!body.tytul?.trim()) return Response.json({ error: "Tytuł jest wymagany" }, { status: 400 });
   if (!body.slug?.trim()) return Response.json({ error: "Slug jest wymagany" }, { status: 400 });

@@ -1,4 +1,4 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { spawn } from "child_process";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
@@ -26,7 +26,7 @@ function writeStatus(data) {
 }
 
 export async function GET() {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("scraper"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const status = readStatus();
   let data = null;
   const outputFile = getOutputFile();
@@ -40,7 +40,7 @@ export async function GET() {
 }
 
 export async function POST() {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("scraper"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const status = readStatus();
   if (status.status === "running") return Response.json({ error: "Scraper już działa" }, { status: 409 });
 
@@ -63,7 +63,7 @@ export async function POST() {
 }
 
 export async function DELETE() {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("scraper"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   writeStatus({ status: "idle", progress: null, startedAt: null, finishedAt: null, stats: null });
   return Response.json({ ok: true });
 }

@@ -1,10 +1,10 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 403 });
+  if (!(await hasAccess("typowanie"))) return Response.json({ error: "Brak dostępu" }, { status: 403 });
 
   const lista = await prisma.typowanie.findMany({
     orderBy: { dataRozpoczecia: "desc" },
@@ -15,7 +15,7 @@ export async function GET() {
 }
 
 export async function POST(req) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 403 });
+  if (!(await hasAccess("typowanie"))) return Response.json({ error: "Brak dostępu" }, { status: 403 });
 
   const body = await req.json();
   const { team1, team2, herb1, herb2, dataRozpoczecia } = body;

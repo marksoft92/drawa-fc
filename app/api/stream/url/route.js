@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 
 const dataFile = join(process.cwd(), "stream-data.json");
 
@@ -18,7 +18,7 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  if (!(await isAdmin())) {
+  if (!(await hasAccess("transmisja"))) {
     return Response.json({ error: "Brak dostępu" }, { status: 401 });
   }
 

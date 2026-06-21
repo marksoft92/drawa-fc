@@ -37,3 +37,10 @@ export async function isAdminOrStaff(): Promise<boolean> {
   const session = await getPlayerSession();
   return session?.user.role === "ADMIN" || session?.user.role === "STAFF";
 }
+
+export async function hasAccess(slug: string): Promise<boolean> {
+  const session = await getPlayerSession();
+  if (!session) return false;
+  if (session.user.role === "ADMIN") return true;
+  return (session.user as any).uprawnienia?.includes(slug) ?? false;
+}

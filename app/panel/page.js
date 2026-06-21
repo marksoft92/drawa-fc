@@ -6,5 +6,7 @@ export default async function PanelIndex() {
   if (!session) redirect("/login");
   if (session.user.role === "ADMIN") redirect("/panel/gracze");
   if (session.user.role === "STAFF") redirect("/panel/ankiety");
+  const upr = session.user.uprawnienia;
+  if (upr?.length > 0) redirect(`/panel/${upr[0]}`);
   redirect("/panel/profil");
 }

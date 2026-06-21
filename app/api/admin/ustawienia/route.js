@@ -1,4 +1,4 @@
-import { isAdmin } from "@/lib/auth";
+import { getPlayerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -12,14 +12,23 @@ const ALLOWED_KEYS = new Set([
   "smtp_host", "smtp_port", "smtp_email", "smtp_password",
 ]);
 
+const USTAWIENIA_SLUGS = ["kontakt", "liga", "sezony", "serwer"];
+
+async function canAccessUstawienia() {
+  const session = await getPlayerSession();
+  if (!session) return false;
+  if (session.user.role === "ADMIN") return true;
+  return USTAWIENIA_SLUGS.some(s => session.user.uprawnienia?.includes(s));
+}
+
 export async function GET() {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await canAccessUstawienia())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const rows = await prisma.ustawienie.findMany({ orderBy: { klucz: "asc" } });
   return Response.json(Object.fromEntries(rows.map(r => [r.klucz, r.wartosc])));
 }
 
 export async function PATCH(request) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await canAccessUstawienia())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const body = await request.json();
 
   const entries = Object.entries(body).filter(([klucz]) => ALLOWED_KEYS.has(klucz));

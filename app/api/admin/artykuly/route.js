@@ -1,10 +1,10 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("aktualnosci"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
 
   const artykuly = await prisma.artykul.findMany({
     orderBy: { date: "desc" },
@@ -14,7 +14,7 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("aktualnosci"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
 
   const body = await request.json();
   const { slug, title, excerpt, content, thumbnail, kolor, tags, photos, published, pinned, date, podobne } = body;

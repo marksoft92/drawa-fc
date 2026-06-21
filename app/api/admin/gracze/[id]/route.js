@@ -7,7 +7,7 @@ export async function PATCH(request, { params }) {
 
   const { id } = await params;
   const body = await request.json();
-  const { login, email, role, active, newPassword, mustChangePassword, imieNazwisko, pozycja, numer, dataUrodzenia } = body;
+  const { login, email, role, uprawnienia, active, newPassword, mustChangePassword, imieNazwisko, pozycja, numer, dataUrodzenia } = body;
 
   const userUpdate = {};
   if (login !== undefined && login.trim()) {
@@ -17,6 +17,7 @@ export async function PATCH(request, { params }) {
   }
   if (email !== undefined) userUpdate.email = email || null;
   if (role !== undefined) userUpdate.role = role;
+  if (uprawnienia !== undefined) userUpdate.uprawnienia = Array.isArray(uprawnienia) ? uprawnienia : [];
   if (active !== undefined) userUpdate.active = active;
   if (newPassword) {
     userUpdate.password = await bcrypt.hash(newPassword, 10);

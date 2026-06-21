@@ -12,6 +12,23 @@ const ROLES = [
 
 const POSITIONS = ["Bramkarz", "Obrońca", "Pomocnik", "Napastnik"];
 
+const UPRAWNIENIA_OPTIONS = [
+  { slug: "aktualnosci", label: "Aktualności" },
+  { slug: "galeria", label: "Galeria" },
+  { slug: "wideo", label: "Wideo" },
+  { slug: "strony", label: "Strony" },
+  { slug: "komentarze", label: "Komentarze" },
+  { slug: "typowanie", label: "Typowanie" },
+  { slug: "liga", label: "Liga" },
+  { slug: "sponsorzy", label: "Sponsorzy" },
+  { slug: "struktura", label: "Struktura" },
+  { slug: "kontakt", label: "Kontakt" },
+  { slug: "newsletter", label: "Newsletter" },
+  { slug: "transmisja", label: "Transmisja" },
+  { slug: "sezony", label: "Sezony" },
+  { slug: "koszty", label: "Koszty" },
+];
+
 const STAT_FIELDS = [
   { key: "mecze",       label: "Mecze (liga)" },
   { key: "gole",        label: "Gole (liga)" },
@@ -25,6 +42,7 @@ const STAT_FIELDS = [
 const emptyUserForm = {
   login: "", email: "", password: "", role: "PLAYER",
   imieNazwisko: "", pozycja: "", numer: "", dataUrodzenia: "",
+  uprawnienia: [],
 };
 
 const emptyStats = () => Object.fromEntries(STAT_FIELDS.map((f) => [f.key, 0]));
@@ -157,6 +175,7 @@ export default function PanelGracze() {
       pozycja: u.player?.pozycja || "",
       numer: u.player?.numer?.toString() || "",
       dataUrodzenia: "",
+      uprawnienia: u.uprawnienia || [],
     });
     setError("");
     setFormOpen(true);
@@ -353,6 +372,31 @@ export default function PanelGracze() {
                 <input style={inp} type="date" value={form.dataUrodzenia} onChange={f("dataUrodzenia")} />
               </div>
             </div>
+            {form.role !== "ADMIN" && (
+              <div style={{ marginTop: 16 }}>
+                <label style={{ ...lbl, marginBottom: 10 }}>UPRAWNIENIA DO PODSTRON</label>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(150px,1fr))", gap: 6 }}>
+                  {UPRAWNIENIA_OPTIONS.map(({ slug, label }) => (
+                    <label key={slug} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 13, color: "#94a3b8", padding: "4px 0" }}>
+                      <input
+                        type="checkbox"
+                        checked={form.uprawnienia.includes(slug)}
+                        onChange={(e) => {
+                          setForm((p) => ({
+                            ...p,
+                            uprawnienia: e.target.checked
+                              ? [...p.uprawnienia, slug]
+                              : p.uprawnienia.filter((s) => s !== slug),
+                          }));
+                        }}
+                        style={{ width: 16, height: 16, accentColor: "#3b82f6" }}
+                      />
+                      {label}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
             {error && <div style={{ ...alertErr, marginTop: 14 }}>{error}</div>}
             <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
               <button type="submit" disabled={saving} style={btnPrimary}>

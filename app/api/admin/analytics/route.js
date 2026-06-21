@@ -1,4 +1,4 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +37,7 @@ async function umamiFetch(path, params = {}) {
 }
 
 export async function GET(request) {
-  if (!(await isAdmin())) {
+  if (!(await hasAccess("analityka"))) {
     return Response.json({ error: "Brak dostępu" }, { status: 403 });
   }
 

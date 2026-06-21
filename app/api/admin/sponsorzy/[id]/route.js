@@ -1,10 +1,10 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export async function PATCH(request, { params }) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("sponsorzy"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const { id } = await params;
   const body = await request.json();
   const data = {};
@@ -23,7 +23,7 @@ export async function PATCH(request, { params }) {
 }
 
 export async function DELETE(request, { params }) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("sponsorzy"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const { id } = await params;
   await prisma.sponsor.delete({ where: { id } });
   return Response.json({ ok: true });

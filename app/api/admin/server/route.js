@@ -1,4 +1,4 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { execSync } from "child_process";
 
 export const dynamic = "force-dynamic";
@@ -8,7 +8,7 @@ function run(cmd) {
 }
 
 export async function GET() {
-  if (!(await isAdmin())) {
+  if (!(await hasAccess("serwer"))) {
     return Response.json({ error: "Brak dostępu" }, { status: 403 });
   }
 

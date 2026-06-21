@@ -1,11 +1,11 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { createTransport } from "@/lib/mailer";
 import { execSync } from "child_process";
 
 export const dynamic = "force-dynamic";
 
 export async function POST() {
-  if (!(await isAdmin())) {
+  if (!(await hasAccess("serwer"))) {
     return Response.json({ error: "Brak dostępu" }, { status: 403 });
   }
 

@@ -1,11 +1,11 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createTransport } from "@/lib/mailer";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  if (!(await isAdmin())) {
+  if (!(await hasAccess("newsletter"))) {
     return Response.json({ error: "Brak dostępu" }, { status: 403 });
   }
 
@@ -17,7 +17,7 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  if (!(await isAdmin())) {
+  if (!(await hasAccess("newsletter"))) {
     return Response.json({ error: "Brak dostępu" }, { status: 403 });
   }
 
@@ -66,7 +66,7 @@ export async function POST(request) {
 }
 
 export async function DELETE(request) {
-  if (!(await isAdmin())) {
+  if (!(await hasAccess("newsletter"))) {
     return Response.json({ error: "Brak dostępu" }, { status: 403 });
   }
   const { id } = await request.json();

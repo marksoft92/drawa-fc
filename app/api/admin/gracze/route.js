@@ -15,6 +15,7 @@ export async function GET() {
     login: u.login,
     email: u.email,
     role: u.role,
+    uprawnienia: u.uprawnienia,
     active: u.active,
     createdAt: u.createdAt,
     player: u.player ? {
@@ -29,7 +30,7 @@ export async function GET() {
 export async function POST(request) {
   if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
 
-  const { login, email, password, role, imieNazwisko, pozycja, numer, dataUrodzenia } =
+  const { login, email, password, role, uprawnienia, imieNazwisko, pozycja, numer, dataUrodzenia } =
     await request.json();
 
   if (!login || !password || !imieNazwisko) {
@@ -47,6 +48,7 @@ export async function POST(request) {
       email: email || null,
       password: hash,
       role: role ?? "PLAYER",
+      uprawnienia: Array.isArray(uprawnienia) ? uprawnienia : [],
       player: {
         create: {
           imieNazwisko,

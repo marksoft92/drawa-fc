@@ -1,17 +1,17 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("liga"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const sezon = new URL(request.url).searchParams.get("sezon") || "2025/26";
   const mecze = await prisma.mecz.findMany({ where: { sezon }, orderBy: { createdAt: "asc" } });
   return Response.json(mecze);
 }
 
 export async function POST(request) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("liga"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const { sezon = "2025/26", mecze } = await request.json();
   if (!Array.isArray(mecze) || mecze.length === 0)
     return Response.json({ error: "Brak danych meczów" }, { status: 400 });

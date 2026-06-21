@@ -1,10 +1,10 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("sponsorzy"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const sponsorzy = await prisma.sponsor.findMany({
     orderBy: [{ kolejnosc: "asc" }, { createdAt: "asc" }],
   });
@@ -12,7 +12,7 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("sponsorzy"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const { nazwa, slug, logo, href, facebook, instagram, opis, opisDlugi, kolejnosc, aktywny } = await request.json();
   if (!nazwa?.trim()) return Response.json({ error: "Nazwa jest wymagana" }, { status: 400 });
   const sponsor = await prisma.sponsor.create({

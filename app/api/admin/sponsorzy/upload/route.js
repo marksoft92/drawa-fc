@@ -1,4 +1,4 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { validateImageBytes } from "@/lib/validateImage";
 import { saveImage } from "@/lib/saveImage";
 import { writeFile } from "fs/promises";
@@ -10,7 +10,7 @@ const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/sv
 const MAX_SIZE = 5 * 1024 * 1024;
 
 export async function POST(request) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("sponsorzy"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const formData = await request.formData();
   const file = formData.get("file");
   if (!file || typeof file === "string") return Response.json({ error: "Brak pliku" }, { status: 400 });

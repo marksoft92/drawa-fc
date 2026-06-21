@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 
 const FILE = join(process.cwd(), "match-state.json");
 
@@ -26,7 +26,7 @@ export async function GET() {
 }
 
 export async function POST(req) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("transmisja"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const body = await req.json();
   const next = { ...read(), ...body };
   writeFileSync(FILE, JSON.stringify(next), "utf8");

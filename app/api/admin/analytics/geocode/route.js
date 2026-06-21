@@ -1,4 +1,4 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { join } from "path";
 
@@ -37,7 +37,7 @@ async function geocodeCity(city, country) {
 }
 
 export async function POST(request) {
-  if (!(await isAdmin())) {
+  if (!(await hasAccess("analityka"))) {
     return Response.json({ error: "Brak dostępu" }, { status: 403 });
   }
 

@@ -12,7 +12,7 @@ export default async function PanelLayout({ children }) {
 
   const { user } = session;
   return (
-    <PanelLayoutClient role={user.role} login={user.login} name={user.player?.imieNazwisko || null} foto={user.player?.foto || null}>
+    <PanelLayoutClient role={user.role} uprawnienia={user.uprawnienia || []} login={user.login} name={user.player?.imieNazwisko || null} foto={user.player?.foto || null}>
       {children}
     </PanelLayoutClient>
   );

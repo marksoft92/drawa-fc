@@ -1,10 +1,10 @@
-import { isAdmin } from "@/lib/auth";
+import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request, { params }) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("galeria"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const { id } = await params;
   const album = await prisma.album.findUnique({ where: { id } });
   if (!album) return Response.json({ error: "Nie znaleziono" }, { status: 404 });
@@ -12,7 +12,7 @@ export async function GET(request, { params }) {
 }
 
 export async function PATCH(request, { params }) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("galeria"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const { id } = await params;
   const body = await request.json();
   const data = {};
@@ -31,7 +31,7 @@ export async function PATCH(request, { params }) {
 }
 
 export async function DELETE(request, { params }) {
-  if (!(await isAdmin())) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  if (!(await hasAccess("galeria"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const { id } = await params;
   await prisma.album.delete({ where: { id } });
   return Response.json({ ok: true });
