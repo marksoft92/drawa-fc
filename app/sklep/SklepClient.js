@@ -96,6 +96,13 @@ export default function SklepClient({ produkty, kategorie }) {
       <div style={{ paddingTop: 64, minHeight: "100vh", background: "#030712" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", padding: "24px 16px" }}>
 
+          <div style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.25)", borderRadius: 10, padding: "12px 18px", marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ fontSize: 20, flexShrink: 0 }}>&#9888;&#65039;</span>
+            <div style={{ fontSize: 13, color: "#fbbf24", lineHeight: 1.5 }}>
+              <strong>Strona testowa</strong> — sklep jest w trakcie przygotowania. Przeglądanie produktów możliwe, ale składanie zamówień jest tymczasowo wyłączone.
+            </div>
+          </div>
+
           <div style={{ fontSize: "clamp(22px,5vw,32px)", fontFamily: "'Bebas Neue',Impact,sans-serif", letterSpacing: "0.1em", color: "#fff", marginBottom: 20, display: "flex", alignItems: "center", gap: 12 }}>
             <span>Sklep</span>
             <span style={{ fontSize: 14, fontWeight: 400, color: "#475569", letterSpacing: 0 }}>MKS Drawa Drawno</span>
@@ -271,9 +278,9 @@ export default function SklepClient({ produkty, kategorie }) {
                       <span style={{ color: "#94a3b8" }}>Razem:</span>
                       <span style={{ color: "#fff", fontWeight: 700 }}>{fmtPLN(cartTotal)}</span>
                     </div>
-                    <button onClick={() => setCheckout(true)}
-                      style={{ width: "100%", padding: "12px", background: "#3b82f6", border: "none", borderRadius: 8, color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-                      Zamów
+                    <button disabled
+                      style={{ width: "100%", padding: "12px", background: "#1e293b", border: "none", borderRadius: 8, color: "#475569", fontSize: 15, fontWeight: 700, cursor: "not-allowed" }}>
+                      Zamówienia tymczasowo wyłączone
                     </button>
                   </div>
                 )}
