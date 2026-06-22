@@ -109,15 +109,32 @@ function decodeUnicode(str) {
   }
 }
 
+// Max age of posts to import (days)
+const MAX_POST_AGE_DAYS = 7;
+
 function extractPostsFromHTML(html) {
   const posts = [];
   const seen = new Set();
+  const now = Date.now();
+  const maxAgeMs = MAX_POST_AGE_DAYS * 24 * 60 * 60 * 1000;
 
-  // FB embeds posts as JSON in the HTML. Key pattern:
-  // "message":{"text":"..."} with "creation_time":UNIX nearby
-  // "preferred_thumbnail":{"image":{"uri":"..."}} for images
+  // Pre-index all creation_time positions for fast nearest-match lookup
+  const ctRegex = /"creation_time":(\d+)/g;
+  const ctEntries = [];
+  let ctMatch;
+  while ((ctMatch = ctRegex.exec(html)) !== null) {
+    ctEntries.push({ pos: ctMatch.index, ts: parseInt(ctMatch[1]) });
+  }
 
-  // Strategy: find all "message":{"text":"..."} occurrences and extract surrounding context
+  function findNearestTime(pos) {
+    let best = null;
+    for (const ct of ctEntries) {
+      const dist = Math.abs(ct.pos - pos);
+      if (!best || dist < best.dist) best = { dist, ts: ct.ts };
+    }
+    return best;
+  }
+
   const msgRegex = /"message":\{"text":"((?:[^"\\]|\\.)*)"/g;
   let match;
 
@@ -131,26 +148,25 @@ function extractPostsFromHTML(html) {
     if (seen.has(h)) continue;
     seen.add(h);
 
-    // Look for creation_time nearby (within ~2000 chars before the match)
-    const contextStart = Math.max(0, match.index - 3000);
-    const contextEnd = Math.min(html.length, match.index + match[0].length + 3000);
-    const context = html.slice(contextStart, contextEnd);
-
+    // Find nearest creation_time
+    const nearest = findNearestTime(match.index);
     let date = null;
-    const timeMatch = context.match(/"creation_time":(\d+)/);
-    if (timeMatch) {
-      const ts = parseInt(timeMatch[1]) * 1000;
-      date = new Date(ts).toISOString().split('T')[0];
+    if (nearest) {
+      const postAge = now - nearest.ts * 1000;
+      if (postAge > maxAgeMs) continue; // skip old posts
+      date = new Date(nearest.ts * 1000).toISOString().split('T')[0];
     }
 
-    // Look for thumbnail image
+    // Look for thumbnail image in surrounding context (wider range)
+    const contextStart = Math.max(0, match.index - 25000);
+    const contextEnd = Math.min(html.length, match.index + match[0].length + 5000);
+    const context = html.slice(contextStart, contextEnd);
+
     let imageUrl = null;
-    // Check for preferred_thumbnail nearby
     const thumbMatch = context.match(/"preferred_thumbnail":\{"image":\{"uri":"((?:[^"\\]|\\.)*)"/);
     if (thumbMatch) {
       imageUrl = decodeUnicode(thumbMatch[1]).replace(/\\\//g, '/');
     }
-    // Also check for "full_image" or "media" > "image"
     if (!imageUrl) {
       const imgMatch = context.match(/"full_image":\{"uri":"((?:[^"\\]|\\.)*)"/);
       if (imgMatch) imageUrl = decodeUnicode(imgMatch[1]).replace(/\\\//g, '/');
