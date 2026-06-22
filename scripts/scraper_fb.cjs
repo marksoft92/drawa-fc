@@ -201,7 +201,7 @@ async function saveImage(buffer) {
 
 // ━━━ LLM REWRITE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-async function rewritePost(text, clubName) {
+async function rewritePost(text, clubName, retries = 0) {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) return null;
 
@@ -237,6 +237,12 @@ ${text.slice(0, 2000)}`;
       }),
     });
 
+    if (res.status === 429 && retries < 2) {
+      const wait = 15000 * (retries + 1);
+      console.log(`     ⏳ LLM rate limit — czekam ${wait / 1000}s (retry ${retries + 1})...`);
+      await sleep(wait);
+      return rewritePost(text, clubName, retries + 1);
+    }
     if (!res.ok) {
       console.log(`     ⚠️ LLM HTTP ${res.status}`);
       return null;
@@ -339,8 +345,8 @@ function slugify(str) {
             }
           }
 
-          // Rewrite via LLM (with small delay to not spam the API)
-          if (totalNew > 0) await sleep(1000);
+          // Rewrite via LLM (delay to respect free tier rate limits)
+          if (totalNew > 0) await sleep(5000);
           const rewrite = await rewritePost(post.text, z.nazwa);
           const tytul = rewrite?.tytul || '';
           const tresc = rewrite?.tresc || post.text;
