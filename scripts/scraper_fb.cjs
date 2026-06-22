@@ -231,7 +231,7 @@ ${text.slice(0, 2000)}`;
         'X-Title': 'MKS Drawa Scraper',
       },
       body: JSON.stringify({
-        model: 'google/gemma-4-12b-it:free',
+        model: 'google/gemma-4-31b-it:free',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 800,
       }),
