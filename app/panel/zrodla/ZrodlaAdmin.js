@@ -318,9 +318,31 @@ function WpisyTab({ published }) {
 
   const fmtDate = (d) => {
     if (!d) return "";
-    try { return new Date(d).toLocaleDateString("pl-PL", { day: "numeric", month: "short", year: "numeric" }); }
+    try { return new Date(d).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" }); }
     catch { return d; }
   };
+
+  const fmtDateShort = (d) => {
+    if (!d) return "Brak daty";
+    try { return new Date(d).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" }); }
+    catch { return d; }
+  };
+
+  // Group posts by dataPostu date
+  const grouped = {};
+  wpisy.forEach(w => {
+    const key = w.dataPostu || "brak-daty";
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(w);
+  });
+  const dateKeys = Object.keys(grouped).sort((a, b) => {
+    if (a === "brak-daty") return 1;
+    if (b === "brak-daty") return -1;
+    return b.localeCompare(a);
+  });
+
+  const [collapsedDates, setCollapsedDates] = useState({});
+  const toggleDate = (key) => setCollapsedDates(prev => ({ ...prev, [key]: !prev[key] }));
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -335,8 +357,32 @@ function WpisyTab({ published }) {
         </select>
       </div>
 
-      {/* Posts */}
-      {wpisy.map(w => {
+      {/* Date groups */}
+      {dateKeys.map(dateKey => {
+        const items = grouped[dateKey];
+        const isCollapsed = collapsedDates[dateKey];
+        return (
+          <div key={dateKey}>
+            {/* Date header — clickable to toggle */}
+            <div
+              onClick={() => toggleDate(dateKey)}
+              style={{
+                display: "flex", alignItems: "center", gap: 10, padding: "10px 0", cursor: "pointer",
+                borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: 8,
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"
+                style={{ transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)", transition: "transform 0.2s", flexShrink: 0 }}>
+                <polyline points="6,9 12,15 18,9" />
+              </svg>
+              <span style={{ fontSize: 13, fontWeight: 700, color: "#3b82f6", letterSpacing: "0.03em" }}>
+                {fmtDateShort(dateKey === "brak-daty" ? null : dateKey)}
+              </span>
+              <span style={{ fontSize: 11, color: "#475569" }}>({items.length})</span>
+            </div>
+
+            {/* Posts in this date group */}
+            {!isCollapsed && items.map(w => {
         const isExpanded = expanded === w.id;
         const isEditing = editId === w.id;
         const images = Array.isArray(w.obrazki) ? w.obrazki : [];
@@ -439,6 +485,9 @@ function WpisyTab({ published }) {
                 )}
               </div>
             )}
+          </div>
+        );
+      })}
           </div>
         );
       })}
