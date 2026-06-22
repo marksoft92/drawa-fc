@@ -198,6 +198,75 @@ async function saveImage(buffer) {
   }
 }
 
+// ━━━ LLM REWRITE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+async function rewritePost(text, clubName) {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) return null;
+
+  const prompt = `Przepisz poniższy post z Facebooka klubu "${clubName}" na krótką wiadomość w 3 osobie, jak informacja na portalu sportowym. Napisz też tytuł (max 80 znaków).
+
+ZASADY:
+- Pisz w 3 osobie (np. "${clubName} ogłosił..." zamiast "Ogłaszamy...")
+- Zachowaj fakty, daty, wyniki, nazwiska
+- Usuń emotikony, hashtagi, CTA ("polub", "udostępnij")
+- Ton: neutralny, dziennikarski, po polsku
+- Nie dodawaj informacji których nie ma w oryginale
+
+FORMAT ODPOWIEDZI (dokładnie tak):
+TYTUŁ: <tytuł>
+TREŚĆ: <treść>
+
+POST DO PRZEPISANIA:
+${text.slice(0, 2000)}`;
+
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://mksdrawadrawno.pl',
+        'X-Title': 'MKS Drawa Scraper',
+      },
+      body: JSON.stringify({
+        model: 'google/gemma-4-12b-it:free',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 800,
+      }),
+    });
+
+    if (!res.ok) {
+      console.log(`     ⚠️ LLM HTTP ${res.status}`);
+      return null;
+    }
+
+    const data = await res.json();
+    const reply = data?.choices?.[0]?.message?.content || '';
+
+    const titleMatch = reply.match(/TYTU[ŁL]:\s*(.+)/i);
+    const contentMatch = reply.match(/TRE[SŚ][CĆ]:\s*([\s\S]+)/i);
+
+    if (titleMatch && contentMatch) {
+      return {
+        tytul: titleMatch[1].trim().replace(/^["„]|[""]$/g, ''),
+        tresc: contentMatch[1].trim(),
+      };
+    }
+    return null;
+  } catch (err) {
+    console.log(`     ⚠️ LLM: ${err.message}`);
+    return null;
+  }
+}
+
+function slugify(str) {
+  return str.toLowerCase()
+    .replace(/ą/g, 'a').replace(/ć/g, 'c').replace(/ę/g, 'e').replace(/ł/g, 'l')
+    .replace(/ń/g, 'n').replace(/ó/g, 'o').replace(/ś/g, 's').replace(/ź/g, 'z').replace(/ż/g, 'z')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
 // ━━━ MAIN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 (async () => {
   const startedAt = new Date().toISOString();
@@ -269,15 +338,21 @@ async function saveImage(buffer) {
             }
           }
 
+          // Rewrite via LLM (with small delay to not spam the API)
+          if (totalNew > 0) await sleep(1000);
+          const rewrite = await rewritePost(post.text, z.nazwa);
+          const tytul = rewrite?.tytul || '';
+          const tresc = rewrite?.tresc || post.text;
+
           const id = genId();
-          const autoSlug = `fb-${id}`;
+          const autoSlug = tytul ? slugify(tytul) + '-' + id.slice(-6) : `fb-${id}`;
           await pool.query(
             `INSERT INTO "WpisLigowy" (id, "zrodloId", "fbHash", tytul, slug, tresc, miniaturka, obrazki, "dataPostu", published, "createdAt", "updatedAt")
-             VALUES ($1, $2, $3, '', $4, $5, $6, $7, $8, false, NOW(), NOW())`,
-            [id, z.id, h, autoSlug, post.text, localImages[0] || null, JSON.stringify(localImages), post.date || null]
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, false, NOW(), NOW())`,
+            [id, z.id, h, tytul, autoSlug, tresc, localImages[0] || null, JSON.stringify(localImages), post.date || null]
           );
           totalNew++;
-          console.log(`     ✅ Nowy: ${post.text.slice(0, 60).replace(/\n/g, ' ')}...`);
+          console.log(`     ✅ ${tytul || post.text.slice(0, 50).replace(/\n/g, ' ')}...`);
         }
 
       } catch (err) {
