@@ -1,7 +1,9 @@
 /**
  * Drawa FC — Facebook scraper ligowy
  *
- * Ściąga posty z publicznych stron FB klubów z ligi.
+ * Ściąga posty z publicznych stron FB klubów z ligi
+ * używając www.facebook.com + Googlebot User-Agent (server-rendered HTML z JSON).
+ *
  * Wynik: nowe wpisy w tabeli WpisLigowy (published=false).
  *
  * Uruchomienie:
@@ -10,7 +12,6 @@
  * Wymaga: cheerio, sharp, pg, dotenv
  */
 
-const { load } = require('cheerio');
 const crypto = require('crypto');
 const sharp = require('sharp');
 const https = require('https');
@@ -26,7 +27,7 @@ const TMP_DIR = path.join(ROOT, 'tmp');
 const UPLOADS_DIR = path.join(ROOT, 'public', 'uploads');
 const STATUS_FILE = path.join(TMP_DIR, 'scraper_fb_status.json');
 
-const USER_AGENT = 'Mozilla/5.0 (Linux; Android 10; SM-G975F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36';
+const GOOGLEBOT_UA = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
 
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -39,14 +40,12 @@ function writeStatus(data) {
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-function hash(text) {
+function hashText(text) {
   return crypto.createHash('sha256').update(text.trim()).digest('hex');
 }
 
 function genId() {
-  const t = Date.now().toString(36);
-  const r = crypto.randomBytes(8).toString('hex');
-  return `${t}${r}`;
+  return Date.now().toString(36) + crypto.randomBytes(8).toString('hex');
 }
 
 function fetchHTML(url) {
@@ -54,18 +53,19 @@ function fetchHTML(url) {
     const proto = url.startsWith('https') ? https : http;
     const req = proto.get(url, {
       headers: {
-        'User-Agent': USER_AGENT,
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'pl-PL,pl;q=0.9,en;q=0.5',
+        'User-Agent': GOOGLEBOT_UA,
+        'Accept': 'text/html,application/xhtml+xml',
+        'Accept-Language': 'pl-PL,pl;q=0.9',
         'Accept-Encoding': 'identity',
       },
-      timeout: 20000,
+      timeout: 25000,
     }, res => {
-      if (res.statusCode === 301 || res.statusCode === 302 || res.statusCode === 303) {
+      if ([301, 302, 303, 307].includes(res.statusCode)) {
         const loc = res.headers.location;
-        if (loc) return fetchHTML(loc.startsWith('http') ? loc : `https://mbasic.facebook.com${loc}`).then(resolve).catch(reject);
+        if (loc) return fetchHTML(loc.startsWith('http') ? loc : `https://www.facebook.com${loc}`).then(resolve).catch(reject);
+        return reject(new Error(`Redirect bez location`));
       }
-      if (res.statusCode !== 200) return reject(new Error(`HTTP ${res.statusCode} for ${url}`));
+      if (res.statusCode !== 200) return reject(new Error(`HTTP ${res.statusCode}`));
       const chunks = [];
       res.on('data', c => chunks.push(c));
       res.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
@@ -78,7 +78,7 @@ function fetchHTML(url) {
 function downloadBuffer(url) {
   return new Promise((resolve, reject) => {
     const proto = url.startsWith('https') ? https : http;
-    const req = proto.get(url, { headers: { 'User-Agent': USER_AGENT }, timeout: 15000 }, res => {
+    const req = proto.get(url, { headers: { 'User-Agent': GOOGLEBOT_UA }, timeout: 15000 }, res => {
       if (res.statusCode === 301 || res.statusCode === 302) {
         return downloadBuffer(res.headers.location).then(resolve).catch(reject);
       }
@@ -94,7 +94,6 @@ function downloadBuffer(url) {
 
 function extractPageSlug(fbUrl) {
   let url = fbUrl.trim().replace(/\/+$/, '');
-  // Handle profile.php?id=XXXX format
   const idMatch = url.match(/profile\.php\?id=(\d+)/);
   if (idMatch) return `profile.php?id=${idMatch[1]}`;
   url = url.replace(/https?:\/\/(www\.|m\.|mbasic\.)?facebook\.com\/?/, '');
@@ -102,99 +101,66 @@ function extractPageSlug(fbUrl) {
   return url;
 }
 
-function parsePosts($) {
+function decodeUnicode(str) {
+  try {
+    return str.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+  } catch {
+    return str;
+  }
+}
+
+function extractPostsFromHTML(html) {
   const posts = [];
-
-  // mbasic.facebook.com uses <div id="recent_capsule_container"> or similar
-  // posts are typically in <div> with role="article" or inside story containers
-  // The structure: each post is in a div that contains the text + optional images
-
-  // Strategy: find all story/post containers
-  const selectors = [
-    'div[data-ft]',
-    'article',
-    '#recent_capsule_container > div > div',
-    '#structured_composer_async_container ~ div > div > div',
-    'div.story_body_container',
-  ];
-
   const seen = new Set();
-  const allEls = new Set();
 
-  for (const sel of selectors) {
-    $(sel).each((_, el) => allEls.add(el));
-  }
+  // FB embeds posts as JSON in the HTML. Key pattern:
+  // "message":{"text":"..."} with "creation_time":UNIX nearby
+  // "preferred_thumbnail":{"image":{"uri":"..."}} for images
 
-  // If selectors didn't match, try a broad approach: divs that look like posts
-  if (allEls.size === 0) {
-    $('div').each((_, el) => {
-      const $el = $(el);
-      // A post div typically has some text and might have images
-      const text = $el.children('div').first().text().trim();
-      if (text.length > 30 && text.length < 5000) {
-        // Check it's not a container of many posts
-        const childDivs = $el.children('div').length;
-        if (childDivs <= 5) allEls.add(el);
-      }
-    });
-  }
+  // Strategy: find all "message":{"text":"..."} occurrences and extract surrounding context
+  const msgRegex = /"message":\{"text":"((?:[^"\\]|\\.)*)"/g;
+  let match;
 
-  for (const el of allEls) {
-    const $el = $(el);
+  while ((match = msgRegex.exec(html)) !== null) {
+    const rawText = match[1];
+    const text = decodeUnicode(rawText).replace(/\\n/g, '\n').replace(/\\\\/g, '\\').replace(/\\"/g, '"');
 
-    // Extract text
-    let text = '';
-    // Try specific content selectors first
-    const candidates = [
-      $el.find('div > div > span').first(),
-      $el.find('p').first(),
-      $el.find('div.bx').first(),
-    ];
-    for (const c of candidates) {
-      if (c.length && c.text().trim().length > 15) {
-        text = c.text().trim();
-        break;
-      }
-    }
-    if (!text) {
-      // Fallback: get text but strip navigation/link-only content
-      const clone = $el.clone();
-      clone.find('a[href*="reaction"], a[href*="comment"], a[href*="share"], footer, header, form').remove();
-      const allText = clone.text().trim();
-      if (allText.length > 20 && allText.length < 5000) text = allText;
-    }
+    if (text.length < 15) continue;
 
-    if (!text || text.length < 15) continue;
-    // Skip meta-only text
-    if (/^[\s\S]{0,30}(udostępni|shared|polub|like|skomentuj|odpowiedz)/i.test(text)) continue;
-
-    // Dedup within page
-    const h = hash(text);
+    const h = hashText(text);
     if (seen.has(h)) continue;
     seen.add(h);
 
-    // Extract images
-    const images = [];
-    $el.find('img').each((_, img) => {
-      const src = $(img).attr('src') || '';
-      if (src.includes('emoji') || src.includes('rsrc.php') || src.includes('static')) return;
-      if (src.includes('profile') || src.includes('avatar')) return;
-      if (src.startsWith('http') && (src.includes('fbcdn') || src.includes('facebook') || src.includes('fbsbx'))) {
-        images.push(src);
-      }
-    });
+    // Look for creation_time nearby (within ~2000 chars before the match)
+    const contextStart = Math.max(0, match.index - 3000);
+    const contextEnd = Math.min(html.length, match.index + match[0].length + 3000);
+    const context = html.slice(contextStart, contextEnd);
 
-    // Extract date
     let date = null;
-    const abbrEl = $el.find('abbr');
-    if (abbrEl.length) date = abbrEl.first().text().trim();
-    if (!date) {
-      // Try timestamp from links
-      const timeLink = $el.find('a[href*="/story.php"], a[href*="/permalink"]');
-      if (timeLink.length) date = timeLink.first().text().trim();
+    const timeMatch = context.match(/"creation_time":(\d+)/);
+    if (timeMatch) {
+      const ts = parseInt(timeMatch[1]) * 1000;
+      date = new Date(ts).toISOString().split('T')[0];
     }
 
-    posts.push({ text, images, date });
+    // Look for thumbnail image
+    let imageUrl = null;
+    // Check for preferred_thumbnail nearby
+    const thumbMatch = context.match(/"preferred_thumbnail":\{"image":\{"uri":"((?:[^"\\]|\\.)*)"/);
+    if (thumbMatch) {
+      imageUrl = decodeUnicode(thumbMatch[1]).replace(/\\\//g, '/');
+    }
+    // Also check for "full_image" or "media" > "image"
+    if (!imageUrl) {
+      const imgMatch = context.match(/"full_image":\{"uri":"((?:[^"\\]|\\.)*)"/);
+      if (imgMatch) imageUrl = decodeUnicode(imgMatch[1]).replace(/\\\//g, '/');
+    }
+    if (!imageUrl) {
+      const imgMatch2 = context.match(/"image":\{"uri":"(https:\/\/scontent[^"\\]*)"/);
+      if (imgMatch2) imageUrl = decodeUnicode(imgMatch2[1]).replace(/\\\//g, '/');
+    }
+
+    posts.push({ text, date, imageUrl });
   }
 
   return posts;
@@ -205,7 +171,10 @@ async function saveImage(buffer) {
   const filename = `fb-${Date.now()}-${Math.random().toString(36).slice(2, 7)}.webp`;
   const dest = path.join(UPLOADS_DIR, filename);
   try {
-    const webp = await sharp(buffer).resize(1200, 1200, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 82 }).toBuffer();
+    const webp = await sharp(buffer)
+      .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: 82 })
+      .toBuffer();
     fs.writeFileSync(dest, webp);
     return `/uploads/${filename}`;
   } catch {
@@ -213,6 +182,7 @@ async function saveImage(buffer) {
   }
 }
 
+// ━━━ MAIN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 (async () => {
   const startedAt = new Date().toISOString();
   console.log(`[${startedAt}] Scraper FB start`);
@@ -221,7 +191,6 @@ async function saveImage(buffer) {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
   try {
-    // 1. Fetch active sources
     const { rows: zrodla } = await pool.query(
       'SELECT id, nazwa, "fbUrl" FROM "ZrodloFB" WHERE aktywne = true'
     );
@@ -234,7 +203,6 @@ async function saveImage(buffer) {
     }
 
     console.log(`Znaleziono ${zrodla.length} aktywnych źródeł`);
-    writeStatus({ status: 'running', startedAt, progress: `Scrapuję ${zrodla.length} źródeł...`, finishedAt: null, stats: null });
 
     let totalNew = 0;
     let totalSkipped = 0;
@@ -252,36 +220,34 @@ async function saveImage(buffer) {
         const slug = extractPageSlug(z.fbUrl);
         if (!slug) { errors.push(`${z.nazwa}: nie można wyciągnąć slug z URL`); continue; }
 
-        const fbUrl = `https://mbasic.facebook.com/${slug}`;
+        const fbUrl = `https://www.facebook.com/${slug}/`;
         console.log(`  📥 [${i + 1}/${zrodla.length}] ${z.nazwa}: ${fbUrl}`);
 
         const html = await fetchHTML(fbUrl);
-        console.log(`     Pobrano HTML: ${html.length} znaków`);
+        console.log(`     HTML: ${html.length} znaków`);
 
-        const $ = load(html);
-        const posts = parsePosts($);
+        const posts = extractPostsFromHTML(html);
         console.log(`     Znaleziono ${posts.length} postów`);
 
         for (const post of posts) {
-          const h = hash(post.text);
+          const h = hashText(post.text);
 
-          // Check dedup
           const { rowCount } = await pool.query(
             'SELECT 1 FROM "WpisLigowy" WHERE "fbHash" = $1', [h]
           );
           if (rowCount > 0) { totalSkipped++; continue; }
 
-          // Download images
+          // Download image if available
           const localImages = [];
-          for (const imgUrl of post.images.slice(0, 5)) {
+          if (post.imageUrl) {
             try {
-              const buf = await downloadBuffer(imgUrl);
+              const buf = await downloadBuffer(post.imageUrl);
               if (buf.length > 1000) {
                 const localPath = await saveImage(buf);
                 if (localPath) localImages.push(localPath);
               }
             } catch (imgErr) {
-              console.log(`     ⚠️ Nie udało się pobrać obrazka: ${imgErr.message}`);
+              console.log(`     ⚠️ Obrazek: ${imgErr.message}`);
             }
           }
 
@@ -289,18 +255,10 @@ async function saveImage(buffer) {
           await pool.query(
             `INSERT INTO "WpisLigowy" (id, "zrodloId", "fbHash", tytul, slug, tresc, miniaturka, obrazki, "dataPostu", published, "createdAt", "updatedAt")
              VALUES ($1, $2, $3, '', '', $4, $5, $6, $7, false, NOW(), NOW())`,
-            [
-              id,
-              z.id,
-              h,
-              post.text,
-              localImages[0] || null,
-              JSON.stringify(localImages),
-              post.date || null,
-            ]
+            [id, z.id, h, post.text, localImages[0] || null, JSON.stringify(localImages), post.date || null]
           );
           totalNew++;
-          console.log(`     ✅ Nowy wpis (${post.text.slice(0, 60)}...)`);
+          console.log(`     ✅ Nowy: ${post.text.slice(0, 60).replace(/\n/g, ' ')}...`);
         }
 
       } catch (err) {
@@ -308,7 +266,6 @@ async function saveImage(buffer) {
         errors.push(`${z.nazwa}: ${err.message}`);
       }
 
-      // Polite delay between pages
       if (i < zrodla.length - 1) {
         const delay = 3000 + Math.random() * 3000;
         console.log(`     ⏳ Czekam ${Math.round(delay / 1000)}s...`);
@@ -318,9 +275,7 @@ async function saveImage(buffer) {
 
     const finishedAt = new Date().toISOString();
     writeStatus({
-      status: 'done',
-      startedAt,
-      finishedAt,
+      status: 'done', startedAt, finishedAt,
       progress: errors.length ? `Gotowe (${errors.length} błędów)` : 'Gotowe!',
       stats: { zrodla: zrodla.length, noweWpisy: totalNew, pominiete: totalSkipped, bledy: errors },
     });
@@ -330,8 +285,7 @@ async function saveImage(buffer) {
   } catch (err) {
     console.error('💥 Krytyczny błąd:', err);
     writeStatus({
-      status: 'error',
-      startedAt,
+      status: 'error', startedAt,
       finishedAt: new Date().toISOString(),
       progress: `Błąd: ${err.message}`,
       stats: null,
