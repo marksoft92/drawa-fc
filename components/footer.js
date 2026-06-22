@@ -23,6 +23,7 @@ const kolumny = [
       { label: 'Liga', href: '/liga' },
       { label: 'Statystyki', href: '/statystyki' },
       { label: 'Typowanie', href: '/typowanie' },
+      { label: 'Piłka lokalna', href: '/pilka-lokalna' },
     ],
   },
   {

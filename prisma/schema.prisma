@@ -598,3 +598,35 @@ model ZamowieniePozycja {
   cena         Int
   createdAt    DateTime   @default(now())
 }
+
+// ─── Źródła FB (scraper ligowy) ─────────────────────────────────────────────
+
+model ZrodloFB {
+  id        String       @id @default(cuid())
+  nazwa     String
+  fbUrl     String
+  herb      String?
+  aktywne   Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  wpisy     WpisLigowy[]
+}
+
+model WpisLigowy {
+  id         String   @id @default(cuid())
+  zrodloId   String
+  zrodlo     ZrodloFB @relation(fields: [zrodloId], references: [id], onDelete: Cascade)
+  fbHash     String   @unique
+  tytul      String   @default("")
+  slug       String   @unique @default("")
+  tresc      String
+  miniaturka String?
+  obrazki    Json     @default("[]")
+  dataPostu  String?
+  published  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([zrodloId])
+  @@index([published])
+}
