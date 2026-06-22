@@ -618,7 +618,7 @@ model WpisLigowy {
   zrodlo     ZrodloFB @relation(fields: [zrodloId], references: [id], onDelete: Cascade)
   fbHash     String   @unique
   tytul      String   @default("")
-  slug       String   @unique @default("")
+  slug       String   @unique @default(cuid())
   tresc      String
   miniaturka String?
   obrazki    Json     @default("[]")

@@ -220,7 +220,9 @@ async function saveImage(buffer) {
         const slug = extractPageSlug(z.fbUrl);
         if (!slug) { errors.push(`${z.nazwa}: nie można wyciągnąć slug z URL`); continue; }
 
-        const fbUrl = `https://www.facebook.com/${slug}/`;
+        const fbUrl = slug.includes('?')
+          ? `https://www.facebook.com/${slug}`
+          : `https://www.facebook.com/${slug}/`;
         console.log(`  📥 [${i + 1}/${zrodla.length}] ${z.nazwa}: ${fbUrl}`);
 
         const html = await fetchHTML(fbUrl);
@@ -252,10 +254,11 @@ async function saveImage(buffer) {
           }
 
           const id = genId();
+          const autoSlug = `fb-${id}`;
           await pool.query(
             `INSERT INTO "WpisLigowy" (id, "zrodloId", "fbHash", tytul, slug, tresc, miniaturka, obrazki, "dataPostu", published, "createdAt", "updatedAt")
-             VALUES ($1, $2, $3, '', '', $4, $5, $6, $7, false, NOW(), NOW())`,
-            [id, z.id, h, post.text, localImages[0] || null, JSON.stringify(localImages), post.date || null]
+             VALUES ($1, $2, $3, '', $4, $5, $6, $7, $8, false, NOW(), NOW())`,
+            [id, z.id, h, autoSlug, post.text, localImages[0] || null, JSON.stringify(localImages), post.date || null]
           );
           totalNew++;
           console.log(`     ✅ Nowy: ${post.text.slice(0, 60).replace(/\n/g, ' ')}...`);
