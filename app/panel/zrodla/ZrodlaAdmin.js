@@ -736,10 +736,13 @@ function ZZPNImportTab() {
     fetch("/api/admin/zrodla/zzpn").then(r => r.json()).then(setLeagues).catch(() => {});
   }, []);
 
+  const [searching, setSearching] = useState({});
+
   const scanLeague = async () => {
     if (!selectedLeague) return;
     setScanning(true);
     setResults(null);
+    setEditFb({});
     try {
       const r = await fetch("/api/admin/zrodla/zzpn", {
         method: "POST",
@@ -751,6 +754,28 @@ function ZZPNImportTab() {
       setLeagueName(d.leagueName || "");
     } catch {}
     setScanning(false);
+  };
+
+  const searchFbForTeam = async (teamName) => {
+    setSearching(p => ({ ...p, [teamName]: true }));
+    try {
+      const r = await fetch("/api/admin/zrodla/zzpn", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "search-fb", teamName }),
+      });
+      const d = await r.json();
+      if (d.fbUrl) setEditFb(p => ({ ...p, [teamName]: d.fbUrl }));
+    } catch {}
+    setSearching(p => ({ ...p, [teamName]: false }));
+  };
+
+  const searchFbAll = async () => {
+    if (!results) return;
+    const toSearch = results.filter(t => t.status === "pending" && !added[t.name] && !editFb[t.name]);
+    for (const t of toSearch) {
+      await searchFbForTeam(t.name);
+    }
   };
 
   const addClub = async (team) => {
@@ -815,8 +840,7 @@ function ZZPNImportTab() {
 
       {scanning && (
         <div style={{ ...card, textAlign: "center", color: "#a78bfa" }}>
-          <div style={{ fontSize: 13, marginBottom: 6 }}>Pobieram drużyny i szukam stron FB...</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>~12 drużyn × kilka wariantów URL = może potrwać do minuty</div>
+          <div style={{ fontSize: 13 }}>Pobieram drużyny z ZZPN...</div>
         </div>
       )}
 
@@ -829,6 +853,11 @@ function ZZPNImportTab() {
                 ({results.filter(t => t.status === "exists" || added[t.name]).length} już dodanych)
               </span>
             </span>
+            {results.some(t => t.status === "pending" && !added[t.name] && !editFb[t.name]) && (
+              <button onClick={searchFbAll} style={{ ...btnPrimary, background: "#7c3aed", fontSize: 12, marginRight: 8 }}>
+                Szukaj FB dla wszystkich
+              </button>
+            )}
             {results.some(t => !added[t.name] && t.status !== "exists" && (editFb[t.name] || t.fbUrl)) && (
               <button onClick={addAll} style={{ ...btnPrimary, background: "#22c55e", fontSize: 12 }}>
                 Dodaj wszystkie z FB ({results.filter(t => !added[t.name] && t.status !== "exists" && (editFb[t.name] || t.fbUrl)).length})
@@ -863,13 +892,20 @@ function ZZPNImportTab() {
                         onChange={e => setEditFb(p => ({ ...p, [t.name]: e.target.value }))}
                         placeholder="Link do Facebooka klubu"
                       />
+                      <button
+                        onClick={() => searchFbForTeam(t.name)}
+                        disabled={searching[t.name]}
+                        style={{ ...btnRow, color: "#a78bfa", borderColor: "rgba(167,139,250,0.3)", whiteSpace: "nowrap", fontSize: 10 }}
+                      >
+                        {searching[t.name] ? "..." : "Auto"}
+                      </button>
                       <a
                         href={`https://www.google.com/search?q=facebook+"${encodeURIComponent(t.name)}"`}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ ...btnRow, color: "#3b82f6", borderColor: "rgba(59,130,246,0.3)", whiteSpace: "nowrap", textDecoration: "none", fontSize: 10 }}
                       >
-                        Szukaj
+                        Google
                       </a>
                     </div>
                   )}

@@ -66,23 +66,36 @@ async function checkFbPage(slug) {
   try {
     const r = await fetch(`https://www.facebook.com/${slug}`, {
       headers: { "User-Agent": GOOGLEBOT_UA },
-      signal: AbortSignal.timeout(8000),
+      signal: AbortSignal.timeout(4000),
       redirect: "follow",
     });
     const html = await r.text();
     const titleMatch = html.match(/<title>([^<]+)<\/title>/);
-    if (titleMatch && titleMatch[1] !== "Facebook" && titleMatch[1] !== "Log in to Facebook") {
+    if (titleMatch && titleMatch[1] !== "Facebook" && titleMatch[1] !== "Log in to Facebook" && !titleMatch[1].includes("Log In")) {
       return { url: `https://www.facebook.com/${slug}`, title: titleMatch[1].trim() };
     }
   } catch {}
   return null;
 }
 
+async function checkFbBatch(slugs) {
+  const results = await Promise.allSettled(
+    slugs.map(s => checkFbPage(s))
+  );
+  for (const r of results) {
+    if (r.status === "fulfilled" && r.value) return r.value.url;
+  }
+  return null;
+}
+
 async function searchFacebookPage(teamName) {
   const slugs = generateFbSlugs(teamName);
-  for (const slug of slugs.slice(0, 12)) {
-    const result = await checkFbPage(slug);
-    if (result) return result.url;
+  const top = slugs.slice(0, 8);
+  // sprawdzaj po 4 równolegle
+  for (let i = 0; i < top.length; i += 4) {
+    const batch = top.slice(i, i + 4);
+    const result = await checkFbBatch(batch);
+    if (result) return result;
   }
   return null;
 }
@@ -125,11 +138,6 @@ export async function POST(request) {
 
   const { action, teamName, leagueId } = await request.json();
 
-  if (action === "search-fb") {
-    const fbUrl = await searchFacebookPage(teamName);
-    return Response.json({ fbUrl });
-  }
-
   if (action === "scan-league") {
     const data = await fetchZZPN(`/table/${leagueId}`);
     const rows = JSON.parse(data.table?.rows || "[]");
@@ -137,23 +145,19 @@ export async function POST(request) {
     const existing = await prisma.zrodloFB.findMany({ select: { nazwa: true, fbUrl: true } });
     const existingNames = new Set(existing.map(z => z.nazwa.toLowerCase()));
 
-    const results = [];
-    for (const r of rows) {
-      if (!r.team?.name) continue;
-      if (existingNames.has(r.team.name.toLowerCase())) {
-        results.push({ name: r.team.name, logo: r.team.logo, status: "exists", fbUrl: null });
-        continue;
-      }
-      const fbUrl = await searchFacebookPage(r.team.name);
-      results.push({
-        name: r.team.name,
-        logo: r.team.logo || null,
-        status: fbUrl ? "found" : "not-found",
-        fbUrl,
-      });
-    }
+    const teams = rows.filter(r => r.team?.name).map(r => ({
+      name: r.team.name,
+      logo: r.team.logo || null,
+      status: existingNames.has(r.team.name.toLowerCase()) ? "exists" : "pending",
+      fbUrl: null,
+    }));
 
-    return Response.json({ leagueName: data.league_name, results });
+    return Response.json({ leagueName: data.league_name, results: teams });
+  }
+
+  if (action === "search-fb") {
+    const fbUrl = await searchFacebookPage(teamName);
+    return Response.json({ fbUrl });
   }
 
   if (action === "add") {
