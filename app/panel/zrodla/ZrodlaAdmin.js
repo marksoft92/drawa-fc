@@ -38,11 +38,13 @@ export default function ZrodlaAdmin() {
           <button onClick={() => setTab("zrodla")} style={tabBtn("zrodla")}>Źródła</button>
           <button onClick={() => setTab("nowe")} style={tabBtn("nowe")}>Do akceptacji</button>
           <button onClick={() => setTab("opublikowane")} style={tabBtn("opublikowane")}>Opublikowane</button>
+          <button onClick={() => setTab("zzpn")} style={tabBtn("zzpn")}>Import ZZPN</button>
         </div>
       </div>
       {tab === "zrodla" && <ZrodlaTab />}
       {tab === "nowe" && <WpisyTab published={false} />}
       {tab === "opublikowane" && <WpisyTab published={true} />}
+      {tab === "zzpn" && <ZZPNImportTab />}
       <style>{`input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(59,130,246,0.5)!important} *{box-sizing:border-box}`}</style>
     </div>
   );
@@ -713,6 +715,173 @@ function WpisyTab({ published }) {
       {!wpisy.length && (
         <div style={{ textAlign: "center", padding: 40, color: "#475569", fontSize: 13 }}>
           {published ? "Brak opublikowanych wpisów." : "Brak nowych wpisów do akceptacji. Uruchom scraper w zakładce Źródła."}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ━━━ ZZPN IMPORT TAB ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function ZZPNImportTab() {
+  const [leagues, setLeagues] = useState([]);
+  const [selectedLeague, setSelectedLeague] = useState("");
+  const [scanning, setScanning] = useState(false);
+  const [results, setResults] = useState(null);
+  const [leagueName, setLeagueName] = useState("");
+  const [adding, setAdding] = useState({});
+  const [added, setAdded] = useState({});
+  const [editFb, setEditFb] = useState({});
+
+  useEffect(() => {
+    fetch("/api/admin/zrodla/zzpn").then(r => r.json()).then(setLeagues).catch(() => {});
+  }, []);
+
+  const scanLeague = async () => {
+    if (!selectedLeague) return;
+    setScanning(true);
+    setResults(null);
+    try {
+      const r = await fetch("/api/admin/zrodla/zzpn", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "scan-league", leagueId: Number(selectedLeague) }),
+      });
+      const d = await r.json();
+      setResults(d.results || []);
+      setLeagueName(d.leagueName || "");
+    } catch {}
+    setScanning(false);
+  };
+
+  const addClub = async (team) => {
+    const fbUrl = editFb[team.name] ?? team.fbUrl;
+    if (!fbUrl) return;
+    setAdding(p => ({ ...p, [team.name]: true }));
+    try {
+      const r = await fetch("/api/admin/zrodla", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nazwa: team.name, fbUrl, herb: team.logo || "" }),
+      });
+      if (r.ok) setAdded(p => ({ ...p, [team.name]: true }));
+    } catch {}
+    setAdding(p => ({ ...p, [team.name]: false }));
+  };
+
+  const addAll = async () => {
+    if (!results) return;
+    const toAdd = results.filter(t => t.status === "found" && !added[t.name] && !t.exists);
+    for (const t of toAdd) {
+      await addClub(t);
+    }
+  };
+
+  const grouped = {};
+  if (leagues.length) {
+    for (const l of leagues) {
+      const parts = l.name.split(" ");
+      const level = parts.length >= 2 ? parts[0] + " " + parts[1] : parts[0];
+      if (!grouped[level]) grouped[level] = [];
+      grouped[level].push(l);
+    }
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={card}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 12 }}>Import drużyn z ZZPN</div>
+        <div style={{ fontSize: 12, color: "#64748b", marginBottom: 16 }}>
+          Wybierz ligę → skanuje tabelę ZZPN → szuka stron FB → dodaje jako źródła
+        </div>
+
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <select value={selectedLeague} onChange={e => setSelectedLeague(e.target.value)} style={{ ...inp, width: "auto", minWidth: 260 }}>
+            <option value="">Wybierz ligę...</option>
+            {Object.entries(grouped).map(([level, lgs]) => (
+              <optgroup key={level} label={level}>
+                {lgs.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+              </optgroup>
+            ))}
+          </select>
+          <button
+            onClick={scanLeague}
+            disabled={!selectedLeague || scanning}
+            style={{ ...btnPrimary, background: "#7c3aed", opacity: (!selectedLeague || scanning) ? 0.5 : 1 }}
+          >
+            {scanning ? "Skanuję..." : "Skanuj ligę"}
+          </button>
+        </div>
+      </div>
+
+      {scanning && (
+        <div style={{ ...card, textAlign: "center", color: "#a78bfa" }}>
+          <div style={{ fontSize: 13, marginBottom: 8 }}>Pobieram drużyny i szukam stron FB...</div>
+          <div style={{ fontSize: 11, color: "#64748b" }}>To może potrwać ~30s (Google throttling)</div>
+        </div>
+      )}
+
+      {results && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
+            <span style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{leagueName} — {results.length} drużyn</span>
+            {results.some(t => t.status === "found" && !added[t.name] && !t.exists) && (
+              <button onClick={addAll} style={{ ...btnPrimary, background: "#22c55e", fontSize: 12 }}>
+                Dodaj wszystkie znalezione
+              </button>
+            )}
+          </div>
+
+          {results.map(t => {
+            const fbUrl = editFb[t.name] ?? t.fbUrl;
+            const isDone = added[t.name] || t.exists;
+
+            return (
+              <div key={t.name} style={{ ...card, display: "flex", alignItems: "center", gap: 12, opacity: isDone ? 0.5 : 1 }}>
+                {t.logo ? (
+                  <img src={t.logo} alt="" style={{ width: 36, height: 36, objectFit: "contain", borderRadius: 4, flexShrink: 0 }} />
+                ) : (
+                  <div style={{ width: 36, height: 36, borderRadius: 4, background: "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "#475569", flexShrink: 0 }}>?</div>
+                )}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{t.name}</div>
+                  {isDone ? (
+                    <div style={{ fontSize: 11, color: "#22c55e" }}>Już dodany</div>
+                  ) : t.status === "found" ? (
+                    <input
+                      style={{ ...inp, fontSize: 11, padding: "4px 8px", marginTop: 4 }}
+                      value={fbUrl || ""}
+                      onChange={e => setEditFb(p => ({ ...p, [t.name]: e.target.value }))}
+                      placeholder="URL Facebook"
+                    />
+                  ) : (
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+                      <span style={{ fontSize: 11, color: "#ef4444" }}>Nie znaleziono FB</span>
+                      <input
+                        style={{ ...inp, fontSize: 11, padding: "4px 8px", flex: 1 }}
+                        value={editFb[t.name] || ""}
+                        onChange={e => setEditFb(p => ({ ...p, [t.name]: e.target.value }))}
+                        placeholder="Wklej URL ręcznie"
+                      />
+                    </div>
+                  )}
+                </div>
+                {!isDone && (
+                  <button
+                    onClick={() => addClub({ ...t, fbUrl: editFb[t.name] ?? t.fbUrl })}
+                    disabled={adding[t.name] || !(editFb[t.name] ?? t.fbUrl)}
+                    style={{
+                      ...btnRow,
+                      color: (editFb[t.name] ?? t.fbUrl) ? "#22c55e" : "#475569",
+                      borderColor: (editFb[t.name] ?? t.fbUrl) ? "rgba(34,197,94,0.3)" : undefined,
+                      opacity: adding[t.name] ? 0.5 : 1,
+                    }}
+                  >
+                    {adding[t.name] ? "..." : "Dodaj"}
+                  </button>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
