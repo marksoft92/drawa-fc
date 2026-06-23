@@ -19,7 +19,7 @@ export async function GET(request) {
       where,
       include: { zrodlo: { select: { nazwa: true, herb: true } } },
       orderBy: { createdAt: "desc" },
-      take: 50,
+      take: 500,
       skip,
     }),
     prisma.wpisLigowy.count({ where }),
