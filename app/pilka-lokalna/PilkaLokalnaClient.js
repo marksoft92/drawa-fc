@@ -100,7 +100,7 @@ export default function PilkaLokalnaClient({ wpisy, zrodla }) {
                       )}
                       <span style={{ fontSize: 11, color: "#3b82f6", fontWeight: 600 }}>{w.zrodlo?.nazwa}</span>
                       <span style={{ fontSize: 11, color: "#334155" }}>·</span>
-                      <span style={{ fontSize: 11, color: "#475569" }}>{fmtDate(w.createdAt)}</span>
+                      <span style={{ fontSize: 11, color: "#475569" }}>{fmtDate(w.dataPostu || w.createdAt)}</span>
                     </div>
                     <h3 style={{ fontSize: 16, fontWeight: 700, color: "#e2e8f0", lineHeight: 1.4, marginBottom: 8 }}>
                       {w.tytul}

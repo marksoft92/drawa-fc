@@ -18,8 +18,8 @@ export default async function PilkaLokalnaPage() {
   const wpisy = await prisma.wpisLigowy.findMany({
     where: { published: true },
     include: { zrodlo: { select: { nazwa: true, herb: true } } },
-    orderBy: { createdAt: "desc" },
-    take: 48,
+    orderBy: [{ dataPostu: "desc" }, { createdAt: "desc" }],
+    take: 200,
   });
 
   const zrodla = await prisma.zrodloFB.findMany({
