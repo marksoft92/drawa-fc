@@ -22,60 +22,68 @@ async function fetchZZPN(path) {
 }
 
 const GOOGLEBOT_UA = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
-const FB_JUNK = /facebook\.com\/(search|share|sharer|dialog|login|help|policies|groups|watch|story|photo|reel|events|marketplace|people|profile\.php)/;
 
-function extractFbUrl(html) {
-  const matches = html.match(/https?:\/\/(?:www\.)?facebook\.com\/[a-zA-Z0-9._%-]+/g) || [];
-  for (const m of matches) {
-    const clean = m.replace(/&amp;/g, "&").replace(/[?#].*$/, "");
-    if (FB_JUNK.test(clean)) continue;
-    const slug = clean.split("facebook.com/")[1];
-    if (!slug || slug.length < 3) continue;
-    if (/^\d+$/.test(slug)) continue;
-    if (/^[a-z]+\.[a-z]+\.\d+$/.test(slug)) continue;
-    return clean;
-  }
-  return null;
+function stripDiacritics(s) {
+  return s.replace(/ą/g,"a").replace(/ć/g,"c").replace(/ę/g,"e").replace(/ł/g,"l")
+    .replace(/ń/g,"n").replace(/ó/g,"o").replace(/ś/g,"s").replace(/ź/g,"z").replace(/ż/g,"z")
+    .replace(/Ą/g,"A").replace(/Ć/g,"C").replace(/Ę/g,"E").replace(/Ł/g,"L")
+    .replace(/Ń/g,"N").replace(/Ó/g,"O").replace(/Ś/g,"S").replace(/Ź/g,"Z").replace(/Ż/g,"Z");
 }
 
-async function searchFacebookPage(teamName) {
-  // 1. DuckDuckGo (nie blokuje)
-  try {
-    const q = encodeURIComponent(`site:facebook.com "${teamName}"`);
-    const r = await fetch(`https://html.duckduckgo.com/html/?q=${q}`, {
-      headers: { "User-Agent": GOOGLE_UA },
-      signal: AbortSignal.timeout(8000),
-    });
-    const html = await r.text();
-    const url = extractFbUrl(html);
-    if (url) return url;
-  } catch {}
+function generateFbSlugs(name) {
+  const clean = stripDiacritics(name).replace(/[^a-zA-Z0-9 ]/g, "").trim();
+  const words = clean.split(/\s+/);
+  const joined = words.join("");
+  const dotted = words.join(".");
+  const dashed = words.join("-");
+  const slugs = new Set([joined, dotted, dashed]);
 
-  // 2. Facebook search z Googlebot UA
+  const prefixes = ["KS", "LKS", "MKS", "GKS", "SKS", "UKS", "GLKS", "MLKS", "NKS", "KP", "AP", "OKS", "KKPN", "CRS", "MG"];
+  for (const p of prefixes) {
+    if (words[0]?.toUpperCase() === p && words.length > 1) {
+      const rest = words.slice(1);
+      slugs.add(rest.join(""));
+      slugs.add(rest.join("."));
+      slugs.add(rest.join("-"));
+    }
+    if (words[0]?.toUpperCase() !== p) {
+      slugs.add(p + joined);
+      slugs.add(p + "." + dotted);
+    }
+  }
+
+  if (words.length >= 2) {
+    slugs.add(words[0]);
+    slugs.add(words[words.length - 1] + words[0]);
+    slugs.add(words[0] + words[words.length - 1]);
+    slugs.add(words[0] + "." + words[words.length - 1]);
+  }
+
+  return [...slugs].filter(s => s.length >= 3);
+}
+
+async function checkFbPage(slug) {
   try {
-    const q = encodeURIComponent(teamName);
-    const r = await fetch(`https://www.facebook.com/search/pages/?q=${q}`, {
-      headers: { "User-Agent": GOOGLEBOT_UA, "Accept-Language": "pl-PL,pl;q=0.9" },
+    const r = await fetch(`https://www.facebook.com/${slug}`, {
+      headers: { "User-Agent": GOOGLEBOT_UA },
       signal: AbortSignal.timeout(8000),
       redirect: "follow",
     });
     const html = await r.text();
-    const url = extractFbUrl(html);
-    if (url) return url;
+    const titleMatch = html.match(/<title>([^<]+)<\/title>/);
+    if (titleMatch && titleMatch[1] !== "Facebook" && titleMatch[1] !== "Log in to Facebook") {
+      return { url: `https://www.facebook.com/${slug}`, title: titleMatch[1].trim() };
+    }
   } catch {}
+  return null;
+}
 
-  // 3. Google fallback
-  try {
-    const q = encodeURIComponent(`site:facebook.com "${teamName}" piłka`);
-    const r = await fetch(`https://www.google.com/search?q=${q}&num=3&hl=pl`, {
-      headers: { "User-Agent": GOOGLE_UA, "Accept-Language": "pl-PL,pl;q=0.9" },
-      signal: AbortSignal.timeout(8000),
-    });
-    const html = await r.text();
-    const url = extractFbUrl(html);
-    if (url) return url;
-  } catch {}
-
+async function searchFacebookPage(teamName) {
+  const slugs = generateFbSlugs(teamName);
+  for (const slug of slugs.slice(0, 12)) {
+    const result = await checkFbPage(slug);
+    if (result) return result.url;
+  }
   return null;
 }
 
@@ -129,14 +137,21 @@ export async function POST(request) {
     const existing = await prisma.zrodloFB.findMany({ select: { nazwa: true, fbUrl: true } });
     const existingNames = new Set(existing.map(z => z.nazwa.toLowerCase()));
 
-    const results = rows
-      .filter(r => r.team?.name)
-      .map(r => ({
+    const results = [];
+    for (const r of rows) {
+      if (!r.team?.name) continue;
+      if (existingNames.has(r.team.name.toLowerCase())) {
+        results.push({ name: r.team.name, logo: r.team.logo, status: "exists", fbUrl: null });
+        continue;
+      }
+      const fbUrl = await searchFacebookPage(r.team.name);
+      results.push({
         name: r.team.name,
         logo: r.team.logo || null,
-        status: existingNames.has(r.team.name.toLowerCase()) ? "exists" : "new",
-        fbUrl: null,
-      }));
+        status: fbUrl ? "found" : "not-found",
+        fbUrl,
+      });
+    }
 
     return Response.json({ leagueName: data.league_name, results });
   }
