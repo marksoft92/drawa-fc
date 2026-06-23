@@ -770,9 +770,9 @@ function ZZPNImportTab() {
 
   const addAll = async () => {
     if (!results) return;
-    const toAdd = results.filter(t => t.status === "found" && !added[t.name] && !t.exists);
+    const toAdd = results.filter(t => t.status === "new" && !added[t.name] && editFb[t.name]);
     for (const t of toAdd) {
-      await addClub(t);
+      await addClub({ ...t, fbUrl: editFb[t.name] });
     }
   };
 
@@ -791,7 +791,7 @@ function ZZPNImportTab() {
       <div style={card}>
         <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 12 }}>Import drużyn z ZZPN</div>
         <div style={{ fontSize: 12, color: "#64748b", marginBottom: 16 }}>
-          Wybierz ligę → skanuje tabelę ZZPN → szuka stron FB → dodaje jako źródła
+          Wybierz ligę → pobiera drużyny z tabeli → wklej linki FB → dodaj jako źródła
         </div>
 
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
@@ -815,25 +815,29 @@ function ZZPNImportTab() {
 
       {scanning && (
         <div style={{ ...card, textAlign: "center", color: "#a78bfa" }}>
-          <div style={{ fontSize: 13, marginBottom: 8 }}>Pobieram drużyny i szukam stron FB...</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>To może potrwać ~30s (Google throttling)</div>
+          <div style={{ fontSize: 13 }}>Pobieram drużyny z ZZPN...</div>
         </div>
       )}
 
       {results && (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
-            <span style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{leagueName} — {results.length} drużyn</span>
-            {results.some(t => t.status === "found" && !added[t.name] && !t.exists) && (
+            <span style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>
+              {leagueName} — {results.length} drużyn
+              <span style={{ fontSize: 12, color: "#64748b", fontWeight: 400, marginLeft: 8 }}>
+                ({results.filter(t => t.status === "exists" || added[t.name]).length} już dodanych)
+              </span>
+            </span>
+            {results.some(t => t.status === "new" && !added[t.name] && editFb[t.name]) && (
               <button onClick={addAll} style={{ ...btnPrimary, background: "#22c55e", fontSize: 12 }}>
-                Dodaj wszystkie znalezione
+                Dodaj wszystkie z linkiem FB ({results.filter(t => t.status === "new" && !added[t.name] && editFb[t.name]).length})
               </button>
             )}
           </div>
 
           {results.map(t => {
-            const fbUrl = editFb[t.name] ?? t.fbUrl;
-            const isDone = added[t.name] || t.exists;
+            const isDone = added[t.name] || t.status === "exists";
+            const fbUrl = editFb[t.name] || "";
 
             return (
               <div key={t.name} style={{ ...card, display: "flex", alignItems: "center", gap: 12, opacity: isDone ? 0.5 : 1 }}>
@@ -846,33 +850,33 @@ function ZZPNImportTab() {
                   <div style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{t.name}</div>
                   {isDone ? (
                     <div style={{ fontSize: 11, color: "#22c55e" }}>Już dodany</div>
-                  ) : t.status === "found" ? (
-                    <input
-                      style={{ ...inp, fontSize: 11, padding: "4px 8px", marginTop: 4 }}
-                      value={fbUrl || ""}
-                      onChange={e => setEditFb(p => ({ ...p, [t.name]: e.target.value }))}
-                      placeholder="URL Facebook"
-                    />
                   ) : (
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
-                      <span style={{ fontSize: 11, color: "#ef4444" }}>Nie znaleziono FB</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
                       <input
                         style={{ ...inp, fontSize: 11, padding: "4px 8px", flex: 1 }}
-                        value={editFb[t.name] || ""}
+                        value={fbUrl}
                         onChange={e => setEditFb(p => ({ ...p, [t.name]: e.target.value }))}
-                        placeholder="Wklej URL ręcznie"
+                        placeholder="Wklej link do Facebooka klubu"
                       />
+                      <a
+                        href={`https://www.google.com/search?q=facebook+"${encodeURIComponent(t.name)}"+piłka`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ ...btnRow, color: "#3b82f6", borderColor: "rgba(59,130,246,0.3)", whiteSpace: "nowrap", textDecoration: "none", fontSize: 10 }}
+                      >
+                        Szukaj FB
+                      </a>
                     </div>
                   )}
                 </div>
                 {!isDone && (
                   <button
-                    onClick={() => addClub({ ...t, fbUrl: editFb[t.name] ?? t.fbUrl })}
-                    disabled={adding[t.name] || !(editFb[t.name] ?? t.fbUrl)}
+                    onClick={() => addClub({ ...t, fbUrl })}
+                    disabled={adding[t.name] || !fbUrl}
                     style={{
                       ...btnRow,
-                      color: (editFb[t.name] ?? t.fbUrl) ? "#22c55e" : "#475569",
-                      borderColor: (editFb[t.name] ?? t.fbUrl) ? "rgba(34,197,94,0.3)" : undefined,
+                      color: fbUrl ? "#22c55e" : "#475569",
+                      borderColor: fbUrl ? "rgba(34,197,94,0.3)" : undefined,
                       opacity: adding[t.name] ? 0.5 : 1,
                     }}
                   >

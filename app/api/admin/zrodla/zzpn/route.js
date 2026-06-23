@@ -21,21 +21,61 @@ async function fetchZZPN(path) {
   return r.json();
 }
 
+const GOOGLEBOT_UA = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+const FB_JUNK = /facebook\.com\/(search|share|sharer|dialog|login|help|policies|groups|watch|story|photo|reel|events|marketplace|people|profile\.php)/;
+
+function extractFbUrl(html) {
+  const matches = html.match(/https?:\/\/(?:www\.)?facebook\.com\/[a-zA-Z0-9._%-]+/g) || [];
+  for (const m of matches) {
+    const clean = m.replace(/&amp;/g, "&").replace(/[?#].*$/, "");
+    if (FB_JUNK.test(clean)) continue;
+    const slug = clean.split("facebook.com/")[1];
+    if (!slug || slug.length < 3) continue;
+    if (/^\d+$/.test(slug)) continue;
+    if (/^[a-z]+\.[a-z]+\.\d+$/.test(slug)) continue;
+    return clean;
+  }
+  return null;
+}
+
 async function searchFacebookPage(teamName) {
-  const query = encodeURIComponent(`site:facebook.com "${teamName}" piłka nożna`);
+  // 1. DuckDuckGo (nie blokuje)
   try {
-    const r = await fetch(`https://www.google.com/search?q=${query}&num=3&hl=pl`, {
+    const q = encodeURIComponent(`site:facebook.com "${teamName}"`);
+    const r = await fetch(`https://html.duckduckgo.com/html/?q=${q}`, {
+      headers: { "User-Agent": GOOGLE_UA },
+      signal: AbortSignal.timeout(8000),
+    });
+    const html = await r.text();
+    const url = extractFbUrl(html);
+    if (url) return url;
+  } catch {}
+
+  // 2. Facebook search z Googlebot UA
+  try {
+    const q = encodeURIComponent(teamName);
+    const r = await fetch(`https://www.facebook.com/search/pages/?q=${q}`, {
+      headers: { "User-Agent": GOOGLEBOT_UA, "Accept-Language": "pl-PL,pl;q=0.9" },
+      signal: AbortSignal.timeout(8000),
+      redirect: "follow",
+    });
+    const html = await r.text();
+    const url = extractFbUrl(html);
+    if (url) return url;
+  } catch {}
+
+  // 3. Google fallback
+  try {
+    const q = encodeURIComponent(`site:facebook.com "${teamName}" piłka`);
+    const r = await fetch(`https://www.google.com/search?q=${q}&num=3&hl=pl`, {
       headers: { "User-Agent": GOOGLE_UA, "Accept-Language": "pl-PL,pl;q=0.9" },
       signal: AbortSignal.timeout(8000),
     });
     const html = await r.text();
-    const fbMatch = html.match(/https?:\/\/(?:www\.)?facebook\.com\/[a-zA-Z0-9._%-]+/);
-    if (fbMatch) {
-      let url = fbMatch[0].replace(/&amp;/g, "&").replace(/[?#].*$/, "");
-      if (/facebook\.com\/(search|share|sharer|dialog|login|help|policies)/.test(url)) return null;
-      return url;
-    }
+    const url = extractFbUrl(html);
+    if (url) return url;
   } catch {}
+
   return null;
 }
 
@@ -89,16 +129,14 @@ export async function POST(request) {
     const existing = await prisma.zrodloFB.findMany({ select: { nazwa: true, fbUrl: true } });
     const existingNames = new Set(existing.map(z => z.nazwa.toLowerCase()));
 
-    const results = [];
-    for (const r of rows) {
-      if (!r.team?.name || existingNames.has(r.team.name.toLowerCase())) {
-        results.push({ name: r.team?.name, status: "exists", fbUrl: null, logo: r.team?.logo });
-        continue;
-      }
-      const fbUrl = await searchFacebookPage(r.team.name);
-      results.push({ name: r.team.name, fbUrl, logo: r.team?.logo, status: fbUrl ? "found" : "not-found" });
-      await new Promise(r => setTimeout(r, 1500));
-    }
+    const results = rows
+      .filter(r => r.team?.name)
+      .map(r => ({
+        name: r.team.name,
+        logo: r.team.logo || null,
+        status: existingNames.has(r.team.name.toLowerCase()) ? "exists" : "new",
+        fbUrl: null,
+      }));
 
     return Response.json({ leagueName: data.league_name, results });
   }
