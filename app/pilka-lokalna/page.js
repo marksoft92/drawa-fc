@@ -19,7 +19,6 @@ export default async function PilkaLokalnaPage() {
     where: { published: true },
     include: { zrodlo: { select: { nazwa: true, herb: true } } },
     orderBy: [{ dataPostu: "desc" }, { createdAt: "desc" }],
-    take: 200,
   });
 
   const zrodla = await prisma.zrodloFB.findMany({

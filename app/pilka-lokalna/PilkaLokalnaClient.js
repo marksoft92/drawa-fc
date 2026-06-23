@@ -17,9 +17,14 @@ function fmtDate(d) {
   catch { return ""; }
 }
 
+const PER_PAGE = 24;
+
 export default function PilkaLokalnaClient({ wpisy, zrodla }) {
   const [filter, setFilter] = useState("");
+  const [page, setPage] = useState(1);
   const filtered = filter ? wpisy.filter(w => w.zrodloId === filter) : wpisy;
+  const visible = filtered.slice(0, page * PER_PAGE);
+  const hasMore = visible.length < filtered.length;
 
   return (
     <>
@@ -31,7 +36,7 @@ export default function PilkaLokalnaClient({ wpisy, zrodla }) {
             {zrodla.length > 1 && (
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                 <button
-                  onClick={() => setFilter("")}
+                  onClick={() => { setFilter(""); setPage(1); }}
                   style={{
                     padding: "6px 14px", borderRadius: 20, border: "1px solid rgba(255,255,255,0.1)",
                     background: !filter ? "rgba(59,130,246,0.15)" : "transparent",
@@ -43,7 +48,7 @@ export default function PilkaLokalnaClient({ wpisy, zrodla }) {
                 {zrodla.map(z => (
                   <button
                     key={z.id}
-                    onClick={() => setFilter(z.id)}
+                    onClick={() => { setFilter(z.id); setPage(1); }}
                     style={{
                       padding: "6px 14px", borderRadius: 20, border: "1px solid rgba(255,255,255,0.1)",
                       background: filter === z.id ? "rgba(59,130,246,0.15)" : "transparent",
@@ -71,7 +76,7 @@ export default function PilkaLokalnaClient({ wpisy, zrodla }) {
             gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
             gap: 20,
           }}>
-            {filtered.map(w => (
+            {visible.map(w => (
               <Link
                 key={w.id}
                 href={`/pilka-lokalna/${w.slug}`}
@@ -113,6 +118,27 @@ export default function PilkaLokalnaClient({ wpisy, zrodla }) {
               </Link>
             ))}
           </div>
+
+          {hasMore && (
+            <div style={{ textAlign: "center", marginTop: 32 }}>
+              <button
+                onClick={() => setPage(p => p + 1)}
+                style={{
+                  padding: "12px 32px", borderRadius: 10, border: "1px solid rgba(59,130,246,0.3)",
+                  background: "rgba(59,130,246,0.08)", color: "#3b82f6", fontSize: 14, fontWeight: 600,
+                  cursor: "pointer", letterSpacing: "0.03em",
+                }}
+              >
+                Pokaż więcej ({filtered.length - visible.length})
+              </button>
+            </div>
+          )}
+
+          {filtered.length > 0 && (
+            <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "#334155" }}>
+              {visible.length} z {filtered.length} wpisów
+            </div>
+          )}
         </section>
       </div>
     </>
