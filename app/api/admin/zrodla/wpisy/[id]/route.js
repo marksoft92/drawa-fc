@@ -3,6 +3,11 @@ import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
+function pingIndexNow(urlPath) {
+  const key = "c2bde26566f3c19e8c143ffe94cde083";
+  fetch(`https://api.indexnow.org/indexnow?url=https://mksdrawadrawno.pl${urlPath}&key=${key}`).catch(() => {});
+}
+
 function slugify(str) {
   return str
     .toLowerCase()
@@ -33,6 +38,9 @@ export async function PATCH(request, { params }) {
     data.published = body.published;
   }
   const wpis = await prisma.wpisLigowy.update({ where: { id }, data });
+  if (data.published === true && wpis.slug) {
+    pingIndexNow(`/pilka-lokalna/${wpis.slug}`);
+  }
   return Response.json(wpis);
 }
 

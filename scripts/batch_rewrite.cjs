@@ -17,6 +17,8 @@ const TMP_DIR = path.join(ROOT, 'tmp');
 const STATUS_FILE = path.join(TMP_DIR, 'batch_rewrite_status.json');
 
 const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY;
+const INDEXNOW_KEY = 'c2bde26566f3c19e8c143ffe94cde083';
+const SITE_HOST = 'mksdrawadrawno.pl';
 
 const FREE_MODELS = [
   "openai/gpt-oss-120b",
@@ -60,6 +62,11 @@ function readStatus() {
 
 function wasStopped() {
   return readStatus().status !== 'running';
+}
+
+function pingIndexNow(urlPath) {
+  const url = `https://api.indexnow.org/indexnow?url=https://${SITE_HOST}${urlPath}&key=${INDEXNOW_KEY}`;
+  https.get(url, () => {}).on('error', () => {});
 }
 
 function slugify(str) {
@@ -187,6 +194,7 @@ async function main() {
             `UPDATE "WpisLigowy" SET tytul = $1, tresc = $2, slug = $3, published = true, "updatedAt" = NOW() WHERE id = $4`,
             [rewritten.tytul, rewritten.tresc, slug, w.id]
           );
+          pingIndexNow(`/pilka-lokalna/${slug}`);
           ok++;
         } catch (e) {
           errors.push(`DB error ${w.id}: ${e.message}`);
