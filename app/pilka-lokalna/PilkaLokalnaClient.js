@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
 
@@ -17,6 +17,106 @@ function fmtDate(d) {
   catch { return ""; }
 }
 
+function ClubSelect({ zrodla, filter, onSelect }) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const ref = useRef(null);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  useEffect(() => { if (open && inputRef.current) inputRef.current.focus(); }, [open]);
+
+  const selected = zrodla.find(z => z.id === filter);
+  const results = search
+    ? zrodla.filter(z => z.nazwa.toLowerCase().includes(search.toLowerCase()))
+    : zrodla;
+
+  return (
+    <div ref={ref} style={{ position: "relative", minWidth: 220 }}>
+      <button
+        onClick={() => { setOpen(o => !o); setSearch(""); }}
+        style={{
+          width: "100%", padding: "9px 14px", borderRadius: 10,
+          border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)",
+          color: selected ? "#e2e8f0" : "#64748b", fontSize: 13, cursor: "pointer",
+          display: "flex", alignItems: "center", gap: 8, textAlign: "left",
+        }}
+      >
+        {selected?.herb && <img src={selected.herb} alt="" style={{ width: 18, height: 18, objectFit: "contain", flexShrink: 0 }} />}
+        <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {selected ? selected.nazwa : "Wszystkie kluby"}
+        </span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0, transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
+          <polyline points="6,9 12,15 18,9" />
+        </svg>
+      </button>
+
+      {open && (
+        <div style={{
+          position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0, zIndex: 50,
+          background: "#0f172a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12,
+          boxShadow: "0 12px 40px rgba(0,0,0,0.5)", overflow: "hidden", maxHeight: 320,
+          display: "flex", flexDirection: "column",
+        }}>
+          <div style={{ padding: "8px 10px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+            <input
+              ref={inputRef}
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Szukaj klubu..."
+              style={{
+                width: "100%", padding: "8px 10px", background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8,
+                color: "#fff", fontSize: 13, outline: "none",
+              }}
+            />
+          </div>
+          <div style={{ overflowY: "auto", flex: 1 }}>
+            <button
+              onClick={() => { onSelect(""); setOpen(false); }}
+              style={{
+                width: "100%", padding: "10px 14px", border: "none", cursor: "pointer", textAlign: "left",
+                background: !filter ? "rgba(59,130,246,0.1)" : "transparent",
+                color: !filter ? "#3b82f6" : "#94a3b8", fontSize: 13, fontWeight: !filter ? 600 : 400,
+                display: "flex", alignItems: "center", gap: 8,
+              }}
+            >
+              Wszystkie kluby
+            </button>
+            {results.map(z => (
+              <button
+                key={z.id}
+                onClick={() => { onSelect(z.id); setOpen(false); }}
+                style={{
+                  width: "100%", padding: "10px 14px", border: "none", cursor: "pointer", textAlign: "left",
+                  background: filter === z.id ? "rgba(59,130,246,0.1)" : "transparent",
+                  color: filter === z.id ? "#3b82f6" : "#cbd5e1", fontSize: 13,
+                  fontWeight: filter === z.id ? 600 : 400,
+                  display: "flex", alignItems: "center", gap: 8,
+                }}
+              >
+                {z.herb && <img src={z.herb} alt="" style={{ width: 18, height: 18, objectFit: "contain", flexShrink: 0 }} />}
+                {z.nazwa}
+              </button>
+            ))}
+            {results.length === 0 && (
+              <div style={{ padding: "16px 14px", color: "#475569", fontSize: 13, textAlign: "center" }}>
+                Nie znaleziono
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 const PER_PAGE = 24;
 
 export default function PilkaLokalnaClient({ wpisy, zrodla }) {
@@ -26,6 +126,8 @@ export default function PilkaLokalnaClient({ wpisy, zrodla }) {
   const visible = filtered.slice(0, page * PER_PAGE);
   const hasMore = visible.length < filtered.length;
 
+  const handleFilter = (id) => { setFilter(id); setPage(1); };
+
   return (
     <>
       <NavBar backLabel="Strona główna" />
@@ -34,33 +136,7 @@ export default function PilkaLokalnaClient({ wpisy, zrodla }) {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
             <SectionLabel>Piłka lokalna</SectionLabel>
             {zrodla.length > 1 && (
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                <button
-                  onClick={() => { setFilter(""); setPage(1); }}
-                  style={{
-                    padding: "6px 14px", borderRadius: 20, border: "1px solid rgba(255,255,255,0.1)",
-                    background: !filter ? "rgba(59,130,246,0.15)" : "transparent",
-                    color: !filter ? "#3b82f6" : "#64748b", fontSize: 12, fontWeight: 600, cursor: "pointer",
-                  }}
-                >
-                  Wszystkie
-                </button>
-                {zrodla.map(z => (
-                  <button
-                    key={z.id}
-                    onClick={() => { setFilter(z.id); setPage(1); }}
-                    style={{
-                      padding: "6px 14px", borderRadius: 20, border: "1px solid rgba(255,255,255,0.1)",
-                      background: filter === z.id ? "rgba(59,130,246,0.15)" : "transparent",
-                      color: filter === z.id ? "#3b82f6" : "#64748b", fontSize: 12, fontWeight: 600, cursor: "pointer",
-                      display: "flex", alignItems: "center", gap: 6,
-                    }}
-                  >
-                    {z.herb && <img src={z.herb} alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />}
-                    {z.nazwa}
-                  </button>
-                ))}
-              </div>
+              <ClubSelect zrodla={zrodla} filter={filter} onSelect={handleFilter} />
             )}
           </div>
 
