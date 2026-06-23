@@ -215,8 +215,10 @@ function ZrodlaTab() {
         {scraperEnabled && scrStatus.status !== "running" && (
           <button onClick={startScraper} style={btnPrimary} disabled={!zrodla.length}>Uruchom scraper</button>
         )}
-        {(scrStatus.status === "done" || scrStatus.status === "error") && (
-          <button onClick={resetScraper} style={btnGhost}>Resetuj</button>
+        {scrStatus.status !== "idle" && (
+          <button onClick={resetScraper} style={{ ...btnGhost, color: scrStatus.status === "running" ? "#ef4444" : "#64748b", borderColor: scrStatus.status === "running" ? "rgba(239,68,68,0.3)" : undefined }}>
+            {scrStatus.status === "running" ? "Zatrzymaj" : "Resetuj"}
+          </button>
         )}
         {scrStatus.status === "done" && scrStatus.stats?.bledy?.length > 0 && (
           <div style={{ width: "100%", fontSize: 11, color: "#ef4444", marginTop: 4 }}>

@@ -39,6 +39,15 @@ function writeStatus(data) {
   fs.writeFileSync(STATUS_FILE, JSON.stringify(data, null, 2));
 }
 
+function readStatus() {
+  try { return JSON.parse(fs.readFileSync(STATUS_FILE, 'utf8')); }
+  catch { return { status: 'idle' }; }
+}
+
+function wasStopped() {
+  return readStatus().status !== 'running';
+}
+
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 function hashText(text) {
@@ -375,6 +384,11 @@ function slugify(str) {
       } catch (err) {
         console.error(`  ❌ ${z.nazwa}: ${err.message}`);
         errors.push(`${z.nazwa}: ${err.message}`);
+      }
+
+      if (wasStopped()) {
+        console.log('⛔ Scraper zatrzymany przez użytkownika');
+        break;
       }
 
       if (i < zrodla.length - 1) {
