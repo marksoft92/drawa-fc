@@ -276,9 +276,8 @@ function WpisyTab({ published }) {
   const [aiLoading, setAiLoading] = useState(null);
   const [aiPreview, setAiPreview] = useState({});
   const [aiError, setAiError] = useState({});
-  const [batchRunning, setBatchRunning] = useState(false);
-  const [batchProgress, setBatchProgress] = useState(null);
-  const batchAbortRef = useRef(false);
+  const [batchStatus, setBatchStatus] = useState({ status: "idle" });
+  const batchPollRef = useRef(null);
 
   const load = useCallback(async () => {
     const params = new URLSearchParams({ published: String(published) });
@@ -408,41 +407,47 @@ function WpisyTab({ published }) {
     setAiPreview(prev => { const n = { ...prev }; delete n[wId]; return n; });
   };
 
-  const batchProcessAll = async () => {
-    if (batchRunning) return;
-    const toProcess = wpisy.filter(w => !w.published);
-    if (!toProcess.length) return;
-    setBatchRunning(true);
-    batchAbortRef.current = false;
-    let done = 0, ok = 0, fail = 0;
-    const total = toProcess.length;
-    setBatchProgress({ done: 0, total, ok: 0, fail: 0, current: toProcess[0]?.tytul || toProcess[0]?.tresc?.slice(0, 60) });
+  const pollBatch = useCallback(async () => {
+    try {
+      const r = await fetch("/api/admin/zrodla/wpisy/batch-rewrite");
+      if (r.ok) {
+        const s = await r.json();
+        setBatchStatus(s);
+        if (s.status === "done" || s.status === "error") {
+          clearInterval(batchPollRef.current);
+          batchPollRef.current = null;
+          setTick(t => t + 1);
+        }
+      }
+    } catch {}
+  }, []);
 
-    for (const w of toProcess) {
-      if (batchAbortRef.current) break;
-      setBatchProgress({ done, total, ok, fail, current: w.zrodlo?.nazwa + ": " + (w.tytul || w.tresc?.slice(0, 50)) });
-      try {
-        const r = await fetch(`/api/admin/zrodla/wpisy/${w.id}/rewrite`, { method: "POST" });
-        const d = await r.json();
-        if (!r.ok) { fail++; done++; continue; }
-        const slug = slugify(d.tytul) + "-" + w.id.slice(-6);
-        const r2 = await fetch(`/api/admin/zrodla/wpisy/${w.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tytul: d.tytul, tresc: d.tresc, slug, published: true }),
-        });
-        if (r2.ok) ok++; else fail++;
-      } catch { fail++; }
-      done++;
-      setBatchProgress({ done, total, ok, fail, current: null });
+  useEffect(() => {
+    pollBatch();
+    return () => { if (batchPollRef.current) clearInterval(batchPollRef.current); };
+  }, [pollBatch]);
+
+  useEffect(() => {
+    if (batchStatus.status === "running" && !batchPollRef.current) {
+      batchPollRef.current = setInterval(pollBatch, 3000);
     }
+  }, [batchStatus.status, pollBatch]);
 
-    setBatchProgress({ done, total: done, ok, fail, current: null, finished: true });
-    setBatchRunning(false);
-    setTick(t => t + 1);
+  const batchStart = async () => {
+    const r = await fetch("/api/admin/zrodla/wpisy/batch-rewrite", { method: "POST" });
+    if (r.ok) {
+      setBatchStatus({ status: "running", done: 0, total: 0, ok: 0, fail: 0, current: "Uruchamianie..." });
+      if (!batchPollRef.current) batchPollRef.current = setInterval(pollBatch, 3000);
+    }
   };
 
-  const batchStop = () => { batchAbortRef.current = true; };
+  const batchStop = async () => {
+    await fetch("/api/admin/zrodla/wpisy/batch-rewrite", { method: "DELETE" });
+    setBatchStatus({ status: "idle" });
+    clearInterval(batchPollRef.current);
+    batchPollRef.current = null;
+    setTick(t => t + 1);
+  };
 
   const fmtDate = (d) => {
     if (!d) return "";
@@ -476,32 +481,39 @@ function WpisyTab({ published }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       {success && <div style={alertOk}>{success}</div>}
 
-      {/* Batch progress overlay */}
-      {batchProgress && (
+      {/* Batch progress */}
+      {batchStatus.status !== "idle" && (
         <div style={{ ...card, background: "#1e293b", border: "1px solid rgba(167,139,250,0.3)" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
             <span style={{ fontSize: 13, fontWeight: 700, color: "#a78bfa" }}>
-              {batchProgress.finished ? "Zakończono" : "Przetwarzanie AI..."}
+              {batchStatus.status === "running" && "Przetwarzanie AI..."}
+              {batchStatus.status === "done" && "Zakończono"}
+              {batchStatus.status === "error" && "Błąd"}
             </span>
-            {!batchProgress.finished && (
+            {batchStatus.status === "running" && (
               <button onClick={batchStop} style={{ ...btnGhost, color: "#ef4444", borderColor: "rgba(239,68,68,0.3)", padding: "4px 12px", fontSize: 11 }}>Stop</button>
             )}
-            {batchProgress.finished && (
-              <button onClick={() => setBatchProgress(null)} style={{ ...btnGhost, padding: "4px 12px", fontSize: 11 }}>Zamknij</button>
+            {(batchStatus.status === "done" || batchStatus.status === "error") && (
+              <button onClick={batchStop} style={{ ...btnGhost, padding: "4px 12px", fontSize: 11 }}>Zamknij</button>
             )}
           </div>
-          <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 6, height: 8, marginBottom: 8, overflow: "hidden" }}>
-            <div style={{ height: "100%", background: "#a78bfa", borderRadius: 6, transition: "width 0.3s", width: `${batchProgress.total ? (batchProgress.done / batchProgress.total) * 100 : 0}%` }} />
-          </div>
-          <div style={{ display: "flex", gap: 16, fontSize: 12 }}>
-            <span style={{ color: "#94a3b8" }}>{batchProgress.done}/{batchProgress.total}</span>
-            <span style={{ color: "#22c55e" }}>{batchProgress.ok} opublikowanych</span>
-            {batchProgress.fail > 0 && <span style={{ color: "#ef4444" }}>{batchProgress.fail} błędów</span>}
-          </div>
-          {batchProgress.current && (
-            <div style={{ fontSize: 11, color: "#64748b", marginTop: 6, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              {batchProgress.current}
+          {batchStatus.total > 0 && (
+            <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 6, height: 8, marginBottom: 8, overflow: "hidden" }}>
+              <div style={{ height: "100%", background: "#a78bfa", borderRadius: 6, transition: "width 0.3s", width: `${(batchStatus.done / batchStatus.total) * 100}%` }} />
             </div>
+          )}
+          <div style={{ display: "flex", gap: 16, fontSize: 12 }}>
+            <span style={{ color: "#94a3b8" }}>{batchStatus.done || 0}/{batchStatus.total || 0}</span>
+            <span style={{ color: "#22c55e" }}>{batchStatus.ok || 0} opublikowanych</span>
+            {(batchStatus.fail || 0) > 0 && <span style={{ color: "#ef4444" }}>{batchStatus.fail} błędów</span>}
+          </div>
+          {batchStatus.current && (
+            <div style={{ fontSize: 11, color: "#64748b", marginTop: 6, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {batchStatus.current}
+            </div>
+          )}
+          {batchStatus.status === "error" && batchStatus.progress && (
+            <div style={{ fontSize: 11, color: "#ef4444", marginTop: 6 }}>{batchStatus.progress}</div>
           )}
         </div>
       )}
@@ -509,8 +521,8 @@ function WpisyTab({ published }) {
       {/* Filters */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
         <span style={{ fontSize: 13, color: "#94a3b8" }}>{total} wpisów</span>
-        {!published && total > 0 && !batchRunning && (
-          <button onClick={batchProcessAll} style={{ ...btnPrimary, background: "#7c3aed", padding: "7px 16px", fontSize: 12 }}>
+        {!published && total > 0 && batchStatus.status !== "running" && (
+          <button onClick={batchStart} style={{ ...btnPrimary, background: "#7c3aed", padding: "7px 16px", fontSize: 12 }}>
             Przetwórz wszystkie AI ({total})
           </button>
         )}
