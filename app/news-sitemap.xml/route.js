@@ -10,14 +10,14 @@ export async function GET() {
 
   const [artykuly, wpisyLigowe] = await Promise.all([
     prisma.artykul.findMany({
-      where: { published: true, createdAt: { gte: twoDaysAgo } },
-      select: { slug: true, title: true, createdAt: true, tags: true },
-      orderBy: { createdAt: "desc" },
+      where: { published: true, updatedAt: { gte: twoDaysAgo } },
+      select: { slug: true, title: true, updatedAt: true, tags: true },
+      orderBy: { updatedAt: "desc" },
     }),
     prisma.wpisLigowy.findMany({
-      where: { published: true, createdAt: { gte: twoDaysAgo } },
-      select: { slug: true, tytul: true, createdAt: true, zrodlo: { select: { nazwa: true } } },
-      orderBy: { createdAt: "desc" },
+      where: { published: true, updatedAt: { gte: twoDaysAgo } },
+      select: { slug: true, tytul: true, updatedAt: true, zrodlo: { select: { nazwa: true } } },
+      orderBy: { updatedAt: "desc" },
     }),
   ]);
 
@@ -25,13 +25,13 @@ export async function GET() {
     ...artykuly.map(a => ({
       url: `${BASE}/aktualnosci/${a.slug}`,
       title: a.title,
-      date: a.createdAt,
+      date: a.updatedAt,
       keywords: a.tags?.join(", ") || "",
     })),
     ...wpisyLigowe.map(w => ({
       url: `${BASE}/pilka-lokalna/${w.slug}`,
       title: w.tytul?.replace(/^#+\s*/, "") || "",
-      date: w.createdAt,
+      date: w.updatedAt,
       keywords: [w.zrodlo?.nazwa, "piłka lokalna", "zachodniopomorskie"].filter(Boolean).join(", "),
     })),
   ].filter(e => e.title);
