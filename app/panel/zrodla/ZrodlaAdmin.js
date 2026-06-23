@@ -276,6 +276,9 @@ function WpisyTab({ published }) {
   const [aiLoading, setAiLoading] = useState(null);
   const [aiPreview, setAiPreview] = useState({});
   const [aiError, setAiError] = useState({});
+  const [batchRunning, setBatchRunning] = useState(false);
+  const [batchProgress, setBatchProgress] = useState(null);
+  const batchAbortRef = useRef(false);
 
   const load = useCallback(async () => {
     const params = new URLSearchParams({ published: String(published) });
@@ -405,6 +408,42 @@ function WpisyTab({ published }) {
     setAiPreview(prev => { const n = { ...prev }; delete n[wId]; return n; });
   };
 
+  const batchProcessAll = async () => {
+    if (batchRunning) return;
+    const toProcess = wpisy.filter(w => !w.published);
+    if (!toProcess.length) return;
+    setBatchRunning(true);
+    batchAbortRef.current = false;
+    let done = 0, ok = 0, fail = 0;
+    const total = toProcess.length;
+    setBatchProgress({ done: 0, total, ok: 0, fail: 0, current: toProcess[0]?.tytul || toProcess[0]?.tresc?.slice(0, 60) });
+
+    for (const w of toProcess) {
+      if (batchAbortRef.current) break;
+      setBatchProgress({ done, total, ok, fail, current: w.zrodlo?.nazwa + ": " + (w.tytul || w.tresc?.slice(0, 50)) });
+      try {
+        const r = await fetch(`/api/admin/zrodla/wpisy/${w.id}/rewrite`, { method: "POST" });
+        const d = await r.json();
+        if (!r.ok) { fail++; done++; continue; }
+        const slug = slugify(d.tytul) + "-" + w.id.slice(-6);
+        const r2 = await fetch(`/api/admin/zrodla/wpisy/${w.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tytul: d.tytul, tresc: d.tresc, slug, published: true }),
+        });
+        if (r2.ok) ok++; else fail++;
+      } catch { fail++; }
+      done++;
+      setBatchProgress({ done, total, ok, fail, current: null });
+    }
+
+    setBatchProgress({ done, total: done, ok, fail, current: null, finished: true });
+    setBatchRunning(false);
+    setTick(t => t + 1);
+  };
+
+  const batchStop = () => { batchAbortRef.current = true; };
+
   const fmtDate = (d) => {
     if (!d) return "";
     try { return new Date(d).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" }); }
@@ -437,9 +476,44 @@ function WpisyTab({ published }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       {success && <div style={alertOk}>{success}</div>}
 
+      {/* Batch progress overlay */}
+      {batchProgress && (
+        <div style={{ ...card, background: "#1e293b", border: "1px solid rgba(167,139,250,0.3)" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: "#a78bfa" }}>
+              {batchProgress.finished ? "Zakończono" : "Przetwarzanie AI..."}
+            </span>
+            {!batchProgress.finished && (
+              <button onClick={batchStop} style={{ ...btnGhost, color: "#ef4444", borderColor: "rgba(239,68,68,0.3)", padding: "4px 12px", fontSize: 11 }}>Stop</button>
+            )}
+            {batchProgress.finished && (
+              <button onClick={() => setBatchProgress(null)} style={{ ...btnGhost, padding: "4px 12px", fontSize: 11 }}>Zamknij</button>
+            )}
+          </div>
+          <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 6, height: 8, marginBottom: 8, overflow: "hidden" }}>
+            <div style={{ height: "100%", background: "#a78bfa", borderRadius: 6, transition: "width 0.3s", width: `${batchProgress.total ? (batchProgress.done / batchProgress.total) * 100 : 0}%` }} />
+          </div>
+          <div style={{ display: "flex", gap: 16, fontSize: 12 }}>
+            <span style={{ color: "#94a3b8" }}>{batchProgress.done}/{batchProgress.total}</span>
+            <span style={{ color: "#22c55e" }}>{batchProgress.ok} opublikowanych</span>
+            {batchProgress.fail > 0 && <span style={{ color: "#ef4444" }}>{batchProgress.fail} błędów</span>}
+          </div>
+          {batchProgress.current && (
+            <div style={{ fontSize: 11, color: "#64748b", marginTop: 6, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {batchProgress.current}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Filters */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
         <span style={{ fontSize: 13, color: "#94a3b8" }}>{total} wpisów</span>
+        {!published && total > 0 && !batchRunning && (
+          <button onClick={batchProcessAll} style={{ ...btnPrimary, background: "#7c3aed", padding: "7px 16px", fontSize: 12 }}>
+            Przetwórz wszystkie AI ({total})
+          </button>
+        )}
         <select value={filter} onChange={e => setFilter(e.target.value)} style={{ ...inp, width: "auto", minWidth: 160 }}>
           <option value="">Wszystkie źródła</option>
           {zrodla.map(z => <option key={z.id} value={z.id}>{z.nazwa}</option>)}
