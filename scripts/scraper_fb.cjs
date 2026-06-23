@@ -364,14 +364,11 @@ function slugify(str) {
             }
           }
 
-          // Rewrite via LLM (delay to respect free tier rate limits)
-          if (totalNew > 0) await sleep(5000);
-          const rewrite = await rewritePost(post.text, z.nazwa);
-          const tytul = rewrite?.tytul || '';
-          const tresc = rewrite?.tresc || post.text;
+          const tytul = '';
+          const tresc = post.text;
 
           const id = genId();
-          const autoSlug = tytul ? slugify(tytul) + '-' + id.slice(-6) : `fb-${id}`;
+          const autoSlug = `fb-${id}`;
           await pool.query(
             `INSERT INTO "WpisLigowy" (id, "zrodloId", "fbHash", tytul, slug, tresc, miniaturka, obrazki, "dataPostu", published, "createdAt", "updatedAt")
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, false, NOW(), NOW())`,
@@ -392,9 +389,7 @@ function slugify(str) {
       }
 
       if (i < zrodla.length - 1) {
-        const delay = 3000 + Math.random() * 3000;
-        console.log(`     ⏳ Czekam ${Math.round(delay / 1000)}s...`);
-        await sleep(delay);
+        await sleep(1000 + Math.random() * 1000);
       }
     }
 
