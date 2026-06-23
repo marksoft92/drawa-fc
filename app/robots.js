@@ -7,6 +7,6 @@ export default function robots() {
         disallow: ['/panel', '/admin', '/login', '/konto', '/api/'],
       },
     ],
-    sitemap: 'https://mksdrawadrawno.pl/sitemap.xml',
+    sitemap: ['https://mksdrawadrawno.pl/sitemap.xml', 'https://mksdrawadrawno.pl/news-sitemap.xml'],
   };
 }

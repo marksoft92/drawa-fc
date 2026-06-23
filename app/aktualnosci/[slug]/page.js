@@ -59,19 +59,23 @@ export default async function ArticlePage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify([
           {
             "@context": "https://schema.org",
-            "@type": "Article",
+            "@type": "NewsArticle",
             headline: a.title,
             description: a.excerpt,
             datePublished: a.date,
             dateModified: a.updatedAt?.toISOString?.() || a.date,
             image: a.thumbnail ? `https://mksdrawadrawno.pl${a.thumbnail}` : "https://mksdrawadrawno.pl/logo.png",
-            author: { "@type": "SportsOrganization", name: "MKS Drawa Drawno", url: "https://mksdrawadrawno.pl" },
+            author: { "@type": "Organization", name: "MKS Drawa Drawno", url: "https://mksdrawadrawno.pl" },
             publisher: {
-              "@type": "SportsOrganization",
+              "@type": "Organization",
               name: "MKS Drawa Drawno",
-              logo: { "@type": "ImageObject", url: "https://mksdrawadrawno.pl/logo.png" },
+              url: "https://mksdrawadrawno.pl",
+              logo: { "@type": "ImageObject", url: "https://mksdrawadrawno.pl/logo.png", width: 200, height: 200 },
             },
-            mainEntityOfPage: `https://mksdrawadrawno.pl/aktualnosci/${a.slug}`,
+            mainEntityOfPage: { "@type": "WebPage", "@id": `https://mksdrawadrawno.pl/aktualnosci/${a.slug}` },
+            articleSection: "Aktualności",
+            inLanguage: "pl-PL",
+            isAccessibleForFree: true,
           },
           {
             "@context": "https://schema.org",
