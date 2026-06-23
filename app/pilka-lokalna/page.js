@@ -21,11 +21,13 @@ export default async function PilkaLokalnaPage() {
     orderBy: [{ dataPostu: "desc" }, { createdAt: "desc" }],
   });
 
-  const zrodla = await prisma.zrodloFB.findMany({
-    where: { aktywne: true },
-    select: { id: true, nazwa: true, herb: true },
-    orderBy: { nazwa: "asc" },
-  });
+  const zrodlaMap = new Map();
+  for (const w of wpisy) {
+    if (w.zrodlo && w.zrodloId && !zrodlaMap.has(w.zrodloId)) {
+      zrodlaMap.set(w.zrodloId, { id: w.zrodloId, nazwa: w.zrodlo.nazwa, herb: w.zrodlo.herb });
+    }
+  }
+  const zrodla = [...zrodlaMap.values()].sort((a, b) => a.nazwa.localeCompare(b.nazwa, "pl"));
 
   return (
     <>
