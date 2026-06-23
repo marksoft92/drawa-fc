@@ -10,6 +10,7 @@ const ALLOWED_KEYS = new Set([
   "aktywny_sezon", "aktywny_klasa", "youtube",
   "backup_email", "backup_password",
   "smtp_host", "smtp_port", "smtp_email", "smtp_password",
+  "scraper_fb_aktywny",
 ]);
 
 const USTAWIENIA_SLUGS = ["kontakt", "liga", "sezony", "serwer"];

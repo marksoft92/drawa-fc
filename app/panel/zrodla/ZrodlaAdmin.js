@@ -61,6 +61,8 @@ function ZrodlaTab() {
 
   // Scraper status
   const [scrStatus, setScrStatus] = useState({ status: "idle" });
+  const [scraperEnabled, setScraperEnabled] = useState(true);
+  const [togglingScr, setTogglingScr] = useState(false);
   const pollRef = useRef(null);
 
   const load = useCallback(async () => {
@@ -69,6 +71,23 @@ function ZrodlaTab() {
   }, []);
 
   useEffect(() => { load(); }, [load, tick]);
+
+  useEffect(() => {
+    fetch("/api/ustawienia").then(r => r.json()).then(u => {
+      if (u.scraper_fb_aktywny !== undefined) setScraperEnabled(u.scraper_fb_aktywny !== "0");
+    }).catch(() => {});
+  }, []);
+
+  const toggleScraperEnabled = async () => {
+    setTogglingScr(true);
+    const next = !scraperEnabled;
+    const r = await fetch("/api/admin/ustawienia", {
+      method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ scraper_fb_aktywny: next ? "1" : "0" }),
+    });
+    if (r.ok) setScraperEnabled(next);
+    setTogglingScr(false);
+  };
 
   // Poll scraper status
   useEffect(() => {
@@ -169,15 +188,31 @@ function ZrodlaTab() {
       {/* Scraper control */}
       <div style={{ ...card, display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, minWidth: 200 }}>
-          <div style={{ width: 8, height: 8, borderRadius: "50%", background: statusDot, boxShadow: scrStatus.status === "running" ? `0 0 8px ${statusDot}` : "none", animation: scrStatus.status === "running" ? "pulse 1.5s infinite" : "none" }} />
-          <span style={{ fontSize: 13, color: "#94a3b8" }}>
-            {scrStatus.status === "idle" && "Scraper gotowy"}
-            {scrStatus.status === "running" && (scrStatus.progress || "Pracuję...")}
-            {scrStatus.status === "done" && `Gotowe — ${scrStatus.stats?.noweWpisy || 0} nowych wpisów`}
-            {scrStatus.status === "error" && (scrStatus.progress || "Błąd")}
+          <div style={{ width: 8, height: 8, borderRadius: "50%", background: !scraperEnabled ? "#64748b" : statusDot, boxShadow: scrStatus.status === "running" && scraperEnabled ? `0 0 8px ${statusDot}` : "none", animation: scrStatus.status === "running" && scraperEnabled ? "pulse 1.5s infinite" : "none" }} />
+          <span style={{ fontSize: 13, color: !scraperEnabled ? "#64748b" : "#94a3b8" }}>
+            {!scraperEnabled ? "Scraper wyłączony" : (
+              <>
+                {scrStatus.status === "idle" && "Scraper gotowy"}
+                {scrStatus.status === "running" && (scrStatus.progress || "Pracuję...")}
+                {scrStatus.status === "done" && `Gotowe — ${scrStatus.stats?.noweWpisy || 0} nowych wpisów`}
+                {scrStatus.status === "error" && (scrStatus.progress || "Błąd")}
+              </>
+            )}
           </span>
         </div>
-        {scrStatus.status !== "running" && (
+        <button
+          onClick={toggleScraperEnabled}
+          disabled={togglingScr}
+          style={{
+            ...btnGhost,
+            color: scraperEnabled ? "#22c55e" : "#ef4444",
+            borderColor: scraperEnabled ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)",
+            opacity: togglingScr ? 0.5 : 1,
+          }}
+        >
+          {scraperEnabled ? "Włączony" : "Wyłączony"}
+        </button>
+        {scraperEnabled && scrStatus.status !== "running" && (
           <button onClick={startScraper} style={btnPrimary} disabled={!zrodla.length}>Uruchom scraper</button>
         )}
         {(scrStatus.status === "done" || scrStatus.status === "error") && (

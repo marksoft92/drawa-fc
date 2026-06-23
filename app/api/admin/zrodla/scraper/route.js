@@ -1,4 +1,5 @@
 import { hasAccess } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { spawn } from "child_process";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
@@ -30,6 +31,8 @@ export async function GET() {
 
 export async function POST() {
   if (!(await hasAccess("zrodla"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
+  const flag = await prisma.ustawienie.findUnique({ where: { klucz: "scraper_fb_aktywny" } });
+  if (flag?.wartosc === "0") return Response.json({ error: "Scraper jest wyłączony" }, { status: 403 });
   const status = readStatus();
   if (status.status === "running") return Response.json({ error: "Scraper już działa" }, { status: 409 });
 

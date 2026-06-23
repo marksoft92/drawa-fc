@@ -283,6 +283,16 @@ function slugify(str) {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
   try {
+    const { rows: flagRows } = await pool.query(
+      `SELECT wartosc FROM "Ustawienie" WHERE klucz = 'scraper_fb_aktywny'`
+    );
+    if (flagRows[0]?.wartosc === '0') {
+      console.log('Scraper FB wyłączony (ustawienie scraper_fb_aktywny = 0)');
+      writeStatus({ status: 'done', startedAt, finishedAt: new Date().toISOString(), progress: 'Wyłączony', stats: { zrodla: 0, noweWpisy: 0 } });
+      await pool.end();
+      return;
+    }
+
     const { rows: zrodla } = await pool.query(
       'SELECT id, nazwa, "fbUrl" FROM "ZrodloFB" WHERE aktywne = true'
     );
