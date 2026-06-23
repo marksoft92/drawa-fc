@@ -273,6 +273,9 @@ function WpisyTab({ published }) {
   const [saving, setSaving] = useState(false);
   const [tick, setTick] = useState(0);
   const [success, setSuccess] = useState(null);
+  const [aiLoading, setAiLoading] = useState(null);
+  const [aiPreview, setAiPreview] = useState({});
+  const [aiError, setAiError] = useState({});
 
   const load = useCallback(async () => {
     const params = new URLSearchParams({ published: String(published) });
@@ -351,6 +354,55 @@ function WpisyTab({ published }) {
     if (!confirm("Odrzucić i usunąć ten wpis?")) return;
     await fetch(`/api/admin/zrodla/wpisy/${w.id}`, { method: "DELETE" });
     setTick(t => t + 1);
+  };
+
+  const aiRewrite = async (w) => {
+    setAiLoading(w.id);
+    setAiError(prev => ({ ...prev, [w.id]: null }));
+    try {
+      const r = await fetch(`/api/admin/zrodla/wpisy/${w.id}/rewrite`, { method: "POST" });
+      const d = await r.json();
+      if (!r.ok) {
+        setAiError(prev => ({ ...prev, [w.id]: d.error + (d.details ? "\n" + d.details.join("\n") : "") }));
+      } else {
+        setAiPreview(prev => ({ ...prev, [w.id]: d }));
+      }
+    } catch (e) {
+      setAiError(prev => ({ ...prev, [w.id]: "Błąd połączenia: " + e.message }));
+    }
+    setAiLoading(null);
+  };
+
+  const aiApprove = async (w) => {
+    const preview = aiPreview[w.id];
+    if (!preview) return;
+    setSaving(true);
+    const slug = slugify(preview.tytul) + "-" + w.id.slice(-6);
+    const r = await fetch(`/api/admin/zrodla/wpisy/${w.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tytul: preview.tytul, tresc: preview.tresc, slug, published: true }),
+    });
+    if (r.ok) {
+      setAiPreview(prev => { const n = { ...prev }; delete n[w.id]; return n; });
+      setTick(t => t + 1);
+      setSuccess("Opublikowano!");
+      setTimeout(() => setSuccess(null), 2000);
+    }
+    setSaving(false);
+  };
+
+  const aiDismiss = (wId) => {
+    setAiPreview(prev => { const n = { ...prev }; delete n[wId]; return n; });
+    setAiError(prev => { const n = { ...prev }; delete n[wId]; return n; });
+  };
+
+  const aiEdit = (wId) => {
+    const preview = aiPreview[wId];
+    if (!preview) return;
+    setEditId(wId);
+    setEditForm({ tytul: preview.tytul, tresc: preview.tresc, miniaturka: "" });
+    setAiPreview(prev => { const n = { ...prev }; delete n[wId]; return n; });
   };
 
   const fmtDate = (d) => {
@@ -506,7 +558,50 @@ function WpisyTab({ published }) {
                       </div>
                     )}
                     {w.dataPostu && <div style={{ fontSize: 11, color: "#475569", marginBottom: 8 }}>Post z: {w.dataPostu}</div>}
+
+                    {/* AI Preview */}
+                    {aiPreview[w.id] && (
+                      <div style={{ background: "rgba(59,130,246,0.06)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: 10, padding: 16, marginBottom: 12 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                          <span style={{ fontSize: 11, fontWeight: 700, color: "#3b82f6", letterSpacing: "0.06em" }}>PODGLĄD AI</span>
+                          <span style={{ fontSize: 10, color: "#475569" }}>{aiPreview[w.id].model}</span>
+                        </div>
+                        <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8 }}>{aiPreview[w.id].tytul}</div>
+                        <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.8, whiteSpace: "pre-wrap", marginBottom: 12 }}>{aiPreview[w.id].tresc}</div>
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                          <button onClick={() => aiApprove(w)} disabled={saving} style={{ ...btnPrimary, background: "#22c55e", opacity: saving ? 0.6 : 1 }}>Zatwierdź i publikuj</button>
+                          <button onClick={() => aiEdit(w.id)} style={{ ...btnGhost, color: "#3b82f6", borderColor: "rgba(59,130,246,0.3)" }}>Edytuj ręcznie</button>
+                          <button onClick={() => aiRewrite(w)} disabled={aiLoading === w.id} style={{ ...btnGhost, color: "#fbbf24", borderColor: "rgba(251,191,36,0.3)" }}>
+                            {aiLoading === w.id ? "Generuję..." : "Generuj ponownie"}
+                          </button>
+                          <button onClick={() => aiDismiss(w.id)} style={{ ...btnGhost, color: "#ef4444", borderColor: "rgba(239,68,68,0.2)" }}>Odrzuć</button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* AI Error */}
+                    {aiError[w.id] && (
+                      <div style={{ ...alertErr, marginBottom: 12, whiteSpace: "pre-wrap", fontSize: 11 }}>
+                        {aiError[w.id]}
+                        <button onClick={() => aiDismiss(w.id)} style={{ ...btnRow, marginLeft: 8, color: "#ef4444" }}>×</button>
+                      </div>
+                    )}
+
                     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      {!published && !aiPreview[w.id] && (
+                        <button
+                          onClick={() => aiRewrite(w)}
+                          disabled={aiLoading === w.id}
+                          style={{
+                            ...btnRow,
+                            color: "#a78bfa",
+                            borderColor: "rgba(167,139,250,0.3)",
+                            background: aiLoading === w.id ? "rgba(167,139,250,0.08)" : "none",
+                          }}
+                        >
+                          {aiLoading === w.id ? "Generuję..." : "Przetwórz AI"}
+                        </button>
+                      )}
                       <button onClick={() => startEdit(w)} style={btnRow}>Edytuj</button>
                       {!published && (
                         <button onClick={() => publish(w)} style={{ ...btnRow, color: "#22c55e", borderColor: "rgba(34,197,94,0.3)" }}>Publikuj</button>
