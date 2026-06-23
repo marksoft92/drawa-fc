@@ -6,17 +6,23 @@ import { prisma } from "@/lib/prisma";
 
 export const revalidate = 120;
 
+function cleanTitle(t) { return t?.replace(/^#+\s*/, '') || ''; }
+function cleanDesc(tresc) {
+  return tresc.split('\n').filter(l => l.trim() && !l.trim().startsWith('#')).join(' ').slice(0, 160);
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const w = await prisma.wpisLigowy.findUnique({ where: { slug }, include: { zrodlo: { select: { nazwa: true } } } });
   if (!w || !w.published) return {};
-  const desc = w.tresc.slice(0, 160);
+  const title = cleanTitle(w.tytul);
+  const desc = cleanDesc(w.tresc);
   return {
-    title: `${w.tytul} | Piłka lokalna`,
+    title: `${title} | Piłka lokalna`,
     description: desc,
     alternates: { canonical: `https://mksdrawadrawno.pl/pilka-lokalna/${w.slug}` },
     openGraph: {
-      title: `${w.tytul} | Piłka lokalna — MKS Drawa Drawno`,
+      title: `${title} | Piłka lokalna — MKS Drawa Drawno`,
       description: desc,
       url: `https://mksdrawadrawno.pl/pilka-lokalna/${w.slug}`,
       ...(w.miniaturka && { images: [`https://mksdrawadrawno.pl${w.miniaturka}`] }),
@@ -32,8 +38,9 @@ export default async function WpisPage({ params }) {
   });
   if (!w || !w.published) notFound();
 
+  const title = cleanTitle(w.tytul);
   const images = Array.isArray(w.obrazki) ? w.obrazki : [];
-  const paragraphs = w.tresc.split("\n\n").filter(Boolean);
+  const paragraphs = w.tresc.split("\n\n").filter(Boolean).map(p => p.replace(/^#+\s*/, ''));
   const fmtDate = (d) => {
     try { return new Date(d).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" }); }
     catch { return ""; }
@@ -52,8 +59,8 @@ export default async function WpisPage({ params }) {
         {
           "@context": "https://schema.org",
           "@type": "Article",
-          headline: w.tytul,
-          description: w.tresc.slice(0, 160),
+          headline: title,
+          description: cleanDesc(w.tresc),
           datePublished: w.createdAt,
           image: w.miniaturka ? `https://mksdrawadrawno.pl${w.miniaturka}` : "https://mksdrawadrawno.pl/logo.png",
           author: { "@type": "Organization", name: w.zrodlo?.nazwa || "Piłka lokalna" },
@@ -70,7 +77,7 @@ export default async function WpisPage({ params }) {
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "Strona główna", item: "https://mksdrawadrawno.pl" },
             { "@type": "ListItem", position: 2, name: "Piłka lokalna", item: "https://mksdrawadrawno.pl/pilka-lokalna" },
-            { "@type": "ListItem", position: 3, name: w.tytul },
+            { "@type": "ListItem", position: 3, name: title },
           ],
         },
       ]) }} />
@@ -96,13 +103,13 @@ export default async function WpisPage({ params }) {
             letterSpacing: "0.06em", color: "#fff",
             lineHeight: 1.15, marginBottom: 28,
           }}>
-            {w.tytul}
+            {title}
           </h1>
 
           {/* Hero image */}
           {w.miniaturka && (
             <div style={{ borderRadius: 12, overflow: "hidden", marginBottom: 32, background: "#000", border: "1px solid rgba(255,255,255,0.06)" }}>
-              <img src={w.miniaturka} alt={w.tytul} style={{ display: "block", width: "100%", maxHeight: 520, objectFit: "contain" }} />
+              <img src={w.miniaturka} alt={title} style={{ display: "block", width: "100%", maxHeight: 520, objectFit: "contain" }} />
             </div>
           )}
 
@@ -118,7 +125,7 @@ export default async function WpisPage({ params }) {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10, marginBottom: 40 }}>
               {images.map((img, i) => (
                 <div key={i} style={{ borderRadius: 8, overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)" }}>
-                  <img src={img} alt={`${w.tytul} — zdjęcie ${i + 1}`} style={{ display: "block", width: "100%", height: "auto" }} />
+                  <img src={img} alt={`${title} — zdjęcie ${i + 1}`} style={{ display: "block", width: "100%", height: "auto" }} />
                 </div>
               ))}
             </div>
@@ -136,7 +143,7 @@ export default async function WpisPage({ params }) {
 
           {/* Share */}
           <div style={{ marginTop: 32, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-            <ShareButtons url={`https://mksdrawadrawno.pl/pilka-lokalna/${w.slug}`} title={w.tytul} />
+            <ShareButtons url={`https://mksdrawadrawno.pl/pilka-lokalna/${w.slug}`} title={title} />
           </div>
 
           {/* Back link */}
