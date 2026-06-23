@@ -14,7 +14,7 @@ function slugify(name) {
 function isDrawa(n) { return n?.toLowerCase().includes("drawa drawno"); }
 
 export default async function sitemap() {
-  const [artykuly, archiwum, players, ustawieniaRows, meczeAll, strony, sponsorzy] = await Promise.all([
+  const [artykuly, archiwum, players, ustawieniaRows, meczeAll, strony, sponsorzy, wpisyLigowe] = await Promise.all([
     prisma.artykul.findMany({
       where: { published: true },
       select: { slug: true, updatedAt: true },
@@ -31,6 +31,11 @@ export default async function sitemap() {
     prisma.mecz.findMany({ orderBy: { date: 'asc' } }),
     prisma.strona.findMany({ where: { published: true }, select: { slug: true, updatedAt: true } }),
     prisma.sponsor.findMany({ where: { aktywny: true, NOT: { slug: null } }, select: { slug: true, updatedAt: true } }),
+    prisma.wpisLigowy.findMany({
+      where: { published: true },
+      select: { slug: true, updatedAt: true },
+      orderBy: { createdAt: 'desc' },
+    }),
   ]);
 
   const newsUrls = artykuly.map(a => ({
@@ -101,6 +106,13 @@ export default async function sitemap() {
       lastModified: s.updatedAt,
       changeFrequency: 'monthly',
       priority: 0.6,
+    })),
+    { url: `${BASE}/pilka-lokalna`, lastModified: wpisyLigowe[0]?.updatedAt ?? new Date(), changeFrequency: 'daily', priority: 0.8 },
+    ...wpisyLigowe.map(w => ({
+      url: `${BASE}/pilka-lokalna/${w.slug}`,
+      lastModified: w.updatedAt,
+      changeFrequency: 'weekly',
+      priority: 0.7,
     })),
   ];
 }
