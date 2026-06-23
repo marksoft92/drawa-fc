@@ -16,8 +16,7 @@ export async function GET() {
     }),
     prisma.wpisLigowy.findMany({
       where: { published: true, createdAt: { gte: twoDaysAgo } },
-      select: { slug: true, tytul: true, createdAt: true },
-      include: { zrodlo: { select: { nazwa: true } } },
+      select: { slug: true, tytul: true, createdAt: true, zrodlo: { select: { nazwa: true } } },
       orderBy: { createdAt: "desc" },
     }),
   ]);
