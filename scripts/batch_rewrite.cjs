@@ -43,6 +43,7 @@ ZASADY:
 
 ODPOWIEDZ DOKŁADNIE W TYM FORMACIE (bez żadnych dodatkowych komentarzy):
 TYTUŁ: [tytuł artykułu]
+TAGI: [2-4 tagi oddzielone przecinkami, np: transfery, wyniki, zapowiedź, B klasa]
 ---
 [treść artykułu]`;
 
@@ -121,25 +122,27 @@ function callOpenRouter(model, klubNazwa, tresc) {
 function parseResponse(raw) {
   const lines = raw.trim().split('\n');
   let tytul = '';
+  let tags = [];
   let tresc = '';
   let separatorIdx = -1;
 
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].startsWith('TYTUŁ:')) tytul = lines[i].replace('TYTUŁ:', '').trim();
+    if (lines[i].startsWith('TAGI:')) tags = lines[i].replace('TAGI:', '').split(',').map(t => t.trim()).filter(Boolean);
     if (lines[i].trim() === '---') { separatorIdx = i; break; }
   }
 
   if (separatorIdx >= 0) {
     tresc = lines.slice(separatorIdx + 1).join('\n').trim();
   } else if (tytul) {
-    tresc = lines.filter(l => !l.startsWith('TYTUŁ:')).join('\n').trim();
+    tresc = lines.filter(l => !l.startsWith('TYTUŁ:') && !l.startsWith('TAGI:')).join('\n').trim();
   } else {
     tytul = (lines[0] || '').replace(/^#+\s*/, '').trim();
     tresc = lines.slice(1).join('\n').trim();
   }
 
   tytul = tytul.replace(/^["„]+|["„]+$/g, '').replace(/^#+\s*/, '').trim();
-  return { tytul, tresc };
+  return { tytul, tags, tresc };
 }
 
 async function main() {
@@ -191,8 +194,8 @@ async function main() {
         const slug = slugify(rewritten.tytul) + '-' + w.id.slice(-6);
         try {
           await pool.query(
-            `UPDATE "WpisLigowy" SET tytul = $1, tresc = $2, slug = $3, published = true, "updatedAt" = NOW() WHERE id = $4`,
-            [rewritten.tytul, rewritten.tresc, slug, w.id]
+            `UPDATE "WpisLigowy" SET tytul = $1, tresc = $2, slug = $3, tags = $4::text[], published = true, "updatedAt" = NOW() WHERE id = $5`,
+            [rewritten.tytul, rewritten.tresc, slug, rewritten.tags, w.id]
           );
           pingIndexNow(`/pilka-lokalna/${slug}`);
           ok++;
