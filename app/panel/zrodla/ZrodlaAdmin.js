@@ -389,7 +389,7 @@ function WpisyTab({ published }) {
     const r = await fetch(`/api/admin/zrodla/wpisy/${w.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tytul: preview.tytul, tresc: preview.tresc, slug, published: true }),
+      body: JSON.stringify({ tytul: preview.tytul, tresc: preview.tresc, tags: preview.tags || [], slug, published: true }),
     });
     if (r.ok) {
       setAiPreview(prev => { const n = { ...prev }; delete n[w.id]; return n; });
@@ -409,7 +409,7 @@ function WpisyTab({ published }) {
     const preview = aiPreview[wId];
     if (!preview) return;
     setEditId(wId);
-    setEditForm({ tytul: preview.tytul, tresc: preview.tresc, miniaturka: "" });
+    setEditForm({ tytul: preview.tytul, tresc: preview.tresc, miniaturka: "", tags: (preview.tags || []).join(", ") });
     setAiPreview(prev => { const n = { ...prev }; delete n[wId]; return n; });
   };
 
@@ -662,7 +662,14 @@ function WpisyTab({ published }) {
                           <span style={{ fontSize: 11, fontWeight: 700, color: "#3b82f6", letterSpacing: "0.06em" }}>PODGLĄD AI</span>
                           <span style={{ fontSize: 10, color: "#475569" }}>{aiPreview[w.id].model}</span>
                         </div>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8 }}>{aiPreview[w.id].tytul}</div>
+                                        <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8 }}>{aiPreview[w.id].tytul}</div>
+                        {aiPreview[w.id].tags?.length > 0 && (
+                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>
+                            {aiPreview[w.id].tags.map(t => (
+                              <span key={t} style={{ fontSize: 10, color: "#3b82f6", background: "rgba(59,130,246,0.1)", padding: "2px 8px", borderRadius: 4, letterSpacing: "0.1em", fontWeight: 600 }}>{t.toUpperCase()}</span>
+                            ))}
+                          </div>
+                        )}
                         <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.8, whiteSpace: "pre-wrap", marginBottom: 12 }}>{aiPreview[w.id].tresc}</div>
                         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                           <button onClick={() => aiApprove(w)} disabled={saving} style={{ ...btnPrimary, background: "#22c55e", opacity: saving ? 0.6 : 1 }}>Zatwierdź i publikuj</button>

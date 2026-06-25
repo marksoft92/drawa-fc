@@ -27,6 +27,7 @@ ZASADY:
 
 ODPOWIEDZ DOKŁADNIE W TYM FORMACIE (bez żadnych dodatkowych komentarzy):
 TYTUŁ: [tytuł artykułu]
+TAGI: [2-4 tagi oddzielone przecinkami, np: transfery, wyniki, zapowiedź, B klasa]
 ---
 [treść artykułu]`;
 
@@ -64,12 +65,16 @@ async function callOpenRouter(model, klubNazwa, tresc) {
 function parseResponse(raw) {
   const lines = raw.trim().split("\n");
   let tytul = "";
+  let tags = [];
   let tresc = "";
   let separatorIdx = -1;
 
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].startsWith("TYTUŁ:")) {
       tytul = lines[i].replace("TYTUŁ:", "").trim();
+    }
+    if (lines[i].startsWith("TAGI:")) {
+      tags = lines[i].replace("TAGI:", "").split(",").map(t => t.trim()).filter(Boolean);
     }
     if (lines[i].trim() === "---") {
       separatorIdx = i;
@@ -80,7 +85,7 @@ function parseResponse(raw) {
   if (separatorIdx >= 0) {
     tresc = lines.slice(separatorIdx + 1).join("\n").trim();
   } else if (tytul) {
-    const rest = lines.filter(l => !l.startsWith("TYTUŁ:")).join("\n").trim();
+    const rest = lines.filter(l => !l.startsWith("TYTUŁ:") && !l.startsWith("TAGI:")).join("\n").trim();
     tresc = rest;
   } else {
     const firstLine = lines[0]?.replace(/^#+\s*/, "").trim() || "";
@@ -90,7 +95,7 @@ function parseResponse(raw) {
 
   tytul = tytul.replace(/^["„]+|["„]+$/g, "").replace(/^#+\s*/, "").trim();
 
-  return { tytul, tresc };
+  return { tytul, tags, tresc };
 }
 
 export async function POST(request, { params }) {
@@ -118,6 +123,7 @@ export async function POST(request, { params }) {
 
       return Response.json({
         tytul: parsed.tytul,
+        tags: parsed.tags,
         tresc: parsed.tresc,
         model: usedModel,
         raw: content,
