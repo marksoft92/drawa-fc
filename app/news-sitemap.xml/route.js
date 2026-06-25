@@ -6,16 +6,14 @@ export const revalidate = 600;
 const BASE = "https://mksdrawadrawno.pl";
 
 export async function GET() {
-  const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
-
   const [artykuly, wpisyLigowe] = await Promise.all([
     prisma.artykul.findMany({
-      where: { published: true, updatedAt: { gte: twoDaysAgo } },
+      where: { published: true },
       select: { slug: true, title: true, updatedAt: true, tags: true },
       orderBy: { updatedAt: "desc" },
     }),
     prisma.wpisLigowy.findMany({
-      where: { published: true, updatedAt: { gte: twoDaysAgo } },
+      where: { published: true },
       select: { slug: true, tytul: true, updatedAt: true, tags: true, zrodlo: { select: { nazwa: true } } },
       orderBy: { updatedAt: "desc" },
     }),
