@@ -4,12 +4,12 @@ import PilkaLokalnaClient from "./PilkaLokalnaClient";
 export const revalidate = 120;
 
 export const metadata = {
-  title: "Piłka lokalna — aktualności z ligi | MKS Drawa Drawno",
-  description: "Najnowsze wiadomości z klubów lokalnej ligi piłkarskiej. Transfery, wyniki, zapowiedzi meczów z regionu.",
+  title: "Piłka lokalna — zachodniopomorskie aktualności z ligi | MKS Drawa Drawno",
+  description: "Najnowsze wiadomości z ponad 150 klubów piłkarskich województwa zachodniopomorskiego. Transfery, wyniki meczów i zapowiedzi spotkań z B-klasy, klasy okręgowej i IV ligi.",
   alternates: { canonical: "https://mksdrawadrawno.pl/pilka-lokalna" },
   openGraph: {
-    title: "Piłka lokalna — aktualności z ligi | MKS Drawa Drawno",
-    description: "Najnowsze wiadomości z klubów lokalnej ligi piłkarskiej.",
+    title: "Piłka lokalna — zachodniopomorskie aktualności z ligi | MKS Drawa Drawno",
+    description: "Najnowsze wiadomości z ponad 150 klubów piłkarskich województwa zachodniopomorskiego. Transfery, wyniki, zapowiedzi meczów.",
     url: "https://mksdrawadrawno.pl/pilka-lokalna",
   },
 };

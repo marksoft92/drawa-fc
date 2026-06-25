@@ -622,6 +622,7 @@ model WpisLigowy {
   tresc      String
   miniaturka String?
   obrazki    Json     @default("[]")
+  tags       String[] @default([])
   dataPostu  String?
   published  Boolean  @default(false)
   createdAt  DateTime @default(now())

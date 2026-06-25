@@ -28,6 +28,10 @@ export const metadata = {
   robots: { index: true, follow: true },
   alternates: {
     canonical: BASE_URL,
+    languages: {
+      'pl-PL': BASE_URL,
+      'x-default': BASE_URL,
+    },
   },
   other: {
     copyright: `© ${new Date().getFullYear()} MKS Drawa Drawno. Wszelkie prawa zastrzeżone. Projekt i kod strony są chronione prawem autorskim.`,

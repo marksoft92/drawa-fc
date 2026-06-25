@@ -30,6 +30,7 @@ export async function PATCH(request, { params }) {
   if (body.slug !== undefined) data.slug = body.slug.trim();
   if (body.tresc !== undefined) data.tresc = body.tresc;
   if (body.miniaturka !== undefined) data.miniaturka = body.miniaturka?.trim() || null;
+  if (body.tags !== undefined) data.tags = Array.isArray(body.tags) ? body.tags : [];
   if (body.published !== undefined) {
     const wpis = await prisma.wpisLigowy.findUnique({ where: { id } });
     if (body.published && (!wpis?.tytul && !data.tytul)) {

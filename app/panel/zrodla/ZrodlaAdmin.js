@@ -304,6 +304,7 @@ function WpisyTab({ published }) {
       tytul: w.tytul || "",
       tresc: w.tresc || "",
       miniaturka: w.miniaturka || "",
+      tags: (w.tags || []).join(", "),
     });
   };
 
@@ -312,6 +313,9 @@ function WpisyTab({ published }) {
     const body = { ...editForm };
     if (body.tytul && !body.slug) {
       body.slug = slugify(body.tytul);
+    }
+    if (body.tags !== undefined) {
+      body.tags = body.tags.split(",").map(t => t.trim()).filter(Boolean);
     }
     const r = await fetch(`/api/admin/zrodla/wpisy/${editId}`, {
       method: "PATCH",
@@ -609,6 +613,10 @@ function WpisyTab({ published }) {
                     <div>
                       <label style={lbl}>TREŚĆ</label>
                       <textarea style={{ ...inp, height: 160, fontFamily: "monospace", resize: "vertical" }} value={editForm.tresc} onChange={e => setEditForm(f => ({ ...f, tresc: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label style={lbl}>TAGI (oddzielone przecinkami)</label>
+                      <input style={inp} value={editForm.tags || ""} onChange={e => setEditForm(f => ({ ...f, tags: e.target.value }))} placeholder="np. transfery, wyniki, B klasa" />
                     </div>
                     <div>
                       <label style={lbl}>MINIATURKA</label>

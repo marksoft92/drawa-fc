@@ -16,7 +16,7 @@ export async function GET() {
     }),
     prisma.wpisLigowy.findMany({
       where: { published: true, updatedAt: { gte: twoDaysAgo } },
-      select: { slug: true, tytul: true, updatedAt: true, zrodlo: { select: { nazwa: true } } },
+      select: { slug: true, tytul: true, updatedAt: true, tags: true, zrodlo: { select: { nazwa: true } } },
       orderBy: { updatedAt: "desc" },
     }),
   ]);
@@ -32,7 +32,7 @@ export async function GET() {
       url: `${BASE}/pilka-lokalna/${w.slug}`,
       title: w.tytul?.replace(/^#+\s*/, "") || "",
       date: w.updatedAt,
-      keywords: [w.zrodlo?.nazwa, "piłka lokalna", "zachodniopomorskie"].filter(Boolean).join(", "),
+      keywords: [...(w.tags?.length ? w.tags : []), w.zrodlo?.nazwa, "piłka lokalna", "zachodniopomorskie"].filter(Boolean).join(", "),
     })),
   ].filter(e => e.title);
 

@@ -10,6 +10,19 @@ function cleanTitle(t) { return t?.replace(/^#+\s*/, '') || ''; }
 function cleanDesc(tresc) {
   return tresc.split('\n').filter(l => l.trim() && !l.trim().startsWith('#')).join(' ').slice(0, 160);
 }
+function slugify(str) {
+  return str.toLowerCase()
+    .replace(/ą/g,"a").replace(/ć/g,"c").replace(/ę/g,"e").replace(/ł/g,"l")
+    .replace(/ń/g,"n").replace(/ó/g,"o").replace(/ś/g,"s").replace(/ź/g,"z").replace(/ż/g,"z")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export async function generateStaticParams() {
+  try {
+    const wpisy = await prisma.wpisLigowy.findMany({ where: { published: true }, select: { slug: true } });
+    return wpisy.map(w => ({ slug: w.slug }));
+  } catch { return []; }
+}
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -17,6 +30,7 @@ export async function generateMetadata({ params }) {
   if (!w || !w.published) return {};
   const title = cleanTitle(w.tytul);
   const desc = cleanDesc(w.tresc);
+  const imgUrl = w.miniaturka ? `https://mksdrawadrawno.pl${w.miniaturka}` : null;
   return {
     title: `${title} | Piłka lokalna`,
     description: desc,
@@ -25,7 +39,13 @@ export async function generateMetadata({ params }) {
       title: `${title} | Piłka lokalna — MKS Drawa Drawno`,
       description: desc,
       url: `https://mksdrawadrawno.pl/pilka-lokalna/${w.slug}`,
-      ...(w.miniaturka && { images: [`https://mksdrawadrawno.pl${w.miniaturka}`] }),
+      ...(imgUrl && { images: [{ url: imgUrl, width: 1200, height: 630, alt: title }] }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | Piłka lokalna`,
+      description: desc,
+      ...(imgUrl && { images: [imgUrl] }),
     },
   };
 }
@@ -94,11 +114,22 @@ export default async function WpisPage({ params }) {
         <article style={{ maxWidth: 860, margin: "0 auto", padding: "40px 20px 80px" }}>
 
           {/* Source badge */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-            {w.zrodlo?.herb && (
-              <img src={w.zrodlo.herb} alt="" style={{ width: 24, height: 24, objectFit: "contain" }} />
-            )}
-            <span style={{ fontSize: 12, color: "#3b82f6", fontWeight: 600 }}>{w.zrodlo?.nazwa}</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+            {w.zrodlo?.nazwa ? (
+              <Link href={`/klub/${slugify(w.zrodlo.nazwa)}`} style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
+                {w.zrodlo.herb && (
+                  <img src={w.zrodlo.herb} alt="" style={{ width: 24, height: 24, objectFit: "contain" }} />
+                )}
+                <span style={{ fontSize: 12, color: "#3b82f6", fontWeight: 600 }}>{w.zrodlo.nazwa}</span>
+              </Link>
+            ) : null}
+            {(w.tags || []).map(tag => (
+              <Link key={tag} href={`/tag/${slugify(tag)}`} style={{ textDecoration: "none" }}>
+                <span style={{ fontSize: 10, color: "#64748b", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "2px 8px", borderRadius: 4, letterSpacing: "0.1em", fontWeight: 600 }}>
+                  {tag.toUpperCase()}
+                </span>
+              </Link>
+            ))}
             <span style={{ fontSize: 12, color: "#475569", marginLeft: "auto" }}>{fmtDate(w.createdAt)}</span>
           </div>
 

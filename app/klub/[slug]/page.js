@@ -5,6 +5,13 @@ import { prisma } from "@/lib/prisma";
 
 export const revalidate = 300;
 
+export async function generateStaticParams() {
+  try {
+    const zrodla = await prisma.zrodloFB.findMany({ select: { nazwa: true } });
+    return zrodla.map(z => ({ slug: slugify(z.nazwa) }));
+  } catch { return []; }
+}
+
 function slugify(str) {
   return str.toLowerCase()
     .replace(/ą/g, "a").replace(/ć/g, "c").replace(/ę/g, "e").replace(/ł/g, "l")

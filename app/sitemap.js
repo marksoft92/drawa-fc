@@ -17,7 +17,7 @@ export default async function sitemap() {
   const [artykuly, archiwum, players, ustawieniaRows, meczeAll, strony, sponsorzy, wpisyLigowe, zrodlaFB] = await Promise.all([
     prisma.artykul.findMany({
       where: { published: true },
-      select: { slug: true, updatedAt: true },
+      select: { slug: true, updatedAt: true, tags: true },
       orderBy: { createdAt: 'desc' },
     }),
     prisma.archiwumSezon.findMany({
@@ -124,5 +124,15 @@ export default async function sitemap() {
       changeFrequency: 'daily',
       priority: 0.7,
     })),
+    ...(() => {
+      const allTags = new Set(artykuly.flatMap(a => a.tags || []));
+      const newestArticle = artykuly[0]?.updatedAt ?? new Date();
+      return [...allTags].map(tag => ({
+        url: `${BASE}/tag/${slugify(tag)}`,
+        lastModified: newestArticle,
+        changeFrequency: 'weekly',
+        priority: 0.6,
+      }));
+    })(),
   ];
 }

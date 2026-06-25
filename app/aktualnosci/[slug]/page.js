@@ -8,6 +8,20 @@ import { prisma } from '@/lib/prisma';
 
 export const revalidate = 60;
 
+function slugifyTag(s) {
+  return s.toLowerCase()
+    .replace(/ą/g,"a").replace(/ć/g,"c").replace(/ę/g,"e").replace(/ł/g,"l")
+    .replace(/ń/g,"n").replace(/ó/g,"o").replace(/ś/g,"s").replace(/ź/g,"z").replace(/ż/g,"z")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export async function generateStaticParams() {
+  try {
+    const artykuly = await prisma.artykul.findMany({ where: { published: true }, select: { slug: true } });
+    return artykuly.map(a => ({ slug: a.slug }));
+  } catch { return []; }
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const a = await prisma.artykul.findUnique({ where: { slug } });
@@ -20,6 +34,13 @@ export async function generateMetadata({ params }) {
       title: `${a.title} | MKS Drawa Drawno`,
       description: a.excerpt,
       url: `https://mksdrawadrawno.pl/aktualnosci/${a.slug}`,
+      ...(a.thumbnail && { images: [{ url: `https://mksdrawadrawno.pl${a.thumbnail}`, width: 1200, height: 630, alt: a.title }] }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: a.title,
+      description: a.excerpt,
+      ...(a.thumbnail && { images: [`https://mksdrawadrawno.pl${a.thumbnail}`] }),
     },
   };
 }
@@ -96,14 +117,16 @@ export default async function ArticlePage({ params }) {
 
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
             {(a.tags || []).map((tag) => (
-              <span key={tag} style={{
-                fontSize: 10, color: a.kolor || '#3b82f6',
-                background: `${a.kolor || '#3b82f6'}1a`,
-                padding: '3px 10px', borderRadius: 4,
-                letterSpacing: '0.15em', fontWeight: 700,
-              }}>
-                {tag.toUpperCase()}
-              </span>
+              <Link key={tag} href={`/tag/${slugifyTag(tag)}`} style={{ textDecoration: 'none' }}>
+                <span style={{
+                  fontSize: 10, color: a.kolor || '#3b82f6',
+                  background: `${a.kolor || '#3b82f6'}1a`,
+                  padding: '3px 10px', borderRadius: 4,
+                  letterSpacing: '0.15em', fontWeight: 700,
+                }}>
+                  {tag.toUpperCase()}
+                </span>
+              </Link>
             ))}
             <span style={{ fontSize: 12, color: '#475569', marginLeft: 'auto' }}>{a.date}</span>
           </div>
