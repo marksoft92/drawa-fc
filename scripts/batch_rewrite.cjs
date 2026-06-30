@@ -21,11 +21,10 @@ const INDEXNOW_KEY = 'c2bde26566f3c19e8c143ffe94cde083';
 const SITE_HOST = 'mksdrawadrawno.pl';
 
 const FREE_MODELS = [
-  "openai/gpt-oss-120b",
-  "meta-llama/llama-3.3-70b-instruct",
-  "qwen/qwen3-next-80b-a3b-instruct",
-  "nvidia/nemotron-3-nano-30b-a3b",
-  "openai/gpt-oss-20b",
+  "openai/gpt-oss-120b:free",
+  "nvidia/nemotron-3-super-120b-a12b:free",
+  "nvidia/nemotron-3-nano-30b-a3b:free",
+  "openai/gpt-oss-20b:free",
 ];
 
 const SYSTEM_PROMPT = `Jesteś redaktorem portalu piłkarskiego z zachodniopomorskiego. Dostajesz surowy post z Facebooka klubu piłkarskiego i musisz go przepisać na pełny artykuł dziennikarski.
