@@ -22,9 +22,8 @@ const SITE_HOST = 'mksdrawadrawno.pl';
 
 const FREE_MODELS = [
   "openai/gpt-oss-120b",
-  "qwen/qwen3-next-80b-a3b-instruct",
-  "nousresearch/hermes-3-405b-instruct",
   "meta-llama/llama-3.3-70b-instruct",
+  "qwen/qwen3-next-80b-a3b-instruct",
   "nvidia/nemotron-3-nano-30b-a3b",
   "openai/gpt-oss-20b",
 ];
