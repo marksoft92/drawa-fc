@@ -317,6 +317,19 @@ export default function Footer({ HerbImg, herb }) {
             są chronione prawem autorskim. Kopiowanie, reprodukowanie lub rozpowszechnianie
             bez zgody właściciela jest zabronione.
           </div>
+          <div style={{ fontSize: 10, color: '#1e293b' }}>
+            Strona stworzona przez{' '}
+            <a
+              href="https://www.bienkowski.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#3b82f6')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#334155')}
+            >
+              bienkowski.dev
+            </a>
+          </div>
         </div>
 
       </div>
