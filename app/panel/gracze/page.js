@@ -118,6 +118,14 @@ export default function PanelGracze() {
   const [statsError, setStatsError] = useState("");
   const [statsLoading, setStatsLoading] = useState(false);
 
+  // Health/band tokens
+  const [healthUserId, setHealthUserId] = useState(null);
+  const [healthToken, setHealthToken] = useState(null);
+  const [healthToday, setHealthToday] = useState(null);
+  const [healthLoading, setHealthLoading] = useState(false);
+  const [healthGenerating, setHealthGenerating] = useState(false);
+  const [healthCopied, setHealthCopied] = useState(false);
+
   // Kadra per sezon
   const [aktywnySezon, setAktywnySezon] = useState(null);
   const [kadraPlayerIds, setKadraPlayerIds] = useState(new Set());
@@ -163,6 +171,7 @@ export default function PanelGracze() {
     setFormOpen(true);
     setStatsUserId(null);
     setResetPwId(null);
+    setHealthUserId(null);
   }
 
   function openEdit(u) {
@@ -182,11 +191,13 @@ export default function PanelGracze() {
     setFormOpen(true);
     setStatsUserId(null);
     setResetPwId(null);
+    setHealthUserId(null);
   }
 
   async function openStats(u) {
     if (statsUserId === u.id) { setStatsUserId(null); return; }
     setStatsUserId(u.id);
+    setHealthUserId(null);
     setStatsSuccess(""); setStatsError("");
     setStatsLoading(true);
     setStatsForm(emptyStats());
@@ -206,6 +217,42 @@ export default function PanelGracze() {
       }
     } catch { setStatsError("Błąd połączenia"); }
     finally { setStatsLoading(false); }
+  }
+
+  async function openHealth(u) {
+    if (healthUserId === u.id) { setHealthUserId(null); return; }
+    setHealthUserId(u.id);
+    setStatsUserId(null);
+    setResetPwId(null);
+    setHealthCopied(false);
+    setHealthLoading(true);
+    setHealthToken(null);
+    setHealthToday(null);
+    try {
+      const r = await fetch(`/api/admin/gracze/${u.id}/health-token`);
+      const d = await r.json();
+      setHealthToken(d.healthToken ?? null);
+      setHealthToday(d.today ?? null);
+    } catch { /* noop */ }
+    finally { setHealthLoading(false); }
+  }
+
+  async function generateHealthToken(userId) {
+    setHealthGenerating(true);
+    setHealthCopied(false);
+    try {
+      const r = await fetch(`/api/admin/gracze/${userId}/health-token`, { method: "POST" });
+      const d = await r.json();
+      if (r.ok) setHealthToken(d.healthToken);
+    } catch { /* noop */ }
+    finally { setHealthGenerating(false); }
+  }
+
+  function copyHealthUrl() {
+    const url = `https://mksdrawadrawno.pl/api/health-webhook/${healthToken}`;
+    navigator.clipboard?.writeText(url);
+    setHealthCopied(true);
+    setTimeout(() => setHealthCopied(false), 2000);
   }
 
   function onSezonChange(sezonId) {
@@ -493,6 +540,12 @@ export default function PanelGracze() {
                               style={{ ...btnRowAction, color: statsUserId === u.id ? "#3b82f6" : "#64748b", borderColor: statsUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
                             >Staty</button>
                           )}
+                          {u.player && (
+                            <button
+                              onClick={() => { setResetPwId(null); openHealth(u); }}
+                              style={{ ...btnRowAction, color: healthUserId === u.id ? "#3b82f6" : "#64748b", borderColor: healthUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
+                            >Band</button>
+                          )}
                           {u.player && aktywnySezon && (
                             <button
                               onClick={() => toggleKadra(u.player.id)}
@@ -526,6 +579,12 @@ export default function PanelGracze() {
                             onClick={() => { setResetPwId(null); openStats(u); }}
                             style={{ ...btnRowAction, color: statsUserId === u.id ? "#3b82f6" : "#64748b", borderColor: statsUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
                           >Staty</button>
+                        )}
+                        {u.player && (
+                          <button
+                            onClick={() => { setResetPwId(null); openHealth(u); }}
+                            style={{ ...btnRowAction, color: healthUserId === u.id ? "#3b82f6" : "#64748b", borderColor: healthUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
+                          >Band</button>
                         )}
                       </>
                     )}
@@ -579,6 +638,53 @@ export default function PanelGracze() {
                           <button onClick={() => setStatsUserId(null)} style={{ ...btnGhost, padding: "6px 12px", fontSize: 12 }}>Zamknij</button>
                           {statsSuccess && <span style={{ fontSize: 12, color: "#22c55e" }}>{statsSuccess}</span>}
                           {statsError && <span style={{ fontSize: 12, color: "#ef4444" }}>{statsError}</span>}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Health/band token row */}
+                {isAdmin && healthUserId === u.id && (
+                  <div style={{ padding: "14px 16px", background: "rgba(59,130,246,0.03)", border: "1px solid rgba(59,130,246,0.1)", borderTop: "none", borderRadius: "0 0 8px 8px", marginTop: -4 }}>
+                    {healthLoading ? (
+                      <span style={{ fontSize: 12, color: "#475569" }}>Ładowanie...</span>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                        {healthToken ? (
+                          <div>
+                            <label style={{ ...lbl, fontSize: 10 }}>URL DO WPISANIA W APCE HEALTH CONNECT WEBHOOK</label>
+                            <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                              <code style={{ fontSize: 11, color: "#94a3b8", background: "rgba(0,0,0,0.3)", padding: "6px 10px", borderRadius: 6, wordBreak: "break-all" }}>
+                                https://mksdrawadrawno.pl/api/health-webhook/{healthToken}
+                              </code>
+                              <button onClick={copyHealthUrl} style={{ ...btnGhost, padding: "6px 12px", fontSize: 12 }}>
+                                {healthCopied ? "Skopiowano ✓" : "Kopiuj"}
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <span style={{ fontSize: 12, color: "#64748b" }}>Ten gracz nie ma jeszcze tokenu do bandu.</span>
+                        )}
+
+                        {healthToday && (
+                          <div style={{ display: "flex", gap: 16, fontSize: 12, color: "#94a3b8" }}>
+                            <span>Dziś: <strong style={{ color: "#fff" }}>{healthToday.steps}</strong> kroków</span>
+                            {healthToday.heartRateAvg != null && (
+                              <span>śr. tętno: <strong style={{ color: "#fff" }}>{Math.round(healthToday.heartRateAvg)}</strong> bpm</span>
+                            )}
+                            <span>kalorie: <strong style={{ color: "#fff" }}>{Math.round(healthToday.activeCalories)}</strong></span>
+                          </div>
+                        )}
+
+                        <div>
+                          <button
+                            onClick={() => generateHealthToken(u.id)}
+                            disabled={healthGenerating}
+                            style={{ ...btnPrimary, padding: "6px 16px", fontSize: 12 }}
+                          >
+                            {healthGenerating ? "Generuję..." : healthToken ? "Wygeneruj nowy token" : "Wygeneruj token"}
+                          </button>
                         </div>
                       </div>
                     )}
