@@ -77,6 +77,7 @@ model Player {
   stats         SezonStats[]
   kadra         KadraSezon[]
   healthDaily   PlayerHealthDaily[]
+  exercises     PlayerExerciseSession[]
 }
 
 // ─── Statystyki z opasek (Health Connect) ────────────────────────────────────
@@ -98,6 +99,24 @@ model PlayerHealthDaily {
   createdAt        DateTime @default(now())
 
   @@unique([playerId, date])
+}
+
+model PlayerExerciseSession {
+  id               String   @id @default(cuid())
+  playerId         String
+  player           Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  exerciseType     String // kod typu z Health Connect (ExerciseSessionRecord.exerciseType)
+  startTime        DateTime
+  endTime          DateTime
+  durationSeconds  Int
+  heartRateAvg     Float?
+  heartRateMax     Int?
+  heartRateMin     Int?
+  heartRateSamples Int      @default(0)
+  rawPayload       Json?
+  createdAt        DateTime @default(now())
+
+  @@unique([playerId, startTime])
 }
 
 // ─── Sezony i statystyki ──────────────────────────────────────────────────────
