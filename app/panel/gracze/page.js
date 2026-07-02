@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { exerciseLabel, formatExerciseWhen, formatDuration } from "@/lib/health-format";
 
 const ROLES = [
   { value: "PLAYER", label: "Piłkarz" },
@@ -61,34 +62,6 @@ function timeAgo(date) {
 function isOnline(lastSeen) {
   if (!lastSeen) return false;
   return (Date.now() - new Date(lastSeen)) / 60000 < 5;
-}
-
-// Kody typów z Health Connect (ExerciseSessionRecord.exerciseType)
-const EXERCISE_TYPE_LABELS = {
-  0: "Trening (inny)",
-  8: "Rower",
-  57: "Bieganie",
-  65: "Piłka nożna",
-  70: "Siłownia",
-  79: "Marsz",
-  81: "Podnoszenie ciężarów",
-};
-
-function exerciseLabel(type) {
-  return EXERCISE_TYPE_LABELS[type] ?? `Trening (typ ${type})`;
-}
-
-function formatExerciseWhen(startTime) {
-  const d = new Date(startTime);
-  const dateStr = d.toLocaleDateString("pl-PL", { timeZone: "Europe/Warsaw", day: "2-digit", month: "2-digit" });
-  const timeStr = d.toLocaleTimeString("pl-PL", { timeZone: "Europe/Warsaw", hour: "2-digit", minute: "2-digit" });
-  return `${dateStr}, ${timeStr}`;
-}
-
-function formatDuration(seconds) {
-  const mins = Math.round(seconds / 60);
-  if (mins < 60) return `${mins} min`;
-  return `${Math.floor(mins / 60)} godz. ${mins % 60} min`;
 }
 
 function Avatar({ foto, name, size = 38 }) {
@@ -729,6 +702,9 @@ export default function PanelGracze() {
                                 </div>
                               ))}
                             </div>
+                            <Link href={`/panel/gracze/${u.id}`} style={{ fontSize: 12, color: "#3b82f6", marginTop: 6, display: "inline-block" }}>
+                              Zobacz pełną historię →
+                            </Link>
                           </div>
                         )}
 
