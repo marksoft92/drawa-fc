@@ -86,14 +86,21 @@ model PlayerHealthDaily {
   id               String   @id @default(cuid())
   playerId         String
   player           Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
-  date             DateTime // dzień (północ UTC), do którego należą dane
+  date             DateTime // dzień (wg czasu polskiego), do którego należą dane
   steps            Int      @default(0)
   activeCalories   Float    @default(0)
+  distanceMeters   Float    @default(0)
+  sleepMinutes     Int      @default(0)
   heartRateAvg     Float?
   heartRateMax     Int?
   heartRateSamples Int      @default(0)
   lastHrTime       DateTime?
-  sleepMinutes     Int?
+  // znaczniki ostatnio zliczonego okna (koniec przedziału) dla każdej metryki —
+  // pozwalają sumować kolejne synchronizacje bez podwójnego liczenia tych samych okien
+  lastStepsEnd     DateTime?
+  lastCaloriesEnd  DateTime?
+  lastDistanceEnd  DateTime?
+  lastSleepEnd     DateTime?
   lastPayload      Json?
   updatedAt        DateTime @updatedAt
   createdAt        DateTime @default(now())

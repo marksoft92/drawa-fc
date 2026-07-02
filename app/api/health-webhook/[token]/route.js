@@ -25,6 +25,43 @@ function groupByDay(samples, timeField) {
   return groups;
 }
 
+// Health Connect wysyła kroki/kalorie/dystans jako kolejne, niezachodzące na siebie
+// przedziały czasowe (od ostatniej synchronizacji) — trzeba je sumować, a nie brać
+// max z pojedynczego payloadu, i pilnować znacznika "do którego momentu już policzono",
+// żeby ponowny sync (dosync zaległych rekordów) nie zliczył tego samego przedziału dwa razy.
+function sumNewWindows(entries, valueField, lastEndIso) {
+  const lastEndMs = lastEndIso ? new Date(lastEndIso).getTime() : null;
+  const seen = new Set();
+  let total = 0;
+  let maxEnd = lastEndIso ?? null;
+
+  const sorted = entries
+    .filter((e) => e.end_time)
+    .sort((a, b) => new Date(a.end_time) - new Date(b.end_time));
+
+  for (const e of sorted) {
+    const key = `${e.start_time}|${e.end_time}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+
+    const endMs = new Date(e.end_time).getTime();
+    if (lastEndMs != null && endMs <= lastEndMs) continue;
+
+    total += e[valueField] ?? 0;
+    if (!maxEnd || endMs > new Date(maxEnd).getTime()) maxEnd = e.end_time;
+  }
+
+  return { total, lastEnd: maxEnd };
+}
+
+function sleepStart(entry) {
+  if (entry.stages?.[0]?.start_time) return entry.stages[0].start_time;
+  if (entry.session_end_time && entry.duration_seconds != null) {
+    return new Date(new Date(entry.session_end_time).getTime() - entry.duration_seconds * 1000).toISOString();
+  }
+  return null;
+}
+
 export async function POST(request, { params }) {
   const { token } = await params;
 
@@ -40,26 +77,36 @@ export async function POST(request, { params }) {
 
   const steps = payload.steps ?? [];
   const activeCalories = payload.active_calories ?? [];
+  const distance = payload.distance ?? [];
+  const sleep = (payload.sleep ?? []).map((s) => ({ ...s, start_time: sleepStart(s), end_time: s.session_end_time })).filter((s) => s.start_time);
   const heartRate = (payload.heart_rate ?? []).filter((s) => s.time && s.bpm != null);
 
   const stepsByDay = groupByDay(steps, "start_time");
   const caloriesByDay = groupByDay(activeCalories, "start_time");
+  const distanceByDay = groupByDay(distance, "start_time");
+  const sleepByDay = groupByDay(sleep, "start_time");
   const hrByDay = groupByDay(heartRate, "time");
 
-  const dayKeys = new Set([...stepsByDay.keys(), ...caloriesByDay.keys(), ...hrByDay.keys()]);
+  const dayKeys = new Set([
+    ...stepsByDay.keys(), ...caloriesByDay.keys(), ...distanceByDay.keys(), ...sleepByDay.keys(), ...hrByDay.keys(),
+  ]);
 
   for (const dayKey of dayKeys) {
     const date = new Date(dayKey);
     const daySteps = stepsByDay.get(dayKey) ?? [];
     const dayCalories = caloriesByDay.get(dayKey) ?? [];
+    const dayDistance = distanceByDay.get(dayKey) ?? [];
+    const daySleep = sleepByDay.get(dayKey) ?? [];
     const dayHr = (hrByDay.get(dayKey) ?? []).sort((a, b) => new Date(a.time) - new Date(b.time));
-
-    const stepsCount = daySteps.reduce((max, s) => Math.max(max, s.count ?? 0), 0);
-    const caloriesTotal = dayCalories.reduce((max, c) => Math.max(max, c.calories ?? 0), 0);
 
     const existing = await prisma.playerHealthDaily.findUnique({
       where: { playerId_date: { playerId: player.id, date } },
     });
+
+    const stepsResult = sumNewWindows(daySteps, "count", existing?.lastStepsEnd);
+    const caloriesResult = sumNewWindows(dayCalories, "calories", existing?.lastCaloriesEnd);
+    const distanceResult = sumNewWindows(dayDistance, "meters", existing?.lastDistanceEnd);
+    const sleepResult = sumNewWindows(daySleep, "duration_seconds", existing?.lastSleepEnd);
 
     let heartRateAvg = existing?.heartRateAvg ?? null;
     let heartRateMax = existing?.heartRateMax ?? null;
@@ -82,8 +129,14 @@ export async function POST(request, { params }) {
       create: {
         playerId: player.id,
         date,
-        steps: stepsCount,
-        activeCalories: caloriesTotal,
+        steps: stepsResult.total,
+        activeCalories: caloriesResult.total,
+        distanceMeters: distanceResult.total,
+        sleepMinutes: Math.round(sleepResult.total / 60),
+        lastStepsEnd: stepsResult.lastEnd,
+        lastCaloriesEnd: caloriesResult.lastEnd,
+        lastDistanceEnd: distanceResult.lastEnd,
+        lastSleepEnd: sleepResult.lastEnd,
         heartRateAvg,
         heartRateMax,
         heartRateSamples,
@@ -91,8 +144,14 @@ export async function POST(request, { params }) {
         lastPayload: payload,
       },
       update: {
-        steps: Math.max(existing?.steps ?? 0, stepsCount),
-        activeCalories: Math.max(existing?.activeCalories ?? 0, caloriesTotal),
+        steps: (existing?.steps ?? 0) + stepsResult.total,
+        activeCalories: (existing?.activeCalories ?? 0) + caloriesResult.total,
+        distanceMeters: (existing?.distanceMeters ?? 0) + distanceResult.total,
+        sleepMinutes: (existing?.sleepMinutes ?? 0) + Math.round(sleepResult.total / 60),
+        lastStepsEnd: stepsResult.lastEnd,
+        lastCaloriesEnd: caloriesResult.lastEnd,
+        lastDistanceEnd: distanceResult.lastEnd,
+        lastSleepEnd: sleepResult.lastEnd,
         heartRateAvg,
         heartRateMax,
         heartRateSamples,

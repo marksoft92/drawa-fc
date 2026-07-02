@@ -672,12 +672,18 @@ export default function PanelGracze() {
                         )}
 
                         {healthToday && (
-                          <div style={{ display: "flex", gap: 16, fontSize: 12, color: "#94a3b8" }}>
+                          <div style={{ display: "flex", gap: 16, fontSize: 12, color: "#94a3b8", flexWrap: "wrap" }}>
                             <span>Dziś: <strong style={{ color: "#fff" }}>{healthToday.steps}</strong> kroków</span>
+                            <span>kalorie: <strong style={{ color: "#fff" }}>{Math.round(healthToday.activeCalories)}</strong></span>
+                            {healthToday.distanceMeters > 0 && (
+                              <span>dystans: <strong style={{ color: "#fff" }}>{(healthToday.distanceMeters / 1000).toFixed(2)}</strong> km</span>
+                            )}
                             {healthToday.heartRateAvg != null && (
                               <span>śr. tętno: <strong style={{ color: "#fff" }}>{Math.round(healthToday.heartRateAvg)}</strong> bpm</span>
                             )}
-                            <span>kalorie: <strong style={{ color: "#fff" }}>{Math.round(healthToday.activeCalories)}</strong></span>
+                            {healthToday.sleepMinutes > 0 && (
+                              <span>sen: <strong style={{ color: "#fff" }}>{Math.floor(healthToday.sleepMinutes / 60)}</strong>h <strong style={{ color: "#fff" }}>{healthToday.sleepMinutes % 60}</strong>min</span>
+                            )}
                           </div>
                         )}
 
