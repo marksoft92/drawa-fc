@@ -4,11 +4,10 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { exerciseLabel, formatExerciseWhen, formatDuration, formatDay, formatSleep } from "@/lib/health-format";
 
-function usePaginatedList(userId, endpoint, itemsKey) {
+function usePaginatedList(userId, endpoint, itemsKey, enabled) {
   const [player, setPlayer] = useState(null);
   const [items, setItems] = useState([]);
   const [nextCursor, setNextCursor] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
   const [loaded, setLoaded] = useState(false);
@@ -22,19 +21,22 @@ function usePaginatedList(userId, endpoint, itemsKey) {
     return r.json();
   }, [userId, endpoint]);
 
-  const load = useCallback(() => {
-    setLoading(true);
-    setError("");
+  useEffect(() => {
+    if (!enabled || loaded || error) return;
+    let cancelled = false;
     loadPage(null)
       .then((d) => {
+        if (cancelled) return;
         setPlayer(d.player ?? null);
         setItems(d[itemsKey] ?? []);
         setNextCursor(d.nextCursor ?? null);
         setLoaded(true);
       })
-      .catch(() => setError("Błąd połączenia"))
-      .finally(() => setLoading(false));
-  }, [loadPage, itemsKey]);
+      .catch(() => { if (!cancelled) setError("Błąd połączenia"); });
+    return () => { cancelled = true; };
+  }, [enabled, loaded, error, loadPage, itemsKey]);
+
+  const loading = enabled && !loaded && !error;
 
   async function loadMore() {
     if (!nextCursor) return;
@@ -50,19 +52,13 @@ function usePaginatedList(userId, endpoint, itemsKey) {
     }
   }
 
-  return { player, items, nextCursor, loading, loadingMore, error, loaded, load, loadMore };
+  return { player, items, nextCursor, loading, loadingMore, error, loaded, loadMore };
 }
 
 export default function HistoriaClient({ userId }) {
   const [tab, setTab] = useState("treningi");
-  const exercisesState = usePaginatedList(userId, "exercises", "exercises");
-  const dailyState = usePaginatedList(userId, "daily", "days");
-
-  useEffect(() => { exercisesState.load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (tab === "dni" && !dailyState.loaded && !dailyState.loading) dailyState.load();
-  }, [tab, dailyState]);
+  const exercisesState = usePaginatedList(userId, "exercises", "exercises", tab === "treningi");
+  const dailyState = usePaginatedList(userId, "daily", "days", tab === "dni");
 
   const player = exercisesState.player ?? dailyState.player;
 
@@ -135,8 +131,8 @@ export default function HistoriaClient({ userId }) {
 }
 
 function List({ state, empty = "Brak zarejestrowanych treningów.", children }) {
-  if (state.loading) return <span style={{ fontSize: 13, color: "#64748b" }}>Ładowanie...</span>;
   if (state.error) return <span style={{ fontSize: 13, color: "#ef4444" }}>{state.error}</span>;
+  if (state.loading) return <span style={{ fontSize: 13, color: "#64748b" }}>Ładowanie...</span>;
   if (state.items.length === 0) return <span style={{ fontSize: 13, color: "#64748b" }}>{empty}</span>;
   return (
     <>
