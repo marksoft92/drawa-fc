@@ -4,9 +4,11 @@ import crypto from "crypto";
 
 export const dynamic = "force-dynamic";
 
+const TZ = "Europe/Warsaw";
+
 function todayBucket() {
-  const d = new Date();
-  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  const local = new Date(new Date().toLocaleString("en-US", { timeZone: TZ }));
+  return new Date(Date.UTC(local.getFullYear(), local.getMonth(), local.getDate()));
 }
 
 export async function GET(request, { params }) {
@@ -16,11 +18,27 @@ export async function GET(request, { params }) {
   const user = await prisma.user.findUnique({ where: { id }, include: { player: true } });
   if (!user?.player) return Response.json({ error: "Nie znaleziono gracza" }, { status: 404 });
 
-  const today = await prisma.playerHealthDaily.findUnique({
-    where: { playerId_date: { playerId: user.player.id, date: todayBucket() } },
-  });
+  const [today, exercises] = await Promise.all([
+    prisma.playerHealthDaily.findUnique({
+      where: { playerId_date: { playerId: user.player.id, date: todayBucket() } },
+    }),
+    prisma.playerExerciseSession.findMany({
+      where: { playerId: user.player.id },
+      orderBy: { startTime: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        exerciseType: true,
+        startTime: true,
+        endTime: true,
+        durationSeconds: true,
+        heartRateAvg: true,
+        heartRateMax: true,
+      },
+    }),
+  ]);
 
-  return Response.json({ healthToken: user.player.healthToken, today });
+  return Response.json({ healthToken: user.player.healthToken, today, exercises });
 }
 
 export async function POST(request, { params }) {

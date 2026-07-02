@@ -63,6 +63,34 @@ function isOnline(lastSeen) {
   return (Date.now() - new Date(lastSeen)) / 60000 < 5;
 }
 
+// Kody typów z Health Connect (ExerciseSessionRecord.exerciseType)
+const EXERCISE_TYPE_LABELS = {
+  0: "Trening (inny)",
+  8: "Rower",
+  57: "Bieganie",
+  65: "Piłka nożna",
+  70: "Siłownia",
+  79: "Marsz",
+  81: "Podnoszenie ciężarów",
+};
+
+function exerciseLabel(type) {
+  return EXERCISE_TYPE_LABELS[type] ?? `Trening (typ ${type})`;
+}
+
+function formatExerciseWhen(startTime) {
+  const d = new Date(startTime);
+  const dateStr = d.toLocaleDateString("pl-PL", { timeZone: "Europe/Warsaw", day: "2-digit", month: "2-digit" });
+  const timeStr = d.toLocaleTimeString("pl-PL", { timeZone: "Europe/Warsaw", hour: "2-digit", minute: "2-digit" });
+  return `${dateStr}, ${timeStr}`;
+}
+
+function formatDuration(seconds) {
+  const mins = Math.round(seconds / 60);
+  if (mins < 60) return `${mins} min`;
+  return `${Math.floor(mins / 60)} godz. ${mins % 60} min`;
+}
+
 function Avatar({ foto, name, size = 38 }) {
   const [err, setErr] = useState(false);
   const initials = (name || "?").charAt(0).toUpperCase();
@@ -122,6 +150,7 @@ export default function PanelGracze() {
   const [healthUserId, setHealthUserId] = useState(null);
   const [healthToken, setHealthToken] = useState(null);
   const [healthToday, setHealthToday] = useState(null);
+  const [healthExercises, setHealthExercises] = useState([]);
   const [healthLoading, setHealthLoading] = useState(false);
   const [healthGenerating, setHealthGenerating] = useState(false);
   const [healthCopied, setHealthCopied] = useState(false);
@@ -228,11 +257,13 @@ export default function PanelGracze() {
     setHealthLoading(true);
     setHealthToken(null);
     setHealthToday(null);
+    setHealthExercises([]);
     try {
       const r = await fetch(`/api/admin/gracze/${u.id}/health-token`);
       const d = await r.json();
       setHealthToken(d.healthToken ?? null);
       setHealthToday(d.today ?? null);
+      setHealthExercises(d.exercises ?? []);
     } catch { /* noop */ }
     finally { setHealthLoading(false); }
   }
@@ -674,6 +705,30 @@ export default function PanelGracze() {
                               <span>śr. tętno: <strong style={{ color: "#fff" }}>{Math.round(healthToday.heartRateAvg)}</strong> bpm</span>
                             )}
                             <span>kalorie: <strong style={{ color: "#fff" }}>{Math.round(healthToday.activeCalories)}</strong></span>
+                          </div>
+                        )}
+
+                        {healthExercises.length > 0 && (
+                          <div>
+                            <label style={{ ...lbl, fontSize: 10 }}>OSTATNIE TRENINGI</label>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                              {healthExercises.map((ex) => (
+                                <div
+                                  key={ex.id}
+                                  style={{ display: "flex", gap: 12, alignItems: "center", fontSize: 12, color: "#94a3b8", background: "rgba(0,0,0,0.2)", padding: "6px 10px", borderRadius: 6, flexWrap: "wrap" }}
+                                >
+                                  <span style={{ color: "#fff", fontWeight: 600 }}>{exerciseLabel(ex.exerciseType)}</span>
+                                  <span>{formatExerciseWhen(ex.startTime)}</span>
+                                  <span>{formatDuration(ex.durationSeconds)}</span>
+                                  {ex.heartRateAvg != null && (
+                                    <span>śr. tętno: <strong style={{ color: "#fff" }}>{Math.round(ex.heartRateAvg)}</strong> bpm</span>
+                                  )}
+                                  {ex.heartRateMax != null && (
+                                    <span>maks: <strong style={{ color: "#fff" }}>{Math.round(ex.heartRateMax)}</strong> bpm</span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         )}
 
