@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { parseMeczDate } from "@/lib/parseMeczDate";
 
 const isDrawa = (name) => name?.toLowerCase().includes("drawa");
 
@@ -55,7 +56,9 @@ export default function NavBar({ backLabel }) {
     const parts = (raw.date || "").split(" ");
     const time = parts.find(p => p.includes(":")) ?? "";
     const date = parts.filter(p => !p.includes(":")).join(" ");
-    setNextMatch({ opp: oppShort, date, time });
+    const parsed = parseMeczDate(raw.date);
+    const isToday = !!parsed && parsed.toDateString() === new Date().toDateString();
+    setNextMatch({ opp: oppShort, date, time, isToday });
    })
    .catch(() => {});
   return () => { cancelled = true; };
@@ -206,19 +209,19 @@ export default function NavBar({ backLabel }) {
  alignItems: "center",
  gap: 7,
  padding: "5px 11px",
- background: "rgba(34,197,94,0.07)",
- border: "1px solid rgba(34,197,94,0.2)",
+ background: nextMatch.isToday ? "rgba(34,197,94,0.07)" : "rgba(59,130,246,0.07)",
+ border: `1px solid ${nextMatch.isToday ? "rgba(34,197,94,0.2)" : "rgba(59,130,246,0.2)"}`,
  borderRadius: 20,
  textDecoration: "none",
  }}
  >
  <div
- className="nav-pulse-dot"
- style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }}
+ className={nextMatch.isToday ? "nav-pulse-dot" : undefined}
+ style={{ width: 7, height: 7, borderRadius: "50%", background: nextMatch.isToday ? "#22c55e" : "#3b82f6", flexShrink: 0 }}
  />
  <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.2 }}>
- <span style={{ fontSize: 9, color: "#22c55e", fontWeight: 700, letterSpacing: "0.08em" }}>
- {nextMatch.date} · {nextMatch.time}
+ <span style={{ fontSize: 9, color: nextMatch.isToday ? "#22c55e" : "#3b82f6", fontWeight: 700, letterSpacing: "0.08em" }}>
+ {nextMatch.isToday ? "DZIŚ" : nextMatch.date} · {nextMatch.time}
  </span>
  <span style={{ fontSize: 9, color: "#475569", letterSpacing: "0.06em" }}>
  vs {nextMatch.opp}
@@ -288,9 +291,9 @@ export default function NavBar({ backLabel }) {
  onClick={close}
  style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", textDecoration: "none" }}
  >
- <div className="nav-pulse-dot" style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }} />
- <span style={{ fontSize: 12, color: "#22c55e", fontWeight: 600 }}>
- Następny mecz: {nextMatch.date} {nextMatch.time} vs {nextMatch.opp}
+ <div className={nextMatch.isToday ? "nav-pulse-dot" : undefined} style={{ width: 7, height: 7, borderRadius: "50%", background: nextMatch.isToday ? "#22c55e" : "#3b82f6", flexShrink: 0 }} />
+ <span style={{ fontSize: 12, color: nextMatch.isToday ? "#22c55e" : "#3b82f6", fontWeight: 600 }}>
+ {nextMatch.isToday ? "Dziś mecz" : "Następny mecz"}: {nextMatch.date} {nextMatch.time} vs {nextMatch.opp}
  </span>
  </Link>
  )}
