@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import NavBar from "@/components/NavBar";
 import {computeTeamStats} from "@/lib/computeStats";
+import {parseMeczDate} from "@/lib/parseMeczDate";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
   AreaChart, Area, CartesianGrid, PieChart, Pie, Legend,
@@ -35,34 +36,8 @@ const BIG = {
   lineHeight: 1,
 };
 
-// ── Polish date parser ────────────────────────────────────────
-const POLISH_MONTH = {
-  sty: 0, luty: 1, lut: 1, marzec: 2, mar: 2,
-  kwi: 3, maj: 4, cze: 5, czerwiec: 5,
-  lip: 6, sierpien: 7, sie: 7,
-  wrzesien: 8, wrz: 8, pazdziernik: 9, paz: 9,
-  listopad: 10, lis: 10, grudzien: 11, gru: 11,
-};
-
 function parsePolishDate(s) {
-  if (!s) return new Date(0);
-  const norm = s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/,/g, "").toLowerCase();
-  const tokens = norm.split(/\s+/);
-  let day = 1, month = 0, year = null;
-  for (const t of tokens) {
-    if (/^\d{1,2}$/.test(t)) {
-      day = +t;
-      continue;
-    }
-    if (/^\d{4}$/.test(t)) {
-      year = +t;
-      continue;
-    }
-    const key = Object.keys(POLISH_MONTH).find((k) => t.startsWith(k));
-    if (key !== undefined) month = POLISH_MONTH[key];
-  }
-  if (year === null) year = month >= 7 ? 2025 : 2026;
-  return new Date(year, month, day);
+  return parseMeczDate(s) || new Date(0);
 }
 
 const SHORT_MONTHS = ["sty", "lut", "mar", "kwi", "maj", "cze", "lip", "sie", "wrz", "paź", "lis", "gru"];

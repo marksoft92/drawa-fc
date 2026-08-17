@@ -2,30 +2,7 @@
 
 import { useState } from 'react';
 import Komentarze from '@/components/Komentarze';
-
-const MONTHS = {
-  'sty': 1, 'styczeń': 1, 'lut': 2, 'luty': 2,
-  'mar': 3, 'marzec': 3, 'kwi': 4, 'kwiecień': 4,
-  'maj': 5, 'cze': 6, 'czerwiec': 6, 'lip': 7, 'lipiec': 7,
-  'sie': 8, 'sierpień': 8, 'wrz': 9, 'wrzesień': 9,
-  'paź': 10, 'październik': 10, 'lis': 11, 'listopad': 11,
-  'gru': 12, 'grudzień': 12,
-};
-
-function parseDate(str) {
-  if (!str) return 0;
-  const full = str.match(/^(\d{1,2})\s+(\S+)\s+(\d{4})/);
-  if (full) {
-    const m = MONTHS[full[2].toLowerCase()];
-    if (m) return parseInt(full[3]) * 10000 + m * 100 + parseInt(full[1]);
-  }
-  const short = str.match(/^(\d{1,2})\s+(\S+)\s/);
-  if (short) {
-    const m = MONTHS[short[2].toLowerCase()];
-    if (m) return 2026 * 10000 + m * 100 + parseInt(short[1]);
-  }
-  return 0;
-}
+import { meczSortKeyDesc as parseDate } from '@/lib/parseMeczDate';
 
 export default function OstatniMecz({
                                       mecze = [],

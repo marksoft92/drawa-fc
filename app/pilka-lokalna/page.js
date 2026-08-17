@@ -18,7 +18,7 @@ export default async function PilkaLokalnaPage() {
   const wpisy = await prisma.wpisLigowy.findMany({
     where: { published: true },
     include: { zrodlo: { select: { nazwa: true, herb: true } } },
-    orderBy: [{ dataPostu: "desc" }, { createdAt: "desc" }],
+    orderBy: [{ dataPostu: { sort: "desc", nulls: "last" } }, { createdAt: "desc" }],
   });
 
   const zrodlaMap = new Map();

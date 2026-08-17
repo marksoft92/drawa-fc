@@ -51,7 +51,7 @@ export default async function KlubPage({ params }) {
   const wpisy = await prisma.wpisLigowy.findMany({
     where: { zrodloId: klub.id, published: true },
     select: { slug: true, tytul: true, tresc: true, miniaturka: true, dataPostu: true, createdAt: true, obrazki: true },
-    orderBy: [{ dataPostu: "desc" }, { createdAt: "desc" }],
+    orderBy: [{ dataPostu: { sort: "desc", nulls: "last" } }, { createdAt: "desc" }],
   });
 
   const fmtDate = (d) => {

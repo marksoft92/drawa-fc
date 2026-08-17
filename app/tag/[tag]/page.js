@@ -68,7 +68,7 @@ export default async function TagPage({ params }) {
     prisma.wpisLigowy.findMany({
       where: { published: true, tags: { has: tagName } },
       include: { zrodlo: { select: { nazwa: true, herb: true } } },
-      orderBy: [{ dataPostu: "desc" }, { createdAt: "desc" }],
+      orderBy: [{ dataPostu: { sort: "desc", nulls: "last" } }, { createdAt: "desc" }],
     }),
   ]);
 

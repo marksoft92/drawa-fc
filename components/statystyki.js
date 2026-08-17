@@ -4,7 +4,7 @@ import Link from 'next/link';
 const FORM_COLOR = { W: '#22c55e', D: '#94a3b8', L: '#ef4444' };
 const FORM_LABEL = { W: 'W', D: 'R', L: 'P' };
 
-export default function Statystyki({ teamStats = null, SectionLabel }) {
+export default function Statystyki({ teamStats = null, SectionLabel, sezon = "2025/26" }) {
   if (!teamStats) return null;
 
   const { wins, draws, losses, total, winPct, golesFor, golesAgainst,
@@ -17,7 +17,7 @@ export default function Statystyki({ teamStats = null, SectionLabel }) {
       style={{ padding: '0 20px 80px', background: '#030712' }}
     >
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
-        <SectionLabel>Statystyki sezonu 2025/2026</SectionLabel>
+        <SectionLabel>Statystyki sezonu {sezon}</SectionLabel>
 
         {/* Główne liczby */}
         <div

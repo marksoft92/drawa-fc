@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { meczSortKeyAsc } from "@/lib/parseMeczDate";
 
 export const dynamic = "force-dynamic";
 
@@ -80,10 +81,13 @@ export async function GET() {
   const sezonNazwa = ust.aktywny_sezon || "2025/26";
   const enc = sezonNazwa;
 
-  const [tabela, mecze] = await Promise.all([
+  const [tabela, meczeRaw] = await Promise.all([
     prisma.tabelaDruzyna.findMany({ where: { sezon: enc }, orderBy: { pozycja: "asc" } }),
-    prisma.mecz.findMany({ where: { sezon: enc }, orderBy: { date: "asc" } }),
+    prisma.mecz.findMany({ where: { sezon: enc } }),
   ]);
+  // "date" to zwykły string w polskim formacie ("22 sie") — sortowanie po nim
+  // w bazie byłoby leksykograficzne, nie chronologiczne, więc sortujemy w JS
+  const mecze = [...meczeRaw].sort((a, b) => meczSortKeyAsc(a.date) - meczSortKeyAsc(b.date));
 
   return Response.json(
     { ustawienia: ust, aktualnosci, galeria, sponsorzy, struktura, kadra: kadraData, tabela, mecze, allTimeStats: archiwumStats },

@@ -1,5 +1,6 @@
 "use client";
 import {computeTeamStats} from "@/lib/computeStats";
+import {parseMeczDate, meczSortKeyAsc} from "@/lib/parseMeczDate";
 import {useState, useEffect} from "react";
 import NavBar from "@/components/NavBar";
 import Hero from "@/components/hero";
@@ -123,32 +124,16 @@ export default function HomePageClient({ data }) {
 
   const teamStats = computeTeamStats(mecze);
 
-  function parseSimpleDate(str) {
-    if (!str) return null;
-    const MONTHS = { sty:0,lut:1,mar:2,kwi:3,maj:4,cze:5,lip:6,sie:7,wrz:8,'paź':9,lis:10,gru:11 };
-    const tokens = str.replace(',','').toLowerCase().split(/\s+/);
-    let day=null,month=null,year=null,h=0,m=0;
-    for (const t of tokens) {
-      if (/^\d{1,2}:\d{2}$/.test(t)){[h,m]=t.split(':').map(Number);continue;}
-      if (/^\d{4}$/.test(t)){year=+t;continue;}
-      if (/^\d{1,2}$/.test(t)){day=+t;continue;}
-      const k=Object.keys(MONTHS).find(k=>t.startsWith(k));
-      if(k!==undefined)month=MONTHS[k];
-    }
-    if(day===null||month===null)return null;
-    if(year===null)year=month>=6?2025:2026;
-    return new Date(year,month,day,h,m,0);
-  }
-
   const today = new Date();
   const isMatchday = mecze.some(m => {
     if (!m.date || m.score || m.walkower) return false;
-    const d = parseSimpleDate(m.date);
+    const d = parseMeczDate(m.date);
     return d && d.toDateString() === today.toDateString();
   });
 
   const MatchdayBanner = isMatchday ? () => {
-    const next = mecze.find(m => !m.score && !m.walkower);
+    const next = [...mecze].filter(m => !m.score && !m.walkower)
+      .sort((a, b) => meczSortKeyAsc(a.date) - meczSortKeyAsc(b.date))[0];
     const opp = next ? (isDrawa(next.team1) ? next.team2 : next.team1) : '';
     const time = next?.date?.split(' ').find(p => p.includes(':')) ?? '';
     return (
@@ -222,7 +207,7 @@ export default function HomePageClient({ data }) {
 
 
         <div id="statystyki">
-          <Statystyki teamStats={teamStats} SectionLabel={SectionLabel}/>
+          <Statystyki teamStats={teamStats} SectionLabel={SectionLabel} sezon={hp?.ustawienia?.aktywny_sezon || "2025/26"}/>
         </div>
 
         <div id="galeria">

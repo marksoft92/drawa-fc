@@ -1,60 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-
-const POLISH_MONTHS = {
-  sty: 0, styczeń: 0,
-  lut: 1, luty: 1,
-  mar: 2, marzec: 2,
-  kwi: 3, kwiecień: 3,
-  maj: 4,
-  cze: 5, czerwiec: 5,
-  lip: 6, lipiec: 6,
-  sie: 7, sierpień: 7,
-  wrz: 8, wrzesień: 8,
-  paź: 9, październik: 9,
-  lis: 10, listopad: 10,
-  gru: 11, grudzień: 11,
-};
-
-function parseMatchDate(str) {
-  if (!str) return null;
-  const cleaned = str.replace(',', '').toLowerCase();
-  const tokens = cleaned.split(/\s+/);
-
-  let day = null, month = null, year = null, hours = 0, minutes = 0;
-
-  for (const token of tokens) {
-    if (/^\d{1,2}:\d{2}$/.test(token)) {
-      const [h, m] = token.split(':').map(Number);
-      hours = h;
-      minutes = m;
-      continue;
-    }
-    if (/^\d{4}$/.test(token)) {
-      year = parseInt(token, 10);
-      continue;
-    }
-    if (/^\d{1,2}$/.test(token)) {
-      day = parseInt(token, 10);
-      continue;
-    }
-    // Try matching month by checking if any key is a prefix of or matches the token
-    const matchedKey = Object.keys(POLISH_MONTHS).find((k) => token.startsWith(k));
-    if (matchedKey !== undefined) {
-      month = POLISH_MONTHS[matchedKey];
-    }
-  }
-
-  if (day === null || month === null) return null;
-
-  // Year heuristic: months >= 6 (July and later) → 2025, else → 2026
-  if (year === null) {
-    year = month >= 6 ? 2025 : 2026;
-  }
-
-  return new Date(year, month, day, hours, minutes, 0, 0);
-}
+import { parseMeczDate as parseMatchDate, meczSortKeyAsc } from '@/lib/parseMeczDate';
 
 function useCountdown(targetDate) {
   const [state, setState] = useState({ d: 0, h: 0, m: 0, s: 0, past: false });
@@ -93,7 +40,11 @@ export default function NastepnyMecz({
                                        HerbImg,
                                        isDrawa,
                                      }) {
-  const next = mecze.find((m) => !m.score && !m.walkower);
+  const next = useMemo(
+    () => [...mecze].filter((m) => !m.score && !m.walkower)
+      .sort((a, b) => meczSortKeyAsc(a.date) - meczSortKeyAsc(b.date))[0],
+    [mecze]
+  );
 
   const matchDate = useMemo(() => parseMatchDate(next?.date ?? null), [next?.date]);
   const countdown = useCountdown(matchDate);

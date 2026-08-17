@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { meczSortKeyAsc } from "@/lib/parseMeczDate";
 
 const DRAWA_HERB = "/logo.png";
 const isDrawa = (name) => name?.toLowerCase().includes("drawa");
@@ -182,20 +183,10 @@ function MatchCard({ mecz }) {
   );
 }
 
-const MONTHS = { sty:1,lut:2,mar:3,kwi:4,maj:5,cze:6,lip:7,sie:8,wrz:9,'paź':10,lis:11,gru:12,styczeń:1,luty:2,marzec:3,kwiecień:4,czerwiec:6,lipiec:7,sierpień:8,wrzesień:9,październik:10,listopad:11,grudzień:12 };
-function parseDate(str) {
-  if (!str) return 0;
-  const f = str.match(/^(\d{1,2})\s+(\S+)\s+(\d{4})/);
-  if (f) { const m = MONTHS[f[2].toLowerCase()]; if (m) return parseInt(f[3]) * 10000 + m * 100 + parseInt(f[1]); }
-  const s = str.match(/^(\d{1,2})\s+(\S+)\s/);
-  if (s) { const m = MONTHS[s[2].toLowerCase()]; if (m) return 2026 * 10000 + m * 100 + parseInt(s[1]); }
-  return 0;
-}
-
 export default function LigaClient({ mecze }) {
   const [showAll, setShowAll] = useState(false);
 
-  const sorted = [...mecze].sort((a, b) => parseDate(a.date) - parseDate(b.date));
+  const sorted = [...mecze].sort((a, b) => meczSortKeyAsc(a.date) - meczSortKeyAsc(b.date));
 
   return (
     <>

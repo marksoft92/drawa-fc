@@ -1,28 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-
-const MONTHS = {
-  sty: 0, styczeń: 0, lut: 1, luty: 1, mar: 2, marzec: 2,
-  kwi: 3, kwiecień: 3, maj: 4, cze: 5, czerwiec: 5,
-  lip: 6, lipiec: 6, sie: 7, sierpień: 7, wrz: 8, wrzesień: 8,
-  'paź': 9, październik: 9, lis: 10, listopad: 10, gru: 11, grudzień: 11,
-};
-
-function parseDate(str) {
-  if (!str) return null;
-  const tokens = str.replace(',', '').toLowerCase().split(/\s+/);
-  let day = null, month = null, year = null, h = 0, m = 0;
-  for (const t of tokens) {
-    if (/^\d{1,2}:\d{2}$/.test(t)) { [h, m] = t.split(':').map(Number); continue; }
-    if (/^\d{4}$/.test(t)) { year = +t; continue; }
-    if (/^\d{1,2}$/.test(t)) { day = +t; continue; }
-    const key = Object.keys(MONTHS).find(k => t.startsWith(k));
-    if (key !== undefined) month = MONTHS[key];
-  }
-  if (day === null || month === null) return null;
-  if (year === null) year = month >= 6 ? 2025 : 2026;
-  return new Date(year, month, day, h, m, 0);
-}
+import { parseMeczDate as parseDate } from '@/lib/parseMeczDate';
 
 async function maybeNotify() {
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
