@@ -23,9 +23,11 @@ const ROOT = path.join(__dirname, '..');
 const TMP_DIR = path.join(ROOT, 'tmp');
 
 const URLS = {
-  lista:  `${BASE}/druzyna/Pilka_Nozna/Zachodniopomorskie/Drawa_Drawno/zachodniopomorska_IV/`,
-  tabela: `${BASE}/druzyna/Pilka_Nozna/Zachodniopomorskie/Drawa_Drawno/zachodniopomorska_IV/tabela/`,
-  kadra:  `${BASE}/druzyna/Pilka_Nozna/Zachodniopomorskie/Drawa_Drawno/zachodniopomorska_IV/kadra/`,
+  // Drawa Drawno spadła z IV ligi do Klasy A na sezon 2026/2027 — regiowyniki.pl
+  // porzuciło stary segment ligi w URL drużyny (zachodniopomorska_IV)
+  lista:  `${BASE}/druzyna/Pilka_Nozna/Zachodniopomorskie/Drawa_Drawno/`,
+  tabela: `${BASE}/druzyna/Pilka_Nozna/Zachodniopomorskie/Drawa_Drawno/tabela/`,
+  kadra:  `${BASE}/druzyna/Pilka_Nozna/Zachodniopomorskie/Drawa_Drawno/kadra/`,
 };
 
 function ensureTmp() {
