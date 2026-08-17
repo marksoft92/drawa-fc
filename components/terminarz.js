@@ -6,6 +6,12 @@ import { meczSortKeyAsc, meczSortKeyDesc } from '@/lib/parseMeczDate';
 
 const SHOW_INITIALLY = 5;
 
+function ligaLabel(liga) {
+  if (!liga) return 'LIGA';
+  const m = liga.match(/klasa\s*[a-z]/i);
+  return (m ? m[0] : liga).toUpperCase();
+}
+
 function getResult(mecz, isDrawa) {
   if (!mecz.score) return null;
   const isHome = isDrawa(mecz.team1);
@@ -250,7 +256,7 @@ function MatchCard({ mecz, isDrawa, HerbImg, upcoming }) {
             border: `1px solid ${isPuchar ? 'rgba(234,179,8,0.3)' : 'rgba(59,130,246,0.2)'}`,
             letterSpacing: '0.08em', fontWeight: 600,
           }}>
-            {isPuchar ? 'PUCHAR POLSKI' : 'KLASA B'}
+            {isPuchar ? 'PUCHAR POLSKI' : ligaLabel(mecz.liga)}
           </span>
           <span style={{ fontSize: 12, color: '#475569' }}>{dateShort}</span>
         </div>
