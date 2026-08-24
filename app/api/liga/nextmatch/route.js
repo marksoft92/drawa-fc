@@ -13,7 +13,7 @@ export async function GET() {
   });
   // score:null nie gwarantuje, że mecz jest w przyszłości — zdarzają się
   // nieaktualne rekordy sprzed korekty terminarza z datą już z przeszłości
-  const mecz = [...mecze].filter(isMeczUpcoming).sort((a, b) => meczSortKeyAsc(a.date) - meczSortKeyAsc(b.date))[0] ?? null;
+  const mecz = [...mecze].filter((m) => isMeczUpcoming(m)).sort((a, b) => meczSortKeyAsc(a.date) - meczSortKeyAsc(b.date))[0] ?? null;
   if (!mecz) return Response.json(null, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } });
   return Response.json(mecz, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } });
 }
