@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { absoluteUrl } from "@/lib/absoluteUrl";
 
 const emptyForm = () => ({
   title: "", slug: "", excerpt: "", content: "",
@@ -370,7 +371,7 @@ export default function AktualnosciAdmin() {
     setNlSending(true); setNlResult(null);
     const articleUrl = `https://mksdrawadrawno.pl/aktualnosci/${a.slug}`;
     const imgHtml = a.thumbnail
-      ? `<img src="https://mksdrawadrawno.pl${a.thumbnail}" alt="" style="width:100%;max-width:520px;border-radius:8px;margin-bottom:16px" />`
+      ? `<img src="${absoluteUrl(a.thumbnail)}" alt="" style="width:100%;max-width:520px;border-radius:8px;margin-bottom:16px" />`
       : "";
     const bodyHtml = nlBody.split("\n").map(l => l.trim() ? `<p style="margin:0 0 12px;color:#1e293b;font-size:15px;line-height:1.7">${l}</p>` : "").join("");
     const html = `

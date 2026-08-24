@@ -5,6 +5,7 @@ import ArticleGallery from '@/components/ArticleGallery';
 import Komentarze from '@/components/Komentarze';
 import ShareButtons from '@/components/ShareButtons';
 import { prisma } from '@/lib/prisma';
+import { absoluteUrl } from '@/lib/absoluteUrl';
 
 export const revalidate = 60;
 
@@ -34,13 +35,13 @@ export async function generateMetadata({ params }) {
       title: `${a.title} | MKS Drawa Drawno`,
       description: a.excerpt,
       url: `https://mksdrawadrawno.pl/aktualnosci/${a.slug}`,
-      ...(a.thumbnail && { images: [{ url: `https://mksdrawadrawno.pl${a.thumbnail}`, width: 1200, height: 630, alt: a.title }] }),
+      ...(a.thumbnail && { images: [{ url: absoluteUrl(a.thumbnail), width: 1200, height: 630, alt: a.title }] }),
     },
     twitter: {
       card: "summary_large_image",
       title: a.title,
       description: a.excerpt,
-      ...(a.thumbnail && { images: [`https://mksdrawadrawno.pl${a.thumbnail}`] }),
+      ...(a.thumbnail && { images: [absoluteUrl(a.thumbnail)] }),
     },
   };
 }
@@ -85,7 +86,7 @@ export default async function ArticlePage({ params }) {
             description: a.excerpt,
             datePublished: a.date,
             dateModified: a.updatedAt?.toISOString?.() || a.date,
-            image: a.thumbnail ? `https://mksdrawadrawno.pl${a.thumbnail}` : "https://mksdrawadrawno.pl/logo.png",
+            image: a.thumbnail ? absoluteUrl(a.thumbnail) : "https://mksdrawadrawno.pl/logo.png",
             author: { "@type": "Organization", name: "MKS Drawa Drawno", url: "https://mksdrawadrawno.pl" },
             publisher: {
               "@type": "Organization",
