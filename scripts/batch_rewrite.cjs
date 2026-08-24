@@ -21,6 +21,7 @@ const INDEXNOW_KEY = 'c2bde26566f3c19e8c143ffe94cde083';
 const SITE_HOST = 'mksdrawadrawno.pl';
 
 const FREE_MODELS = [
+  "stealth/ox-alpha",
   "openai/gpt-oss-120b:free",
   "nvidia/nemotron-3-super-120b-a12b:free",
   "nvidia/nemotron-3-nano-30b-a3b:free",

@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 const FREE_MODELS = [
+  "stealth/ox-alpha",
   "openai/gpt-oss-120b",
   "qwen/qwen3-next-80b-a3b-instruct",
   "nousresearch/hermes-3-405b-instruct",
