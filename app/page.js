@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import HomePageClient from "./HomePageClient";
+import { isMeczUpcoming } from "@/lib/parseMeczDate";
 
 export const revalidate = 60;
 
@@ -97,7 +98,7 @@ export default async function Page() {
   const data = await getHomeData();
 
   const drawaRow = data.tabela.find((r) => r.nazwa?.toLowerCase().includes("drawa"));
-  const upcomingMatches = data.mecze.filter(m => !m.score && !m.walkower);
+  const upcomingMatches = data.mecze.filter(m => isMeczUpcoming(m));
 
   return (
     <>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Komentarze from '@/components/Komentarze';
-import { meczSortKeyAsc, meczSortKeyDesc } from '@/lib/parseMeczDate';
+import { meczSortKeyAsc, meczSortKeyDesc, isMeczUpcoming } from '@/lib/parseMeczDate';
 
 const SHOW_INITIALLY = 5;
 
@@ -419,7 +419,7 @@ export default function Terminarz({ mecze = [], SectionLabel, HerbImg, isDrawa }
     .sort((a, b) => meczSortKeyDesc(b.date) - meczSortKeyDesc(a.date));
 
   const upcoming = mecze
-    .filter(m => !m.score && m.status === 'planowany')
+    .filter(m => m.status === 'planowany' && isMeczUpcoming(m))
     .sort((a, b) => meczSortKeyAsc(a.date) - meczSortKeyAsc(b.date));
 
   const visiblePlayed = showAll ? played : played.slice(0, SHOW_INITIALLY);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { parseMeczDate as parseMatchDate, meczSortKeyAsc } from '@/lib/parseMeczDate';
+import { parseMeczDate as parseMatchDate, meczSortKeyAsc, isMeczUpcoming } from '@/lib/parseMeczDate';
 
 function useCountdown(targetDate) {
   const [state, setState] = useState({ d: 0, h: 0, m: 0, s: 0, past: false });
@@ -41,7 +41,7 @@ export default function NastepnyMecz({
                                        isDrawa,
                                      }) {
   const next = useMemo(
-    () => [...mecze].filter((m) => !m.score && !m.walkower)
+    () => [...mecze].filter((m) => isMeczUpcoming(m))
       .sort((a, b) => meczSortKeyAsc(a.date) - meczSortKeyAsc(b.date))[0],
     [mecze]
   );
