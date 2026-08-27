@@ -4,15 +4,18 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
+// Tylko modele zweryfikowane jako wciąż dostępne w darmowym tierze OpenRouter
+// (wiele popularnych :free slugów zostało wycofanych — sprawdzaj okresowo).
 const FREE_MODELS = [
-  "stealth/ox-alpha",
-  "openai/gpt-oss-120b",
-  "qwen/qwen3-next-80b-a3b-instruct",
-  "nousresearch/hermes-3-405b-instruct",
-  "meta-llama/llama-3.3-70b-instruct",
-  "nvidia/nemotron-3-nano-30b-a3b",
-  "openai/gpt-oss-20b",
+  "nvidia/nemotron-3-super-120b-a12b:free",
+  "liquid/lfm-2.5-2.6b:free",
+  "dots-studio/dots-3-note-preview:free",
+  "poolside/laguna-s-2.1:free",
+  "poolside/laguna-xs-2.1:free",
 ];
+
+// Gdy jeden klucz wyczerpie dzienny limit darmowych zapytań, próbujemy kolejny.
+const OPENROUTER_KEYS = [process.env.OPENROUTER_API_KEY, process.env.OPENROUTER_API_KEY_2].filter(Boolean);
 
 const SYSTEM_PROMPT = `Jesteś redaktorem portalu piłkarskiego z zachodniopomorskiego. Dostajesz surowy post z Facebooka klubu piłkarskiego i musisz go przepisać na pełny artykuł dziennikarski.
 
@@ -32,11 +35,11 @@ TAGI: [2-4 tagi oddzielone przecinkami, np: transfery, wyniki, zapowiedź, B kla
 ---
 [treść artykułu]`;
 
-async function callOpenRouter(model, klubNazwa, tresc) {
+async function callOpenRouter(model, klubNazwa, tresc, apiKey) {
   const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
       "HTTP-Referer": "https://drawa-fc.pl",
     },
@@ -53,8 +56,12 @@ async function callOpenRouter(model, klubNazwa, tresc) {
   });
 
   if (!r.ok) {
-    const err = await r.text().catch(() => "");
-    throw new Error(`${model}: HTTP ${r.status} ${err.slice(0, 200)}`);
+    const errText = await r.text().catch(() => "");
+    let isDailyLimit = false;
+    try { isDailyLimit = r.status === 429 && /free-models-per-day/.test(JSON.parse(errText)?.error?.message || ""); } catch {}
+    const err = new Error(`${model}: HTTP ${r.status} ${errText.slice(0, 200)}`);
+    err.isDailyLimit = isDailyLimit;
+    throw err;
   }
 
   const data = await r.json();
@@ -110,27 +117,37 @@ export async function POST(request, { params }) {
 
   if (!wpis) return Response.json({ error: "Nie znaleziono wpisu" }, { status: 404 });
 
+  if (OPENROUTER_KEYS.length === 0) {
+    return Response.json({ error: "Brak OPENROUTER_API_KEY" }, { status: 500 });
+  }
+
   const errors = [];
+  const exhaustedKeys = new Set();
 
   for (const model of FREE_MODELS) {
-    try {
-      const { content, model: usedModel } = await callOpenRouter(model, wpis.zrodlo.nazwa, wpis.tresc);
-      const parsed = parseResponse(content);
+    for (const key of OPENROUTER_KEYS) {
+      if (exhaustedKeys.has(key)) continue;
+      try {
+        const { content, model: usedModel } = await callOpenRouter(model, wpis.zrodlo.nazwa, wpis.tresc, key);
+        const parsed = parseResponse(content);
 
-      if (!parsed.tytul || !parsed.tresc || parsed.tresc.length < 100) {
-        errors.push(`${model}: za krótka odpowiedź`);
-        continue;
+        if (!parsed.tytul || !parsed.tresc || parsed.tresc.length < 100) {
+          errors.push(`${model}: za krótka odpowiedź`);
+          break;
+        }
+
+        return Response.json({
+          tytul: parsed.tytul,
+          tags: parsed.tags,
+          tresc: parsed.tresc,
+          model: usedModel,
+          raw: content,
+        });
+      } catch (e) {
+        errors.push(e.message);
+        if (e.isDailyLimit) exhaustedKeys.add(key);
+        else break;
       }
-
-      return Response.json({
-        tytul: parsed.tytul,
-        tags: parsed.tags,
-        tresc: parsed.tresc,
-        model: usedModel,
-        raw: content,
-      });
-    } catch (e) {
-      errors.push(e.message);
     }
   }
 
