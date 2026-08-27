@@ -17,9 +17,18 @@ function slugify(str) {
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
+// Buduj statycznie tylko najnowsze wpisy — starsze i tak wyrenderują się
+// on-demand przy pierwszym wejściu (dynamicParams domyślnie true) i trafią
+// do cache. Chroni to czas builda i miejsce na dysku przed wzrostem do
+// tysięcy wpisów w bazie.
 export async function generateStaticParams() {
   try {
-    const wpisy = await prisma.wpisLigowy.findMany({ where: { published: true }, select: { slug: true } });
+    const wpisy = await prisma.wpisLigowy.findMany({
+      where: { published: true },
+      select: { slug: true },
+      orderBy: { createdAt: 'desc' },
+      take: 300,
+    });
     return wpisy.map(w => ({ slug: w.slug }));
   } catch { return []; }
 }

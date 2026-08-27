@@ -24,17 +24,20 @@ async function resolveTag(tagSlug) {
   return [...allTags].find(t => slugify(t) === tagSlug) || null;
 }
 
+// Buduj statycznie tylko najpopularniejsze tagi — rzadkie/jednorazowe
+// wyrenderują się on-demand przy pierwszym wejściu i trafią do cache.
 export async function generateStaticParams() {
   try {
     const [artykuly, wpisy] = await Promise.all([
       prisma.artykul.findMany({ where: { published: true }, select: { tags: true } }),
       prisma.wpisLigowy.findMany({ where: { published: true }, select: { tags: true } }),
     ]);
-    const allTags = new Set([
-      ...artykuly.flatMap(a => a.tags),
-      ...wpisy.flatMap(w => w.tags || []),
-    ]);
-    return [...allTags].map(t => ({ tag: slugify(t) }));
+    const counts = new Map();
+    for (const t of [...artykuly.flatMap(a => a.tags), ...wpisy.flatMap(w => w.tags || [])]) {
+      counts.set(t, (counts.get(t) || 0) + 1);
+    }
+    const topTags = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 100).map(([t]) => t);
+    return topTags.map(t => ({ tag: slugify(t) }));
   } catch { return []; }
 }
 
