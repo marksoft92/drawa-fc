@@ -196,7 +196,7 @@ export default function Tabela({
                     row.wygrane,
                     row.remisy,
                     row.przegrane,
-                    row.bramki,
+                    `${row.bramkiZd}:${row.bramkiStr}`,
                   ].map((v, j) => (
                     <td
                       key={j}
