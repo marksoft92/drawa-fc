@@ -1,5 +1,6 @@
 import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { notifyAll } from "@/lib/pushNotify";
 
 export const dynamic = "force-dynamic";
 
@@ -38,6 +39,13 @@ export async function POST(request) {
       }),
     });
   });
+
+  notifyAll({
+    title: "📊 Tabela ligowa zaktualizowana",
+    body: "Sprawdź aktualne pozycje w tabeli",
+    url: "/liga/tabela",
+    tag: `tabela-${sezon}`,
+  }).catch(() => {});
 
   return Response.json({ ok: true, count: tabela.length });
 }

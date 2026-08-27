@@ -226,6 +226,7 @@ model Mecz {
   zmiany             Json     @default("[]")
   wszystkieZdarzenia Json     @default("[]")
   sklady             Json     @default("{}")
+  notified1h         Boolean  @default(false)
   createdAt          DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -445,8 +446,8 @@ model AnkietaGlos {
 
 model PushSubscription {
   id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   endpoint  String   @unique
   p256dh    String
   auth      String

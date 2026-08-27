@@ -1,5 +1,6 @@
 import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { notifyAll } from "@/lib/pushNotify";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,8 @@ export async function PATCH(request, { params }) {
   const { id } = await params;
   const body = await request.json();
 
+  const before = await prisma.artykul.findUnique({ where: { id }, select: { published: true } });
+
   const data = {};
   if (body.title !== undefined)     data.title     = body.title.trim();
   if (body.slug !== undefined)      data.slug      = body.slug.trim();
@@ -31,6 +34,16 @@ export async function PATCH(request, { params }) {
   if (body.date !== undefined)      data.date      = body.date;
 
   const artykul = await prisma.artykul.update({ where: { id }, data });
+
+  if (before && !before.published && artykul.published) {
+    notifyAll({
+      title: "📰 Nowa aktualność",
+      body: artykul.title,
+      url: `/aktualnosci/${artykul.slug}`,
+      tag: `artykul-${artykul.id}`,
+    }).catch(() => {});
+  }
+
   return Response.json(artykul);
 }
 

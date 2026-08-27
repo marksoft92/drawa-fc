@@ -1,5 +1,6 @@
 import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { notifyAll } from "@/lib/pushNotify";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +43,15 @@ export async function POST(request) {
       date: date || new Date().toISOString().slice(0, 10),
     },
   });
+
+  if (artykul.published) {
+    notifyAll({
+      title: "📰 Nowa aktualność",
+      body: artykul.title,
+      url: `/aktualnosci/${artykul.slug}`,
+      tag: `artykul-${artykul.id}`,
+    }).catch(() => {});
+  }
 
   return Response.json(artykul, { status: 201 });
 }

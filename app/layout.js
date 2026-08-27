@@ -4,6 +4,7 @@ import ServiceWorker from "@/components/ServiceWorker";
 import SplashScreen from "@/components/SplashScreen";
 import DrawaChat from "@/components/DrawaChat";
 import AntiCopy from "@/components/AntiCopy";
+import PublicPushButton from "@/components/PublicPushButton";
 
 const BASE_URL = "https://mksdrawadrawno.pl";
 
@@ -86,11 +87,6 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
-        <script
-          defer
-          src="/a.js"
-          data-website-id="02c455f0-bd76-4de5-a89c-69c0a8709ea0"
-        />
       </head>
       <body className="min-h-full flex flex-col">
         <script
@@ -128,6 +124,7 @@ export default function RootLayout({ children }) {
         <GlobalAudio />
         <SplashScreen />
         <DrawaChat />
+        <PublicPushButton />
         {children}
       </body>
     </html>
