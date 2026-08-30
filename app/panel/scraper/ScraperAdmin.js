@@ -242,6 +242,7 @@ function JsonTab({ data }) {
 export default function ScraperAdmin() {
   const [status, setStatus] = useState({ status: "idle", progress: null, startedAt: null, finishedAt: null, stats: null });
   const [data, setData] = useState(null);
+  const [source, setSource] = useState("regiowyniki");
   const [sezon, setSezon] = useState("2025/26");
   const [tab, setTab] = useState("tabela");
   const [edits, setEdits] = useState({});
@@ -252,6 +253,7 @@ export default function ScraperAdmin() {
   const load = () => {
     fetch("/api/admin/scraper").then(r => r.json()).then(d => {
       setStatus({ status: d.status, progress: d.progress, startedAt: d.startedAt, finishedAt: d.finishedAt, stats: d.stats });
+      if (d.source) setSource(d.source);
       if (d.data) setData(d.data);
     }).catch(() => {});
   };
@@ -272,7 +274,10 @@ export default function ScraperAdmin() {
 
   async function handleRun() {
     setImportMsg({ text: "", err: false });
-    const r = await fetch("/api/admin/scraper", { method: "POST" });
+    const r = await fetch("/api/admin/scraper", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ source }),
+    });
     if (r.ok) { setStatus(s => ({ ...s, status: "queued", progress: "Oczekiwanie na agenta..." })); }
     else { const d = await r.json(); setImportMsg({ text: d.error || "Błąd", err: true }); }
   }
@@ -352,10 +357,10 @@ export default function ScraperAdmin() {
     <div>
       {/* Header */}
       <div style={{ fontSize: "clamp(20px,4vw,28px)", fontFamily: "'Bebas Neue',Impact,sans-serif", letterSpacing: "0.1em", color: "#fff", marginBottom: 4 }}>
-        Scraper · RegioWyniki
+        Scraper · {source === "zzpn" ? "ZZPN" : "RegioWyniki"}
       </div>
       <div style={{ fontSize: 12, color: "#475569", marginBottom: 20 }}>
-        Pobierz dane z regiowyniki.pl i zaimportuj do bazy. Serwer nie łączy się z regiowyniki.pl sam (blokada Cloudflare na składy) —
+        Pobierz dane z {source === "zzpn" ? "rozgrywki.zzpn.pl" : "regiowyniki.pl"} i zaimportuj do bazy. Serwer nie łączy się z {source === "zzpn" ? "zzpn.pl" : "regiowyniki.pl"} sam (blokada Cloudflare na składy) —
         zlecenie odbiera i wykonuje lokalny agent (<code style={{ color: "#64748b" }}>node scripts/agent.cjs</code>), który musi działać na Twoim komputerze.
       </div>
 
@@ -376,6 +381,20 @@ export default function ScraperAdmin() {
         </div>
 
         <div style={{ display: "flex", gap: 8, alignItems: "center", marginLeft: "auto", flexWrap: "wrap" }}>
+          {/* Źródło */}
+          <div>
+            <label style={{ ...lbl, display: "inline", marginRight: 6 }}>Źródło:</label>
+            <select
+              style={{ ...inp, width: 140, display: "inline", cursor: (isRunning || isQueued) ? "not-allowed" : "pointer" }}
+              value={source}
+              onChange={e => setSource(e.target.value)}
+              disabled={isRunning || isQueued}
+            >
+              <option value="regiowyniki">RegioWyniki.pl</option>
+              <option value="zzpn">ZZPN (terminarz)</option>
+            </select>
+          </div>
+
           {/* Sezon */}
           <div>
             <label style={{ ...lbl, display: "inline", marginRight: 6 }}>Sezon:</label>

@@ -42,14 +42,17 @@ export async function GET() {
 // przy pobieraniu składów (Cloudflare 403 na /ajax/matchPlayers.php). Zamiast
 // tego zlecenie czeka w kolejce, aż odbierze je lokalny agent (scripts/agent.cjs)
 // uruchomiony na komputerze z niezablokowanym adresem IP — patrz /api/agent/scraper.
-export async function POST() {
+export async function POST(request) {
   if (!(await hasAccess("scraper"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const status = readStatus();
   if (status.status === "running" || status.status === "queued") {
     return Response.json({ error: "Scraper już działa" }, { status: 409 });
   }
 
-  writeStatus({ status: "queued", startedAt: new Date().toISOString(), progress: "Oczekiwanie na agenta...", finishedAt: null, stats: null });
+  const body = await request.json().catch(() => ({}));
+  const source = body?.source === "zzpn" ? "zzpn" : "regiowyniki";
+
+  writeStatus({ status: "queued", source, startedAt: new Date().toISOString(), progress: "Oczekiwanie na agenta...", finishedAt: null, stats: null });
 
   return Response.json({ ok: true });
 }

@@ -41,7 +41,7 @@ export async function GET(request) {
   // Agent przejmuje zlecenie — od razu oznacz jako "running", żeby inny
   // ewentualny agent (lub odświeżenie panelu) nie przejął go drugi raz.
   writeStatus({ ...status, status: "running", progress: "Agent pobrał zlecenie, scrapuję...", claimedAt: new Date().toISOString() });
-  return Response.json({ job: true });
+  return Response.json({ job: true, source: status.source || "regiowyniki" });
 }
 
 // Agent może w trakcie pracy zaktualizować progres widoczny w panelu.

@@ -70,22 +70,28 @@ async function reportError(error) {
   }).catch(() => {});
 }
 
-function runScraper() {
+const SCRAPERS = {
+  regiowyniki: "scraper_v5.cjs",
+  zzpn: "scraper_zzpn.cjs",
+};
+
+function runScraper(source) {
   return new Promise((resolve, reject) => {
-    const scraperPath = path.join(ROOT, "scripts", "scraper_v5.cjs");
+    const scraperFile = SCRAPERS[source] || SCRAPERS.regiowyniki;
+    const scraperPath = path.join(ROOT, "scripts", scraperFile);
     const proc = spawn(process.execPath, [scraperPath], { cwd: ROOT, stdio: "inherit" });
     proc.on("close", (code) => {
-      if (code === 0) resolve(); else reject(new Error(`scraper_v5.cjs zakończył się kodem ${code}`));
+      if (code === 0) resolve(); else reject(new Error(`${scraperFile} zakończył się kodem ${code}`));
     });
     proc.on("error", reject);
   });
 }
 
-async function runJob() {
-  log("📥 Odebrano zlecenie — odpalam scraper_v5.cjs lokalnie...");
+async function runJob(source) {
+  log(`📥 Odebrano zlecenie (źródło: ${source}) — odpalam ${SCRAPERS[source] || SCRAPERS.regiowyniki} lokalnie...`);
   await reportProgress("Agent uruchomił scraper lokalnie...");
   try {
-    await runScraper();
+    await runScraper(source);
     const result = JSON.parse(fs.readFileSync(OUTPUT_FILE, "utf-8"));
     log(`📤 Wysyłam wynik na serwer (${result.mecze?.length || 0} meczów, ${result.tabela?.length || 0} drużyn w tabeli)...`);
     await reportResult(result);
@@ -100,8 +106,8 @@ async function loop() {
   log(`👀 Agent nasłuchuje (${SITE}) — sprawdzam co ${POLL_INTERVAL / 1000}s...`);
   for (;;) {
     try {
-      const { job } = await checkJob();
-      if (job) await runJob();
+      const { job, source } = await checkJob();
+      if (job) await runJob(source);
     } catch (e) {
       log(`⚠️  Błąd komunikacji z serwerem: ${e.message}`);
     }
