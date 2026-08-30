@@ -34,6 +34,7 @@ export async function PATCH(request, { params }) {
   if (body.strzelcy !== undefined) data.strzelcy = body.strzelcy;
   if (body.kartki !== undefined) data.kartki = body.kartki;
   if (body.zmiany !== undefined) data.zmiany = body.zmiany;
+  if (body.sklady !== undefined) data.sklady = body.sklady;
   if (body.date !== undefined) data.date = body.date;
   const mecz = await prisma.mecz.update({ where: { id }, data });
 

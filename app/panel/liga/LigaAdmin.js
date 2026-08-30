@@ -151,6 +151,8 @@ function MeczEditor({ mecz, onSave, onClose }) {
     strzelcyJson: JSON.stringify(mecz.strzelcy || [], null, 2),
     kartkiJson: JSON.stringify(mecz.kartki || [], null, 2),
     zmianyJson: JSON.stringify(mecz.zmiany || [], null, 2),
+    skladGospodarzeJson: JSON.stringify(mecz.sklady?.gospodarze || { pierwsza11: [], rezerwa: [] }, null, 2),
+    skladGoscieJson: JSON.stringify(mecz.sklady?.goscie || { pierwsza11: [], rezerwa: [] }, null, 2),
     date: mecz.date || "",
   });
   const [saving, setSaving] = useState(false);
@@ -158,13 +160,16 @@ function MeczEditor({ mecz, onSave, onClose }) {
 
   async function handleSave() {
     setErr(""); setSaving(true);
-    let strzelcy, kartki, zmiany;
+    let strzelcy, kartki, zmiany, skladGospodarze, skladGoscie;
     try { strzelcy = JSON.parse(form.strzelcyJson || "[]"); } catch { setErr("Błąd JSON strzelcy"); setSaving(false); return; }
     try { kartki = JSON.parse(form.kartkiJson || "[]"); } catch { setErr("Błąd JSON kartki"); setSaving(false); return; }
     try { zmiany = JSON.parse(form.zmianyJson || "[]"); } catch { setErr("Błąd JSON zmiany"); setSaving(false); return; }
+    try { skladGospodarze = JSON.parse(form.skladGospodarzeJson || "{}"); } catch { setErr("Błąd JSON skład gospodarze"); setSaving(false); return; }
+    try { skladGoscie = JSON.parse(form.skladGoscieJson || "{}"); } catch { setErr("Błąd JSON skład goście"); setSaving(false); return; }
+    const sklady = { gospodarze: skladGospodarze, goscie: skladGoscie };
     const r = await fetch(`/api/admin/liga/mecze/${mecz.id}`, {
       method: "PATCH", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ score: form.score, status: form.status, komentarz: form.komentarz, walkower: form.walkower, strzelcy, kartki, zmiany, date: form.date }),
+      body: JSON.stringify({ score: form.score, status: form.status, komentarz: form.komentarz, walkower: form.walkower, strzelcy, kartki, zmiany, sklady, date: form.date }),
     });
     if (!r.ok) { const d = await r.json(); setErr(d.error || "Błąd"); setSaving(false); return; }
     setSaving(false);
@@ -222,6 +227,28 @@ function MeczEditor({ mecz, onSave, onClose }) {
               value={form[key]}
               onChange={e => setForm(p => ({ ...p, [key]: e.target.value }))}
               placeholder="[]"
+            />
+          </div>
+        ))}
+      </div>
+
+      <div style={{ marginBottom: 4 }}>
+        <div style={{ fontSize: 11, color: "#334155", marginBottom: 8 }}>
+          Każdy skład: obiekt z <code>pierwsza11</code> i <code>rezerwa</code> — tablice zawodników z polami: numer, nazwisko, gole_w_meczu, kartka_w_meczu (&quot;żółta&quot;/&quot;czerwona&quot;/null)
+        </div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: 10, marginBottom: 12 }}>
+        {[
+          { key: "skladGospodarzeJson", label: `SKŁAD GOSPODARZE — ${mecz.team1} (JSON)` },
+          { key: "skladGoscieJson",     label: `SKŁAD GOŚCIE — ${mecz.team2} (JSON)` },
+        ].map(({ key, label }) => (
+          <div key={key}>
+            <label style={lbl}>{label}</label>
+            <textarea
+              style={{ ...inp, height: 220, fontFamily: "monospace", fontSize: 11, resize: "vertical" }}
+              value={form[key]}
+              onChange={e => setForm(p => ({ ...p, [key]: e.target.value }))}
+              placeholder='{ "pierwsza11": [], "rezerwa": [] }'
             />
           </div>
         ))}
