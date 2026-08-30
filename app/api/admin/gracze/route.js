@@ -19,10 +19,12 @@ export async function GET() {
     active: u.active,
     createdAt: u.createdAt,
     player: u.player ? {
+      id: u.player.id,
       imieNazwisko: u.player.imieNazwisko,
       pozycja: u.player.pozycja,
       numer: u.player.numer,
       dataUrodzenia: u.player.dataUrodzenia,
+      foto: u.player.foto,
     } : null,
   })));
 }

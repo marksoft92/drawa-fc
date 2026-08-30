@@ -133,6 +133,11 @@ export default function PanelGracze() {
   const [kadraPlayerIds, setKadraPlayerIds] = useState(new Set());
   const [kadraToggling, setKadraToggling] = useState(null);
 
+  // Zdjęcie profilowe
+  const [fotoUserId, setFotoUserId] = useState(null);
+  const [fotoUploading, setFotoUploading] = useState(false);
+  const [fotoError, setFotoError] = useState("");
+
   const load = useCallback(() => setTick((t) => t + 1), []);
 
   useEffect(() => {
@@ -340,6 +345,46 @@ export default function PanelGracze() {
     setKadraToggling(null);
   }
 
+  function openFoto(u) {
+    setFotoUserId(fotoUserId === u.id ? null : u.id);
+    setFotoError("");
+    setStatsUserId(null);
+    setHealthUserId(null);
+    setResetPwId(null);
+  }
+
+  async function uploadFoto(userId, file) {
+    if (!file) return;
+    setFotoUploading(true);
+    setFotoError("");
+    try {
+      const body = new FormData();
+      body.append("foto", file);
+      const r = await fetch(`/api/admin/gracze/${userId}/foto`, { method: "POST", body });
+      const d = await r.json();
+      if (!r.ok) { setFotoError(d.error || "Błąd"); return; }
+      setData((prev) => ({
+        ...prev,
+        users: prev.users.map((u) => u.id === userId ? { ...u, player: { ...u.player, foto: d.foto } } : u),
+      }));
+    } catch { setFotoError("Błąd połączenia"); }
+    finally { setFotoUploading(false); }
+  }
+
+  async function removeFoto(userId) {
+    setFotoUploading(true);
+    setFotoError("");
+    try {
+      const r = await fetch(`/api/admin/gracze/${userId}/foto`, { method: "DELETE" });
+      if (!r.ok) { const d = await r.json(); setFotoError(d.error || "Błąd"); return; }
+      setData((prev) => ({
+        ...prev,
+        users: prev.users.map((u) => u.id === userId ? { ...u, player: { ...u.player, foto: null } } : u),
+      }));
+    } catch { setFotoError("Błąd połączenia"); }
+    finally { setFotoUploading(false); }
+  }
+
   async function handleResetPw(id) {
     if (!resetPw || resetPw.length < 6) { setError("Min. 6 znaków"); return; }
     setSaving(true);
@@ -540,6 +585,12 @@ export default function PanelGracze() {
                           >Hasło</button>
                           {u.player && (
                             <button
+                              onClick={() => openFoto(u)}
+                              style={{ ...btnRowAction, color: fotoUserId === u.id ? "#3b82f6" : "#64748b", borderColor: fotoUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
+                            >Zdjęcie</button>
+                          )}
+                          {u.player && (
+                            <button
                               onClick={() => { setResetPwId(null); openStats(u); }}
                               style={{ ...btnRowAction, color: statsUserId === u.id ? "#3b82f6" : "#64748b", borderColor: statsUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
                             >Staty</button>
@@ -580,6 +631,12 @@ export default function PanelGracze() {
                         >Hasło</button>
                         {u.player && (
                           <button
+                            onClick={() => openFoto(u)}
+                            style={{ ...btnRowAction, color: fotoUserId === u.id ? "#3b82f6" : "#64748b", borderColor: fotoUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
+                          >Zdjęcie</button>
+                        )}
+                        {u.player && (
+                          <button
                             onClick={() => { setResetPwId(null); openStats(u); }}
                             style={{ ...btnRowAction, color: statsUserId === u.id ? "#3b82f6" : "#64748b", borderColor: statsUserId === u.id ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.08)" }}
                           >Staty</button>
@@ -605,6 +662,29 @@ export default function PanelGracze() {
                       <button onClick={() => handleResetPw(u.id)} disabled={saving} style={{ ...btnPrimary, padding: "6px 14px", fontSize: 12 }}>Zmień</button>
                       <button onClick={() => setResetPwId(null)} style={{ ...btnGhost, padding: "6px 12px", fontSize: 12 }}>Anuluj</button>
                       {error && <span style={{ fontSize: 12, color: "#ef4444" }}>{error}</span>}
+                    </div>
+                  </div>
+                )}
+
+                {/* Foto row */}
+                {isAdmin && fotoUserId === u.id && (
+                  <div style={{ padding: "14px 16px", background: "rgba(59,130,246,0.03)", border: "1px solid rgba(59,130,246,0.1)", borderTop: "none", borderRadius: "0 0 8px 8px", marginTop: -4 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+                      <Avatar foto={u.player?.foto} name={name} size={64} />
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        <label style={{ ...btnRowAction, cursor: fotoUploading ? "default" : "pointer", opacity: fotoUploading ? 0.6 : 1, display: "inline-block" }}>
+                          {fotoUploading ? "Wgrywam..." : "Wgraj zdjęcie"}
+                          <input
+                            type="file" accept="image/jpeg,image/png,image/webp" style={{ display: "none" }}
+                            disabled={fotoUploading}
+                            onChange={(e) => { const file = e.target.files?.[0]; e.target.value = ""; if (file) uploadFoto(u.id, file); }}
+                          />
+                        </label>
+                        {u.player?.foto && (
+                          <button onClick={() => removeFoto(u.id)} disabled={fotoUploading} style={{ ...btnRowAction, color: "#ef4444" }}>Usuń zdjęcie</button>
+                        )}
+                      </div>
+                      {fotoError && <span style={{ fontSize: 12, color: "#ef4444" }}>{fotoError}</span>}
                     </div>
                   </div>
                 )}

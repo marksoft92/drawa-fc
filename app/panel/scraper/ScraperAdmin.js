@@ -262,7 +262,7 @@ export default function ScraperAdmin() {
   }, []);
 
   useEffect(() => {
-    if (status.status === "running") {
+    if (status.status === "running" || status.status === "queued") {
       pollRef.current = setInterval(load, 3000);
     } else {
       clearInterval(pollRef.current);
@@ -273,7 +273,7 @@ export default function ScraperAdmin() {
   async function handleRun() {
     setImportMsg({ text: "", err: false });
     const r = await fetch("/api/admin/scraper", { method: "POST" });
-    if (r.ok) { setStatus(s => ({ ...s, status: "running", progress: "Uruchamianie..." })); }
+    if (r.ok) { setStatus(s => ({ ...s, status: "queued", progress: "Oczekiwanie na agenta..." })); }
     else { const d = await r.json(); setImportMsg({ text: d.error || "Błąd", err: true }); }
   }
 
@@ -331,6 +331,7 @@ export default function ScraperAdmin() {
     await handleImportMecze();
   }
 
+  const isQueued = status.status === "queued";
   const isRunning = status.status === "running";
   const isDone = status.status === "done";
   const isIdle = status.status === "idle";
@@ -354,7 +355,8 @@ export default function ScraperAdmin() {
         Scraper · RegioWyniki
       </div>
       <div style={{ fontSize: 12, color: "#475569", marginBottom: 20 }}>
-        Pobierz dane z regiowyniki.pl i zaimportuj do bazy. Wymagane: <code style={{ color: "#64748b" }}>npm install playwright && npx playwright install chromium</code>
+        Pobierz dane z regiowyniki.pl i zaimportuj do bazy. Serwer nie łączy się z regiowyniki.pl sam (blokada Cloudflare na składy) —
+        zlecenie odbiera i wykonuje lokalny agent (<code style={{ color: "#64748b" }}>node scripts/agent.cjs</code>), który musi działać na Twoim komputerze.
       </div>
 
       {/* Status + Controls */}
@@ -363,12 +365,12 @@ export default function ScraperAdmin() {
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{
             width: 10, height: 10, borderRadius: "50%",
-            background: isRunning ? "#f59e0b" : isDone ? "#22c55e" : "#334155",
-            boxShadow: isRunning ? "0 0 8px #f59e0b" : "none",
-            animation: isRunning ? "pulse 1.5s ease-in-out infinite" : "none",
+            background: isRunning ? "#f59e0b" : isQueued ? "#3b82f6" : isDone ? "#22c55e" : "#334155",
+            boxShadow: isRunning ? "0 0 8px #f59e0b" : isQueued ? "0 0 8px #3b82f6" : "none",
+            animation: (isRunning || isQueued) ? "pulse 1.5s ease-in-out infinite" : "none",
           }} />
-          <span style={{ fontSize: 12, color: isRunning ? "#f59e0b" : isDone ? "#22c55e" : "#475569", fontWeight: 600 }}>
-            {isRunning ? `Scrapuję... (${elapsed})` : isDone ? `Pobrano ${status.finishedAt?.slice(0,10)} (${elapsed})` : "Gotowy"}
+          <span style={{ fontSize: 12, color: isRunning ? "#f59e0b" : isQueued ? "#3b82f6" : isDone ? "#22c55e" : "#475569", fontWeight: 600 }}>
+            {isRunning ? `Scrapuję... (${elapsed})` : isQueued ? "Oczekiwanie na agenta..." : isDone ? `Pobrano ${status.finishedAt?.slice(0,10)} (${elapsed})` : "Gotowy"}
           </span>
           {status.progress && <span style={{ fontSize: 11, color: "#334155" }}>· {status.progress}</span>}
         </div>
@@ -381,15 +383,15 @@ export default function ScraperAdmin() {
           </div>
 
           {/* Buttons */}
-          {!isRunning && (
+          {!isRunning && !isQueued && (
             <button onClick={handleRun} style={btnPrimary}>
               ▶ Uruchom scraper
             </button>
           )}
-          {(isDone || status.status === "error") && (
+          {(isDone || isQueued || status.status === "error") && (
             <button onClick={handleReset} style={btnGhost}>Resetuj</button>
           )}
-          {hasData && !isRunning && (
+          {hasData && !isRunning && !isQueued && (
             <button onClick={handleImportAll} disabled={!!importing} style={{ ...btnPrimary, background: "#22c55e" }}>
               {importing ? "Importuję..." : `↓ Importuj wszystko → ${sezon}`}
             </button>
@@ -403,11 +405,22 @@ export default function ScraperAdmin() {
         )}
       </div>
 
+      {/* Waiting for agent to pick up the job */}
+      {isQueued && (
+        <div style={{ ...card, textAlign: "center", padding: 40 }}>
+          <div style={{ fontSize: 24, marginBottom: 12 }}>🕓</div>
+          <div style={{ fontSize: 13, color: "#475569" }}>Zlecenie czeka w kolejce.</div>
+          <div style={{ fontSize: 11, color: "#334155", marginTop: 8 }}>
+            Uruchom na swoim komputerze: <code style={{ color: "#64748b" }}>node scripts/agent.cjs</code> — agent sam wykryje zlecenie i zacznie scrapować.
+          </div>
+        </div>
+      )}
+
       {/* Loading spinner while running */}
       {isRunning && !hasData && (
         <div style={{ ...card, textAlign: "center", padding: 40 }}>
           <div style={{ fontSize: 24, marginBottom: 12 }}>⏳</div>
-          <div style={{ fontSize: 13, color: "#475569" }}>Scraper pracuje... może to potrwać kilka minut.</div>
+          <div style={{ fontSize: 13, color: "#475569" }}>Agent pracuje... może to potrwać kilka minut.</div>
           <div style={{ fontSize: 11, color: "#334155", marginTop: 8 }}>{status.progress}</div>
         </div>
       )}
@@ -416,7 +429,7 @@ export default function ScraperAdmin() {
       {isIdle && !hasData && (
         <div style={{ ...card, textAlign: "center", padding: 48, color: "#334155" }}>
           <div style={{ fontSize: 32, marginBottom: 12 }}>📡</div>
-          <div style={{ fontSize: 13 }}>Kliknij "Uruchom scraper" aby pobrać aktualne dane z regiowyniki.pl</div>
+          <div style={{ fontSize: 13 }}>Kliknij "Uruchom scraper" aby zlecić pobranie aktualnych danych z regiowyniki.pl</div>
         </div>
       )}
 

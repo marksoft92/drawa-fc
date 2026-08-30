@@ -1,5 +1,4 @@
 import { hasAccess } from "@/lib/auth";
-import { spawn } from "child_process";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 
@@ -39,25 +38,18 @@ export async function GET() {
   return Response.json({ ...status, data });
 }
 
+// Serwer (VPS) nie odpala scrapera sam — regiowyniki.pl blokuje jego adres IP
+// przy pobieraniu składów (Cloudflare 403 na /ajax/matchPlayers.php). Zamiast
+// tego zlecenie czeka w kolejce, aż odbierze je lokalny agent (scripts/agent.cjs)
+// uruchomiony na komputerze z niezablokowanym adresem IP — patrz /api/agent/scraper.
 export async function POST() {
   if (!(await hasAccess("scraper"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   const status = readStatus();
-  if (status.status === "running") return Response.json({ error: "Scraper już działa" }, { status: 409 });
+  if (status.status === "running" || status.status === "queued") {
+    return Response.json({ error: "Scraper już działa" }, { status: 409 });
+  }
 
-  writeStatus({ status: "running", startedAt: new Date().toISOString(), progress: "Uruchamianie...", finishedAt: null, stats: null });
-
-  // Compute path at runtime to avoid Next.js build-time module tracing
-  const cwd = process.cwd();
-  const scriptSegments = ["scripts", "scraper_v5.cjs"];
-  const scriptPath = path.join(cwd, ...scriptSegments);
-
-  const proc = spawn(process.execPath, [scriptPath], { cwd, detached: true, stdio: "ignore" });
-  proc.on("close", (code) => {
-    if (code === 0) return;
-    const s = readStatus();
-    writeStatus({ ...s, status: "error", finishedAt: new Date().toISOString(), progress: `Błąd (kod ${code})` });
-  });
-  proc.unref();
+  writeStatus({ status: "queued", startedAt: new Date().toISOString(), progress: "Oczekiwanie na agenta...", finishedAt: null, stats: null });
 
   return Response.json({ ok: true });
 }
