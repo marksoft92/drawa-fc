@@ -1,5 +1,4 @@
 import { hasAccess } from "@/lib/auth";
-import { spawn } from "child_process";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 
@@ -40,10 +39,11 @@ export async function GET() {
   return Response.json(POWIATY);
 }
 
-// Skan trwa nawet kilka minut (Overpass bywa przeciążony, próbujemy kilku
-// instancji w rundach z odczekaniem) — dlatego działa jako osobny, odpięty
-// od żądania HTTP proces w tle (jak scraper/batch-rewrite), a nie
-// synchronicznie w tym handlerze. Klient odpytuje status przez /skanuj/status.
+// Serwer (VPS) sam nie odpytuje Overpass — jego adres IP jest z zakresu
+// datacenter/VPS, który Overpass mocniej dławi niż domowe łącza. Zlecenie
+// czeka więc w kolejce, aż odbierze je lokalny agent (scripts/agent.cjs)
+// uruchomiony na komputerze z domowym IP — patrz /api/agent/skanuj.
+// Klient odpytuje status przez /skanuj/status.
 export async function POST(request) {
   if (!(await hasAccess("sponsorzy"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
 
@@ -56,21 +56,11 @@ export async function POST(request) {
   if (!POWIATY.includes(powiat)) return Response.json({ error: "Nieznany powiat" }, { status: 400 });
 
   const status = readStatus();
-  if (status.status === "running") return Response.json({ error: "Skan już trwa" }, { status: 409 });
+  if (status.status === "running" || status.status === "queued") {
+    return Response.json({ error: "Skan już trwa" }, { status: 409 });
+  }
 
-  writeStatus({ status: "running", startedAt: new Date().toISOString(), powiat, progress: "Uruchamianie..." });
-
-  const cwd = process.cwd();
-  const scriptPath = path.join(cwd, "scripts", "scan_powiat.cjs");
-  const proc = spawn(process.execPath, [scriptPath, powiat], { cwd, detached: true, stdio: "ignore" });
-  proc.on("close", (code) => {
-    if (code === 0) return;
-    const s = readStatus();
-    if (s.status === "running") {
-      writeStatus({ ...s, status: "error", finishedAt: new Date().toISOString(), error: `Błąd (kod ${code})` });
-    }
-  });
-  proc.unref();
+  writeStatus({ status: "queued", startedAt: new Date().toISOString(), powiat, progress: "Oczekiwanie na agenta..." });
 
   return Response.json({ ok: true });
 }
