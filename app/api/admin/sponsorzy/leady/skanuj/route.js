@@ -59,10 +59,18 @@ export async function GET() {
 
 export async function POST(request) {
   if (!(await hasAccess("sponsorzy"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
-  const { powiat } = await request.json();
+
+  let powiat;
+  try {
+    ({ powiat } = await request.json());
+  } catch {
+    return Response.json({ error: "Niepoprawne dane żądania" }, { status: 400 });
+  }
   if (!POWIATY.includes(powiat)) return Response.json({ error: "Nieznany powiat" }, { status: 400 });
 
-  let data;
+  // Cała reszta w jednym try/catch — endpoint musi zawsze zwrócić JSON, nawet
+  // gdy padnie Overpass, baza albo coś nieoczekiwanego. Błąd trafia do logów
+  // PM2, żeby dało się go zdiagnozować bez zgadywania.
   try {
     const r = await fetch("https://overpass-api.de/api/interpreter", {
       method: "POST",
@@ -70,42 +78,47 @@ export async function POST(request) {
       body: "data=" + encodeURIComponent(overpassQuery(powiat)),
       signal: AbortSignal.timeout(40000),
     });
-    if (!r.ok) return Response.json({ error: `OpenStreetMap (Overpass) odpowiedziało błędem HTTP ${r.status}` }, { status: 502 });
-    data = await r.json();
+    if (!r.ok) {
+      const body = await r.text().catch(() => "");
+      console.error(`[sponsorzy/leady/skanuj] Overpass HTTP ${r.status}: ${body.slice(0, 300)}`);
+      return Response.json({ error: `OpenStreetMap (Overpass) odpowiedziało błędem HTTP ${r.status} — spróbuj ponownie za chwilę.` }, { status: 502 });
+    }
+    const data = await r.json();
+
+    const [existingLeady, existingSponsorzy] = await Promise.all([
+      prisma.sponsorLead.findMany({ select: { nazwa: true } }),
+      prisma.sponsor.findMany({ select: { nazwa: true } }),
+    ]);
+    const known = new Set([
+      ...existingLeady.map(l => l.nazwa.toLowerCase().trim()),
+      ...existingSponsorzy.map(s => s.nazwa.toLowerCase().trim()),
+    ]);
+
+    const seen = new Set();
+    const results = [];
+    for (const el of data.elements || []) {
+      const tags = el.tags || {};
+      const nazwa = tags.name?.trim();
+      if (!nazwa) continue;
+      const key = nazwa.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      results.push({
+        nazwa,
+        telefon: tags.phone || tags["contact:phone"] || null,
+        www: tags.website || tags["contact:website"] || null,
+        adres: adres(tags),
+        kategoria: kategoria(tags),
+        status: known.has(key) ? "exists" : "pending",
+      });
+    }
+
+    results.sort((a, b) => a.nazwa.localeCompare(b.nazwa, "pl"));
+
+    return Response.json({ powiat, results });
   } catch (e) {
-    return Response.json({ error: "Nie udało się połączyć z OpenStreetMap (Overpass): " + e.message }, { status: 502 });
+    console.error(`[sponsorzy/leady/skanuj] błąd dla powiatu "${powiat}":`, e);
+    return Response.json({ error: "Nie udało się zeskanować regionu: " + e.message }, { status: 502 });
   }
-
-  const [existingLeady, existingSponsorzy] = await Promise.all([
-    prisma.sponsorLead.findMany({ select: { nazwa: true } }),
-    prisma.sponsor.findMany({ select: { nazwa: true } }),
-  ]);
-  const known = new Set([
-    ...existingLeady.map(l => l.nazwa.toLowerCase().trim()),
-    ...existingSponsorzy.map(s => s.nazwa.toLowerCase().trim()),
-  ]);
-
-  const seen = new Set();
-  const results = [];
-  for (const el of data.elements || []) {
-    const tags = el.tags || {};
-    const nazwa = tags.name?.trim();
-    if (!nazwa) continue;
-    const key = nazwa.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-
-    results.push({
-      nazwa,
-      telefon: tags.phone || tags["contact:phone"] || null,
-      www: tags.website || tags["contact:website"] || null,
-      adres: adres(tags),
-      kategoria: kategoria(tags),
-      status: known.has(key) ? "exists" : "pending",
-    });
-  }
-
-  results.sort((a, b) => a.nazwa.localeCompare(b.nazwa, "pl"));
-
-  return Response.json({ powiat, results });
 }
