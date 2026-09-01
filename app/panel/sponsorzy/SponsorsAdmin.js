@@ -64,6 +64,27 @@ function LogoField({ value, onChange, onError }) {
 }
 
 export default function SponsorsAdmin() {
+  const [tab, setTab] = useState("sponsorzy");
+
+  const tabBtn = (key) => ({
+    padding: "8px 18px", borderRadius: 8, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600,
+    background: tab === key ? "rgba(59,130,246,0.15)" : "transparent",
+    color: tab === key ? "#3b82f6" : "#64748b",
+  });
+
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 4, background: "rgba(255,255,255,0.03)", borderRadius: 10, padding: 3, border: "1px solid rgba(255,255,255,0.06)", marginBottom: 20, width: "fit-content" }}>
+        <button onClick={() => setTab("sponsorzy")} style={tabBtn("sponsorzy")}>Sponsorzy</button>
+        <button onClick={() => setTab("leady")} style={tabBtn("leady")}>Pozyskiwanie</button>
+      </div>
+      {tab === "sponsorzy" && <SponsorzyTab />}
+      {tab === "leady" && <LeadyTab />}
+    </div>
+  );
+}
+
+function SponsorzyTab() {
   const [sponsorzy, setSponsorzy] = useState([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("list");
@@ -257,6 +278,416 @@ export default function SponsorsAdmin() {
         </div>
       )}
       <style>{`* { box-sizing: border-box; }`}</style>
+    </div>
+  );
+}
+
+// ━━━ POZYSKIWANIE (CRM) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const LEAD_STATUSY = [
+  { key: "NOWY", label: "Nowy", color: "#64748b" },
+  { key: "KONTAKT", label: "Kontakt", color: "#3b82f6" },
+  { key: "NEGOCJACJE", label: "Negocjacje", color: "#f59e0b" },
+  { key: "PODPISANE", label: "Podpisane", color: "#22c55e" },
+  { key: "ODRZUCONE", label: "Odrzucone", color: "#ef4444" },
+];
+const leadStatusInfo = (key) => LEAD_STATUSY.find(s => s.key === key) || LEAD_STATUSY[0];
+const emptyLeadForm = () => ({ nazwa: "", osobaKontaktowa: "", telefon: "", email: "", www: "", adres: "", zrodlo: "", wartosc: "", nastepnyKontakt: "" });
+const isLeadOverdue = (l) => l.nastepnyKontakt && new Date(l.nastepnyKontakt) < new Date() && l.status !== "PODPISANE" && l.status !== "ODRZUCONE";
+const authorName = (a) => a?.player?.imieNazwisko || a?.login || "—";
+
+function LeadyTab() {
+  const [subTab, setSubTab] = useState("lista");
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
+        <button onClick={() => setSubTab("lista")} style={{ ...btnGhost, ...(subTab === "lista" ? { borderColor: "rgba(59,130,246,0.4)", color: "#3b82f6" } : {}) }}>Lista leadów</button>
+        <button onClick={() => setSubTab("skanuj")} style={{ ...btnGhost, ...(subTab === "skanuj" ? { borderColor: "rgba(167,139,250,0.4)", color: "#a78bfa" } : {}) }}>Skanuj region</button>
+      </div>
+      {subTab === "lista" ? <LeadyLista /> : <LeadySkanuj />}
+    </div>
+  );
+}
+
+function LeadyLista() {
+  const [leady, setLeady] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filterStatus, setFilterStatus] = useState("");
+  const [view, setView] = useState("list");
+  const [editId, setEditId] = useState(null);
+  const [form, setForm] = useState(emptyLeadForm());
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [tick, setTick] = useState(0);
+  const [expanded, setExpanded] = useState(null);
+  const [noteDrafts, setNoteDrafts] = useState({});
+  const [noteSaving, setNoteSaving] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const qs = filterStatus ? `?status=${filterStatus}` : "";
+    fetch(`/api/admin/sponsorzy/leady${qs}`)
+      .then(r => r.json())
+      .then(d => { if (!cancelled) setLeady(Array.isArray(d) ? d : []); })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [filterStatus, tick]);
+
+  function openCreate() { setEditId(null); setForm(emptyLeadForm()); setError(""); setView("form"); }
+  function openEdit(l) {
+    setEditId(l.id);
+    setForm({
+      nazwa: l.nazwa, osobaKontaktowa: l.osobaKontaktowa || "", telefon: l.telefon || "", email: l.email || "",
+      www: l.www || "", adres: l.adres || "", zrodlo: l.zrodlo || "",
+      wartosc: l.wartosc ?? "", nastepnyKontakt: l.nastepnyKontakt ? l.nastepnyKontakt.slice(0, 10) : "",
+    });
+    setError(""); setView("form");
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError(""); setSaving(true);
+    try {
+      const url = editId ? `/api/admin/sponsorzy/leady/${editId}` : "/api/admin/sponsorzy/leady";
+      const r = await fetch(url, { method: editId ? "PATCH" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+      const d = await r.json();
+      if (!r.ok) { setError(d.error || "Błąd"); setSaving(false); return; }
+      setSuccess(editId ? "Zapisano zmiany" : "Lead dodany");
+      setTick(t => t + 1); setView("list");
+      setTimeout(() => setSuccess(""), 2500);
+    } catch { setError("Błąd połączenia"); }
+    finally { setSaving(false); }
+  }
+
+  async function setStatus(l, status) {
+    await fetch(`/api/admin/sponsorzy/leady/${l.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status }) });
+    setTick(t => t + 1);
+  }
+
+  async function handleDelete(l) {
+    if (!confirm(`Usunąć lead "${l.nazwa}"?`)) return;
+    await fetch(`/api/admin/sponsorzy/leady/${l.id}`, { method: "DELETE" });
+    setTick(t => t + 1);
+  }
+
+  async function convertToSponsor(l) {
+    if (!confirm(`Utworzyć sponsora "${l.nazwa}"? Trafi na listę sponsorów jako nieaktywny — uzupełnisz logo i opis przed publikacją.`)) return;
+    const r = await fetch(`/api/admin/sponsorzy/leady/${l.id}/konwertuj`, { method: "POST" });
+    const d = await r.json();
+    if (r.ok) { setSuccess("Utworzono sponsora — uzupełnij logo i opis w zakładce Sponsorzy"); setTick(t => t + 1); setTimeout(() => setSuccess(""), 4000); }
+    else alert(d.error || "Błąd konwersji");
+  }
+
+  async function addNote(l) {
+    const tresc = (noteDrafts[l.id] || "").trim();
+    if (!tresc) return;
+    setNoteSaving(l.id);
+    const r = await fetch(`/api/admin/sponsorzy/leady/${l.id}/notatki`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tresc }) });
+    if (r.ok) { setNoteDrafts(p => ({ ...p, [l.id]: "" })); setTick(t => t + 1); }
+    setNoteSaving(null);
+  }
+
+  const f = k => e => setForm(p => ({ ...p, [k]: e.target.value }));
+
+  const fmtDate = (d) => {
+    if (!d) return "";
+    try { return new Date(d).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" }); }
+    catch { return ""; }
+  };
+
+  if (view === "form") return (
+    <div style={{ maxWidth: 600 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
+        <button onClick={() => setView("list")} style={btnGhost}>← Wróć</button>
+        <div style={{ fontSize: "clamp(18px,4vw,26px)", fontFamily: "'Bebas Neue',Impact,sans-serif", letterSpacing: "0.1em", color: "#fff" }}>
+          {editId ? "Edytuj lead" : "Nowy lead"}
+        </div>
+      </div>
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div style={card}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div>
+              <label style={lbl}>NAZWA FIRMY *</label>
+              <input style={inp} value={form.nazwa} onChange={f("nazwa")} required placeholder="np. Auto Serwis Kowalski" />
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div>
+                <label style={lbl}>OSOBA KONTAKTOWA</label>
+                <input style={inp} value={form.osobaKontaktowa} onChange={f("osobaKontaktowa")} placeholder="Jan Kowalski" />
+              </div>
+              <div>
+                <label style={lbl}>TELEFON</label>
+                <input style={inp} value={form.telefon} onChange={f("telefon")} placeholder="600 000 000" />
+              </div>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div>
+                <label style={lbl}>EMAIL</label>
+                <input style={inp} value={form.email} onChange={f("email")} placeholder="kontakt@firma.pl" />
+              </div>
+              <div>
+                <label style={lbl}>STRONA WWW</label>
+                <input style={inp} value={form.www} onChange={f("www")} placeholder="https://firma.pl" />
+              </div>
+            </div>
+            <div>
+              <label style={lbl}>ADRES</label>
+              <input style={inp} value={form.adres} onChange={f("adres")} placeholder="ul. Przykładowa 1, Drawno" />
+            </div>
+            <div>
+              <label style={lbl}>ŹRÓDŁO LEADA</label>
+              <input style={inp} value={form.zrodlo} onChange={f("zrodlo")} placeholder="np. polecenie, event, skan OSM" />
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div>
+                <label style={lbl}>SZACOWANA WARTOŚĆ (PLN)</label>
+                <input style={inp} type="number" min={0} value={form.wartosc} onChange={f("wartosc")} placeholder="2000" />
+              </div>
+              <div>
+                <label style={lbl}>NASTĘPNY KONTAKT</label>
+                <input style={inp} type="date" value={form.nastepnyKontakt} onChange={f("nastepnyKontakt")} />
+              </div>
+            </div>
+          </div>
+        </div>
+        {error && <div style={alertErr}>{error}</div>}
+        <div style={{ display: "flex", gap: 10 }}>
+          <button type="submit" disabled={saving} style={btnPrimary}>{saving ? "Zapisuję..." : editId ? "Zapisz zmiany" : "Dodaj lead"}</button>
+          <button type="button" onClick={() => setView("list")} style={btnGhost}>Anuluj</button>
+        </div>
+      </form>
+      <style>{`input:focus, textarea:focus { outline: none; border-color: rgba(59,130,246,0.5) !important; } * { box-sizing: border-box; }`}</style>
+    </div>
+  );
+
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: 13, color: "#94a3b8" }}>{leady.length} leadów</span>
+          <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ ...inp, width: "auto", minWidth: 160 }}>
+            <option value="">Wszystkie statusy</option>
+            {LEAD_STATUSY.map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
+          </select>
+        </div>
+        <button onClick={openCreate} style={btnPrimary}>+ Nowy lead</button>
+      </div>
+
+      {success && <div style={{ ...alertOk, marginBottom: 16 }}>{success}</div>}
+
+      {loading ? (
+        <div style={{ color: "#475569", fontSize: 13 }}>Ładowanie...</div>
+      ) : leady.length === 0 ? (
+        <div style={{ color: "#475569", fontSize: 13, padding: 20, textAlign: "center" }}>Brak leadów. Dodaj ręcznie albo zeskanuj region w zakładce „Skanuj region”.</div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {leady.map(l => {
+            const isExpanded = expanded === l.id;
+            const st = leadStatusInfo(l.status);
+            const overdue = isLeadOverdue(l);
+            return (
+              <div key={l.id} style={{ ...card, padding: 0, overflow: "hidden" }}>
+                <div onClick={() => setExpanded(isExpanded ? null : l.id)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", cursor: "pointer" }}>
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: st.color, flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, color: "#fff", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{l.nazwa}</div>
+                    <div style={{ fontSize: 11, color: "#475569", marginTop: 2 }}>
+                      {l.osobaKontaktowa || l.telefon ? `${l.osobaKontaktowa || ""}${l.osobaKontaktowa && l.telefon ? " · " : ""}${l.telefon || ""}` : "brak danych kontaktowych"}
+                      {l.sponsorId && <span style={{ color: "#22c55e" }}> · sponsor utworzony</span>}
+                    </div>
+                  </div>
+                  <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", color: st.color, background: `${st.color}1a`, padding: "3px 9px", borderRadius: 5, flexShrink: 0 }}>{st.label.toUpperCase()}</span>
+                  {l.nastepnyKontakt && (
+                    <span style={{ fontSize: 11, color: overdue ? "#ef4444" : "#64748b", fontWeight: overdue ? 700 : 400, flexShrink: 0, whiteSpace: "nowrap" }}>
+                      {overdue ? "zaległy: " : "kontakt: "}{fmtDate(l.nastepnyKontakt)}
+                    </span>
+                  )}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" style={{ transform: isExpanded ? "rotate(180deg)" : "none", transition: "transform 0.2s", flexShrink: 0 }}>
+                    <polyline points="6,9 12,15 18,9" />
+                  </svg>
+                </div>
+
+                {isExpanded && (
+                  <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "16px" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 10, marginBottom: 14, fontSize: 12 }}>
+                      {l.email && <div><span style={{ color: "#475569" }}>Email: </span><span style={{ color: "#cbd5e1" }}>{l.email}</span></div>}
+                      {l.www && <div><span style={{ color: "#475569" }}>WWW: </span><a href={l.www} target="_blank" rel="noopener noreferrer" style={{ color: "#3b82f6" }}>{l.www}</a></div>}
+                      {l.adres && <div><span style={{ color: "#475569" }}>Adres: </span><span style={{ color: "#cbd5e1" }}>{l.adres}</span></div>}
+                      {l.zrodlo && <div><span style={{ color: "#475569" }}>Źródło: </span><span style={{ color: "#cbd5e1" }}>{l.zrodlo}</span></div>}
+                      {l.wartosc != null && <div><span style={{ color: "#475569" }}>Szac. wartość: </span><span style={{ color: "#cbd5e1" }}>{l.wartosc} zł</span></div>}
+                    </div>
+
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
+                      {LEAD_STATUSY.map(s => (
+                        <button key={s.key} onClick={() => setStatus(l, s.key)}
+                          style={{
+                            ...btnRowAction,
+                            color: l.status === s.key ? s.color : "#64748b",
+                            borderColor: l.status === s.key ? `${s.color}55` : "rgba(255,255,255,0.08)",
+                            background: l.status === s.key ? `${s.color}1a` : "none",
+                          }}>
+                          {s.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Notatki */}
+                    <div style={{ marginBottom: 14 }}>
+                      <div style={{ fontSize: 10, color: "#64748b", fontWeight: 700, letterSpacing: "0.06em", marginBottom: 8 }}>HISTORIA KONTAKTU</div>
+                      {(l.notatki || []).length === 0 && <div style={{ fontSize: 12, color: "#334155", marginBottom: 8 }}>Brak notatek.</div>}
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 10 }}>
+                        {(l.notatki || []).map(n => (
+                          <div key={n.id} style={{ fontSize: 12, color: "#cbd5e1", background: "rgba(255,255,255,0.03)", borderRadius: 7, padding: "8px 10px" }}>
+                            <div style={{ fontSize: 10, color: "#475569", marginBottom: 3 }}>{authorName(n.author)} · {fmtDate(n.createdAt)}</div>
+                            {n.tresc}
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <input
+                          style={{ ...inp, flex: 1 }}
+                          placeholder="Dodaj notatkę z kontaktu..."
+                          value={noteDrafts[l.id] || ""}
+                          onChange={e => setNoteDrafts(p => ({ ...p, [l.id]: e.target.value }))}
+                          onKeyDown={e => { if (e.key === "Enter") addNote(l); }}
+                        />
+                        <button onClick={() => addNote(l)} disabled={noteSaving === l.id || !(noteDrafts[l.id] || "").trim()} style={{ ...btnGhost, opacity: noteSaving === l.id ? 0.6 : 1 }}>
+                          {noteSaving === l.id ? "..." : "Dodaj"}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      {!l.sponsorId ? (
+                        <button onClick={() => convertToSponsor(l)} style={{ ...btnRowAction, color: "#22c55e", borderColor: "rgba(34,197,94,0.3)" }}>Konwertuj na sponsora</button>
+                      ) : (
+                        <span style={{ ...btnRowAction, color: "#22c55e", borderColor: "rgba(34,197,94,0.3)", cursor: "default" }}>Sponsor: {l.sponsor?.nazwa}</span>
+                      )}
+                      <button onClick={() => openEdit(l)} style={btnRowAction}>Edytuj</button>
+                      <button onClick={() => handleDelete(l)} style={{ ...btnRowAction, color: "#ef4444", borderColor: "rgba(239,68,68,0.2)" }}>Usuń</button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <style>{`* { box-sizing: border-box; }`}</style>
+    </div>
+  );
+}
+
+function LeadySkanuj() {
+  const [powiaty, setPowiaty] = useState([]);
+  const [selected, setSelected] = useState("");
+  const [scanning, setScanning] = useState(false);
+  const [results, setResults] = useState(null);
+  const [scanError, setScanError] = useState("");
+  const [adding, setAdding] = useState({});
+  const [added, setAdded] = useState({});
+
+  useEffect(() => {
+    fetch("/api/admin/sponsorzy/leady/skanuj").then(r => r.json()).then(setPowiaty).catch(() => {});
+  }, []);
+
+  const scan = async () => {
+    if (!selected) return;
+    setScanning(true); setScanError(""); setResults(null); setAdded({});
+    try {
+      const r = await fetch("/api/admin/sponsorzy/leady/skanuj", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ powiat: selected }),
+      });
+      const d = await r.json();
+      if (!r.ok) setScanError(d.error || "Błąd skanowania");
+      else setResults(d.results || []);
+    } catch (e) { setScanError("Błąd połączenia: " + e.message); }
+    setScanning(false);
+  };
+
+  const addLead = async (t) => {
+    setAdding(p => ({ ...p, [t.nazwa]: true }));
+    try {
+      const r = await fetch("/api/admin/sponsorzy/leady", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nazwa: t.nazwa, telefon: t.telefon, www: t.www, adres: t.adres, zrodlo: `OSM — ${selected} (${t.kategoria})` }),
+      });
+      if (r.ok) setAdded(p => ({ ...p, [t.nazwa]: true }));
+    } catch {}
+    setAdding(p => ({ ...p, [t.nazwa]: false }));
+  };
+
+  const addAll = async () => {
+    if (!results) return;
+    const toAdd = results.filter(t => t.status !== "exists" && !added[t.nazwa]);
+    for (const t of toAdd) await addLead(t);
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={card}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 8 }}>Skanuj firmy w regionie (OpenStreetMap)</div>
+        <div style={{ fontSize: 12, color: "#64748b", marginBottom: 16 }}>
+          Pobiera z OpenStreetMap nazwane sklepy, biura, firmy rzemieślnicze i lokale usługowe z wybranego powiatu
+          (dane publiczne, bez skrobania serwisów komercyjnych) i podpowiada je jako leady do pozyskania.
+        </div>
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <select value={selected} onChange={e => setSelected(e.target.value)} style={{ ...inp, width: "auto", minWidth: 240 }}>
+            <option value="">Wybierz powiat...</option>
+            {powiaty.map(p => <option key={p} value={p}>{p}</option>)}
+          </select>
+          <button onClick={scan} disabled={!selected || scanning} style={{ ...btnPrimary, background: "#7c3aed", opacity: (!selected || scanning) ? 0.5 : 1 }}>
+            {scanning ? "Skanuję..." : "Skanuj powiat"}
+          </button>
+        </div>
+        {scanError && <div style={{ ...alertErr, marginTop: 12 }}>{scanError}</div>}
+      </div>
+
+      {scanning && (
+        <div style={{ ...card, textAlign: "center", color: "#a78bfa" }}>
+          <div style={{ fontSize: 13 }}>Pobieram dane z OpenStreetMap... (może potrwać do minuty)</div>
+        </div>
+      )}
+
+      {results && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
+            <span style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>
+              {results.length} firm znalezionych
+              <span style={{ fontSize: 12, color: "#64748b", fontWeight: 400, marginLeft: 8 }}>
+                ({results.filter(t => t.status === "exists").length} już w bazie)
+              </span>
+            </span>
+            {results.some(t => t.status !== "exists" && !added[t.nazwa]) && (
+              <button onClick={addAll} style={{ ...btnPrimary, background: "#22c55e", fontSize: 12 }}>
+                Dodaj wszystkie jako leady ({results.filter(t => t.status !== "exists" && !added[t.nazwa]).length})
+              </button>
+            )}
+          </div>
+
+          {results.map(t => {
+            const isDone = added[t.nazwa] || t.status === "exists";
+            return (
+              <div key={t.nazwa} style={{ ...card, display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", opacity: isDone ? 0.5 : 1 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{t.nazwa}</div>
+                  <div style={{ fontSize: 11, color: "#475569", marginTop: 2 }}>
+                    {t.kategoria}{t.adres ? ` · ${t.adres}` : ""}{t.telefon ? ` · ${t.telefon}` : ""}
+                  </div>
+                </div>
+                {isDone ? (
+                  <span style={{ fontSize: 11, color: "#22c55e" }}>{t.status === "exists" ? "już w bazie" : "dodano"}</span>
+                ) : (
+                  <button onClick={() => addLead(t)} disabled={adding[t.nazwa]} style={{ ...btnRowAction, color: "#22c55e", borderColor: "rgba(34,197,94,0.3)" }}>
+                    {adding[t.nazwa] ? "..." : "Dodaj jako lead"}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

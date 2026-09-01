@@ -39,6 +39,7 @@ model User {
   dmWiadomosci      PrivateWiadomosc[]    @relation("DmAuthor")
   dmReakcje         PrivateReakcja[]      @relation("DmReakcje")
   dmOdczytania      PrivateOdczytanie[]   @relation("DmOdczytanie")
+  sponsorLeadNotki  SponsorLeadNote[]
 }
 
 enum Role {
@@ -363,6 +364,43 @@ model Sponsor {
   aktywny    Boolean  @default(true)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  lead       SponsorLead?
+}
+
+// CRM pozyskiwania sponsorów — lejek: NOWY -> KONTAKT -> NEGOCJACJE -> PODPISANE / ODRZUCONE
+model SponsorLead {
+  id              String    @id @default(cuid())
+  nazwa           String
+  osobaKontaktowa String?
+  telefon         String?
+  email           String?
+  www             String?
+  adres           String?
+  zrodlo          String?
+  status          String    @default("NOWY")
+  wartosc         Int?
+  nastepnyKontakt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  sponsorId       String?      @unique
+  sponsor         Sponsor?     @relation(fields: [sponsorId], references: [id], onDelete: SetNull)
+  notatki         SponsorLeadNote[]
+
+  @@index([status])
+}
+
+model SponsorLeadNote {
+  id        String      @id @default(cuid())
+  leadId    String
+  lead      SponsorLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  tresc     String
+  authorId  String?
+  author    User?       @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt DateTime    @default(now())
+
+  @@index([leadId])
 }
 
 // ─── Chat ─────────────────────────────────────────────────────────────────────
