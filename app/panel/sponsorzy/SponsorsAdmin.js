@@ -373,10 +373,12 @@ function LeadyLista() {
 
   async function convertToSponsor(l) {
     if (!confirm(`Utworzyć sponsora "${l.nazwa}"? Trafi na listę sponsorów jako nieaktywny — uzupełnisz logo i opis przed publikacją.`)) return;
-    const r = await fetch(`/api/admin/sponsorzy/leady/${l.id}/konwertuj`, { method: "POST" });
-    const d = await r.json();
-    if (r.ok) { setSuccess("Utworzono sponsora — uzupełnij logo i opis w zakładce Sponsorzy"); setTick(t => t + 1); setTimeout(() => setSuccess(""), 4000); }
-    else alert(d.error || "Błąd konwersji");
+    try {
+      const r = await fetch(`/api/admin/sponsorzy/leady/${l.id}/konwertuj`, { method: "POST" });
+      const d = await r.json();
+      if (r.ok) { setSuccess("Utworzono sponsora — uzupełnij logo i opis w zakładce Sponsorzy"); setTick(t => t + 1); setTimeout(() => setSuccess(""), 4000); }
+      else alert(d.error || "Błąd konwersji");
+    } catch { alert("Błąd połączenia z serwerem — spróbuj ponownie za chwilę."); }
   }
 
   async function addNote(l) {
@@ -599,10 +601,11 @@ function LeadySkanuj() {
       const r = await fetch("/api/admin/sponsorzy/leady/skanuj", {
         method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ powiat: selected }),
       });
-      const d = await r.json();
+      let d;
+      try { d = await r.json(); } catch { throw new Error("Serwer nie odpowiedział poprawnie (błąd bramki/proxy) — spróbuj ponownie za chwilę."); }
       if (!r.ok) setScanError(d.error || "Błąd skanowania");
       else setResults(d.results || []);
-    } catch (e) { setScanError("Błąd połączenia: " + e.message); }
+    } catch (e) { setScanError(e.message || "Błąd połączenia — spróbuj ponownie."); }
     setScanning(false);
   };
 
