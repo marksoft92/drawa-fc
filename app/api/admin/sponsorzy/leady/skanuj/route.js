@@ -145,6 +145,9 @@ export async function POST(request) {
     return Response.json({ powiat, results });
   } catch (e) {
     console.error(`[sponsorzy/leady/skanuj] błąd dla powiatu "${powiat}":`, e);
-    return Response.json({ error: "Nie udało się zeskanować regionu: " + e.message }, { status: 502 });
+    // Uwaga: celowo NIE 502/503/504 — Cloudflare z automatu podmienia takie
+    // odpowiedzi na własną brandowaną stronę błędu (nawet gdy origin zwraca
+    // poprawny JSON), więc nasz czytelny komunikat nigdy by nie dotarł do klienta.
+    return Response.json({ error: "Nie udało się zeskanować regionu: " + e.message }, { status: 422 });
   }
 }
