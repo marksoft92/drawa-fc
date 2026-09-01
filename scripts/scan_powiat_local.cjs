@@ -1,91 +1,161 @@
 /**
- * Skan firm w powiecie przez Overpass API (OpenStreetMap) — wersja do
- * uruchamiania lokalnie przez agenta (scripts/agent.cjs), nie na VPS-ie.
- * Overpass mocniej dławi ruch z adresów datacenter/VPS niż z domowych łączy,
- * stąd przeniesienie skanu poza serwer (analogicznie do scrapera regiowyniki).
+ * Skan firm w powiecie przez Google Maps (Playwright) — do uruchamiania
+ * lokalnie przez agenta (scripts/agent.cjs), nie na VPS-ie. Automatyzacja
+ * przeglądarki z domowego IP ma dużo mniejsze ryzyko zablokowania niż z
+ * adresu datacenter/VPS. Zastępuje wcześniejszą wersję opartą o Overpass
+ * (OpenStreetMap) — ta dawała ubogie dane (rzadko telefon/WWW) i publiczne
+ * serwery Overpass bywały nieosiągalne.
+ *
+ * Google Maps nie ma odpowiednika zapytania "wszystkie firmy w powiecie X"
+ * jak Overpass — więc dla każdej gminy (głównej miejscowości) w powiecie i
+ * każdej kategorii z listy robimy osobne wyszukiwanie, a dla każdego wyniku
+ * wchodzimy na kartę firmy po telefon/WWW/adres (na liście wyników ich nie
+ * ma). To wolniejsze niż jeden request do Overpass — skan całego powiatu
+ * potrafi trwać kilkanaście do kilkudziesięciu minut.
  *
  * Baza (SponsorLead/Sponsor) jest dostępna tylko z serwera, więc ten skrypt
- * tylko pobiera i parsuje dane z Overpass — deduplikacja ze znanymi leadami
- * dzieje się na serwerze w POST /api/agent/skanuj, po odesłaniu wyniku.
+ * tylko zbiera i parsuje dane z Google Maps — deduplikacja ze znanymi
+ * leadami dzieje się na serwerze w POST /api/agent/skanuj, po odesłaniu
+ * wyniku. Progres wysyłany jest też stąd bezpośrednio (PATCH), bo skan trwa
+ * zbyt długo, żeby czekać na pojedynczy komunikat z agent.cjs.
+ *
  * Wynik zapisywany w tmp/scan_powiat_output.json.
  */
 
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env.local') });
+
+const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const OUTPUT_FILE = path.join(ROOT, 'tmp', 'scan_powiat_output.json');
 
+const SITE = process.env.AGENT_SITE_URL || 'https://mksdrawadrawno.pl';
+const TOKEN = process.env.AGENT_TOKEN;
+
 const powiat = process.argv[2];
 
-const OVERPASS_ENDPOINTS = [
-  'https://overpass-api.de/api/interpreter',
-  'https://lz4.overpass-api.de/api/interpreter',
-  'https://overpass.kumi.systems/api/interpreter',
+// Główne miejscowości (siedziby gmin) w każdym powiecie — Google Maps nie
+// obsługuje zapytań po granicy administracyjnej jak Overpass, więc szukamy
+// per miejscowość. Lista przybliżona (stan gmin na 2026) — do weryfikacji,
+// jeśli jakaś gmina się zmieniła.
+const POWIATY_MIEJSCOWOSCI = {
+  'powiat choszczeński': ['Choszczno', 'Bierzwnik', 'Drawno', 'Krzęcin', 'Pełczyce', 'Recz'],
+  'powiat myśliborski': ['Myślibórz', 'Barlinek', 'Boleszkowice', 'Dębno', 'Nowogródek Pomorski'],
+  'powiat pyrzycki': ['Pyrzyce', 'Bielice', 'Kozielice', 'Lipiany', 'Przelewice', 'Warnice'],
+  'powiat stargardzki': ['Stargard', 'Chociwel', 'Dobrzany', 'Dolice', 'Ińsko', 'Kobylanka', 'Marianowo', 'Stara Dąbrowa', 'Suchań'],
+  'powiat drawski': ['Drawsko Pomorskie', 'Czaplinek', 'Kalisz Pomorski', 'Wierzchowo', 'Złocieniec'],
+  'powiat wałecki': ['Wałcz', 'Człopa', 'Mirosławiec', 'Tuczno'],
+  'powiat strzelecko-drezdenecki': ['Strzelce Krajeńskie', 'Dobiegniew', 'Drezdenko', 'Stare Kurowo', 'Zwierzyn'],
+};
+
+// Kategorie firm najbardziej sensowne jako leady sponsorskie — łatwo dopisać
+// kolejne. Google Maps nie ma jednego zapytania "wszystkie sklepy/biura" jak
+// Overpass, więc lista musi być jawna.
+const KATEGORIE = [
+  'restauracja', 'warsztat samochodowy', 'stacja paliw', 'apteka',
+  'fryzjer salon kosmetyczny', 'weterynarz', 'stomatolog',
+  'biuro rachunkowe', 'sklep spożywczy', 'piekarnia cukiernia',
 ];
-const ROUNDS = 4;
-const BACKOFF_MS = [15000, 30000, 60000]; // między rundami 1→2, 2→3, 3→4
 
-const AMENITY_WHITELIST = [
-  'restaurant', 'cafe', 'bar', 'pub', 'fast_food', 'fuel', 'bank', 'pharmacy',
-  'car_rental', 'car_wash', 'veterinary', 'dentist', 'clinic', 'driving_school', 'cinema',
-];
+const MAX_WYNIKOW_NA_ZAPYTANIE = 12;
+const NAV_TIMEOUT = 25000;
 
-function overpassQuery(p) {
-  const amenityRegex = AMENITY_WHITELIST.join('|');
-  return `[out:json][timeout:25];
-area["name"="${p}"]["boundary"="administrative"]->.a;
-(
-  node["shop"]["name"](area.a);
-  node["office"]["name"](area.a);
-  node["craft"]["name"](area.a);
-  node["amenity"~"^(${amenityRegex})$"]["name"](area.a);
-);
-out tags 300;`;
+function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+function jitter(base, spread) { return base + Math.random() * spread; }
+function log(msg) { console.log(`[scan_powiat] ${msg}`); }
+
+async function reportProgress(progress) {
+  if (!TOKEN) return;
+  try {
+    await fetch(`${SITE}/api/agent/skanuj`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-agent-token': TOKEN },
+      body: JSON.stringify({ progress }),
+    });
+  } catch { /* nieistotne, spróbujemy przy następnym update */ }
 }
 
-function kategoria(tags) {
-  if (tags.shop) return `sklep (${tags.shop})`;
-  if (tags.office) return `biuro (${tags.office})`;
-  if (tags.craft) return `rzemiosło (${tags.craft})`;
-  if (tags.amenity) return tags.amenity;
-  return 'inne';
+function isBlocked(html) {
+  return /unusual traffic|nietypowy ruch z Twojej sieci|recaptcha/i.test(html);
 }
 
-function adres(tags) {
-  const parts = [];
-  if (tags['addr:street']) parts.push(`${tags['addr:street']}${tags['addr:housenumber'] ? ' ' + tags['addr:housenumber'] : ''}`);
-  else if (tags['addr:housenumber']) parts.push(tags['addr:housenumber']);
-  if (tags['addr:city']) parts.push(tags['addr:city']);
-  return parts.join(', ') || null;
-}
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function log(msg) {
-  console.log(`[scan_powiat] ${msg}`);
-}
-
-async function fetchOverpass(endpoint, query) {
-  const r = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      // Apache przed Overpass odrzuca requesty bez Accept (406) — fetch() w
-      // Node domyślnie go nie wysyła. User-Agent zgodnie z polityką Overpass.
-      'Accept': '*/*',
-      'User-Agent': 'drawa-fc-sponsor-crm/1.0 (https://mksdrawadrawno.pl; kontakt: kontakt@mksdrawadrawno.pl)',
-    },
-    body: 'data=' + encodeURIComponent(query),
-    signal: AbortSignal.timeout(20000),
+async function setupPage(context) {
+  const page = await context.newPage();
+  await page.route('**/*', (route) => {
+    const type = route.request().resourceType();
+    if (type === 'image' || type === 'media' || type === 'font') return route.abort();
+    return route.continue();
   });
-  if (!r.ok) {
-    const text = await r.text().catch(() => '');
-    throw new Error(`HTTP ${r.status} ${text.slice(0, 150)}`);
+  return page;
+}
+
+async function acceptConsentIfPresent(page) {
+  for (const sel of ['button:has-text("Odrzuć wszystko")', 'button:has-text("Zaakceptuj wszystko")']) {
+    try {
+      await page.click(sel, { timeout: 2000 });
+      return;
+    } catch { /* brak dialogu zgody — kolejne odsłony w tym kontekście już go nie pokazują */ }
   }
-  return r.json();
+}
+
+// Zwraca listę {nazwa, href} z panelu wyników wyszukiwania, przewijając po
+// więcej, aż osiągnie limit albo przestanie przybywać.
+async function zbierzWynikiWyszukiwania(page, query) {
+  const url = `https://www.google.com/maps/search/${encodeURIComponent(query)}`;
+  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: NAV_TIMEOUT });
+  await sleep(jitter(1800, 800));
+
+  const html = await page.content();
+  if (isBlocked(html)) throw new Error('BLOCKED');
+
+  // Bardzo konkretne zapytanie (jedna trafiona firma) — Google Maps od razu
+  // otwiera kartę miejsca zamiast listy wyników.
+  if (/\/maps\/place\//.test(page.url())) {
+    const nazwa = await page.locator('h1').first().innerText().catch(() => null);
+    if (!nazwa) return [];
+    return [{ nazwa: nazwa.trim(), href: page.url() }];
+  }
+
+  const feed = page.locator('div[role="feed"]');
+  if (await feed.count() === 0) return [];
+
+  let prevCount = -1;
+  for (let i = 0; i < 6; i++) {
+    const count = await page.locator('div[role="feed"] div[role="article"]').count();
+    if (count >= MAX_WYNIKOW_NA_ZAPYTANIE || count === prevCount) break;
+    prevCount = count;
+    await feed.evaluate((el) => el.scrollBy(0, 2000)).catch(() => {});
+    await sleep(jitter(900, 400));
+  }
+
+  const wyniki = await page.locator('div[role="feed"] a.hfpxzc').evaluateAll((els) =>
+    els.map((el) => ({ nazwa: el.getAttribute('aria-label'), href: el.getAttribute('href') }))
+  );
+  return wyniki.filter((w) => w.nazwa && w.href).slice(0, MAX_WYNIKOW_NA_ZAPYTANIE);
+}
+
+// Wchodzi na kartę firmy po telefon/WWW/adres/kategorię — na liście wyników
+// tych danych nie ma.
+async function pobierzSzczegoly(page, href) {
+  await page.goto(href, { waitUntil: 'domcontentloaded', timeout: NAV_TIMEOUT });
+  await sleep(jitter(1200, 600));
+
+  const html = await page.content();
+  if (isBlocked(html)) throw new Error('BLOCKED');
+
+  const phoneLabel = await page.locator('button[data-item-id^="phone:"]').first().getAttribute('aria-label').catch(() => null);
+  const addrLabel = await page.locator('button[data-item-id="address"]').first().getAttribute('aria-label').catch(() => null);
+  const website = await page.locator('a[data-item-id="authority"]').first().getAttribute('href').catch(() => null);
+  const kategoria = await page.locator('.mgr77e').first().innerText().catch(() => null);
+
+  return {
+    telefon: phoneLabel ? phoneLabel.replace(/^Telefon:\s*/i, '').trim() : null,
+    adres: addrLabel ? addrLabel.replace(/^Adres:\s*/i, '').trim() : null,
+    www: website || null,
+    kategoria: kategoria ? kategoria.trim() : null,
+  };
 }
 
 async function main() {
@@ -93,61 +163,94 @@ async function main() {
     console.error('Brak parametru powiatu');
     process.exit(1);
   }
-
-  const query = overpassQuery(powiat);
-  const errors = [];
-  let data = null;
-
-  roundsLoop:
-  for (let round = 1; round <= ROUNDS; round++) {
-    for (const endpoint of OVERPASS_ENDPOINTS) {
-      log(`Runda ${round}/${ROUNDS} — próbuję ${new URL(endpoint).host}...`);
-      try {
-        data = await fetchOverpass(endpoint, query);
-        break roundsLoop;
-      } catch (e) {
-        errors.push(`${endpoint}: ${e.message}`);
-        log(`Błąd (${endpoint}): ${e.message}`);
-      }
-    }
-    if (round < ROUNDS) {
-      const wait = BACKOFF_MS[round - 1];
-      log(`Wszystkie serwery zajęte — czekam ${Math.round(wait / 1000)}s przed kolejną próbą...`);
-      await sleep(wait);
-    }
-  }
-
-  if (!data) {
-    console.error(`Nie udało się połączyć z żadnym serwerem Overpass po ${ROUNDS} rundach. Ostatnie błędy: ${errors.slice(-3).join(' | ')}`);
+  const miejscowosci = POWIATY_MIEJSCOWOSCI[powiat];
+  if (!miejscowosci) {
+    console.error(`Nieznany powiat: ${powiat}`);
     process.exit(1);
   }
 
-  const seen = new Set();
-  const results = [];
-  for (const el of data.elements || []) {
-    const tags = el.tags || {};
-    const nazwa = tags.name?.trim();
-    if (!nazwa) continue;
-    const key = nazwa.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
+  const zapytania = [];
+  for (const m of miejscowosci) for (const k of KATEGORIE) zapytania.push({ m, k });
+  log(`Start: ${powiat} — ${miejscowosci.length} miejscowości × ${KATEGORIE.length} kategorii = ${zapytania.length} zapytań`);
 
-    results.push({
-      nazwa,
-      telefon: tags.phone || tags['contact:phone'] || null,
-      www: tags.website || tags['contact:website'] || null,
-      adres: adres(tags),
-      kategoria: kategoria(tags),
-    });
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({
+    locale: 'pl-PL',
+    viewport: { width: 1280, height: 900 },
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+  });
+  const page = await setupPage(context);
+
+  const seen = new Map(); // nazwa (lowercase) -> wynik
+  let blockedStreak = 0;
+
+  try {
+    // Rozgrzewka: pierwsze wejście na maps.google.com pokazuje dialog zgody
+    // RODO (przekierowanie na consent.google.com) — trzeba go kliknąć zanim
+    // zaczniemy realne wyszukiwania, inaczej każde z nich odbije się o ten
+    // sam dialog i zwróci 0 wyników bez żadnego błędu.
+    await page.goto('https://www.google.com/maps', { waitUntil: 'domcontentloaded', timeout: NAV_TIMEOUT });
+    await acceptConsentIfPresent(page);
+    await sleep(jitter(1500, 500));
+
+    for (let i = 0; i < zapytania.length; i++) {
+      const { m, k } = zapytania[i];
+      const progress = `Runda ${i + 1}/${zapytania.length} — ${k} w ${m}...`;
+      log(progress);
+      await reportProgress(progress);
+
+      let lista;
+      try {
+        lista = await zbierzWynikiWyszukiwania(page, `${k} ${m}`);
+        log(`  → ${lista.length} wyników`);
+        blockedStreak = 0;
+      } catch (e) {
+        if (e.message === 'BLOCKED') {
+          blockedStreak++;
+          log(`Google zgłosił nietypowy ruch (${blockedStreak}) — czekam i próbuję dalej...`);
+          if (blockedStreak >= 3) throw new Error('Google Maps zablokował ruch (nietypowy ruch / reCAPTCHA) po kilku próbach — przerywam skan.');
+          await sleep(jitter(15000, 10000));
+          continue;
+        }
+        log(`Błąd wyszukiwania "${k} ${m}": ${e.message}`);
+        continue;
+      }
+
+      for (const w of lista) {
+        const key = w.nazwa.toLowerCase().trim();
+        if (seen.has(key)) continue;
+        seen.set(key, { nazwa: w.nazwa.trim(), telefon: null, www: null, adres: null, kategoria: k });
+
+        try {
+          const szczegoly = await pobierzSzczegoly(page, w.href);
+          const wpis = seen.get(key);
+          wpis.telefon = szczegoly.telefon;
+          wpis.www = szczegoly.www;
+          wpis.adres = szczegoly.adres;
+          if (szczegoly.kategoria) wpis.kategoria = szczegoly.kategoria;
+          blockedStreak = 0;
+        } catch (e) {
+          if (e.message === 'BLOCKED') {
+            blockedStreak++;
+            if (blockedStreak >= 3) throw new Error('Google Maps zablokował ruch (nietypowy ruch / reCAPTCHA) po kilku próbach — przerywam skan.');
+            await sleep(jitter(15000, 10000));
+          }
+          // Brak szczegółów (np. timeout) — zostawiamy sam wpis z listy, lepsze to niż nic.
+        }
+        await sleep(jitter(700, 500));
+      }
+    }
+  } finally {
+    await browser.close();
   }
-  results.sort((a, b) => a.nazwa.localeCompare(b.nazwa, 'pl'));
 
+  const results = [...seen.values()].sort((a, b) => a.nazwa.localeCompare(b.nazwa, 'pl'));
   fs.mkdirSync(path.dirname(OUTPUT_FILE), { recursive: true });
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify({ powiat, results }, null, 2));
   log(`Gotowe — ${results.length} firm.`);
 }
 
-main().catch(e => {
+main().catch((e) => {
   console.error(e.message);
   process.exit(1);
 });

@@ -39,10 +39,10 @@ export async function GET() {
   return Response.json(POWIATY);
 }
 
-// Serwer (VPS) sam nie odpytuje Overpass — jego adres IP jest z zakresu
-// datacenter/VPS, który Overpass mocniej dławi niż domowe łącza. Zlecenie
-// czeka więc w kolejce, aż odbierze je lokalny agent (scripts/agent.cjs)
-// uruchomiony na komputerze z domowym IP — patrz /api/agent/skanuj.
+// Serwer (VPS) sam nie skrobie Google Maps — to automatyzacja przeglądarki
+// (Playwright), która ma dużo mniejsze ryzyko zablokowania z domowego IP niż
+// z adresu datacenter/VPS. Zlecenie czeka więc w kolejce, aż odbierze je
+// lokalny agent (scripts/agent.cjs) — patrz /api/agent/skanuj.
 // Klient odpytuje status przez /skanuj/status.
 export async function POST(request) {
   if (!(await hasAccess("sponsorzy"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
