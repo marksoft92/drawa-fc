@@ -16,6 +16,14 @@ const POWIATY = [
   "powiat strzelecko-drezdenecki",
 ];
 
+// Publiczny Overpass bywa przeciążony ("server too busy") — próbujemy po
+// kolei kilku instancji zamiast polegać na jednej.
+const OVERPASS_ENDPOINTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://lz4.overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+];
+
 // Tylko punkty, które realnie mogą być lokalnym sponsorem — pomijamy np. ławki,
 // przystanki czy kosze, które też trafiają do OSM jako POI.
 const AMENITY_WHITELIST = [
@@ -52,6 +60,35 @@ function adres(tags) {
   return parts.join(", ") || null;
 }
 
+async function queryOverpass(powiat) {
+  const body = "data=" + encodeURIComponent(overpassQuery(powiat));
+  const headers = {
+    "Content-Type": "application/x-www-form-urlencoded",
+    // Apache przed Overpass odrzuca requesty bez Accept (406) — fetch() w
+    // Node domyślnie go nie wysyła (w przeciwieństwie do curl/przeglądarki).
+    // User-Agent zgodnie z polityką użytkowania Overpass API.
+    "Accept": "*/*",
+    "User-Agent": "drawa-fc-sponsor-crm/1.0 (https://mksdrawadrawno.pl; kontakt: kontakt@mksdrawadrawno.pl)",
+  };
+
+  const errors = [];
+  for (const endpoint of OVERPASS_ENDPOINTS) {
+    try {
+      const r = await fetch(endpoint, { method: "POST", headers, body, signal: AbortSignal.timeout(15000) });
+      if (!r.ok) {
+        const text = await r.text().catch(() => "");
+        errors.push(`${endpoint}: HTTP ${r.status} ${text.slice(0, 200)}`);
+        continue;
+      }
+      return await r.json();
+    } catch (e) {
+      errors.push(`${endpoint}: ${e.message}`);
+    }
+  }
+  console.error(`[sponsorzy/leady/skanuj] wszystkie instancje Overpass zawiodły:\n${errors.join("\n")}`);
+  throw new Error("Wszystkie serwery OpenStreetMap (Overpass) są chwilowo przeciążone — spróbuj ponownie za kilka minut.");
+}
+
 export async function GET() {
   if (!(await hasAccess("sponsorzy"))) return Response.json({ error: "Brak dostępu" }, { status: 401 });
   return Response.json(POWIATY);
@@ -72,18 +109,7 @@ export async function POST(request) {
   // gdy padnie Overpass, baza albo coś nieoczekiwanego. Błąd trafia do logów
   // PM2, żeby dało się go zdiagnozować bez zgadywania.
   try {
-    const r = await fetch("https://overpass-api.de/api/interpreter", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: "data=" + encodeURIComponent(overpassQuery(powiat)),
-      signal: AbortSignal.timeout(40000),
-    });
-    if (!r.ok) {
-      const body = await r.text().catch(() => "");
-      console.error(`[sponsorzy/leady/skanuj] Overpass HTTP ${r.status}: ${body.slice(0, 300)}`);
-      return Response.json({ error: `OpenStreetMap (Overpass) odpowiedziało błędem HTTP ${r.status} — spróbuj ponownie za chwilę.` }, { status: 502 });
-    }
-    const data = await r.json();
+    const data = await queryOverpass(powiat);
 
     const [existingLeady, existingSponsorzy] = await Promise.all([
       prisma.sponsorLead.findMany({ select: { nazwa: true } }),
