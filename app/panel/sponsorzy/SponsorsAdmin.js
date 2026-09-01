@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 function slugify(str) {
   return str.toLowerCase()
@@ -584,29 +584,64 @@ function LeadyLista() {
 function LeadySkanuj() {
   const [powiaty, setPowiaty] = useState([]);
   const [selected, setSelected] = useState("");
-  const [scanning, setScanning] = useState(false);
+  const [jobStatus, setJobStatus] = useState({ status: "idle" });
   const [results, setResults] = useState(null);
+  const [scannedPowiat, setScannedPowiat] = useState("");
   const [scanError, setScanError] = useState("");
   const [adding, setAdding] = useState({});
   const [added, setAdded] = useState({});
+  const pollRef = useRef(null);
 
   useEffect(() => {
     fetch("/api/admin/sponsorzy/leady/skanuj").then(r => r.json()).then(setPowiaty).catch(() => {});
   }, []);
 
+  const pollStatus = useCallback(async () => {
+    try {
+      const r = await fetch("/api/admin/sponsorzy/leady/skanuj/status");
+      if (!r.ok) return;
+      const s = await r.json();
+      setJobStatus(s);
+      if (s.status === "done" || s.status === "error") {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+        if (s.status === "done") { setResults(s.results || []); setScannedPowiat(s.powiat); setAdded({}); }
+        else setScanError(s.error || "Błąd skanowania");
+      }
+    } catch {}
+  }, []);
+
+  // Wznów polling, jeśli skan już trwał (np. po odświeżeniu strony).
+  useEffect(() => {
+    pollStatus();
+    return () => { if (pollRef.current) clearInterval(pollRef.current); };
+  }, [pollStatus]);
+  useEffect(() => {
+    if (jobStatus.status === "running" && !pollRef.current) {
+      pollRef.current = setInterval(pollStatus, 3000);
+    }
+  }, [jobStatus.status, pollStatus]);
+
   const scan = async () => {
     if (!selected) return;
-    setScanning(true); setScanError(""); setResults(null); setAdded({});
-    try {
-      const r = await fetch("/api/admin/sponsorzy/leady/skanuj", {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ powiat: selected }),
-      });
-      let d;
-      try { d = await r.json(); } catch { throw new Error("Serwer nie odpowiedział poprawnie (błąd bramki/proxy) — spróbuj ponownie za chwilę."); }
-      if (!r.ok) setScanError(d.error || "Błąd skanowania");
-      else setResults(d.results || []);
-    } catch (e) { setScanError(e.message || "Błąd połączenia — spróbuj ponownie."); }
-    setScanning(false);
+    setScanError(""); setResults(null); setAdded({});
+    const r = await fetch("/api/admin/sponsorzy/leady/skanuj", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ powiat: selected }),
+    });
+    if (r.ok) {
+      setJobStatus({ status: "running", powiat: selected, progress: "Uruchamianie..." });
+      if (!pollRef.current) pollRef.current = setInterval(pollStatus, 3000);
+    } else {
+      const d = await r.json().catch(() => ({}));
+      setScanError(d.error || "Nie udało się uruchomić skanu");
+    }
+  };
+
+  const stopScan = async () => {
+    await fetch("/api/admin/sponsorzy/leady/skanuj/status", { method: "DELETE" });
+    clearInterval(pollRef.current);
+    pollRef.current = null;
+    setJobStatus({ status: "idle" });
   };
 
   const addLead = async (t) => {
@@ -614,7 +649,7 @@ function LeadySkanuj() {
     try {
       const r = await fetch("/api/admin/sponsorzy/leady", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nazwa: t.nazwa, telefon: t.telefon, www: t.www, adres: t.adres, zrodlo: `OSM — ${selected} (${t.kategoria})` }),
+        body: JSON.stringify({ nazwa: t.nazwa, telefon: t.telefon, www: t.www, adres: t.adres, zrodlo: `OSM — ${scannedPowiat} (${t.kategoria})` }),
       });
       if (r.ok) setAdded(p => ({ ...p, [t.nazwa]: true }));
     } catch {}
@@ -627,29 +662,37 @@ function LeadySkanuj() {
     for (const t of toAdd) await addLead(t);
   };
 
+  const scanning = jobStatus.status === "running";
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div style={card}>
         <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 8 }}>Skanuj firmy w regionie (OpenStreetMap)</div>
         <div style={{ fontSize: 12, color: "#64748b", marginBottom: 16 }}>
           Pobiera z OpenStreetMap nazwane sklepy, biura, firmy rzemieślnicze i lokale usługowe z wybranego powiatu
-          (dane publiczne, bez skrobania serwisów komercyjnych) i podpowiada je jako leady do pozyskania.
+          (dane publiczne, bez skrobania serwisów komercyjnych) i podpowiada je jako leady do pozyskania. Skan działa
+          w tle i sam ponawia próby przez kilka minut, jeśli publiczny serwer Overpass jest akurat przeciążony.
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-          <select value={selected} onChange={e => setSelected(e.target.value)} style={{ ...inp, width: "auto", minWidth: 240 }}>
+          <select value={selected} onChange={e => setSelected(e.target.value)} disabled={scanning} style={{ ...inp, width: "auto", minWidth: 240 }}>
             <option value="">Wybierz powiat...</option>
             {powiaty.map(p => <option key={p} value={p}>{p}</option>)}
           </select>
-          <button onClick={scan} disabled={!selected || scanning} style={{ ...btnPrimary, background: "#7c3aed", opacity: (!selected || scanning) ? 0.5 : 1 }}>
-            {scanning ? "Skanuję..." : "Skanuj powiat"}
-          </button>
+          {!scanning ? (
+            <button onClick={scan} disabled={!selected} style={{ ...btnPrimary, background: "#7c3aed", opacity: !selected ? 0.5 : 1 }}>
+              Skanuj powiat
+            </button>
+          ) : (
+            <button onClick={stopScan} style={{ ...btnGhost, color: "#ef4444", borderColor: "rgba(239,68,68,0.3)" }}>Przerwij skan</button>
+          )}
         </div>
         {scanError && <div style={{ ...alertErr, marginTop: 12 }}>{scanError}</div>}
       </div>
 
       {scanning && (
         <div style={{ ...card, textAlign: "center", color: "#a78bfa" }}>
-          <div style={{ fontSize: 13 }}>Pobieram dane z OpenStreetMap... (może potrwać do minuty)</div>
+          <div style={{ fontSize: 13 }}>{jobStatus.progress || "Skanuję..."}</div>
+          <div style={{ fontSize: 11, color: "#64748b", marginTop: 6 }}>Możesz zostawić to działające i wrócić za chwilę — nie trzeba czekać na tej stronie.</div>
         </div>
       )}
 
