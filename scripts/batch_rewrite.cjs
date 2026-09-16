@@ -44,8 +44,9 @@ const SYSTEM_PROMPT = `Jesteś doświadczonym dziennikarzem sportowym lokalnego 
 PRAWDA PRZEDE WSZYSTKIM:
 - Opisuj wyłącznie fakty z oryginału: wynik, strzelcy, minuty, nazwiska, daty, godziny, miejsca.
 - Nie zmyślaj przebiegu meczu, cytatów, nastrojów kibiców ani szczegółów, których nie ma w źródle.
-- Kontekst sportowy (np. znaczenie wyniku, seria meczów, sytuacja w tabeli) dodawaj tylko, jeśli wynika wprost z posta — inaczej pomiń, zamiast zgadywać.
-- Krótki, ubogi w fakty post = krótszy artykuł. Nie "dopychaj" objętości ogólnikami tylko po to, by wyjść na kilka akapitów.
+- Kontekst sportowy (np. znaczenie wyniku, seria meczów, sytuacja w tabeli) dodawaj tylko, jeśli wynika wprost z posta, albo jeśli dostałeś sekcję "KONTEKST Z NASZEJ BAZY" poniżej — poza tymi dwoma źródłami nie zgaduj.
+- Sekcja "KONTEKST Z NASZEJ BAZY", jeśli występuje, zawiera prawdziwe dane z naszej bazy (pozycja w tabeli, bilans, forma) o klubie z posta. Możesz je wykorzystać, by wzbogacić artykuł o realny kontekst ligowy (np. co ten wynik/wydarzenie znaczy dla miejsca w tabeli) — ale tylko jeśli sensownie łączy się z treścią posta, nie na siłę. Gdy tej sekcji brak, nie wspominaj o tabeli ani formie.
+- Krótki, ubogi w fakty post bez dodatkowego kontekstu z bazy = krótszy artykuł. Nie "dopychaj" objętości ogólnikami tylko po to, by wyjść na kilka akapitów.
 
 RÓŻNORODNOŚĆ (kluczowe — czytelnik widzi te artykuły jeden po drugim, nie mogą brzmieć jak kalka):
 - Za każdym razem zacznij inaczej: raz od wyniku, raz od kluczowego momentu meczu, raz od konkretnego zdarzenia (gol, kontuzja, decyzja sędziego), raz od rangi spotkania. "Klub X poinformował, że…" to jedna z wielu możliwych opcji, nie domyślny szablon — nie zaczynaj tak za każdym razem.
@@ -95,13 +96,39 @@ function slugify(str) {
     .slice(0, 80).replace(/-$/g, '');
 }
 
-function callOpenRouter(model, klubNazwa, tresc, apiKey) {
+function normalizeName(s) {
+  return (s || '').toLowerCase()
+    .replace(/ą/g, 'a').replace(/ć/g, 'c').replace(/ę/g, 'e').replace(/ł/g, 'l')
+    .replace(/ń/g, 'n').replace(/ó/g, 'o').replace(/ś/g, 's').replace(/ź/g, 'z').replace(/ż/g, 'z')
+    .replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+// Dopasowuje nazwę klubu ze źródła FB do wiersza w naszej tabeli ligowej
+// (ta sama liga co Drawa — inne ligi z ~150 śledzonych klubów po prostu
+// nie mają odpowiednika i wtedy funkcja zwraca null, bez zgadywania).
+function findTabelaRow(tabela, klubNazwa) {
+  const norm = normalizeName(klubNazwa);
+  if (!norm) return null;
+  return tabela.find(t => {
+    const tn = normalizeName(t.nazwa);
+    return tn === norm || tn.includes(norm) || norm.includes(tn);
+  }) || null;
+}
+
+function buildKontekst(row) {
+  if (!row) return '';
+  const bilans = `${row.wygrane}W-${row.remisy}R-${row.przegrane}P`;
+  const forma = row.forma ? `, forma: ${row.forma}` : '';
+  return `\n\nKONTEKST Z NASZEJ BAZY (sezon ${row.sezon}): ${row.nazwa} zajmuje ${row.pozycja}. miejsce w tabeli, ${row.pkt} pkt, bilans ${bilans}, bramki ${row.bramkiZd}:${row.bramkiStr}${forma}.`;
+}
+
+function callOpenRouter(model, klubNazwa, tresc, apiKey, kontekst) {
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({
       model,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: `Klub: ${klubNazwa}\n\nOryginalny post z Facebooka:\n${tresc}` },
+        { role: 'user', content: `Klub: ${klubNazwa}\n\nOryginalny post z Facebooka:\n${tresc}${kontekst || ''}` },
       ],
       max_tokens: 2000,
       temperature: 0.9,
@@ -201,6 +228,12 @@ async function main() {
       ORDER BY w."createdAt" ASC
     `);
 
+    const { rows: ustawienia } = await pool.query(`SELECT klucz, wartosc FROM "Ustawienie"`);
+    const aktywnySezon = ustawienia.find(u => u.klucz === 'aktywny_sezon')?.wartosc || null;
+    const { rows: tabela } = aktywnySezon
+      ? (await pool.query(`SELECT * FROM "TabelaDruzyna" WHERE sezon = $1`, [aktywnySezon]))
+      : { rows: [] };
+
     const total = wpisy.length;
     let nextIndex = 0;
     let done = 0, ok = 0, fail = 0;
@@ -225,6 +258,7 @@ async function main() {
     }
 
     async function processOne(w) {
+      const kontekst = buildKontekst(findTabelaRow(tabela, w.zrodloNazwa));
       let rewritten = null;
       modelLoop:
       for (const model of FREE_MODELS) {
@@ -233,7 +267,7 @@ async function main() {
           if (exhaustedKeys.has(key)) continue;
           if (wasStopped() || dailyLimitHit) break modelLoop;
           try {
-            const { content } = await callOpenRouter(model, w.zrodloNazwa, w.tresc, key);
+            const { content } = await callOpenRouter(model, w.zrodloNazwa, w.tresc, key, kontekst);
             const parsed = parseResponse(content);
             if (parsed.tytul && parsed.tresc && parsed.tresc.length >= 100) {
               rewritten = { ...parsed, model };

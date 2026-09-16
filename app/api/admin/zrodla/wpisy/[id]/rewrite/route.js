@@ -22,8 +22,9 @@ const SYSTEM_PROMPT = `Jesteś doświadczonym dziennikarzem sportowym lokalnego 
 PRAWDA PRZEDE WSZYSTKIM:
 - Opisuj wyłącznie fakty z oryginału: wynik, strzelcy, minuty, nazwiska, daty, godziny, miejsca.
 - Nie zmyślaj przebiegu meczu, cytatów, nastrojów kibiców ani szczegółów, których nie ma w źródle.
-- Kontekst sportowy (np. znaczenie wyniku, seria meczów, sytuacja w tabeli) dodawaj tylko, jeśli wynika wprost z posta — inaczej pomiń, zamiast zgadywać.
-- Krótki, ubogi w fakty post = krótszy artykuł. Nie "dopychaj" objętości ogólnikami tylko po to, by wyjść na kilka akapitów.
+- Kontekst sportowy (np. znaczenie wyniku, seria meczów, sytuacja w tabeli) dodawaj tylko, jeśli wynika wprost z posta, albo jeśli dostałeś sekcję "KONTEKST Z NASZEJ BAZY" poniżej — poza tymi dwoma źródłami nie zgaduj.
+- Sekcja "KONTEKST Z NASZEJ BAZY", jeśli występuje, zawiera prawdziwe dane z naszej bazy (pozycja w tabeli, bilans, forma) o klubie z posta. Możesz je wykorzystać, by wzbogacić artykuł o realny kontekst ligowy — ale tylko jeśli sensownie łączy się z treścią posta, nie na siłę. Gdy tej sekcji brak, nie wspominaj o tabeli ani formie.
+- Krótki, ubogi w fakty post bez dodatkowego kontekstu z bazy = krótszy artykuł. Nie "dopychaj" objętości ogólnikami tylko po to, by wyjść na kilka akapitów.
 
 RÓŻNORODNOŚĆ (kluczowe — czytelnik widzi te artykuły jeden po drugim, nie mogą brzmieć jak kalka):
 - Za każdym razem zacznij inaczej: raz od wyniku, raz od kluczowego momentu meczu, raz od konkretnego zdarzenia (gol, kontuzja, decyzja sędziego), raz od rangi spotkania. "Klub X poinformował, że…" to jedna z wielu możliwych opcji, nie domyślny szablon — nie zaczynaj tak za każdym razem.
@@ -42,7 +43,32 @@ TAGI: [2-4 tagi oddzielone przecinkami, np: transfery, wyniki, zapowiedź, B kla
 ---
 [treść artykułu]`;
 
-async function callOpenRouter(model, klubNazwa, tresc, apiKey) {
+function normalizeName(s) {
+  return (s || "").toLowerCase()
+    .replace(/ą/g, "a").replace(/ć/g, "c").replace(/ę/g, "e").replace(/ł/g, "l")
+    .replace(/ń/g, "n").replace(/ó/g, "o").replace(/ś/g, "s").replace(/ź/g, "z").replace(/ż/g, "z")
+    .replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+// Dopasowuje klub źródła FB do wiersza w naszej tabeli ligowej (ta sama liga
+// co Drawa) — inne ligi po prostu nie mają odpowiednika i wtedy zwraca null.
+function findTabelaRow(tabela, klubNazwa) {
+  const norm = normalizeName(klubNazwa);
+  if (!norm) return null;
+  return tabela.find(t => {
+    const tn = normalizeName(t.nazwa);
+    return tn === norm || tn.includes(norm) || norm.includes(tn);
+  }) || null;
+}
+
+function buildKontekst(row) {
+  if (!row) return "";
+  const bilans = `${row.wygrane}W-${row.remisy}R-${row.przegrane}P`;
+  const forma = row.forma ? `, forma: ${row.forma}` : "";
+  return `\n\nKONTEKST Z NASZEJ BAZY (sezon ${row.sezon}): ${row.nazwa} zajmuje ${row.pozycja}. miejsce w tabeli, ${row.pkt} pkt, bilans ${bilans}, bramki ${row.bramkiZd}:${row.bramkiStr}${forma}.`;
+}
+
+async function callOpenRouter(model, klubNazwa, tresc, apiKey, kontekst) {
   const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -54,7 +80,7 @@ async function callOpenRouter(model, klubNazwa, tresc, apiKey) {
       model,
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: `Klub: ${klubNazwa}\n\nOryginalny post z Facebooka:\n${tresc}` },
+        { role: "user", content: `Klub: ${klubNazwa}\n\nOryginalny post z Facebooka:\n${tresc}${kontekst || ""}` },
       ],
       max_tokens: 2000,
       temperature: 0.9,
@@ -130,6 +156,12 @@ export async function POST(request, { params }) {
     return Response.json({ error: "Brak OPENROUTER_API_KEY" }, { status: 500 });
   }
 
+  const aktywnySezon = await prisma.ustawienie.findUnique({ where: { klucz: "aktywny_sezon" } });
+  const tabela = aktywnySezon?.wartosc
+    ? await prisma.tabelaDruzyna.findMany({ where: { sezon: aktywnySezon.wartosc } })
+    : [];
+  const kontekst = buildKontekst(findTabelaRow(tabela, wpis.zrodlo.nazwa));
+
   const errors = [];
   const exhaustedKeys = new Set();
 
@@ -137,7 +169,7 @@ export async function POST(request, { params }) {
     for (const key of OPENROUTER_KEYS) {
       if (exhaustedKeys.has(key)) continue;
       try {
-        const { content, model: usedModel } = await callOpenRouter(model, wpis.zrodlo.nazwa, wpis.tresc, key);
+        const { content, model: usedModel } = await callOpenRouter(model, wpis.zrodlo.nazwa, wpis.tresc, key, kontekst);
         const parsed = parseResponse(content);
 
         if (!parsed.tytul || !parsed.tresc || parsed.tresc.length < 100) {
