@@ -66,9 +66,14 @@ export default async function MeczPage({ params }) {
           "@context": "https://schema.org", "@type": "SportsEvent",
           name: `${m.team1} vs ${m.team2}`,
           startDate: m.date || undefined,
+          eventStatus: m.score ? "https://schema.org/EventCompleted" : "https://schema.org/EventScheduled",
+          description: m.score
+            ? `Wynik meczu ${m.team1} - ${m.team2}: ${m.score}. ${m.liga || ""} sezon ${m.sezon || ""}.`
+            : `Zapowiedź meczu ${m.team1} - ${m.team2}. ${m.liga || ""} sezon ${m.sezon || ""}.`,
           homeTeam: { "@type": "SportsTeam", name: m.team1 },
           awayTeam: { "@type": "SportsTeam", name: m.team2 },
           location: drawa1 ? { "@type": "Place", name: "Stadion MKS Drawa Drawno", address: { "@type": "PostalAddress", addressLocality: "Drawno" } } : undefined,
+          organizer: { "@type": "SportsOrganization", name: "MKS Drawa Drawno", url: "https://mksdrawadrawno.pl" },
         },
         {
           "@context": "https://schema.org", "@type": "BreadcrumbList",
