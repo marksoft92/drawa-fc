@@ -317,6 +317,18 @@ export default function Footer({ HerbImg, herb }) {
             są chronione prawem autorskim. Kopiowanie, reprodukowanie lub rozpowszechnianie
             bez zgody właściciela jest zabronione.
           </div>
+          <div style={{ display: 'flex', gap: 14, fontSize: 11 }}>
+            <a href="/privacy" style={{ color: '#475569', textDecoration: 'none' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#94a3b8')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#475569')}>
+              Polityka prywatności
+            </a>
+            <a href="/terms" style={{ color: '#475569', textDecoration: 'none' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#94a3b8')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#475569')}>
+              Regulamin
+            </a>
+          </div>
           <div style={{ fontSize: 10, color: '#1e293b' }}>
             Strona stworzona przez{' '}
             <a

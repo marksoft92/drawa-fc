@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Script from "next/script";
 import NavBar from "@/components/NavBar";
 import ShareButtons from "@/components/ShareButtons";
 import { prisma } from "@/lib/prisma";
@@ -116,6 +117,18 @@ export default async function WpisPage({ params }) {
           ],
         },
       ]) }} />
+
+      <Script async src="https://news.google.com/swg/js/v1/swg-basic.js" strategy="afterInteractive" />
+      <Script id="swg-basic-init" strategy="afterInteractive">
+        {`(self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
+          basicSubscriptions.init({
+            type: "NewsArticle",
+            isPartOfType: ["Product"],
+            isPartOfProductId: "CAow_eHLDA:openaccess",
+            clientOptions: { theme: "light", lang: "pl" },
+          });
+        });`}
+      </Script>
 
       <NavBar backLabel="← Piłka lokalna" />
 

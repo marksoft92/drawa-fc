@@ -80,6 +80,8 @@ export default async function sitemap() {
     { url: `${BASE}/transmisja`,  lastModified: new Date('2025-08-01'), changeFrequency: 'weekly',  priority: 0.5 },
     { url: `${BASE}/typowanie`,   lastModified: new Date(),              changeFrequency: 'daily',   priority: 0.7 },
     { url: `${BASE}/newsletter`,  lastModified: new Date(),              changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE}/privacy`,     lastModified: new Date('2025-08-01'), changeFrequency: 'yearly',  priority: 0.3 },
+    { url: `${BASE}/terms`,       lastModified: new Date('2025-08-01'), changeFrequency: 'yearly',  priority: 0.3 },
     ...newsUrls,
     ...players.map(p => ({
       url: `${BASE}/kadra/${slugify(p.imieNazwisko)}`,
