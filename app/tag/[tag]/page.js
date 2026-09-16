@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import NavBar from "@/components/NavBar";
 import { prisma } from "@/lib/prisma";
 
@@ -129,7 +130,7 @@ export default async function TagPage({ params }) {
               <Link key={a.slug} href={`/aktualnosci/${a.slug}`} style={{ textDecoration: "none" }}>
                 <div className="tag-card" style={{ display: "flex", gap: 16, padding: 16, borderTop: `3px solid ${a.kolor || "#3b82f6"}` }}>
                   {a.thumbnail && (
-                    <img src={a.thumbnail} alt="" style={{ width: 100, height: 70, objectFit: "cover", borderRadius: 8, flexShrink: 0 }} />
+                    <Image src={a.thumbnail} alt="" width={100} height={70} style={{ objectFit: "cover", borderRadius: 8, flexShrink: 0 }} />
                   )}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 11, color: "#3b82f6", fontWeight: 700, letterSpacing: "0.1em", marginBottom: 4 }}>AKTUALNOŚCI</div>
@@ -149,7 +150,7 @@ export default async function TagPage({ params }) {
                 <Link key={w.slug} href={`/pilka-lokalna/${w.slug}`} style={{ textDecoration: "none" }}>
                   <div className="tag-card" style={{ display: "flex", gap: 16, padding: 16 }}>
                     {thumb && (
-                      <img src={thumb} alt="" style={{ width: 100, height: 70, objectFit: "cover", borderRadius: 8, flexShrink: 0 }} />
+                      <Image src={thumb} alt="" width={100} height={70} style={{ objectFit: "cover", borderRadius: 8, flexShrink: 0 }} />
                     )}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>

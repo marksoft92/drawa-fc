@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import NavBar from "@/components/NavBar";
 
 const SectionLabel = ({ children }) => (
@@ -171,7 +172,7 @@ export default function PilkaLokalnaClient({ wpisy, zrodla }) {
                 >
                   {w.miniaturka && (
                     <div style={{ position: "relative", aspectRatio: "16/9", overflow: "hidden" }}>
-                      <img src={w.miniaturka} alt={w.tytul} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      <Image src={w.miniaturka} alt={w.tytul} fill sizes="(max-width: 640px) 90vw, 320px" style={{ objectFit: "cover" }} />
                     </div>
                   )}
                   <div style={{ padding: "16px 18px" }}>

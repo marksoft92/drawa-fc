@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function ArticleGallery({ photos }) {
   const [active, setActive] = useState(0);
@@ -25,6 +26,7 @@ export default function ArticleGallery({ photos }) {
               key={i}
               onClick={() => { setActive(i); setLightbox(true); }}
               style={{
+                position: 'relative',
                 aspectRatio: '1',
                 borderRadius: 6,
                 overflow: 'hidden',
@@ -34,8 +36,7 @@ export default function ArticleGallery({ photos }) {
                 transition: 'opacity 0.15s, border-color 0.15s',
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={p.src} alt={p.caption || ''} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <Image src={p.src} alt={p.caption || ''} fill sizes="100px" style={{ objectFit: 'cover' }} />
             </div>
           ))}
         </div>

@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import NavBar from '@/components/NavBar';
 import ArticleGallery from '@/components/ArticleGallery';
 import Komentarze from '@/components/Komentarze';
@@ -182,8 +183,9 @@ export default async function ArticlePage({ params }) {
                   <Link key={p.slug} href={`/aktualnosci/${p.slug}`} style={{ textDecoration: 'none' }}>
                     <div style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.06)', borderTop: `3px solid ${p.kolor || '#3b82f6'}`, borderRadius: 10, overflow: 'hidden' }}>
                       {p.thumbnail && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={p.thumbnail} alt={p.title} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
+                        <div style={{ position: 'relative', height: 120 }}>
+                          <Image src={p.thumbnail} alt={p.title} fill sizes="200px" style={{ objectFit: 'cover' }} />
+                        </div>
                       )}
                       <div style={{ padding: '12px 14px' }}>
                         <div style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0', lineHeight: 1.35, marginBottom: 6 }}>{p.title}</div>

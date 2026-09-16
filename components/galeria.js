@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import Image from 'next/image';
 
 const Placeholder = ({ caption, style = {} }) => (
   <div style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, ...style }}>
@@ -20,8 +21,7 @@ const AlbumCard = ({ album, onClick }) => {
     >
       <div style={{ position: 'relative', height: 180, overflow: 'hidden' }}>
         {album.thumbnail
-          // eslint-disable-next-line @next/next/no-img-element
-          ? <img src={album.thumbnail} alt={album.tytul} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          ? <Image src={album.thumbnail} alt={album.tytul} fill sizes="(max-width: 640px) 90vw, 280px" style={{ objectFit: 'cover' }} />
           : <Placeholder caption={album.tytul} style={{ height: '100%' }} />
         }
         <div style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.7)', color: '#94a3b8', fontSize: 10, padding: '3px 8px', borderRadius: 20, backdropFilter: 'blur(4px)' }}>
