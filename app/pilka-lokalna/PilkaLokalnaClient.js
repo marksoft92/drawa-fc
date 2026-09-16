@@ -18,7 +18,7 @@ function fmtDate(d) {
   catch { return ""; }
 }
 
-function ClubSelect({ zrodla, filter, onSelect }) {
+function ClubSelect({ zrodla, filter }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const ref = useRef(null);
@@ -79,32 +79,34 @@ function ClubSelect({ zrodla, filter, onSelect }) {
             />
           </div>
           <div style={{ overflowY: "auto", flex: 1 }}>
-            <button
-              onClick={() => { onSelect(""); setOpen(false); }}
+            <Link
+              href="/pilka-lokalna"
+              onClick={() => setOpen(false)}
               style={{
                 width: "100%", padding: "10px 14px", border: "none", cursor: "pointer", textAlign: "left",
                 background: !filter ? "rgba(59,130,246,0.1)" : "transparent",
                 color: !filter ? "#3b82f6" : "#94a3b8", fontSize: 13, fontWeight: !filter ? 600 : 400,
-                display: "flex", alignItems: "center", gap: 8,
+                display: "flex", alignItems: "center", gap: 8, textDecoration: "none",
               }}
             >
               Wszystkie kluby
-            </button>
+            </Link>
             {results.map(z => (
-              <button
+              <Link
                 key={z.id}
-                onClick={() => { onSelect(z.id); setOpen(false); }}
+                href={`/pilka-lokalna?zrodlo=${z.id}`}
+                onClick={() => setOpen(false)}
                 style={{
                   width: "100%", padding: "10px 14px", border: "none", cursor: "pointer", textAlign: "left",
                   background: filter === z.id ? "rgba(59,130,246,0.1)" : "transparent",
                   color: filter === z.id ? "#3b82f6" : "#cbd5e1", fontSize: 13,
                   fontWeight: filter === z.id ? 600 : 400,
-                  display: "flex", alignItems: "center", gap: 8,
+                  display: "flex", alignItems: "center", gap: 8, textDecoration: "none",
                 }}
               >
                 {z.herb && <img src={z.herb} alt="" style={{ width: 18, height: 18, objectFit: "contain", flexShrink: 0 }} />}
                 {z.nazwa}
-              </button>
+              </Link>
             ))}
             {results.length === 0 && (
               <div style={{ padding: "16px 14px", color: "#475569", fontSize: 13, textAlign: "center" }}>
@@ -118,16 +120,14 @@ function ClubSelect({ zrodla, filter, onSelect }) {
   );
 }
 
-const PER_PAGE = 24;
-
-export default function PilkaLokalnaClient({ wpisy, zrodla }) {
-  const [filter, setFilter] = useState("");
-  const [page, setPage] = useState(1);
-  const filtered = filter ? wpisy.filter(w => w.zrodloId === filter) : wpisy;
-  const visible = filtered.slice(0, page * PER_PAGE);
-  const hasMore = visible.length < filtered.length;
-
-  const handleFilter = (id) => { setFilter(id); setPage(1); };
+export default function PilkaLokalnaClient({ wpisy, zrodla, total, page, totalPages, perPage, currentZrodloId }) {
+  const pageHref = (p) => {
+    const qs = new URLSearchParams();
+    if (currentZrodloId) qs.set("zrodlo", currentZrodloId);
+    if (p > 1) qs.set("page", String(p));
+    const s = qs.toString();
+    return s ? `/pilka-lokalna?${s}` : "/pilka-lokalna";
+  };
 
   return (
     <>
@@ -137,13 +137,13 @@ export default function PilkaLokalnaClient({ wpisy, zrodla }) {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
             <SectionLabel>Piłka lokalna</SectionLabel>
             {zrodla.length > 1 && (
-              <ClubSelect zrodla={zrodla} filter={filter} onSelect={handleFilter} />
+              <ClubSelect zrodla={zrodla} filter={currentZrodloId} />
             )}
           </div>
 
-          {filtered.length === 0 && (
+          {wpisy.length === 0 && (
             <div style={{ textAlign: "center", padding: "60px 20px", color: "#475569" }}>
-              <div style={{ fontSize: 15, marginBottom: 8 }}>Brak wpisów{filter ? " dla tego źródła" : ""}.</div>
+              <div style={{ fontSize: 15, marginBottom: 8 }}>Brak wpisów{currentZrodloId ? " dla tego źródła" : ""}.</div>
               <div style={{ fontSize: 13 }}>Wróć wkrótce — agregujemy najnowsze wiadomości z klubów ligowych.</div>
             </div>
           )}
@@ -153,7 +153,7 @@ export default function PilkaLokalnaClient({ wpisy, zrodla }) {
             gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
             gap: 20,
           }}>
-            {visible.map(w => (
+            {wpisy.map(w => (
               <Link
                 key={w.id}
                 href={`/pilka-lokalna/${w.slug}`}
@@ -196,24 +196,33 @@ export default function PilkaLokalnaClient({ wpisy, zrodla }) {
             ))}
           </div>
 
-          {hasMore && (
-            <div style={{ textAlign: "center", marginTop: 32 }}>
-              <button
-                onClick={() => setPage(p => p + 1)}
-                style={{
-                  padding: "12px 32px", borderRadius: 10, border: "1px solid rgba(59,130,246,0.3)",
-                  background: "rgba(59,130,246,0.08)", color: "#3b82f6", fontSize: 14, fontWeight: 600,
-                  cursor: "pointer", letterSpacing: "0.03em",
-                }}
-              >
-                Pokaż więcej ({filtered.length - visible.length})
-              </button>
+          {totalPages > 1 && (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 32 }}>
+              {page > 1 ? (
+                <Link href={pageHref(page - 1)} style={{
+                  padding: "10px 24px", borderRadius: 10, border: "1px solid rgba(59,130,246,0.3)",
+                  background: "rgba(59,130,246,0.08)", color: "#3b82f6", fontSize: 13, fontWeight: 600,
+                  letterSpacing: "0.03em", textDecoration: "none",
+                }}>
+                  ← Poprzednia
+                </Link>
+              ) : <span />}
+              <span style={{ fontSize: 12, color: "#475569" }}>Strona {page} z {totalPages}</span>
+              {page < totalPages ? (
+                <Link href={pageHref(page + 1)} style={{
+                  padding: "10px 24px", borderRadius: 10, border: "1px solid rgba(59,130,246,0.3)",
+                  background: "rgba(59,130,246,0.08)", color: "#3b82f6", fontSize: 13, fontWeight: 600,
+                  letterSpacing: "0.03em", textDecoration: "none",
+                }}>
+                  Następna →
+                </Link>
+              ) : <span />}
             </div>
           )}
 
-          {filtered.length > 0 && (
+          {total > 0 && (
             <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "#334155" }}>
-              {visible.length} z {filtered.length} wpisów
+              {(page - 1) * perPage + wpisy.length} z {total} wpisów
             </div>
           )}
         </section>
