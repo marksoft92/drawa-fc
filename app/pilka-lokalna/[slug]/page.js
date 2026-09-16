@@ -68,6 +68,13 @@ export default async function WpisPage({ params }) {
   });
   if (!w || !w.published) notFound();
 
+  const powiazane = await prisma.wpisLigowy.findMany({
+    where: { zrodloId: w.zrodloId, published: true, NOT: { id: w.id } },
+    select: { slug: true, tytul: true, miniaturka: true, obrazki: true, dataPostu: true, createdAt: true },
+    orderBy: [{ dataPostu: { sort: "desc", nulls: "last" } }, { createdAt: "desc" }],
+    take: 6,
+  });
+
   const title = cleanTitle(w.tytul);
   const images = Array.isArray(w.obrazki) ? w.obrazki : [];
   const paragraphs = w.tresc.split("\n\n").filter(Boolean).map(p => p.replace(/^#+\s*/, ''));
@@ -204,6 +211,35 @@ export default async function WpisPage({ params }) {
           <div style={{ marginTop: 32, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
             <ShareButtons url={`https://mksdrawadrawno.pl/pilka-lokalna/${w.slug}`} title={title} />
           </div>
+
+          {/* Related from same club */}
+          {powiazane.length > 0 && (
+            <div style={{ marginTop: 48, paddingTop: 32, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", color: "#475569", marginBottom: 16 }}>
+                WIĘCEJ Z {w.zrodlo?.nazwa?.toUpperCase()}
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
+                {powiazane.map(p => {
+                  const pTitle = cleanTitle(p.tytul);
+                  const pImages = Array.isArray(p.obrazki) ? p.obrazki : [];
+                  const pThumb = p.miniaturka || pImages[0] || null;
+                  return (
+                    <Link key={p.slug} href={`/pilka-lokalna/${p.slug}`} style={{ textDecoration: "none" }}>
+                      <div style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, overflow: "hidden" }}>
+                        {pThumb && (
+                          <img src={pThumb} alt="" style={{ width: "100%", height: 120, objectFit: "cover" }} />
+                        )}
+                        <div style={{ padding: "12px 14px" }}>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: "#e2e8f0", lineHeight: 1.35, marginBottom: 6 }}>{pTitle}</div>
+                          <div style={{ fontSize: 11, color: "#334155" }}>{fmtDate(p.dataPostu || p.createdAt)}</div>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Back link */}
           <div style={{ marginTop: 40, textAlign: "center" }}>
