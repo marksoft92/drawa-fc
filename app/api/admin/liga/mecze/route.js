@@ -1,5 +1,6 @@
 import { hasAccess } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { pairKey, rodzajRozgrywek } from "@/lib/zzpn";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,8 @@ export async function POST(request) {
   const { sezon = "2025/26", mecze } = await request.json();
   if (!Array.isArray(mecze) || mecze.length === 0)
     return Response.json({ error: "Brak danych meczów" }, { status: 400 });
+
+  const wSezonie = await prisma.mecz.findMany({ where: { sezon }, select: { id: true, team1: true, team2: true, liga: true } });
 
   let upserted = 0;
   for (const m of mecze) {
@@ -50,12 +53,19 @@ export async function POST(request) {
           where: { sezon, team1: m.team1, team2: m.team2, score: null, walkower: false },
         });
 
-    const targetId = existing?.id ?? stale?.id;
+    // Ten sam mecz bywa już w bazie pod inną pisownią nazwy lub z inną datą (np. z automatycznej
+    // synchronizacji ZZPN) — para gospodarz–gość w tych samych rozgrywkach to wciąż jedno spotkanie.
+    const tenSamMecz = existing || stale
+      ? null
+      : wSezonie.find((x) => pairKey(x.team1, x.team2) === pairKey(m.team1, m.team2) && rodzajRozgrywek(x.liga) === rodzajRozgrywek(m.liga));
+
+    const targetId = existing?.id ?? stale?.id ?? tenSamMecz?.id;
 
     if (targetId) {
       await prisma.mecz.update({ where: { id: targetId }, data: fields });
     } else {
-      await prisma.mecz.create({ data: { sezon, team1: m.team1, team2: m.team2, ...fields } });
+      const created = await prisma.mecz.create({ data: { sezon, team1: m.team1, team2: m.team2, ...fields } });
+      wSezonie.push(created);
     }
     upserted++;
   }

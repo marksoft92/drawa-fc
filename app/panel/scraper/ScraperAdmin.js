@@ -15,6 +15,67 @@ function typIcon(typ) {
   return "·";
 }
 
+// ─── Automatyczna synchronizacja z ZZPN ───────────────────────
+
+function ZzpnSync() {
+  const [st, setSt] = useState({ status: "idle" });
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+
+  useEffect(() => {
+    fetch("/api/admin/zzpn").then(r => r.json()).then(setSt).catch(() => {});
+  }, []);
+
+  async function handleSync() {
+    setBusy(true); setErr("");
+    try {
+      const r = await fetch("/api/admin/zzpn", { method: "POST" });
+      const d = await r.json();
+      if (!r.ok) setErr(d.error || "Błąd synchronizacji");
+      setSt(await fetch("/api/admin/zzpn").then(x => x.json()));
+    } catch {
+      setErr("Nie udało się połączyć z serwerem");
+    }
+    setBusy(false);
+  }
+
+  const w = st.wynik;
+  const kiedy = iso => iso ? new Date(iso).toLocaleString("pl-PL", { dateStyle: "short", timeStyle: "short" }) : "";
+  const running = busy || st.status === "running";
+
+  return (
+    <div style={{ ...card, marginBottom: 20, borderColor: "rgba(34,197,94,0.25)" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 14, alignItems: "center" }}>
+        <div style={{ flex: 1, minWidth: 220 }}>
+          <div style={{ fontSize: 14, color: "#fff", fontWeight: 700, marginBottom: 4 }}>Automatyczna synchronizacja z ZZPN</div>
+          <div style={{ fontSize: 12, color: "#64748b" }}>
+            Terminarz, wyniki, tabela, składy i przebieg meczów pobierają się same w każdą niedzielę o 20:00 i od razu trafiają na stronę
+            (bez agenta i bez importowania). Mecze nie są dublowane — istniejące są aktualizowane.
+          </div>
+        </div>
+        <button onClick={handleSync} disabled={running} style={{ ...btnPrimary, background: "#22c55e", opacity: running ? 0.6 : 1, cursor: running ? "wait" : "pointer" }}>
+          {running ? "Synchronizuję..." : "⟳ Synchronizuj teraz"}
+        </button>
+      </div>
+      {(err || st.status === "error") && (
+        <div style={{ marginTop: 10, fontSize: 12, color: "#f87171" }}>
+          ✗ {err || st.error}{st.status === "error" && st.finishedAt ? ` (${kiedy(st.finishedAt)})` : ""}
+          {st.ostatniaUdana ? ` · ostatnia udana: ${kiedy(st.ostatniaUdana)}` : ""}
+        </div>
+      )}
+      {st.status === "done" && w && (
+        <div style={{ marginTop: 10, fontSize: 12, color: "#94a3b8" }}>
+          <span style={{ color: "#4ade80" }}>✓ {kiedy(st.finishedAt)}</span> · {w.liga} · sezon {w.sezon} · mecze: {w.mecze} (nowe: {w.dodane}, zaktualizowane: {w.zaktualizowane}
+          {w.usunieteDuplikaty ? `, usunięte duplikaty: ${w.usunieteDuplikaty}` : ""}) · tabela: {w.tabela}
+          {w.bezSzczegolow?.length > 0 && (
+            <div style={{ marginTop: 4, color: "#f59e0b" }}>ZZPN nie ma jeszcze protokołu: {w.bezSzczegolow.join(", ")}</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Zdarzenia meczu ──────────────────────────────────────────
 
 function Zdarzenia({ zdarzenia, team1, team2 }) {
@@ -356,6 +417,8 @@ export default function ScraperAdmin() {
   return (
     <div>
       {/* Header */}
+      <ZzpnSync />
+
       <div style={{ fontSize: "clamp(20px,4vw,28px)", fontFamily: "'Bebas Neue',Impact,sans-serif", letterSpacing: "0.1em", color: "#fff", marginBottom: 4 }}>
         Scraper · {source === "zzpn" ? "ZZPN" : "RegioWyniki"}
       </div>
