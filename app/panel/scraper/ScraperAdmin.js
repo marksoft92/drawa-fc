@@ -49,7 +49,7 @@ function ZzpnSync() {
         <div style={{ flex: 1, minWidth: 220 }}>
           <div style={{ fontSize: 14, color: "#fff", fontWeight: 700, marginBottom: 4 }}>Automatyczna synchronizacja z ZZPN</div>
           <div style={{ fontSize: 12, color: "#64748b" }}>
-            Terminarz, wyniki, tabela, składy i przebieg meczów pobierają się same w każdą niedzielę o 20:00 i od razu trafiają na stronę
+            Terminarz, wyniki, tabela, składy, przebieg meczów i statystyki zawodników (występy, gole, kartki) pobierają się same w każdą niedzielę o 20:00 i od razu trafiają na stronę
             (bez agenta i bez importowania). Mecze nie są dublowane — istniejące są aktualizowane.
           </div>
         </div>
@@ -67,6 +67,10 @@ function ZzpnSync() {
         <div style={{ marginTop: 10, fontSize: 12, color: "#94a3b8" }}>
           <span style={{ color: "#4ade80" }}>✓ {kiedy(st.finishedAt)}</span> · {w.liga} · sezon {w.sezon} · mecze: {w.mecze} (nowe: {w.dodane}, zaktualizowane: {w.zaktualizowane}
           {w.usunieteDuplikaty ? `, usunięte duplikaty: ${w.usunieteDuplikaty}` : ""}) · tabela: {w.tabela}
+          {" "}· statystyki kadry: {w.statystykiZawodnikow ? `zaktualizowano ${w.statystykiZawodnikow}` : "bez zmian"}
+          {w.pozaKadra?.length > 0 && (
+            <div style={{ marginTop: 4, color: "#f59e0b" }}>Grali w meczach, a nie ma ich w kadrze sezonu (statystyki się nie liczą): {w.pozaKadra.join(", ")}</div>
+          )}
           {w.bezSzczegolow?.length > 0 && (
             <div style={{ marginTop: 4, color: "#f59e0b" }}>ZZPN nie ma jeszcze protokołu: {w.bezSzczegolow.join(", ")}</div>
           )}

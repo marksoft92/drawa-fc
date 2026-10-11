@@ -27,7 +27,7 @@ export async function generateMetadata({ params }) {
 }
 
 function EventIcon({ typ }) {
-  if (typ === "gol" || typ === "samobój") return <span>⚽</span>;
+  if (typ === "gol" || typ?.startsWith("samobój")) return <span>⚽</span>;
   if (typ === "żółta kartka") return <span>🟨</span>;
   if (typ?.includes("czerwona")) return <span>🟥</span>;
   return <span>🔄</span>;
@@ -130,7 +130,7 @@ export default async function MeczPage({ params }) {
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {zdarzenia.map((z, i) => {
                   const isGosp = z.strona === "gospodarze";
-                  const isGol = z.typ === "gol" || z.typ === "samobój";
+                  const isGol = z.typ === "gol" || z.typ?.startsWith("samobój");
                   return (
                     <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0", borderBottom: i < zdarzenia.length - 1 ? "1px solid rgba(255,255,255,0.03)" : "none" }}>
                       <div style={{ flex: 1, textAlign: "right", fontSize: 12, color: isGosp ? (isGol ? "#fff" : "#64748b") : "transparent", fontWeight: isGol ? 600 : 400 }}>

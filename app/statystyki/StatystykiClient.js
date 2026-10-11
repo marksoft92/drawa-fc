@@ -107,7 +107,7 @@ export default function StatystykiClient({ initialMecze }) {
     if (!mecz.strzelcy?.length) continue;
     const drawaSide = isDrawa(mecz.team1) ? "gospodarze" : "goscie";
     for (const g of mecz.strzelcy) {
-      if (g.strona === drawaSide) scorerMap[g.zawodnik] = (scorerMap[g.zawodnik] ?? 0) + 1;
+      if (g.strona === drawaSide && g.typ === "gol") scorerMap[g.zawodnik] = (scorerMap[g.zawodnik] ?? 0) + 1;
     }
   }
   const strzelcy = Object.entries(scorerMap).sort((a, b) => b[1] - a[1]).map(([name, gole]) => ({name, gole}));
@@ -139,8 +139,8 @@ export default function StatystykiClient({ initialMecze }) {
       result: gf > ga ? "W" : gf < ga ? "L" : "D",
       events: (m.wszystkieZdarzenia).map((z) => ({
         min: Math.min(Math.max(parseInt(z.minuta) || 1, 1), 90),
-        type: z.typ,
-        isDrawa: z.strona === drawaSide,
+        type: z.typ?.startsWith("samobój") ? "samobój" : z.typ,
+        isDrawa: z.typ?.startsWith("samobój") ? z.strona !== drawaSide : z.strona === drawaSide,
       })),
     };
   });
