@@ -4,6 +4,7 @@ import Script from "next/script";
 import NavBar from "@/components/NavBar";
 import ShareButtons from "@/components/ShareButtons";
 import { prisma } from "@/lib/prisma";
+import { klubiqFor } from "@/lib/klubiq";
 
 export const revalidate = 120;
 
@@ -75,6 +76,7 @@ export default async function WpisPage({ params }) {
     take: 6,
   });
 
+  const klubiq = w.zrodlo?.nazwa ? await klubiqFor(w.zrodlo.nazwa) : null;
   const title = cleanTitle(w.tytul);
   const images = Array.isArray(w.obrazki) ? w.obrazki : [];
   const paragraphs = w.tresc.split("\n\n").filter(Boolean).map(p => p.replace(/^#+\s*/, ''));
@@ -161,6 +163,11 @@ export default async function WpisPage({ params }) {
             ))}
             <span style={{ fontSize: 12, color: "#475569", marginLeft: "auto" }}>{fmtDate(w.createdAt)}</span>
           </div>
+          {klubiq && (
+            <a href={klubiq.url} style={{ display: "inline-block", fontSize: 12, color: "#94a3b8", textDecoration: "none", marginBottom: 12 }}>
+              Terminarz, wyniki i tabela: <span style={{ color: "#3b82f6", fontWeight: 600 }}>{w.zrodlo.nazwa}</span> →
+            </a>
+          )}
 
           {/* Title */}
           <h1 style={{

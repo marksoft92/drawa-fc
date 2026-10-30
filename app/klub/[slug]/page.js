@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import { prisma } from "@/lib/prisma";
+import { klubiqFor } from "@/lib/klubiq";
 
 export const revalidate = 300;
 
@@ -47,6 +48,7 @@ export default async function KlubPage({ params }) {
   const { slug } = await params;
   const klub = await getKlub(slug);
   if (!klub) notFound();
+  const klubiq = await klubiqFor(klub.nazwa);
 
   const wpisy = await prisma.wpisLigowy.findMany({
     where: { zrodloId: klub.id, published: true },
@@ -137,6 +139,14 @@ export default async function KlubPage({ params }) {
               </p>
             </div>
           </div>
+
+          {/* Strona klubu i tabela ligi w Klubiq */}
+          {klubiq && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
+              <a href={klubiq.url} style={{ display: "inline-flex", padding: "8px 16px", background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.25)", borderRadius: 8, color: "#22c55e", fontSize: 13, textDecoration: "none" }}>Terminarz, wyniki i tabela →</a>
+              {klubiq.leagueUrl && <a href={klubiq.leagueUrl} style={{ display: "inline-flex", padding: "8px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#cbd5e1", fontSize: 13, textDecoration: "none" }}>{klubiq.league} — tabela ligi</a>}
+            </div>
+          )}
 
           {/* Facebook link */}
           {klub.fbUrl && (
