@@ -77,6 +77,8 @@ export default async function WpisPage({ params }) {
   });
 
   const klubiq = w.zrodlo?.nazwa ? await klubiqFor(w.zrodlo.nazwa) : null;
+  // wpisy z piłki młodzieżowej: baner dla rodziców (nofollow — reklama własnej usługi, nie link do pozycjonowania)
+  const youth = /junior|trampkarz|m[łl]odzik|orlik|(?<!\p{L})(ża(k|cy|ków|kach|kami))(?!\p{L})|skrzat|akademi|m[łl]odzie[żz]|rocznik|(?<!\p{L})u-?1\d(?!\p{L})|szk[óo][łl]k/iu.test(`${w.tytul} ${(w.tags || []).join(" ")} ${w.tresc.slice(0, 600)}`);
   const title = cleanTitle(w.tytul);
   const images = Array.isArray(w.obrazki) ? w.obrazki : [];
   const paragraphs = w.tresc.split("\n\n").filter(Boolean).map(p => p.replace(/^#+\s*/, ''));
@@ -220,6 +222,15 @@ export default async function WpisPage({ params }) {
           </div>
 
           {/* Related from same club */}
+          {youth && (
+            <aside style={{ margin: "32px 0", padding: 24, borderRadius: 14, background: "linear-gradient(135deg, rgba(34,197,94,0.12), rgba(59,130,246,0.08))", border: "1px solid rgba(34,197,94,0.25)" }}>
+              <p style={{ fontSize: 12, letterSpacing: "0.14em", color: "#facc15", fontWeight: 700 }}>DLA RODZICÓW</p>
+              <p style={{ fontSize: 20, color: "#fff", fontWeight: 700, marginTop: 6 }}>Twoje dziecko gra w piłkę? Załóż mu stronę piłkarza</p>
+              <p style={{ fontSize: 14, color: "#94a3b8", marginTop: 6, lineHeight: 1.6 }}>Profil, mecze, filmy i statystyki w jednym miejscu. To Ty decydujesz, czy akademie i skauci mogą ją zobaczyć — każdy kontakt trafia do Ciebie.</p>
+              <a href="https://klubiq.pl/zaloz-strone-zawodnika?zrodlo=drawa" rel="nofollow" style={{ display: "inline-block", marginTop: 14, padding: "10px 18px", borderRadius: 8, background: "#facc15", color: "#0f172a", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Załóż stronę piłkarza — 30 dni za darmo</a>
+            </aside>
+          )}
+
           {powiazane.length > 0 && (
             <div style={{ marginTop: 48, paddingTop: 32, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", color: "#475569", marginBottom: 16 }}>
